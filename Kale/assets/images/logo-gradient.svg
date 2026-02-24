@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Kalé Compass Coin — Gradient Variant (Premium) -->
+  <!-- Emerald-to-teal gradient circle with white K-compass needle -->
+  <defs>
+    <linearGradient id="emeraldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#064E3B"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="45" fill="url(#emeraldGradient)"/>
+  <path d="M 30 22 L 37 22 L 37 78 L 30 78 Z" fill="#FFFFFF"/>
+  <path d="M 37 53 L 37 47 L 67 23 L 67 29 Z" fill="#FFFFFF"/>
+  <path d="M 37 47 L 37 53 L 67 71 L 67 77 Z" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,170 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Flutter Template",
+
+  "commonOk": "OK",
+  "commonCancel": "Cancel",
+  "commonSave": "Save",
+  "commonDelete": "Delete",
+  "commonEdit": "Edit",
+  "commonClose": "Close",
+  "commonRetry": "Retry",
+  "commonNext": "Next",
+  "commonBack": "Back",
+  "commonSkip": "Skip",
+  "commonDone": "Done",
+  "commonSearch": "Search",
+  "commonLoading": "Loading...",
+  "commonNoResults": "No results found",
+  "commonSeeAll": "See all",
+  "commonOr": "Or",
+
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorNetwork": "No internet connection. Please check your network.",
+  "errorServer": "Server error. Please try again later.",
+  "errorUnauthorized": "Session expired. Please log in again.",
+  "errorValidation": "Please check your input and try again.",
+  "errorTimeout": "Request timed out. Please try again.",
+
+  "authLogin": "Log In",
+  "authRegister": "Sign Up",
+  "authLogout": "Log Out",
+  "authForgotPassword": "Forgot Password?",
+  "authResetPassword": "Reset Password",
+  "authEmail": "Email",
+  "authPassword": "Password",
+  "authConfirmPassword": "Confirm Password",
+  "authName": "Full Name",
+  "authLoginSubtitle": "Welcome back! Your financial journey continues here.",
+  "authRegisterSubtitle": "Take control of your finances. Start your journey today.",
+  "authForgotPasswordSubtitle": "Enter your email and we'll send you a code to reset your password.",
+  "authNoAccount": "Don't have an account? ",
+  "authHaveAccount": "Already have an account? ",
+  "authOtpTitle": "Verify Your Email",
+  "authOtpSubtitle": "Enter the 6-digit code sent to {email}",
+  "@authOtpSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "authOtpResend": "Didn't receive the code? Resend",
+  "authLoginWithGoogle": "Continue with Google",
+  "authLoginWithApple": "Continue with Apple",
+  "authCreatePassword": "Create Password",
+  "authCreatePasswordSubtitle": "Set a secure password for your account.",
+  "authTerms": "By continuing, you agree to our Terms of Service and Privacy Policy.",
+  "authTermsPrefix": "I agree to the ",
+  "authTermsOfService": "Terms of Service",
+  "authTermsAnd": " and ",
+  "authPrivacyPolicy": "Privacy Policy",
+
+  "validationRequired": "This field is required",
+  "validationEmail": "Please enter a valid email address",
+  "validationPasswordLength": "Password must be at least 8 characters",
+  "validationPasswordMatch": "Passwords do not match",
+  "validationTermsRequired": "You must accept the Terms of Service and Privacy Policy",
+
+  "passwordStrengthWeak": "Weak",
+  "passwordStrengthFair": "Fair",
+  "passwordStrengthStrong": "Strong",
+  "passwordStrengthVeryStrong": "Very strong",
+
+  "onboardingTitle1": "Track Every Penny",
+  "onboardingDesc1": "Log your expenses and income in seconds. See exactly where your money goes with clear, instant insights.",
+  "onboardingTitle2": "Budget Smarter",
+  "onboardingDesc2": "Set custom budgets for each category and get notified before you overspend. Stay in control, effortlessly.",
+  "onboardingTitle3": "Reach Your Goals",
+  "onboardingDesc3": "Create savings goals, track your progress, and watch your money grow. Your financial future starts here.",
+  "onboardingGetStarted": "Get Started",
+
+  "homeTitle": "Home",
+  "homeGreeting": "Hello, {name}!",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "profileTitle": "Profile",
+  "profileEditProfile": "Edit Profile",
+  "profileChangePassword": "Change Password",
+  "profileLogout": "Logout",
+
+  "settingsTitle": "Settings",
+  "settingsAppearance": "Appearance",
+  "settingsTheme": "Theme",
+  "settingsThemeSystem": "System",
+  "settingsThemeLight": "Light",
+  "settingsThemeDark": "Dark",
+  "settingsLanguage": "Language",
+  "settingsLanguageEn": "English",
+  "settingsLanguageFr": "French",
+  "settingsAbout": "About",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTerms": "Terms of Service",
+  "settingsPrivacy": "Privacy Policy",
+
+  "legalLastUpdated": "Last updated: February 20, 2026",
+  "legalContactFooter": "If you have any questions, contact us at support@kale.app",
+
+  "legalTosTitle": "Terms of Service",
+  "legalTosIntroHeading": "1. Introduction",
+  "legalTosIntroBody": "Welcome to Kalé. These Terms of Service govern your use of the Kalé mobile application and related services. By creating an account or using Kalé, you agree to be bound by these terms. If you do not agree, please do not use the app.",
+  "legalTosAccountHeading": "2. Account Registration",
+  "legalTosAccountBody": "To use Kalé, you must create an account with accurate and complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. You must be at least 13 years old to create an account. If you are under 18, you confirm that you have your parent or guardian's consent.",
+  "legalTosServicesHeading": "3. Services Provided",
+  "legalTosServicesBody": "Kalé provides personal finance management tools including expense and income tracking, budget creation and monitoring, savings goal management, and financial insights. These tools are designed to help you organize and understand your personal finances.",
+  "legalTosResponsibilitiesHeading": "4. User Responsibilities",
+  "legalTosResponsibilitiesBody": "You are solely responsible for the accuracy of the financial data you enter into Kalé. Kalé is a tracking and organizational tool and does not provide professional financial, investment, tax, or legal advice. You agree to use the app in compliance with all applicable laws and regulations.",
+  "legalTosFinancialDataHeading": "5. Financial Data",
+  "legalTosFinancialDataBody": "Kalé is not a bank, payment processor, or financial institution. We do not hold, transfer, or have custody of your funds. All financial data within Kalé is user-entered information intended for personal tracking purposes only. We do not verify the accuracy of transactions, balances, or other financial information you enter.",
+  "legalTosIpHeading": "6. Intellectual Property",
+  "legalTosIpBody": "The Kalé app, including its design, code, features, and branding, is owned by Kalé and protected by intellectual property laws. You retain full ownership of the personal data and financial information you enter into the app. You grant Kalé a limited license to process your data solely to provide and improve the services.",
+  "legalTosLiabilityHeading": "7. Limitation of Liability",
+  "legalTosLiabilityBody": "Kalé is provided on an \"as is\" basis. We are not liable for any financial decisions you make based on information displayed in the app. We do not guarantee the accuracy of calculations, summaries, or insights derived from your data. To the maximum extent permitted by law, Kalé shall not be liable for any indirect, incidental, or consequential damages.",
+  "legalTosTerminationHeading": "8. Termination",
+  "legalTosTerminationBody": "You may delete your account at any time through the app settings. We may suspend or terminate your account if you violate these terms. Upon termination, your data will be deleted from our servers within 30 days unless retention is required by law.",
+  "legalTosChangesHeading": "9. Changes to These Terms",
+  "legalTosChangesBody": "We may update these Terms of Service from time to time. We will notify you of material changes through the app or by email. Your continued use of Kalé after changes are posted constitutes your acceptance of the updated terms.",
+  "legalTosContactHeading": "10. Contact Us",
+  "legalTosContactBody": "If you have questions about these Terms of Service, please contact us at support@kale.app.",
+
+  "legalPrivacyTitle": "Privacy Policy",
+  "legalPrivacyIntroHeading": "1. Introduction",
+  "legalPrivacyIntroBody": "Your privacy is important to us. This Privacy Policy explains how Kalé collects, uses, stores, and protects your personal and financial information. We are committed to handling your data with transparency and care.",
+  "legalPrivacyCollectionHeading": "2. Information We Collect",
+  "legalPrivacyCollectionBody": "We collect the following types of information:\n\nAccount Information: Your name, email address, and authentication credentials when you create an account.\n\nFinancial Data: Transaction records, budget configurations, savings goals, and category preferences that you enter into the app.\n\nUsage Data: Anonymous analytics about how you interact with the app, including screen views and feature usage, to help us improve the experience.\n\nDevice Information: Device type, operating system version, and app version for compatibility and troubleshooting purposes.",
+  "legalPrivacyUsageHeading": "3. How We Use Your Data",
+  "legalPrivacyUsageBody": "We use your information to:\n\n- Provide, maintain, and improve Kalé's features and services\n- Generate personalized financial summaries, charts, and insights\n- Send you notifications such as budget alerts and daily reminders (when enabled)\n- Authenticate your identity and secure your account\n- Analyze aggregate usage patterns to improve the app experience",
+  "legalPrivacyStorageHeading": "4. Data Storage & Security",
+  "legalPrivacyStorageBody": "Your data is stored securely using industry-standard practices. All data is encrypted in transit using TLS and at rest on our servers. We use Supabase as our backend infrastructure, which provides enterprise-grade security, access controls, and data isolation. We regularly review our security practices and limit access to your data to authorized personnel only.",
+  "legalPrivacyThirdPartyHeading": "5. Third-Party Services",
+  "legalPrivacyThirdPartyBody": "Kalé integrates with the following third-party services:\n\n- Google Sign-In and Apple Sign-In for authentication\n- Analytics services for anonymous usage tracking\n- Crash reporting services to identify and fix app issues\n\nWe do not sell, rent, or share your personal or financial data with third parties for marketing purposes. Third-party services only receive the minimum data necessary to perform their function.",
+  "legalPrivacyRightsHeading": "6. Your Rights",
+  "legalPrivacyRightsBody": "You have the right to:\n\n- Access the personal data we hold about you\n- Correct inaccurate information in your account\n- Delete your account and all associated data\n- Export your financial data\n- Restrict or object to certain processing of your data\n\nTo exercise any of these rights, contact us at privacy@kale.app or use the account management features within the app.",
+  "legalPrivacyRetentionHeading": "7. Data Retention",
+  "legalPrivacyRetentionBody": "We retain your data for as long as your account is active. If you delete your account, we will remove your personal and financial data from our servers within 30 days. Some anonymized, aggregate data may be retained for analytical purposes. We may also retain certain data as required by law.",
+  "legalPrivacyChildrenHeading": "8. Children's Privacy",
+  "legalPrivacyChildrenBody": "Kalé is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected data from a child under 13 without parental consent, we will take steps to delete that information promptly.",
+  "legalPrivacyChangesHeading": "9. Changes to This Policy",
+  "legalPrivacyChangesBody": "We may update this Privacy Policy from time to time. We will notify you of material changes through an in-app notice or by email. We encourage you to review this policy periodically. Your continued use of Kalé after changes are posted constitutes your acceptance of the updated policy.",
+  "legalPrivacyContactHeading": "10. Contact Us",
+  "legalPrivacyContactBody": "If you have questions about this Privacy Policy or how your data is handled, please contact us at privacy@kale.app.",
+
+  "offlineBanner": "You are offline",
+
+  "emptyStateTitle": "Nothing here yet",
+  "emptyStateSubtitle": "Check back later for updates."
+}

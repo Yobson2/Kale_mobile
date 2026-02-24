@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Kalé Compass Coin — Dark Mode Variant -->
+  <!-- Light emerald filled circle with dark slate K-compass needle -->
+  <circle cx="50" cy="50" r="45" fill="#34D399"/>
+  <path d="M 30 22 L 37 22 L 37 78 L 30 78 Z" fill="#0F172A"/>
+  <path d="M 37 53 L 37 47 L 67 23 L 67 29 Z" fill="#0F172A"/>
+  <path d="M 37 47 L 37 53 L 67 71 L 67 77 Z" fill="#0F172A"/>
+</svg>

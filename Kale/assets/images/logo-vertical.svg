@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 130" width="100" height="130">
+  <!-- Kalé Compass Coin — Vertical/Stacked Lockup -->
+  <!-- Logomark (centered, 70x70) -->
+  <g transform="translate(15, 5) scale(0.7)">
+    <circle cx="50" cy="50" r="45" fill="#10B981"/>
+    <path d="M 30 22 L 37 22 L 37 78 L 30 78 Z" fill="#FFFFFF"/>
+    <path d="M 37 53 L 37 47 L 67 23 L 67 29 Z" fill="#FFFFFF"/>
+    <path d="M 37 47 L 37 53 L 67 71 L 67 77 Z" fill="#FFFFFF"/>
+  </g>
+  <!-- Wordmark: "Kalé" centered below -->
+  <text x="50" y="115" text-anchor="middle" font-family="'Inter', system-ui, -apple-system, sans-serif" font-weight="500" font-size="22" letter-spacing="0.5" fill="#0F172A">Kalé</text>
+</svg>

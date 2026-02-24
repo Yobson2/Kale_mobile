@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Kalé App Icon Source (export as 1024x1024 PNG for flutter_launcher_icons) -->
+  <!-- Emerald background with white K-compass logomark -->
+
+  <!-- Background fill -->
+  <rect width="1024" height="1024" fill="#10B981"/>
+
+  <!-- Compass Coin logomark (centered, ~60% of icon area) -->
+  <!-- White circle with emerald K, to create contrast on the emerald bg -->
+  <circle cx="512" cy="512" r="320" fill="rgba(255,255,255,0.15)"/>
+
+  <!-- K letterform (white) — scaled from 100x100 base to 1024x1024 -->
+  <!-- Scale factor: ~6.4x, centered at 512,512 -->
+  <!-- Base K at 100x100: stem 30-37 x 22-78, arms from 37,47/53 to 67,23/29 and 67,71/77 -->
+  <g transform="translate(512, 512) scale(6.4) translate(-50, -50)">
+    <path d="M 30 22 L 37 22 L 37 78 L 30 78 Z" fill="#FFFFFF"/>
+    <path d="M 37 53 L 37 47 L 67 23 L 67 29 Z" fill="#FFFFFF"/>
+    <path d="M 37 47 L 37 53 L 67 71 L 67 77 Z" fill="#FFFFFF"/>
+  </g>
+</svg>

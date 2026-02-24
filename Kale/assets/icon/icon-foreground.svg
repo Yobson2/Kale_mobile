@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Kalé Adaptive Icon Foreground (export as 1024x1024 PNG with transparency) -->
+  <!-- Android adaptive icons use a 66% safe zone (centered 676x676 area) -->
+  <!-- The K-compass logomark is placed within this safe zone -->
+
+  <!-- Transparent background (for adaptive icon layering) -->
+
+  <!-- Compass Coin logomark centered in safe zone -->
+  <!-- Safe zone: 174 to 850 (676px), center at 512 -->
+  <g transform="translate(512, 512) scale(5.0) translate(-50, -50)">
+    <!-- Coin circle -->
+    <circle cx="50" cy="50" r="45" fill="#FFFFFF"/>
+    <!-- K letterform as negative space -->
+    <path d="M 30 22 L 37 22 L 37 78 L 30 78 Z" fill="#10B981"/>
+    <path d="M 37 53 L 37 47 L 67 23 L 67 29 Z" fill="#10B981"/>
+    <path d="M 37 47 L 37 53 L 67 71 L 67 77 Z" fill="#10B981"/>
+  </g>
+</svg>
