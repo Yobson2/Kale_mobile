@@ -137,26 +137,6 @@ class AppColors {
   static const Color savingsLight = Color(0xFF3B82F6);
   static const Color savingsDark = Color(0xFF60A5FA);
 
-  // ── Mascot Colors (Kai the Chameleon) ─────────────────────
-
-  /// Kai's primary body color.
-  static const Color kaiBody = Color(0xFF10B981);
-
-  /// Kai's lighter belly color.
-  static const Color kaiBelly = Color(0xFFD1FAE5);
-
-  /// Kai's head crest / deep teal.
-  static const Color kaiCrest = Color(0xFF064E3B);
-
-  /// Kai's eye color (amber-gold).
-  static const Color kaiEye = Color(0xFFF59E0B);
-
-  /// Kai's Adinkra / Ndebele markings accent.
-  static const Color kaiMarkings = Color(0xFF065F46);
-
-  /// Kai's wristband blue accent.
-  static const Color kaiAccentBlue = Color(0xFF3B82F6);
-
   // ── Savanna Sunset Palette (warm variant for marketing) ───
 
   /// Warm gold secondary.

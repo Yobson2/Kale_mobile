@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/providers/analytics_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/router/analytics_observer.dart';
@@ -300,7 +299,6 @@ GoRouter appRouter(Ref ref) {
                     builder: (context, state) => const Scaffold(
                       appBar: AppAppBar(title: 'Insights'),
                       body: AppEmptyState(
-                        mascotPose: KaiPose.thinking,
                         title: 'Insights Coming Soon',
                         subtitle:
                             'Your spending patterns will be analyzed here.',

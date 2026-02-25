@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
@@ -42,7 +41,6 @@ class SavingsGoalsPage extends ConsumerWidget {
         data: (goals) {
           if (goals.isEmpty) {
             return AppEmptyState(
-              mascotPose: KaiPose.thinking,
               title: 'No savings goals yet',
               subtitle: 'What are you saving for? Set a goal to start tracking.',
               actionText: 'Create Goal',

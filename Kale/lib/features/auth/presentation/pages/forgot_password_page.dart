@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/validators.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
@@ -70,7 +69,6 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                 AuthHeader(
                   title: context.l10n.authResetPassword,
                   subtitle: context.l10n.authForgotPasswordSubtitle,
-                  mascotPose: KaiPose.thinking,
                 ),
                 AppTextField(
                   controller: _emailController,

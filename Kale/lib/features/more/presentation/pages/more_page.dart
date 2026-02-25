@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kale/core/mascot/kai_mascot.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/data_display/app_list_tile.dart';
@@ -76,7 +74,11 @@ class MorePage extends StatelessWidget {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const KaiMascot(pose: KaiPose.thinking, size: 100),
+            Icon(
+              Icons.construction_rounded,
+              size: 64,
+              color: theme.colorScheme.outline,
+            ),
             AppSpacing.verticalLg,
             Text(feature, style: theme.textTheme.titleMedium),
             AppSpacing.verticalSm,

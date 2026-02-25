@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/mascot/kai_mascot.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
@@ -30,18 +28,11 @@ class DashboardPage extends ConsumerWidget {
       _ => 'User',
     };
 
-    final greetingPose =
-        DateTime.now().hour < 12 ? KaiPose.welcome : KaiPose.idle;
-
     return Scaffold(
       appBar: AppAppBar(
         title: context.l10n.homeTitle,
         showBackButton: false,
         centerTitle: false,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: KaiMascot(pose: greetingPose, size: 32),
-        ),
         titleWidget: _buildGreeting(context, userName),
         actions: [
           IconButton(

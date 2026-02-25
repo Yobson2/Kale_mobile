@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kale/core/mascot/kai_mascot.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Header widget for auth pages with Kai mascot, title, and subtitle.
-///
-/// Shows Kai in a contextual pose inside concentric circles, matching
-/// the onboarding visual style. Pass [mascotPose] to set the emotional
-/// context (e.g. [KaiPose.thinking] for forgot-password).
+/// Header widget for auth pages with concentric circles, title, and subtitle.
 class AuthHeader extends StatelessWidget {
   /// Creates an [AuthHeader].
   const AuthHeader({
     required this.title,
     super.key,
     this.subtitle,
-    this.mascotPose = KaiPose.welcome,
-    this.mascotSize = 80,
   });
 
   /// Main title text.
@@ -23,12 +15,6 @@ class AuthHeader extends StatelessWidget {
 
   /// Optional subtitle text.
   final String? subtitle;
-
-  /// Which pose Kai should display. Defaults to [KaiPose.welcome].
-  final KaiPose mascotPose;
-
-  /// Size of the mascot illustration.
-  final double mascotSize;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +26,7 @@ class AuthHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppSpacing.verticalXl,
-        // Kai mascot with concentric circles (matches onboarding style)
+        // Concentric circles visual
         Center(
           child: SizedBox(
             width: 120,
@@ -68,8 +54,12 @@ class AuthHeader extends StatelessWidget {
                         container.withValues(alpha: isDark ? 0.4 : 0.7),
                   ),
                 ),
-                // Kai mascot
-                KaiMascot(pose: mascotPose, size: mascotSize),
+                // Icon in center
+                Icon(
+                  Icons.lock_outline_rounded,
+                  size: 36,
+                  color: theme.colorScheme.primary,
+                ),
               ],
             ),
           ),

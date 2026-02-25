@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kale/core/mascot/kai_mascot.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Error state placeholder with Kai mascot (warning pose) and retry button.
-///
-/// When [useMascot] is true (default), shows Kai in the warning pose instead
-/// of a plain icon. Pass a custom [mascotPose] for contextual poses.
+/// Error state placeholder with icon and retry button.
 class AppErrorState extends StatelessWidget {
   /// Creates an [AppErrorState].
   const AppErrorState({
@@ -16,9 +11,6 @@ class AppErrorState extends StatelessWidget {
     this.retryText = 'Retry',
     this.icon = Icons.error_outline,
     this.iconSize = 64,
-    this.useMascot = true,
-    this.mascotPose = KaiPose.warning,
-    this.mascotSize = 120,
   });
 
   /// Error message.
@@ -30,20 +22,11 @@ class AppErrorState extends StatelessWidget {
   /// Retry button text.
   final String retryText;
 
-  /// Error icon (used when [useMascot] is false).
+  /// Error icon.
   final IconData icon;
 
-  /// Size of the icon (used when [useMascot] is false).
+  /// Size of the icon.
   final double iconSize;
-
-  /// Whether to show Kai mascot instead of the plain icon.
-  final bool useMascot;
-
-  /// Which pose Kai should display. Defaults to [KaiPose.warning].
-  final KaiPose mascotPose;
-
-  /// Size of the mascot illustration.
-  final double mascotSize;
 
   @override
   Widget build(BuildContext context) {
@@ -57,17 +40,11 @@ class AppErrorState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (useMascot)
-                KaiMascot(
-                  pose: mascotPose,
-                  size: mascotSize,
-                )
-              else
-                Icon(
-                  icon,
-                  size: iconSize,
-                  color: theme.colorScheme.error,
-                ),
+              Icon(
+                icon,
+                size: iconSize,
+                color: theme.colorScheme.error,
+              ),
               AppSpacing.verticalLg,
               Text(
                 message,

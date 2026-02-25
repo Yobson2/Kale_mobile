@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/mascot/kai_mascot.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
@@ -77,7 +75,11 @@ class _EmptyBudgetState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const KaiMascot(pose: KaiPose.idle, size: 120),
+            Icon(
+              Icons.account_balance_wallet_outlined,
+              size: 80,
+              color: context.colorScheme.outline,
+            ),
             AppSpacing.verticalXl,
             Text(
               'No Active Budget',
@@ -130,7 +132,11 @@ class _ErrorState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const KaiMascot(pose: KaiPose.warning, size: 100),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: context.colorScheme.error,
+            ),
             AppSpacing.verticalLg,
             Text(
               'Something went wrong',

@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/mascot/kai_mascot.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
@@ -75,34 +73,28 @@ class BudgetHealthCard extends ConsumerWidget {
               AppSpacing.verticalSm,
               Row(
                 children: [
-                  if (percent >= 90)
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: KaiMascot(pose: KaiPose.warning, size: 32),
-                    )
-                  else
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: 56,
-                          height: 56,
-                          child: CircularProgressIndicator(
-                            value: utilization.clamp(0, 1),
-                            strokeWidth: 6,
-                            backgroundColor: color.withValues(alpha: 0.15),
-                            valueColor: AlwaysStoppedAnimation(color),
-                          ),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 56,
+                        height: 56,
+                        child: CircularProgressIndicator(
+                          value: utilization.clamp(0, 1),
+                          strokeWidth: 6,
+                          backgroundColor: color.withValues(alpha: 0.15),
+                          valueColor: AlwaysStoppedAnimation(color),
                         ),
-                        Text(
-                          '$percent%',
-                          style: context.textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: color,
-                          ),
+                      ),
+                      Text(
+                        '$percent%',
+                        style: context.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: color,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                   AppSpacing.horizontalLg,
                   Expanded(
                     child: Column(

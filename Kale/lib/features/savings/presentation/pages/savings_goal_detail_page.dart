@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/extensions/date_time_extensions.dart';
-import 'package:kale/core/mascot/mascot_celebration_overlay.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
@@ -77,18 +75,6 @@ class _GoalDetailContent extends ConsumerWidget {
     ref.listen(savingsNotifierProvider, (_, state) {
       if (state is SavingsSuccess) {
         showAppSnackBar(context, message: state.message ?? 'Done');
-        // Celebrate when a savings goal is fully funded.
-        if (goal.isFullyFunded) {
-          Future.delayed(const Duration(milliseconds: 300), () {
-            if (context.mounted) {
-              MascotCelebrationOverlay.show(
-                context,
-                title: 'Goal Achieved!',
-                subtitle: 'You fully funded "${goal.name}"!',
-              );
-            }
-          });
-        }
       } else if (state is SavingsError) {
         showAppSnackBar(
           context,

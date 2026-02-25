@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/mascot/mascot_celebration_overlay.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
@@ -168,11 +167,7 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     if (mounted) {
       setState(() => _isCreating = false);
       if (success) {
-        await MascotCelebrationOverlay.show(
-          context,
-          title: 'Budget Created!',
-          subtitle: 'Kai is proud of you for planning ahead.',
-        );
+        context.showSnackBar('Budget created successfully!');
         if (mounted) context.pop();
       } else {
         context.showSnackBar('Failed to create budget', isError: true);

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kale/core/mascot/kai_mascot.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 
 /// Finance-themed illustration for each onboarding step featuring
-/// Kai the Chameleon mascot with contextual floating elements.
+/// contextual floating elements and concentric circles.
 class OnboardingIllustration extends StatelessWidget {
   const OnboardingIllustration({
     required this.stepIndex,
@@ -43,10 +41,11 @@ class OnboardingIllustration extends StatelessWidget {
               color: container.withValues(alpha: isDark ? 0.4 : 0.7),
             ),
           ),
-          // Kai mascot in the appropriate pose.
-          KaiMascot(
-            pose: _poseForStep,
-            size: 140,
+          // Step icon in the center.
+          Icon(
+            _iconForStep,
+            size: 64,
+            color: primary,
           ),
           // Floating decorative elements.
           ..._buildFloatingElements(primary, isDark),
@@ -55,11 +54,11 @@ class OnboardingIllustration extends StatelessWidget {
     );
   }
 
-  KaiPose get _poseForStep => switch (stepIndex) {
-        0 => KaiPose.welcome,
-        1 => KaiPose.thinking,
-        2 => KaiPose.celebration,
-        _ => KaiPose.welcome,
+  IconData get _iconForStep => switch (stepIndex) {
+        0 => Icons.account_balance_wallet_rounded,
+        1 => Icons.bar_chart_rounded,
+        2 => Icons.flag_rounded,
+        _ => Icons.account_balance_wallet_rounded,
       };
 
   List<Widget> _buildFloatingElements(Color primary, bool isDark) =>

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/mascot/kai_pose.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/validators.dart';
@@ -111,7 +110,6 @@ class _CreatePasswordPageState extends ConsumerState<CreatePasswordPage>
                     AuthHeader(
                       title: context.l10n.authCreatePassword,
                       subtitle: context.l10n.authCreatePasswordSubtitle,
-                      mascotPose: KaiPose.celebration,
                     ),
                     AppPasswordField(
                       controller: _passwordController,
