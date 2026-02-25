@@ -1,34 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Kalé — The Golden Spiral K — Black & White Variant -->
-  <!-- Dark circle with white Spiral-K monogram -->
+  <!-- Kalé — The Cowrie Flow — Black & White Variant -->
+  <!-- Dark circle with white cowrie shell and flow lines -->
 
-  <!-- Circle container -->
+  <!-- Background circle -->
   <circle cx="50" cy="50" r="42" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
 
-  <!-- K vertical stem -->
-  <rect x="28" y="20" width="8" height="60" rx="2" fill="#FFFFFF"/>
+  <!-- Cowrie shell body -->
+  <ellipse cx="50" cy="50" rx="20" ry="14" fill="#FFFFFF"/>
 
-  <!-- K upper arm with outward golden spiral -->
-  <path d="
-    M 36,43
-    C 44,34 56,22 64,19
-    C 70,17 76,19 77,25
-    C 78,31 74,35 69,33
-    C 56,38 46,44 36,50
-    Z
-  " fill="#FFFFFF"/>
+  <!-- Shell ridges (ledger lines) -->
+  <line x1="34" y1="46" x2="66" y2="46" stroke="#0F172A" stroke-width="0.8" opacity="0.35"/>
+  <line x1="33" y1="50" x2="67" y2="50" stroke="#0F172A" stroke-width="0.8" opacity="0.35"/>
+  <line x1="34" y1="54" x2="66" y2="54" stroke="#0F172A" stroke-width="0.8" opacity="0.35"/>
 
-  <!-- K lower arm with inward spiral -->
-  <path d="
-    M 36,57
-    C 46,64 56,72 64,77
-    C 68,79 70,77 69,73
-    C 68,69 64,69 62,72
-    C 52,68 44,60 36,50
-    Z
-  " fill="#FFFFFF"/>
+  <!-- Shell opening (vertical slit) -->
+  <path d="M 50,37 C 48,43 48,57 50,63" fill="none" stroke="#0F172A" stroke-width="2" stroke-linecap="round"/>
 
-  <!-- Coin fulcrum — mid gray for B&W differentiation -->
-  <circle cx="32" cy="50" r="5" fill="#94A3B8"/>
-  <circle cx="32" cy="50" r="3" fill="none" stroke="#64748B" stroke-width="0.7"/>
+  <!-- Income flow line (upward-right, thicker) -->
+  <path d="M 50,37 C 48,30 55,22 65,20" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Expense flow line (downward-left, thinner) -->
+  <path d="M 50,63 C 52,70 45,78 35,80" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Gray accent dot at income tip -->
+  <circle cx="65" cy="20" r="3.5" fill="#94A3B8"/>
+  <circle cx="65" cy="20" r="2" fill="none" stroke="#64748B" stroke-width="0.6"/>
 </svg>
