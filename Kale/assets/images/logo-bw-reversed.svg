@@ -1,30 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Kalé — The Adinkra K — B&W Reversed (dark background) -->
+  <!-- Kalé — The Golden Spiral K — Reversed B&W Variant -->
+  <!-- White circle with dark Spiral-K monogram -->
 
-  <!-- Squircle container -->
-  <rect x="10" y="10" width="80" height="80" rx="18" ry="18" fill="#FFFFFF"/>
+  <!-- Circle container -->
+  <circle cx="50" cy="50" r="42" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
 
   <!-- K vertical stem -->
-  <rect x="28" y="20" width="7" height="60" fill="#0F172A"/>
+  <rect x="28" y="20" width="8" height="60" rx="2" fill="#0F172A"/>
 
-  <!-- Ndebele diamond cutouts on stem -->
-  <polygon points="31.5,29 34,32 31.5,35 29,32" fill="#FFFFFF"/>
-  <polygon points="31.5,59 34,62 31.5,65 29,62" fill="#FFFFFF"/>
+  <!-- K upper arm with outward golden spiral -->
+  <path d="
+    M 36,43
+    C 44,34 56,22 64,19
+    C 70,17 76,19 77,25
+    C 78,31 74,35 69,33
+    C 56,38 46,44 36,50
+    Z
+  " fill="#0F172A"/>
 
-  <!-- K upper diagonal arm -->
-  <polygon points="35,45 63,19 63,26 35,51" fill="#0F172A"/>
+  <!-- K lower arm with inward spiral -->
+  <path d="
+    M 36,57
+    C 46,64 56,72 64,77
+    C 68,79 70,77 69,73
+    C 68,69 64,69 62,72
+    C 52,68 44,60 36,50
+    Z
+  " fill="#0F172A"/>
 
-  <!-- Aya fern prongs -->
-  <polygon points="62,18 67,12 63,20" fill="#0F172A"/>
-  <polygon points="63,21 71,16 65,24" fill="#0F172A"/>
-  <polygon points="64,25 72,24 66,28" fill="#0F172A"/>
-
-  <!-- K lower diagonal arm -->
-  <polygon points="35,49 63,74 63,81 35,55" fill="#0F172A"/>
-
-  <!-- Maasai shield point -->
-  <polygon points="63,74 68,79 63,84 58,79" fill="#0F172A"/>
-
-  <!-- Nyame Nti junction dot (gray accent) -->
-  <circle cx="33" cy="50" r="4" fill="#64748B"/>
+  <!-- Coin fulcrum — dark gray for B&W differentiation -->
+  <circle cx="32" cy="50" r="5" fill="#475569"/>
+  <circle cx="32" cy="50" r="3" fill="none" stroke="#334155" stroke-width="0.7"/>
 </svg>
