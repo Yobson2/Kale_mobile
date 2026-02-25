@@ -114,15 +114,15 @@ class _SplashPageState extends ConsumerState<SplashPage>
               builder: (context, _) => Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Compass coin logo.
-                  // Transform.scale(
-                  //   scale: _logoScale.value,
-                  //   child: SvgPicture.asset(
-                  //     'assets/images/logo-gradient.svg',
-                  //     width: 80,
-                  //     height: 80,
-                  //   ),
-                  // ),
+                  // Adinkra K logo.
+                  Transform.scale(
+                    scale: _logoScale.value,
+                    child: SvgPicture.asset(
+                      'assets/images/logo-gradient.svg',
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
                   // Kai emerges from behind the logo.
                   Transform.translate(
                     offset: Offset(_mascotSlide.value, 0),

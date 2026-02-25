@@ -1,7 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Kalé Compass Coin — Black & White (light background) -->
-  <circle cx="50" cy="50" r="45" fill="#0F172A"/>
-  <path d="M 30 22 L 37 22 L 37 78 L 30 78 Z" fill="#FFFFFF"/>
-  <path d="M 37 53 L 37 47 L 67 23 L 67 29 Z" fill="#FFFFFF"/>
-  <path d="M 37 47 L 37 53 L 67 71 L 67 77 Z" fill="#FFFFFF"/>
+  <!-- Kalé — The Adinkra K — Black & White (light background) -->
+
+  <!-- Squircle container -->
+  <rect x="10" y="10" width="80" height="80" rx="18" ry="18" fill="#0F172A"/>
+
+  <!-- K vertical stem -->
+  <rect x="28" y="20" width="7" height="60" fill="#FFFFFF"/>
+
+  <!-- Ndebele diamond cutouts on stem -->
+  <polygon points="31.5,29 34,32 31.5,35 29,32" fill="#0F172A"/>
+  <polygon points="31.5,59 34,62 31.5,65 29,62" fill="#0F172A"/>
+
+  <!-- K upper diagonal arm -->
+  <polygon points="35,45 63,19 63,26 35,51" fill="#FFFFFF"/>
+
+  <!-- Aya fern prongs -->
+  <polygon points="62,18 67,12 63,20" fill="#FFFFFF"/>
+  <polygon points="63,21 71,16 65,24" fill="#FFFFFF"/>
+  <polygon points="64,25 72,24 66,28" fill="#FFFFFF"/>
+
+  <!-- K lower diagonal arm -->
+  <polygon points="35,49 63,74 63,81 35,55" fill="#FFFFFF"/>
+
+  <!-- Maasai shield point -->
+  <polygon points="63,74 68,79 63,84 58,79" fill="#FFFFFF"/>
+
+  <!-- Nyame Nti junction dot (gray accent) -->
+  <circle cx="33" cy="50" r="4" fill="#94A3B8"/>
 </svg>

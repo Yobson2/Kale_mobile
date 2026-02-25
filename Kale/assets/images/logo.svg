@@ -1,9 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Kalé Compass Coin — Solid Variant (Primary) -->
-  <!-- Emerald green filled circle with white K-compass needle -->
-  <circle cx="50" cy="50" r="45" fill="#10B981"/>
-  <!-- K letterform: stem + upper arm + lower arm -->
-  <path d="M 30 22 L 37 22 L 37 78 L 30 78 Z" fill="#FFFFFF"/>
-  <path d="M 37 53 L 37 47 L 67 23 L 67 29 Z" fill="#FFFFFF"/>
-  <path d="M 37 47 L 37 53 L 67 71 L 67 77 Z" fill="#FFFFFF"/>
+  <!-- Kalé — The Adinkra K — Primary Variant -->
+  <!-- Emerald squircle with white Adinkra K monogram -->
+
+  <!-- Squircle container -->
+  <rect x="10" y="10" width="80" height="80" rx="18" ry="18"
+        fill="#10B981" stroke="#064E3B" stroke-width="2"/>
+
+  <!-- Ndebele corner step patterns (Kente geometry accents) -->
+  <g stroke="#065F46" stroke-opacity="0.5" stroke-width="1.2" fill="none" stroke-linecap="square">
+    <polyline points="16,13.5 19.5,13.5 19.5,17 23,17"/>
+    <polyline points="84,13.5 80.5,13.5 80.5,17 77,17"/>
+    <polyline points="16,86.5 19.5,86.5 19.5,83 23,83"/>
+    <polyline points="84,86.5 80.5,86.5 80.5,83 77,83"/>
+  </g>
+
+  <!-- K vertical stem -->
+  <rect x="28" y="20" width="7" height="60" fill="#FFFFFF"/>
+
+  <!-- Ndebele diamond cutouts on stem (reveal green background) -->
+  <polygon points="31.5,29 34,32 31.5,35 29,32" fill="#10B981"/>
+  <polygon points="31.5,59 34,62 31.5,65 29,62" fill="#10B981"/>
+
+  <!-- K upper diagonal arm -->
+  <polygon points="35,45 63,19 63,26 35,51" fill="#FFFFFF"/>
+
+  <!-- Aya fern prongs (3 triangular leaves at upper arm tip) -->
+  <polygon points="62,18 67,12 63,20" fill="#FFFFFF"/>
+  <polygon points="63,21 71,16 65,24" fill="#FFFFFF"/>
+  <polygon points="64,25 72,24 66,28" fill="#FFFFFF"/>
+
+  <!-- K lower diagonal arm -->
+  <polygon points="35,49 63,74 63,81 35,55" fill="#FFFFFF"/>
+
+  <!-- Maasai shield point (elongated diamond at lower arm tip) -->
+  <polygon points="63,74 68,79 63,84 58,79" fill="#FFFFFF"/>
+
+  <!-- Nyame Nti junction dot (amber — divine grace) -->
+  <circle cx="33" cy="50" r="4" fill="#F59E0B"/>
 </svg>
