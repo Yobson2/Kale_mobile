@@ -161,6 +161,26 @@ class AuthUnauthenticated implements AuthState {
 
 /// @nodoc
 
+class AuthGuest implements AuthState {
+  const AuthGuest();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is AuthGuest);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'AuthState.guest()';
+  }
+}
+
+/// @nodoc
+
 class AuthError implements AuthState {
   const AuthError(this.message);
 

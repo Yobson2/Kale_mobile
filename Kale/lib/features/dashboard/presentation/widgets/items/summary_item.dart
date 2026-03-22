@@ -49,6 +49,8 @@ class SummaryItem extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     color: color,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

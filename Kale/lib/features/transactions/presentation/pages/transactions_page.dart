@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/extensions/date_time_extensions.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
+import 'package:kale/core/widgets/animations/staggered_list_item.dart';
 import 'package:kale/core/widgets/data_display/app_chip.dart';
+import 'package:kale/core/widgets/inputs/app_search_field.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/core/widgets/layout/app_scaffold.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
@@ -31,6 +34,9 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
   /// Currently selected filter. Null means "All".
   TransactionType? _selectedType;
 
+  /// Current search query for filtering transactions.
+  String _searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
     final transactionsAsync = ref.watch(transactionsStreamProvider);
@@ -39,18 +45,30 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
 
     return AppScaffold(
       appBar: AppAppBar(
-        title: 'Transactions',
+        title: context.l10n.transactionsTitle,
         showBackButton: false,
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            tooltip: 'Add transaction',
+            tooltip: context.l10n.transactionsAddTransaction,
             onPressed: () => context.pushNamed(RouteNames.addTransactionName),
           ),
         ],
       ),
       body: Column(
         children: [
+          // Search field
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.sm,
+            ),
+            child: AppSearchField(
+              hint: context.l10n.transactionsSearchHint,
+              onChanged: (query) => setState(() => _searchQuery = query),
+            ),
+          ),
+
           // Filter chips row
           _FilterChipsRow(
             selectedType: _selectedType,
@@ -65,51 +83,122 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 message: error.toString(),
               ),
               data: (transactions) {
-                // Apply local type filter.
-                final filtered = _selectedType == null
-                    ? transactions
-                    : transactions
-                        .where((t) => t.type == _selectedType)
-                        .toList();
-
-                if (filtered.isEmpty) {
-                  return AppEmptyState(
-                    title: 'No transactions yet',
-                    subtitle: 'Tap + to add your first transaction',
-                    actionText: 'Add Transaction',
-                    onAction: () =>
-                        context.pushNamed(RouteNames.addTransactionName),
-                  );
-                }
-
                 // Build a category lookup map.
                 final categories = categoriesAsync.valueOrNull ?? [];
                 final categoryMap = {
                   for (final cat in categories) cat.id: cat,
                 };
 
+                // Apply local type filter.
+                var filtered = _selectedType == null
+                    ? transactions
+                    : transactions
+                        .where((t) => t.type == _selectedType)
+                        .toList();
+
+                // Apply search filter.
+                if (_searchQuery.isNotEmpty) {
+                  final query = _searchQuery.toLowerCase();
+                  filtered = filtered.where((t) {
+                    final descriptionMatch = t.description
+                            ?.toLowerCase()
+                            .contains(query) ??
+                        false;
+                    final category = categoryMap[t.categoryId];
+                    final categoryMatch =
+                        category?.name.toLowerCase().contains(query) ?? false;
+                    return descriptionMatch || categoryMatch;
+                  }).toList();
+                }
+
+                if (filtered.isEmpty) {
+                  return AppEmptyState(
+                    title: context.l10n.transactionsNoTransactions,
+                    subtitle:
+                        '${context.l10n.transactionsNoTransactionsSubtitle}\n${context.l10n.transactionsEmptyQuickTip}',
+                    actionText: context.l10n.transactionsAddTransaction,
+                    onAction: () =>
+                        context.pushNamed(RouteNames.addTransactionName),
+                  );
+                }
+
+                // Group transactions by date.
+                final groups = _groupTransactionsByDate(context, filtered);
+
                 return RefreshIndicator(
                   onRefresh: () async {
                     ref.invalidate(transactionsStreamProvider);
                   },
-                  child: ListView.separated(
-                    padding: AppSpacing.paddingLg,
-                    itemCount: filtered.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
-                    itemBuilder: (context, index) {
-                      final transaction = filtered[index];
-                      final category = categoryMap[transaction.categoryId];
-
-                      return _TransactionTile(
-                        transaction: transaction,
-                        category: category,
-                        isDark: isDark,
-                        onTap: () => context.pushNamed(
-                          RouteNames.transactionDetailName,
-                          extra: transaction.id,
+                  child: CustomScrollView(
+                    slivers: [
+                      for (final group in groups) ...[
+                        // Sticky section header
+                        SliverPersistentHeader(
+                          pinned: true,
+                          delegate: _StickyHeaderDelegate(
+                            label: group.label,
+                          ),
                         ),
-                      );
-                    },
+                        // Transaction items for this group
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final transaction = group.transactions[index];
+                              final category =
+                                  categoryMap[transaction.categoryId];
+
+                              return StaggeredListItem(
+                                index: index,
+                                child: Dismissible(
+                                key: ValueKey(transaction.id),
+                                direction: DismissDirection.endToStart,
+                                background: Container(
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.only(
+                                    right: AppSpacing.lg,
+                                  ),
+                                  color: Colors.red,
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                confirmDismiss: (_) =>
+                                    _confirmDelete(context),
+                                onDismissed: (_) =>
+                                    _deleteTransaction(transaction.id),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppSpacing.lg,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      _TransactionTile(
+                                        transaction: transaction,
+                                        category: category,
+                                        isDark: isDark,
+                                        onTap: () => context.pushNamed(
+                                          RouteNames.transactionDetailName,
+                                          extra: transaction.id,
+                                        ),
+                                      ),
+                                      if (index < group.transactions.length - 1)
+                                        const Divider(height: 1),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              );
+                            },
+                            childCount: group.transactions.length,
+                          ),
+                        ),
+                      ],
+                      // Bottom padding
+                      const SliverPadding(
+                        padding: EdgeInsets.only(bottom: AppSpacing.lg),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -118,6 +207,147 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
         ],
       ),
     );
+  }
+
+  /// Groups transactions into Today, Yesterday, This Week, and Earlier.
+  List<_TransactionGroup> _groupTransactionsByDate(
+    BuildContext context,
+    List<Transaction> transactions,
+  ) {
+    final today = <Transaction>[];
+    final yesterday = <Transaction>[];
+    final thisWeek = <Transaction>[];
+    final earlier = <Transaction>[];
+
+    final now = DateTime.now();
+    final sevenDaysAgo = now.subtract(const Duration(days: 7));
+
+    for (final t in transactions) {
+      if (t.date.isToday) {
+        today.add(t);
+      } else if (t.date.isYesterday) {
+        yesterday.add(t);
+      } else if (t.date.toLocal().isAfter(sevenDaysAgo)) {
+        thisWeek.add(t);
+      } else {
+        earlier.add(t);
+      }
+    }
+
+    return [
+      if (today.isNotEmpty)
+        _TransactionGroup(
+          label: context.l10n.transactionsToday,
+          transactions: today,
+        ),
+      if (yesterday.isNotEmpty)
+        _TransactionGroup(
+          label: context.l10n.transactionsYesterday,
+          transactions: yesterday,
+        ),
+      if (thisWeek.isNotEmpty)
+        _TransactionGroup(
+          label: context.l10n.transactionsThisWeek,
+          transactions: thisWeek,
+        ),
+      if (earlier.isNotEmpty)
+        _TransactionGroup(
+          label: context.l10n.transactionsEarlier,
+          transactions: earlier,
+        ),
+    ];
+  }
+
+  /// Shows a confirmation dialog before deleting a transaction.
+  Future<bool> _confirmDelete(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.transactionsDeleteConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(MaterialLocalizations.of(ctx).okButtonLabel),
+          ),
+        ],
+      ),
+    );
+    return confirmed ?? false;
+  }
+
+  /// Deletes a transaction and shows a snackbar.
+  Future<void> _deleteTransaction(String id) async {
+    final deleteUseCase = ref.read(deleteTransactionUseCaseProvider);
+    final result = await deleteUseCase(id);
+
+    if (!mounted) return;
+
+    result.fold(
+      (failure) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(failure.message)),
+        );
+      },
+      (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.transactionsDeleted)),
+        );
+      },
+    );
+  }
+}
+
+/// A group of transactions under a date-based section header.
+class _TransactionGroup {
+  const _TransactionGroup({
+    required this.label,
+    required this.transactions,
+  });
+
+  final String label;
+  final List<Transaction> transactions;
+}
+
+/// Delegate for sticky section headers in the [CustomScrollView].
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  const _StickyHeaderDelegate({required this.label});
+
+  final String label;
+
+  @override
+  double get minExtent => 40;
+
+  @override
+  double get maxExtent => 40;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final theme = Theme.of(context);
+    return Container(
+      height: 40,
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      color: theme.scaffoldBackgroundColor,
+      child: Text(
+        label,
+        style: theme.textTheme.titleSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _StickyHeaderDelegate oldDelegate) {
+    return oldDelegate.label != label;
   }
 }
 
@@ -141,19 +371,19 @@ class _FilterChipsRow extends StatelessWidget {
       child: Row(
         children: [
           AppChip(
-            label: 'All',
+            label: context.l10n.transactionsAll,
             isSelected: selectedType == null,
             onTap: () => onTypeSelected(null),
           ),
           AppSpacing.horizontalSm,
           AppChip(
-            label: 'Income',
+            label: context.l10n.transactionsIncome,
             isSelected: selectedType == TransactionType.income,
             onTap: () => onTypeSelected(TransactionType.income),
           ),
           AppSpacing.horizontalSm,
           AppChip(
-            label: 'Expense',
+            label: context.l10n.transactionsExpense,
             isSelected: selectedType == TransactionType.expense,
             onTap: () => onTypeSelected(TransactionType.expense),
           ),
@@ -211,7 +441,7 @@ class _TransactionTile extends StatelessWidget {
         ),
       ),
       title: Text(
-        category?.name ?? 'Uncategorized',
+        category?.name ?? context.l10n.transactionsUncategorized,
         style: theme.textTheme.bodyLarge,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,

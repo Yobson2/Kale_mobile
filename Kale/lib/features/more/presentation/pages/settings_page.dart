@@ -35,11 +35,11 @@ class SettingsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── Currency section ──
-              _SectionHeader(title: 'Currency'),
+              _SectionHeader(title: l10n.settingsCurrency),
               AppSpacing.verticalMd,
               AppListTile(
                 leading: const Icon(Icons.attach_money),
-                title: 'Currency',
+                title: l10n.settingsCurrency,
                 subtitle: currency != null
                     ? '${currency.flag} ${currency.code} — ${currency.name}'
                     : currencyCode,
@@ -71,14 +71,14 @@ class SettingsPage extends ConsumerWidget {
               AppSpacing.verticalXl,
 
               // ── Notifications section ──
-              _SectionHeader(title: 'Notifications'),
+              _SectionHeader(title: l10n.settingsNotifications),
               AppSpacing.verticalMd,
               AppListTile(
                 leading: const Icon(Icons.notifications_outlined),
-                title: 'Push Notifications',
+                title: l10n.settingsPushNotifications,
                 subtitle: localStorage.isNotificationsEnabled
-                    ? 'Enabled'
-                    : 'Disabled',
+                    ? l10n.settingsEnabled
+                    : l10n.settingsDisabled,
                 trailing: Switch.adaptive(
                   value: localStorage.isNotificationsEnabled,
                   onChanged: (value) {
@@ -91,10 +91,10 @@ class SettingsPage extends ConsumerWidget {
               AppSpacing.verticalSm,
               AppListTile(
                 leading: const Icon(Icons.alarm_outlined),
-                title: 'Daily Reminder',
+                title: l10n.settingsDailyReminder,
                 subtitle: localStorage.isDailyReminderEnabled
-                    ? 'Remind me to log transactions'
-                    : 'Disabled',
+                    ? l10n.settingsDailyReminderSubtitle
+                    : l10n.settingsDisabled,
                 trailing: Switch.adaptive(
                   value: localStorage.isDailyReminderEnabled,
                   onChanged: (value) {
@@ -121,15 +121,15 @@ class SettingsPage extends ConsumerWidget {
               AppSpacing.verticalXl,
 
               // ── Data section ──
-              _SectionHeader(title: 'Data'),
+              _SectionHeader(title: l10n.settingsData),
               AppSpacing.verticalMd,
               AppListTile(
                 leading: Icon(
                   Icons.delete_outline,
                   color: context.colorScheme.error,
                 ),
-                title: 'Clear Local Data',
-                subtitle: 'Remove all cached data from this device',
+                title: l10n.settingsClearLocalData,
+                subtitle: l10n.settingsClearLocalDataSubtitle,
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => _showClearDataDialog(context, ref),
               ),
@@ -194,7 +194,7 @@ class SettingsPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: Text(
-                'Select Currency',
+                context.l10n.settingsSelectCurrency,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
@@ -305,19 +305,18 @@ class SettingsPage extends ConsumerWidget {
   }
 
   void _showClearDataDialog(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear Local Data'),
-        content: const Text(
-          'This will remove all cached data from this device. '
-          'Your account and synced data on the server will not be affected.\n\n'
-          'Are you sure?',
+        title: Text(l10n.settingsClearLocalData),
+        content: Text(
+          l10n.settingsClearLocalDataConfirm,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () async {
@@ -326,14 +325,14 @@ class SettingsPage extends ConsumerWidget {
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Local data cleared')),
+                  SnackBar(content: Text(l10n.settingsClearLocalDataSuccess)),
                 );
               }
             },
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Clear'),
+            child: Text(l10n.commonClear),
           ),
         ],
       ),
@@ -399,12 +398,12 @@ class _BudgetAlertThresholdTileState extends State<_BudgetAlertThresholdTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Budget Alert Threshold',
+                      context.l10n.settingsBudgetAlertThreshold,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
-                      'Alert when spending reaches $percentage% of budget',
+                      context.l10n.settingsBudgetAlertThresholdSubtitle(percentage),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],

@@ -43,17 +43,21 @@ class SavingsOverviewCard extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Savings Goals',
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      context.l10n.dashboardSavingsGoals,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   TextButton(
                     onPressed: () =>
                         context.goNamed(RouteNames.savingsGoalsName),
                     child: Text(
-                      'View all',
+                      context.l10n.dashboardViewAll,
                       style: context.textTheme.bodySmall?.copyWith(
                         color: context.colorScheme.primary,
                         fontWeight: FontWeight.w600,

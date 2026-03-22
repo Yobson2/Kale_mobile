@@ -1,5 +1,6 @@
 import 'package:kale/core/providers/notification_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
+import 'package:kale/core/services/achievement_service.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
 import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
 import 'package:kale/features/savings/presentation/providers/savings_state.dart';
@@ -133,6 +134,13 @@ class SavingsNotifier extends _$SavingsNotifier {
             await ref.read(savingsGoalsStreamProvider.future);
         final goal = goals.where((g) => g.id == goalId).firstOrNull;
         if (goal == null) return;
+
+        // Unlock achievement if goal is fully funded.
+        if (goal.isFullyFunded) {
+          final achievements =
+              AchievementService(ref.read(localStorageProvider));
+          await achievements.unlock(Achievement.firstGoalCompleted);
+        }
 
         final percent = (goal.progress * 100).round();
         // Only notify at meaningful milestones.

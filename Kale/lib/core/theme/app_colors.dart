@@ -54,8 +54,8 @@ class AppColors {
   /// Secondary text color.
   static const Color textSecondaryLight = Color(0xFF64748B);
 
-  /// Disabled text / hint color.
-  static const Color textDisabledLight = Color(0xFF94A3B8);
+  /// Disabled text / hint color (WCAG AA compliant on light backgrounds).
+  static const Color textDisabledLight = Color(0xFF6B7280);
 
   /// Border color.
   static const Color borderLight = Color(0xFFE2E8F0);

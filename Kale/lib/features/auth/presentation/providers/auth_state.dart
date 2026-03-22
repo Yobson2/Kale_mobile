@@ -18,6 +18,9 @@ sealed class AuthState with _$AuthState {
   /// User is not authenticated.
   const factory AuthState.unauthenticated() = AuthUnauthenticated;
 
+  /// User is exploring the app as a guest (no account).
+  const factory AuthState.guest() = AuthGuest;
+
   /// An error occurred during an auth operation.
   const factory AuthState.error(String message) = AuthError;
 }

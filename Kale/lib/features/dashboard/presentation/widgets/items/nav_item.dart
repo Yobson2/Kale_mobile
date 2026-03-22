@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kale/core/theme/app_colors.dart';
 
 class NavItem extends StatelessWidget {
@@ -24,10 +25,15 @@ class NavItem extends StatelessWidget {
     final inactiveColor =
         isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+    return Semantics(
+      label: '$label tab',
+      selected: isActive,
+      button: true,
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.selectionClick();
+          onTap();
+        },
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -43,6 +49,8 @@ class NavItem extends StatelessWidget {
                 color: isActive ? activeColor : inactiveColor,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

@@ -18,6 +18,9 @@ enum SplashResult {
 
   /// Not authenticated — go to login.
   unauthenticated,
+
+  /// Returning guest user — go to home without auth.
+  guest,
 }
 
 /// Runs initialization checks: first launch, cached auth.
@@ -52,6 +55,11 @@ Future<SplashResult> _resolve(Ref ref) async {
     // Check first launch
     if (localStorage.isFirstLaunch) {
       return SplashResult.onboarding;
+    }
+
+    // Check if returning guest user.
+    if (localStorage.isGuestMode) {
+      return SplashResult.guest;
     }
 
     // Check for a cached user session directly (read-only).

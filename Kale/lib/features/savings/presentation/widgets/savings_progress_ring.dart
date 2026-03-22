@@ -40,24 +40,31 @@ class SavingsProgressRing extends StatelessWidget {
         backgroundColor ?? theme.colorScheme.surfaceContainerHighest;
     final fgColor = progressColor ?? theme.colorScheme.primary;
 
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          CustomPaint(
-            size: Size(size, size),
-            painter: _RingPainter(
-              progress: progress.clamp(0.0, 1.0),
-              strokeWidth: strokeWidth,
-              backgroundColor: bgColor,
-              progressColor: fgColor,
-            ),
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeOutCubic,
+      builder: (context, animatedProgress, _) {
+        return SizedBox(
+          width: size,
+          height: size,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              CustomPaint(
+                size: Size(size, size),
+                painter: _RingPainter(
+                  progress: animatedProgress,
+                  strokeWidth: strokeWidth,
+                  backgroundColor: bgColor,
+                  progressColor: fgColor,
+                ),
+              ),
+              if (child != null) child!,
+            ],
           ),
-          if (child != null) child!,
-        ],
-      ),
+        );
+      },
     );
   }
 }

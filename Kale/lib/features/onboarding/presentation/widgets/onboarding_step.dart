@@ -8,6 +8,7 @@ class OnboardingStep extends StatelessWidget {
     required this.stepIndex,
     required this.title,
     required this.description,
+    this.child,
     super.key,
   });
 
@@ -19,6 +20,9 @@ class OnboardingStep extends StatelessWidget {
 
   /// Step description.
   final String description;
+
+  /// Optional interactive content rendered below the description.
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +54,10 @@ class OnboardingStep extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          if (child != null) ...[
+            AppSpacing.verticalLg,
+            child!,
+          ],
           const Spacer(flex: 2),
         ],
       ),

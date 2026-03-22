@@ -1,6 +1,8 @@
 import 'package:kale/core/providers/notification_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
+import 'package:kale/core/services/achievement_service.dart';
 import 'package:kale/core/services/budget_alert_checker.dart';
+import 'package:kale/core/services/streak_service.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 import 'package:kale/features/transactions/domain/usecases/create_transaction_usecase.dart';
@@ -57,9 +59,12 @@ class TransactionsNotifier extends _$TransactionsNotifier {
         ),
       );
 
-      // Fire-and-forget budget alert check for expense transactions.
-      if (state is TransactionsSuccess && type == TransactionType.expense) {
-        _checkBudgetAlert(categoryId);
+      // Fire-and-forget post-transaction checks.
+      if (state is TransactionsSuccess) {
+        _checkAchievements();
+        if (type == TransactionType.expense) {
+          _checkBudgetAlert(categoryId);
+        }
       }
     } catch (e) {
       state = TransactionsState.error(e.toString());
@@ -138,6 +143,41 @@ class TransactionsNotifier extends _$TransactionsNotifier {
     } catch (e) {
       state = TransactionsState.error(e.toString());
     }
+  }
+
+  /// Records streak and checks transaction-related achievements.
+  void _checkAchievements() {
+    Future(() async {
+      try {
+        final localStorage = ref.read(localStorageProvider);
+        final achievements = AchievementService(localStorage);
+        final streak = StreakService(localStorage);
+
+        // Record the daily streak.
+        await streak.recordTransaction();
+
+        // First transaction badge.
+        await achievements.unlock(Achievement.firstTransaction);
+
+        // Streak badges.
+        final currentStreak = streak.currentStreak;
+        if (currentStreak >= 7) {
+          await achievements.unlock(Achievement.streak7);
+        }
+        if (currentStreak >= 30) {
+          await achievements.unlock(Achievement.streak30);
+        }
+
+        // 100 transactions badge.
+        final transactions =
+            await ref.read(transactionsStreamProvider.future);
+        if (transactions.length >= 100) {
+          await achievements.unlock(Achievement.transactions100);
+        }
+      } catch (_) {
+        // Best-effort — silently ignore.
+      }
+    });
   }
 
   /// Checks if the transaction's category has exceeded the budget alert

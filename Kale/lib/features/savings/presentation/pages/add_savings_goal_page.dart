@@ -59,7 +59,7 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
     final isLoading = ref.watch(savingsNotifierProvider) is SavingsLoading;
 
     return AppScaffold(
-      appBar: const AppAppBar(title: 'New Savings Goal'),
+      appBar: AppAppBar(title: context.l10n.savingsNewGoal),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: AppSpacing.paddingLg,
@@ -73,11 +73,11 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
                 // Goal name
                 AppTextField(
                   controller: _nameController,
-                  label: 'Goal Name',
-                  hint: 'e.g. Emergency Fund, New Laptop',
+                  label: context.l10n.savingsGoalName,
+                  hint: context.l10n.savingsGoalNameHint,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a goal name';
+                      return context.l10n.savingsGoalNameRequired;
                     }
                     return null;
                   },
@@ -88,7 +88,7 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
                 // Target amount
                 AppTextField(
                   controller: _amountController,
-                  label: 'Target Amount ($currencyCode)',
+                  label: context.l10n.savingsTargetAmount(currencyCode),
                   hint: '0.00',
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
@@ -99,11 +99,11 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
                   ],
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a target amount';
+                      return context.l10n.savingsTargetAmountRequired;
                     }
                     final amount = double.tryParse(value);
                     if (amount == null || amount <= 0) {
-                      return 'Please enter a valid amount';
+                      return context.l10n.savingsTargetAmountInvalid;
                     }
                     return null;
                   },
@@ -114,8 +114,8 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
                 // Description (optional)
                 AppTextField(
                   controller: _descriptionController,
-                  label: 'Description (optional)',
-                  hint: 'What are you saving for?',
+                  label: context.l10n.savingsDescriptionOptional,
+                  hint: context.l10n.savingsDescriptionHint,
                   maxLines: 2,
                 ),
 
@@ -131,7 +131,7 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
 
                 // Create button
                 AppPrimaryButton(
-                  text: 'Create Goal',
+                  text: context.l10n.savingsCreateGoal,
                   isLoading: isLoading,
                   onPressed: isLoading ? null : _onSubmit,
                 ),
@@ -206,7 +206,7 @@ class _DeadlinePicker extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Deadline (optional)',
+                    context.l10n.savingsDeadlineOptional,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -214,7 +214,7 @@ class _DeadlinePicker extends StatelessWidget {
                   Text(
                     deadline != null
                         ? '${deadline!.day}/${deadline!.month}/${deadline!.year}'
-                        : 'No deadline set',
+                        : context.l10n.savingsNoDeadline,
                     style: theme.textTheme.bodyLarge,
                   ),
                 ],

@@ -11,7 +11,7 @@ class OnboardingNotifier extends _$OnboardingNotifier {
 
   /// Advances to the next page.
   void nextPage() {
-    if (state < 2) state = state + 1;
+    if (state < 3) state = state + 1;
   }
 
   /// Goes to the previous page.

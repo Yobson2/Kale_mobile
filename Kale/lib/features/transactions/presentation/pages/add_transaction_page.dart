@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
@@ -70,13 +72,15 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
       _loadExistingTransaction();
     }
 
+    final l10n = context.l10n;
+
     // Listen for success/error states.
     ref.listen<TransactionsState>(transactionsNotifierProvider, (_, next) {
       switch (next) {
         case TransactionsSuccess(:final message):
           showAppSnackBar(
             context,
-            message: message ?? 'Saved',
+            message: message ?? l10n.transactionsSaved,
             variant: SnackBarVariant.success,
           );
           context.pop();
@@ -95,7 +99,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
 
     return AppScaffold(
       appBar: AppAppBar(
-        title: _isEditing ? 'Edit Transaction' : 'Add Transaction',
+        title: _isEditing
+            ? l10n.transactionsEditTransaction
+            : l10n.transactionsAddTransaction,
       ),
       body: Form(
         key: _formKey,
@@ -118,6 +124,8 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
             _AmountInput(
               controller: _amountController,
               theme: theme,
+              currencyCode: ref.watch(userCurrencyCodeProvider),
+              l10n: l10n,
             ),
             AppSpacing.verticalXl,
 
@@ -167,8 +175,8 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
             // Mobile money provider dropdown
             if (_selectedPaymentMethod == PaymentMethod.mobileMoney) ...[
               AppDropdown<MobileMoneyProvider>(
-                label: 'Mobile Money Provider',
-                hint: 'Select provider',
+                label: l10n.transactionsMobileMoneyProvider,
+                hint: l10n.transactionsSelectProvider,
                 value: _selectedMomoProvider,
                 items: MobileMoneyProvider.values
                     .map(
@@ -183,7 +191,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
                 validator: (value) {
                   if (_selectedPaymentMethod == PaymentMethod.mobileMoney &&
                       value == null) {
-                    return 'Please select a provider';
+                    return l10n.transactionsSelectProviderRequired;
                   }
                   return null;
                 },
@@ -194,8 +202,8 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
             // Description field
             AppTextField(
               controller: _descriptionController,
-              label: 'Description (optional)',
-              hint: 'e.g. Lunch at market, Uber to work',
+              label: l10n.transactionsDescription,
+              hint: l10n.transactionsDescriptionHint,
               maxLines: 2,
               textInputAction: TextInputAction.done,
             ),
@@ -203,7 +211,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
 
             // Save button
             AppPrimaryButton(
-              text: _isEditing ? 'Update Transaction' : 'Save Transaction',
+              text: _isEditing
+                  ? l10n.transactionsUpdateTransaction
+                  : l10n.transactionsSaveTransaction,
               isLoading: isLoading,
               onPressed: isLoading ? null : _onSave,
             ),
@@ -253,7 +263,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     if (amount == null || amount <= 0) {
       showAppSnackBar(
         context,
-        message: 'Please enter a valid amount',
+        message: context.l10n.transactionsValidAmountRequired,
         variant: SnackBarVariant.error,
       );
       return;
@@ -262,7 +272,7 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     if (_selectedCategoryId == null) {
       showAppSnackBar(
         context,
-        message: 'Please select a category',
+        message: context.l10n.transactionsCategoryRequired,
         variant: SnackBarVariant.error,
       );
       return;
@@ -324,7 +334,7 @@ class _TypeToggle extends StatelessWidget {
       children: [
         Expanded(
           child: _TypeChip(
-            label: 'Expense',
+            label: context.l10n.transactionsExpense,
             icon: Icons.arrow_downward,
             isSelected: selectedType == TransactionType.expense,
             selectedColor:
@@ -335,7 +345,7 @@ class _TypeToggle extends StatelessWidget {
         AppSpacing.horizontalMd,
         Expanded(
           child: _TypeChip(
-            label: 'Income',
+            label: context.l10n.transactionsIncome,
             icon: Icons.arrow_upward,
             isSelected: selectedType == TransactionType.income,
             selectedColor:
@@ -410,17 +420,21 @@ class _AmountInput extends StatelessWidget {
   const _AmountInput({
     required this.controller,
     required this.theme,
+    required this.currencyCode,
+    required this.l10n,
   });
 
   final TextEditingController controller;
   final ThemeData theme;
+  final String currencyCode;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-          'Amount',
+          l10n.transactionsAmount,
           style: theme.textTheme.labelLarge,
         ),
         AppSpacing.verticalSm,
@@ -435,11 +449,11 @@ class _AmountInput extends StatelessWidget {
             FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
           ],
           decoration: InputDecoration(
-            hintText: '0',
+            hintText: l10n.transactionsAmountHint,
             hintStyle: theme.textTheme.displaySmall?.copyWith(
               color: theme.colorScheme.outline,
             ),
-            prefixText: 'XOF ',
+            prefixText: '$currencyCode ',
             prefixStyle: theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.outline,
             ),
@@ -447,11 +461,11 @@ class _AmountInput extends StatelessWidget {
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Enter an amount';
+              return l10n.transactionsAmountRequired;
             }
             final amount = double.tryParse(value.trim());
             if (amount == null || amount <= 0) {
-              return 'Enter a valid amount';
+              return l10n.transactionsAmountInvalid;
             }
             return null;
           },
@@ -479,10 +493,10 @@ class _CategoryPicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Category', style: theme.textTheme.labelLarge),
+        Text(context.l10n.transactionsCategory, style: theme.textTheme.labelLarge),
         AppSpacing.verticalSm,
         if (categories.isEmpty)
-          const Text('No categories available')
+          Text(context.l10n.transactionsNoCategoriesAvailable)
         else
           GridView.builder(
             shrinkWrap: true,
@@ -571,7 +585,7 @@ class _DatePickerField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Date', style: theme.textTheme.labelLarge),
+        Text(context.l10n.transactionsDate, style: theme.textTheme.labelLarge),
         AppSpacing.verticalSm,
         InkWell(
           onTap: () => _showPicker(context),
@@ -613,12 +627,15 @@ class _PaymentMethodSelector extends StatelessWidget {
   final PaymentMethod selectedMethod;
   final ValueChanged<PaymentMethod> onMethodSelected;
 
-  static const _labels = {
-    PaymentMethod.cash: 'Cash',
-    PaymentMethod.mobileMoney: 'Mobile Money',
-    PaymentMethod.bank: 'Bank',
-    PaymentMethod.card: 'Card',
-  };
+  static Map<PaymentMethod, String> _getLabels(BuildContext context) {
+    final l10n = context.l10n;
+    return {
+      PaymentMethod.cash: l10n.transactionsPaymentCash,
+      PaymentMethod.mobileMoney: l10n.transactionsPaymentMobileMoney,
+      PaymentMethod.bank: l10n.transactionsPaymentBank,
+      PaymentMethod.card: l10n.transactionsPaymentCard,
+    };
+  }
 
   static const _icons = {
     PaymentMethod.cash: Icons.money,
@@ -630,17 +647,21 @@ class _PaymentMethodSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final labels = _getLabels(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Payment Method', style: theme.textTheme.labelLarge),
+        Text(
+          context.l10n.transactionsPaymentMethod,
+          style: theme.textTheme.labelLarge,
+        ),
         AppSpacing.verticalSm,
         Wrap(
           spacing: AppSpacing.sm,
           runSpacing: AppSpacing.sm,
           children: PaymentMethod.values.map((method) {
             return AppChip(
-              label: _labels[method] ?? method.name,
+              label: labels[method] ?? method.name,
               avatar: Icon(_icons[method], size: 16),
               isSelected: selectedMethod == method,
               onTap: () => onMethodSelected(method),

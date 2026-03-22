@@ -52,16 +52,20 @@ class BudgetHealthCard extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Budget Health',
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      context.l10n.dashboardBudgetHealth,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   TextButton(
                     onPressed: () => context.go('/budget'),
                     child: Text(
-                      'View budget',
+                      context.l10n.dashboardViewBudget,
                       style: context.textTheme.bodySmall?.copyWith(
                         color: context.colorScheme.primary,
                         fontWeight: FontWeight.w600,
@@ -102,10 +106,10 @@ class BudgetHealthCard extends ConsumerWidget {
                       children: [
                         Text(
                           percent < 70
-                              ? 'On track'
+                              ? context.l10n.dashboardOnTrack
                               : percent < 90
-                                  ? 'Getting close'
-                                  : 'Over budget',
+                                  ? context.l10n.dashboardGettingClose
+                                  : context.l10n.dashboardOverBudget,
                           style: context.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: color,
@@ -116,10 +120,12 @@ class BudgetHealthCard extends ConsumerWidget {
                           '${CurrencyFormatter.format(totalSpent, compact: true)}'
                           ' of '
                           '${CurrencyFormatter.format(totalAllocated, compact: true)}'
-                          ' spent',
+                          '${context.l10n.dashboardSpent}',
                           style: context.textTheme.bodySmall?.copyWith(
                             color: context.colorScheme.onSurfaceVariant,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),

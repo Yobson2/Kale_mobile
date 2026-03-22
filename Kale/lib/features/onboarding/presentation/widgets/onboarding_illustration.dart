@@ -58,6 +58,7 @@ class OnboardingIllustration extends StatelessWidget {
         0 => Icons.account_balance_wallet_rounded,
         1 => Icons.bar_chart_rounded,
         2 => Icons.flag_rounded,
+        3 => Icons.tune_rounded,
         _ => Icons.account_balance_wallet_rounded,
       };
 
@@ -150,6 +151,36 @@ class OnboardingIllustration extends StatelessWidget {
               child: _Dot(
                 color: primary.withValues(alpha: 0.3),
                 size: 10,
+              ),
+            ),
+          ],
+        3 => [
+            Positioned(
+              top: 20,
+              left: 30,
+              child: _FloatingBubble(
+                icon: Icons.language_rounded,
+                iconSize: 22,
+                color: primary,
+                isDark: isDark,
+              ),
+            ),
+            Positioned(
+              bottom: 28,
+              right: 32,
+              child: _FloatingBubble(
+                icon: Icons.attach_money_rounded,
+                iconSize: 20,
+                color: primary,
+                isDark: isDark,
+              ),
+            ),
+            Positioned(
+              top: 50,
+              right: 40,
+              child: _Dot(
+                color: primary.withValues(alpha: 0.25),
+                size: 9,
               ),
             ),
           ],

@@ -94,6 +94,12 @@ GoRouter appRouter(Ref ref) {
         return RouteNames.dashboard;
       }
 
+      // Guest users can access core features (dashboard, transactions,
+      // budget) but redirect away from auth pages.
+      if (auth is AuthGuest && isPublicRoute) {
+        return RouteNames.dashboard;
+      }
+
       // Redirect unauthenticated users to login for protected routes.
       if (auth is AuthUnauthenticated && !isPublicRoute) {
         return RouteNames.login;

@@ -190,4 +190,9 @@ class AuthNotifier extends _$AuthNotifier {
       AuthState.authenticated,
     );
   }
+
+  /// Enters guest mode for "try before register" flow.
+  void enterGuestMode() {
+    state = const AuthState.guest();
+  }
 }

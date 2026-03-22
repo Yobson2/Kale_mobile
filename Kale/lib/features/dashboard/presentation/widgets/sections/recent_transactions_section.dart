@@ -42,6 +42,7 @@ class RecentTransactionsSection extends ConsumerWidget {
     List<Transaction> transactions,
     Map<String, String> categoryNames,
   ) {
+    final limitedTransactions = transactions.take(5).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -49,7 +50,7 @@ class RecentTransactionsSection extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Recent Transactions',
+              context.l10n.dashboardRecentTransactions,
               style: context.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -59,7 +60,7 @@ class RecentTransactionsSection extends ConsumerWidget {
                 context.go('/transactions');
               },
               child: Text(
-                'See all',
+                context.l10n.commonSeeAll,
                 style: context.textTheme.bodySmall?.copyWith(
                   color: context.colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -80,7 +81,7 @@ class RecentTransactionsSection extends ConsumerWidget {
           child: ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: transactions.length,
+            itemCount: limitedTransactions.length,
             separatorBuilder: (_, __) => Divider(
               height: 1,
               indent: AppSpacing.lg,
@@ -89,7 +90,7 @@ class RecentTransactionsSection extends ConsumerWidget {
             ),
             itemBuilder: (context, index) {
               return TransactionTile(
-                transaction: transactions[index],
+                transaction: limitedTransactions[index],
                 categoryNames: categoryNames,
               );
             },
@@ -111,32 +112,85 @@ class RecentTransactionsSection extends ConsumerWidget {
         ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.receipt_long_outlined,
-            size: 48,
-            color: context.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+          Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.rocket_launch_outlined,
+                  size: 40,
+                  color: context.colorScheme.primary,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  context.l10n.dashboardEmptyTitle,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
           AppSpacing.verticalMd,
           Text(
-            'No transactions yet',
-            style: context.textTheme.titleSmall?.copyWith(
+            context.l10n.dashboardEmptySubtitle,
+            style: context.textTheme.bodySmall?.copyWith(
               color: context.colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
             ),
           ),
-          AppSpacing.verticalXs,
-          Text(
-            'Tap the + button to add your first transaction',
-            textAlign: TextAlign.center,
-            style: context.textTheme.bodySmall?.copyWith(
-              color: context.colorScheme.onSurfaceVariant.withValues(
-                alpha: 0.6,
-              ),
-            ),
+          AppSpacing.verticalLg,
+          _buildChecklistItem(
+            context,
+            Icons.receipt_long_outlined,
+            context.l10n.dashboardEmptyStep1,
+          ),
+          AppSpacing.verticalSm,
+          _buildChecklistItem(
+            context,
+            Icons.pie_chart_outline,
+            context.l10n.dashboardEmptyStep2,
+          ),
+          AppSpacing.verticalSm,
+          _buildChecklistItem(
+            context,
+            Icons.savings_outlined,
+            context.l10n.dashboardEmptyStep3,
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildChecklistItem(
+    BuildContext context,
+    IconData icon,
+    String text,
+  ) {
+    return Row(
+      children: [
+        Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: context.colorScheme.primaryContainer,
+          ),
+          child: Icon(
+            icon,
+            size: 14,
+            color: context.colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            text,
+            style: context.textTheme.bodyMedium,
+          ),
+        ),
+      ],
     );
   }
 }

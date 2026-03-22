@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/extensions/date_time_extensions.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
@@ -30,29 +31,29 @@ class SavingsGoalDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (goalId == null) {
-      return const AppScaffold(
-        appBar: AppAppBar(title: 'Goal Details'),
-        body: Center(child: Text('Goal not found')),
+      return AppScaffold(
+        appBar: AppAppBar(title: context.l10n.savingsGoalDetails),
+        body: Center(child: Text(context.l10n.savingsGoalNotFound)),
       );
     }
 
     final goalsAsync = ref.watch(savingsGoalsStreamProvider);
 
     return goalsAsync.when(
-      loading: () => const AppScaffold(
-        appBar: AppAppBar(title: 'Goal Details'),
-        body: AppShimmerList(),
+      loading: () => AppScaffold(
+        appBar: AppAppBar(title: context.l10n.savingsGoalDetails),
+        body: const AppShimmerList(),
       ),
       error: (error, _) => AppScaffold(
-        appBar: const AppAppBar(title: 'Goal Details'),
+        appBar: AppAppBar(title: context.l10n.savingsGoalDetails),
         body: AppErrorState(message: error.toString()),
       ),
       data: (goals) {
         final goal = goals.where((g) => g.id == goalId).firstOrNull;
         if (goal == null) {
-          return const AppScaffold(
-            appBar: AppAppBar(title: 'Goal Details'),
-            body: Center(child: Text('Goal not found')),
+          return AppScaffold(
+            appBar: AppAppBar(title: context.l10n.savingsGoalDetails),
+            body: Center(child: Text(context.l10n.savingsGoalNotFound)),
           );
         }
         return _GoalDetailContent(goal: goal);
@@ -95,9 +96,9 @@ class _GoalDetailContent extends ConsumerWidget {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'delete',
-                child: Text('Delete Goal'),
+                child: Text(context.l10n.savingsDeleteGoal),
               ),
             ],
           ),
@@ -108,7 +109,7 @@ class _GoalDetailContent extends ConsumerWidget {
               heroTag: 'savings_detail_fab',
               onPressed: () => _showContributeSheet(context, ref),
               icon: const Icon(Icons.add),
-              label: const Text('Add Money'),
+              label: Text(context.l10n.savingsAddMoney),
             )
           : null,
       body: SingleChildScrollView(
@@ -134,7 +135,7 @@ class _GoalDetailContent extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    'saved',
+                    context.l10n.savingsSavedLabel,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -150,7 +151,7 @@ class _GoalDetailContent extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _AmountColumn(
-                  label: 'Saved',
+                  label: context.l10n.savingsSaved,
                   amount: CurrencyFormatter.format(
                     goal.currentAmount,
                     currencyCode: goal.currencyCode,
@@ -158,7 +159,7 @@ class _GoalDetailContent extends ConsumerWidget {
                   color: Colors.green,
                 ),
                 _AmountColumn(
-                  label: 'Remaining',
+                  label: context.l10n.savingsRemaining,
                   amount: CurrencyFormatter.format(
                     goal.remaining,
                     currencyCode: goal.currencyCode,
@@ -166,7 +167,7 @@ class _GoalDetailContent extends ConsumerWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
                 _AmountColumn(
-                  label: 'Target',
+                  label: context.l10n.savingsTarget,
                   amount: CurrencyFormatter.format(
                     goal.targetAmount,
                     currencyCode: goal.currencyCode,
@@ -181,7 +182,7 @@ class _GoalDetailContent extends ConsumerWidget {
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.calendar_today_outlined),
-                  title: const Text('Deadline'),
+                  title: Text(context.l10n.savingsDeadline),
                   subtitle: Text(goal.deadline!.formatted),
                   trailing: Text(
                     '${goal.deadline!.difference(DateTime.now()).inDays}d left',
@@ -207,7 +208,7 @@ class _GoalDetailContent extends ConsumerWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Contribution History',
+                context.l10n.savingsContributionHistory,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -224,7 +225,7 @@ class _GoalDetailContent extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: AppSpacing.xl),
                     child: Text(
-                      'No contributions yet. Tap "Add Money" to start!',
+                      context.l10n.savingsNoContributions,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -271,7 +272,7 @@ class _GoalDetailContent extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Add Money to "${goal.name}"',
+              context.l10n.savingsAddMoneyTo(goal.name),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             AppSpacing.verticalLg,
@@ -285,7 +286,7 @@ class _GoalDetailContent extends ConsumerWidget {
                 ),
               ],
               decoration: InputDecoration(
-                labelText: 'Amount',
+                labelText: context.l10n.transactionsAmount,
                 prefixText: '${goal.currencyCode} ',
                 border: OutlineInputBorder(
                   borderRadius: AppRadius.borderRadiusMd,
@@ -297,7 +298,7 @@ class _GoalDetailContent extends ConsumerWidget {
             TextField(
               controller: noteController,
               decoration: InputDecoration(
-                labelText: 'Note (optional)',
+                labelText: context.l10n.savingsNoteOptional,
                 border: OutlineInputBorder(
                   borderRadius: AppRadius.borderRadiusMd,
                 ),
@@ -305,7 +306,7 @@ class _GoalDetailContent extends ConsumerWidget {
             ),
             AppSpacing.verticalLg,
             AppPrimaryButton(
-              text: 'Add Contribution',
+              text: context.l10n.savingsAddContribution,
               onPressed: () {
                 final amount = double.tryParse(amountController.text);
                 if (amount == null || amount <= 0) return;
@@ -328,15 +329,16 @@ class _GoalDetailContent extends ConsumerWidget {
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Goal'),
-        content: Text('Delete "${goal.name}"? This cannot be undone.'),
+        title: Text(l10n.savingsDeleteGoal),
+        content: Text(l10n.savingsDeleteGoalConfirm(goal.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () {
@@ -347,7 +349,7 @@ class _GoalDetailContent extends ConsumerWidget {
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Delete'),
+            child: Text(l10n.commonDelete),
           ),
         ],
       ),

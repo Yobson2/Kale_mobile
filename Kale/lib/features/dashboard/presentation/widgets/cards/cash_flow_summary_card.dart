@@ -56,7 +56,7 @@ class CashFlowSummaryCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Cash Flow',
+            context.l10n.dashboardCashFlow,
             style: context.textTheme.titleSmall?.copyWith(
               color: context.colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w500,
@@ -75,7 +75,7 @@ class CashFlowSummaryCard extends ConsumerWidget {
             children: [
               Expanded(
                 child: SummaryItem(
-                  label: 'Income',
+                  label: context.l10n.dashboardIncome,
                   amount: summary.totalIncome,
                   color: incomeColor,
                   icon: Icons.arrow_downward_rounded,
@@ -90,7 +90,7 @@ class CashFlowSummaryCard extends ConsumerWidget {
               ),
               Expanded(
                 child: SummaryItem(
-                  label: 'Expenses',
+                  label: context.l10n.dashboardExpenses,
                   amount: summary.totalExpenses,
                   color: expenseColor,
                   icon: Icons.arrow_upward_rounded,
@@ -130,7 +130,7 @@ class CashFlowSummaryCard extends ConsumerWidget {
           AppSpacing.horizontalSm,
           Expanded(
             child: Text(
-              'Could not load summary',
+              context.l10n.dashboardCouldNotLoad,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colorScheme.onErrorContainer,
               ),

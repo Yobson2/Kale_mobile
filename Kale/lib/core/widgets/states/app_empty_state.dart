@@ -11,10 +11,13 @@ class AppEmptyState extends StatelessWidget {
     this.subtitle,
     this.actionText,
     this.onAction,
+    this.secondaryActionText,
+    this.onSecondaryAction,
     this.iconSize = 64,
+    this.illustration,
   });
 
-  /// Large icon displayed at the top.
+  /// Large icon displayed at the top (hidden when [illustration] is provided).
   final IconData icon;
 
   /// Title text.
@@ -29,8 +32,18 @@ class AppEmptyState extends StatelessWidget {
   /// Callback for the action button.
   final VoidCallback? onAction;
 
+  /// Optional secondary action button text.
+  final String? secondaryActionText;
+
+  /// Callback for the secondary action button.
+  final VoidCallback? onSecondaryAction;
+
   /// Size of the icon.
   final double iconSize;
+
+  /// Optional illustration widget (Lottie, SVG, Image) displayed instead of
+  /// the icon.
+  final Widget? illustration;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +56,14 @@ class AppEmptyState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: iconSize,
-                color: theme.colorScheme.outline,
-              ),
+              if (illustration != null)
+                illustration!
+              else
+                Icon(
+                  icon,
+                  size: iconSize,
+                  color: theme.colorScheme.outline,
+                ),
               AppSpacing.verticalLg,
               Text(
                 title,
@@ -64,9 +80,17 @@ class AppEmptyState extends StatelessWidget {
               ],
               if (actionText != null && onAction != null) ...[
                 AppSpacing.verticalXl,
-                OutlinedButton(
+                FilledButton(
                   onPressed: onAction,
                   child: Text(actionText!),
+                ),
+              ],
+              if (secondaryActionText != null &&
+                  onSecondaryAction != null) ...[
+                AppSpacing.verticalSm,
+                OutlinedButton(
+                  onPressed: onSecondaryAction,
+                  child: Text(secondaryActionText!),
                 ),
               ],
             ],

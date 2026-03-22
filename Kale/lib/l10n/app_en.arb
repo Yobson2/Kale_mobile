@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
 
-  "appTitle": "Flutter Template",
+  "appTitle": "Kale",
 
   "commonOk": "OK",
   "commonCancel": "Cancel",
@@ -19,6 +19,9 @@
   "commonNoResults": "No results found",
   "commonSeeAll": "See all",
   "commonOr": "Or",
+  "commonClear": "Clear",
+  "commonContinue": "Continue",
+  "commonUser": "User",
 
   "errorGeneric": "Something went wrong. Please try again.",
   "errorNetwork": "No internet connection. Please check your network.",
@@ -60,6 +63,14 @@
   "authTermsOfService": "Terms of Service",
   "authTermsAnd": " and ",
   "authPrivacyPolicy": "Privacy Policy",
+  "authTryFirst": "Try Kale First",
+  "authTryFirstSubtitle": "Explore the app without an account",
+  "guestBannerMessage": "Create an account to sync your data",
+  "guestBannerAction": "Sign Up",
+  "authRegisterStep1Title": "Create Your Account",
+  "authRegisterStep1Subtitle": "Enter your email to get started",
+  "authRegisterStep2Subtitle": "Complete your profile to finish signing up",
+  "authRegisterContinueWithEmail": "Continue with Email",
 
   "validationRequired": "This field is required",
   "validationEmail": "Please enter a valid email address",
@@ -80,6 +91,11 @@
   "onboardingDesc3": "Create savings goals, track your progress, and watch your money grow. Your financial future starts here.",
   "onboardingGetStarted": "Get Started",
 
+  "navDashboard": "Dashboard",
+  "navTransactions": "Transactions",
+  "navBudget": "Budget",
+  "navMore": "More",
+
   "homeTitle": "Home",
   "homeGreeting": "Hello, {name}!",
   "@homeGreeting": {
@@ -89,11 +105,283 @@
       }
     }
   },
+  "homeGreetingMorning": "Good morning",
+  "homeGreetingAfternoon": "Good afternoon",
+  "homeGreetingEvening": "Good evening",
+
+  "dashboardCashFlow": "Cash Flow",
+  "dashboardIncome": "Income",
+  "dashboardExpenses": "Expenses",
+  "dashboardCouldNotLoad": "Could not load summary",
+  "dashboardBudgetHealth": "Budget Health",
+  "dashboardViewBudget": "View budget",
+  "dashboardOnTrack": "On track",
+  "dashboardGettingClose": "Getting close",
+  "dashboardOverBudget": "Over budget",
+  "dashboardSpent": " spent",
+  "dashboardSavingsGoals": "Savings Goals",
+  "dashboardViewAll": "View all",
+  "dashboardSavedOf": " saved of ",
+  "dashboardRecentTransactions": "Recent Transactions",
+  "dashboardNoTransactions": "No transactions yet",
+  "dashboardNoTransactionsSubtitle": "Tap the + button to add your first transaction",
+  "dashboardDaily": "Daily",
+  "dashboardWeekly": "Weekly",
+  "dashboardMonthly": "Monthly",
+
+  "transactionsTitle": "Transactions",
+  "transactionsAddTransaction": "Add Transaction",
+  "transactionsEditTransaction": "Edit Transaction",
+  "transactionsAll": "All",
+  "transactionsIncome": "Income",
+  "transactionsExpense": "Expense",
+  "transactionsNoTransactions": "No transactions yet",
+  "transactionsNoTransactionsSubtitle": "Tap + to add your first transaction",
+  "transactionsSaved": "Saved",
+  "transactionsAmount": "Amount",
+  "transactionsAmountHint": "0",
+  "transactionsAmountRequired": "Enter an amount",
+  "transactionsAmountInvalid": "Enter a valid amount",
+  "transactionsCategory": "Category",
+  "transactionsCategoryRequired": "Please select a category",
+  "transactionsNoCategoriesAvailable": "No categories available",
+  "transactionsDate": "Date",
+  "transactionsPaymentMethod": "Payment Method",
+  "transactionsPaymentCash": "Cash",
+  "transactionsPaymentMobileMoney": "Mobile Money",
+  "transactionsPaymentBank": "Bank",
+  "transactionsPaymentCard": "Card",
+  "transactionsMobileMoneyProvider": "Mobile Money Provider",
+  "transactionsSelectProvider": "Select provider",
+  "transactionsSelectProviderRequired": "Please select a provider",
+  "transactionsDescription": "Description (optional)",
+  "transactionsDescriptionHint": "e.g. Lunch at market, Uber to work",
+  "transactionsSaveTransaction": "Save Transaction",
+  "transactionsUpdateTransaction": "Update Transaction",
+  "transactionsUncategorized": "Uncategorized",
+  "transactionsValidAmountRequired": "Please enter a valid amount",
+  "transactionsSearchHint": "Search transactions...",
+  "transactionsToday": "Today",
+  "transactionsYesterday": "Yesterday",
+  "transactionsThisWeek": "This Week",
+  "transactionsEarlier": "Earlier",
+  "transactionsDeleteConfirm": "Delete this transaction?",
+  "transactionsDeleted": "Transaction deleted",
+
+  "dashboardQuickAdd": "Add",
+  "dashboardQuickBudget": "Budget",
+  "dashboardQuickSavings": "Savings",
+  "dashboardIncomeVsExpenses": "Income vs Expenses",
+  "dashboardExpenseBreakdown": "Expense Breakdown",
+  "dashboardNoChartData": "No transaction data yet",
+  "dashboardNoChartDataSubtitle": "Add your first transaction to see the chart",
+
+  "budgetTitle": "Budget",
+  "budgetNoActiveBudget": "No Active Budget",
+  "budgetNoActiveBudgetSubtitle": "Create a budget to start tracking your spending and stay on top of your finances.",
+  "budgetCreateBudget": "Create Budget",
+  "budgetEditBudget": "Edit Budget",
+  "budgetNewBudget": "New Budget",
+  "budgetTotalSpent": "Total Spent",
+  "budgetOfBudget": "of {amount} budget",
+  "@budgetOfBudget": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "budgetWeekly": "Weekly",
+  "budgetBiWeekly": "Bi-weekly",
+  "budgetMonthly": "Monthly",
+  "budgetStrategy5030": "50/30/20",
+  "budgetStrategy8020": "80/20",
+  "budgetStrategyEnvelope": "Envelope",
+  "budgetStrategyCustom": "Custom",
+
+  "budgetSetupTitle": "Create Budget",
+  "budgetSetupStep": "Step {current} of {total}",
+  "@budgetSetupStep": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "budgetSetupChooseStrategy": "Choose Your Strategy",
+  "budgetSetupChooseStrategySubtitle": "Pick a budgeting method that fits your lifestyle.",
+  "budgetSetupSetPeriod": "Set Your Period",
+  "budgetSetupSetPeriodSubtitle": "How often do you want to budget?",
+  "budgetSetupExpectedIncome": "Expected Income (optional)",
+  "budgetSetupExpectedIncomeSubtitle": "Enter your expected income to auto-calculate allocations.",
+  "budgetSetupExpectedIncomeHint": "0.00",
+  "budgetSetupBiWeekly": "Bi-weekly (Every 2 weeks)",
+  "budgetSetupCustomize": "Customize Allocations",
+  "budgetSetupCustomizeSubtitle": "Adjust amounts for each spending category.",
+  "budgetSetupReview": "Review Your Budget",
+  "budgetSetupReviewSubtitle": "Confirm the details below to create your budget.",
+  "budgetSetupStrategy": "Strategy",
+  "budgetSetupPeriod": "Period",
+  "budgetSetupIncome": "Income",
+  "budgetSetupTotalBudget": "Total Budget",
+  "budgetSetupCategoryBreakdown": "Category Breakdown",
+  "budgetSetupContinue": "Continue",
+
+  "budgetStrategy5030Name": "50/30/20 Rule",
+  "budgetStrategy5030Desc": "A balanced approach that splits your income into needs, wants, and savings.",
+  "budgetStrategy5030Formula": "50% Needs - 30% Wants - 20% Savings",
+  "budgetStrategy8020Name": "80/20 Entrepreneur",
+  "budgetStrategy8020Desc": "For business owners: reinvest 80% into essentials and business, save 20%.",
+  "budgetStrategy8020Formula": "80% Essentials & Business - 20% Savings",
+  "budgetStrategyEnvelopeName": "Envelope System",
+  "budgetStrategyEnvelopeDesc": "Assign fixed amounts to each category. When the envelope is empty, stop spending.",
+  "budgetStrategyEnvelopeFormula": "Fixed amounts per category",
+  "budgetStrategyCustomName": "Custom",
+  "budgetStrategyCustomDesc": "Set your own percentages and amounts for full control over your budget.",
+  "budgetStrategyCustomFormula": "You decide the split",
+
+  "categoryFoodGroceries": "Food & Groceries",
+  "categoryRent": "Rent",
+  "categoryTransport": "Transport",
+  "categoryUtilities": "Utilities",
+  "categoryHealth": "Health",
+  "categoryEntertainment": "Entertainment",
+  "categoryClothing": "Clothing",
+  "categoryAirtimeData": "Airtime & Data",
+  "categoryPersonalCare": "Personal Care",
+  "categoryFamilySupport": "Family Support",
+  "categorySavings": "Savings",
+  "categoryDebtRepayment": "Debt Repayment",
+  "categoryReligiousGiving": "Religious Giving",
+  "categoryBusinessExpenses": "Business Expenses",
+  "categoryMobileMoneyFees": "Mobile Money Fees",
+  "categoryGroupNeeds": "Needs",
+  "categoryGroupWants": "Wants",
+  "categoryGroupSavings": "Savings",
+  "categoryGroupEssentialsBusiness": "Essentials & Business",
+
+  "savingsGoalsTitle": "Savings Goals",
+  "savingsAddGoal": "Add goal",
+  "savingsNoGoals": "No savings goals yet",
+  "savingsNoGoalsSubtitle": "What are you saving for? Set a goal to start tracking.",
+  "savingsCreateGoal": "Create Goal",
+  "savingsNewGoal": "New Savings Goal",
+  "savingsGoalName": "Goal Name",
+  "savingsGoalNameHint": "e.g. Emergency Fund, New Laptop",
+  "savingsGoalNameRequired": "Please enter a goal name",
+  "savingsTargetAmount": "Target Amount ({currency})",
+  "@savingsTargetAmount": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsTargetAmountRequired": "Please enter a target amount",
+  "savingsTargetAmountInvalid": "Please enter a valid amount",
+  "savingsDescriptionOptional": "Description (optional)",
+  "savingsDescriptionHint": "What are you saving for?",
+  "savingsDeadlineOptional": "Deadline (optional)",
+  "savingsNoDeadline": "No deadline set",
+  "savingsGoalDetails": "Goal Details",
+  "savingsGoalNotFound": "Goal not found",
+  "savingsDeleteGoal": "Delete Goal",
+  "savingsAddMoney": "Add Money",
+  "savingsSaved": "Saved",
+  "savingsRemaining": "Remaining",
+  "savingsTarget": "Target",
+  "savingsDeadline": "Deadline",
+  "savingsNotes": "Notes",
+  "savingsContributionHistory": "Contribution History",
+  "savingsNoContributions": "No contributions yet. Tap \"Add Money\" to start!",
+  "savingsAddMoneyTo": "Add Money to \"{name}\"",
+  "@savingsAddMoneyTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsNoteOptional": "Note (optional)",
+  "savingsAddContribution": "Add Contribution",
+  "savingsDeleteGoalConfirm": "Delete \"{name}\"? This cannot be undone.",
+  "@savingsDeleteGoalConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsSavedLabel": "saved",
+
+  "moreTitle": "More",
+  "moreAccountSection": "Account",
+  "moreFeaturesSection": "Features",
+  "moreSupportSection": "Support",
+  "moreProfile": "Profile",
+  "moreSettings": "Settings",
+  "moreSavingsGoals": "Savings Goals",
+  "moreTontineGroups": "Tontine Groups",
+  "moreInsights": "Insights",
+  "moreHelpSupport": "Help & Support",
+  "moreRateApp": "Rate the App",
+  "moreShareApp": "Share with Friends",
+  "moreShareAppMessage": "Check out Kale - a smart budget and expense tracker app!",
+  "moreComingSoon": "Coming Soon",
+  "moreComingSoonMessage": "Coming soon! Stay tuned.",
+
+  "onboardingTitle4": "Personalize Your Experience",
+  "onboardingDesc4": "Choose your preferences to get the most out of Kale.",
+  "onboardingCurrency": "Currency",
+  "onboardingLanguage": "Language",
+  "onboardingGoal": "What's your primary goal?",
+  "onboardingGoalTrackSpending": "Track Spending",
+  "onboardingGoalSaveMore": "Save More",
+  "onboardingGoalManageBudgets": "Manage Budgets",
+
+  "coachMarkFab": "Tap here to add your first transaction",
+  "coachMarkBudget": "Set up your monthly budget",
+  "coachMarkPeriod": "Switch between daily, weekly, and monthly views",
+  "coachMarkGotIt": "Got it",
 
   "profileTitle": "Profile",
   "profileEditProfile": "Edit Profile",
   "profileChangePassword": "Change Password",
   "profileLogout": "Logout",
+  "profileAchievements": "Achievements",
+  "profileLevel": "Level: {level}",
+  "@profileLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "profileBadgesUnlocked": "{count} of {total} badges unlocked",
+  "@profileBadgesUnlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "achievementFirstTransaction": "First Transaction",
+  "achievementStreak7": "7-Day Streak",
+  "achievementStreak30": "30-Day Streak",
+  "achievementFirstBudget": "First Budget",
+  "achievementUnderBudget": "Under Budget",
+  "achievementFirstGoalCompleted": "Goal Completed",
+  "achievementTransactions100": "100 Transactions",
+  "levelBeginner": "Beginner",
+  "levelExplorer": "Explorer",
+  "levelPro": "Pro",
+  "levelMaster": "Master",
 
   "settingsTitle": "Settings",
   "settingsAppearance": "Appearance",
@@ -115,56 +403,112 @@
   },
   "settingsTerms": "Terms of Service",
   "settingsPrivacy": "Privacy Policy",
+  "settingsCurrency": "Currency",
+  "settingsSelectCurrency": "Select Currency",
+  "settingsNotifications": "Notifications",
+  "settingsPushNotifications": "Push Notifications",
+  "settingsEnabled": "Enabled",
+  "settingsDisabled": "Disabled",
+  "settingsDailyReminder": "Daily Reminder",
+  "settingsDailyReminderSubtitle": "Remind me to log transactions",
+  "settingsBudgetAlertThreshold": "Budget Alert Threshold",
+  "settingsBudgetAlertThresholdSubtitle": "Alert when spending reaches {percentage}% of budget",
+  "@settingsBudgetAlertThresholdSubtitle": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsData": "Data",
+  "settingsClearLocalData": "Clear Local Data",
+  "settingsClearLocalDataSubtitle": "Remove all cached data from this device",
+  "settingsClearLocalDataConfirm": "This will remove all cached data from this device. Your account and synced data on the server will not be affected.\n\nAre you sure?",
+  "settingsClearLocalDataSuccess": "Local data cleared",
 
   "legalLastUpdated": "Last updated: February 20, 2026",
   "legalContactFooter": "If you have any questions, contact us at support@kale.app",
 
   "legalTosTitle": "Terms of Service",
   "legalTosIntroHeading": "1. Introduction",
-  "legalTosIntroBody": "Welcome to Kalé. These Terms of Service govern your use of the Kalé mobile application and related services. By creating an account or using Kalé, you agree to be bound by these terms. If you do not agree, please do not use the app.",
+  "legalTosIntroBody": "Welcome to Kale. These Terms of Service govern your use of the Kale mobile application and related services. By creating an account or using Kale, you agree to be bound by these terms. If you do not agree, please do not use the app.",
   "legalTosAccountHeading": "2. Account Registration",
-  "legalTosAccountBody": "To use Kalé, you must create an account with accurate and complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. You must be at least 13 years old to create an account. If you are under 18, you confirm that you have your parent or guardian's consent.",
+  "legalTosAccountBody": "To use Kale, you must create an account with accurate and complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. You must be at least 13 years old to create an account. If you are under 18, you confirm that you have your parent or guardian's consent.",
   "legalTosServicesHeading": "3. Services Provided",
-  "legalTosServicesBody": "Kalé provides personal finance management tools including expense and income tracking, budget creation and monitoring, savings goal management, and financial insights. These tools are designed to help you organize and understand your personal finances.",
+  "legalTosServicesBody": "Kale provides personal finance management tools including expense and income tracking, budget creation and monitoring, savings goal management, and financial insights. These tools are designed to help you organize and understand your personal finances.",
   "legalTosResponsibilitiesHeading": "4. User Responsibilities",
-  "legalTosResponsibilitiesBody": "You are solely responsible for the accuracy of the financial data you enter into Kalé. Kalé is a tracking and organizational tool and does not provide professional financial, investment, tax, or legal advice. You agree to use the app in compliance with all applicable laws and regulations.",
+  "legalTosResponsibilitiesBody": "You are solely responsible for the accuracy of the financial data you enter into Kale. Kale is a tracking and organizational tool and does not provide professional financial, investment, tax, or legal advice. You agree to use the app in compliance with all applicable laws and regulations.",
   "legalTosFinancialDataHeading": "5. Financial Data",
-  "legalTosFinancialDataBody": "Kalé is not a bank, payment processor, or financial institution. We do not hold, transfer, or have custody of your funds. All financial data within Kalé is user-entered information intended for personal tracking purposes only. We do not verify the accuracy of transactions, balances, or other financial information you enter.",
+  "legalTosFinancialDataBody": "Kale is not a bank, payment processor, or financial institution. We do not hold, transfer, or have custody of your funds. All financial data within Kale is user-entered information intended for personal tracking purposes only. We do not verify the accuracy of transactions, balances, or other financial information you enter.",
   "legalTosIpHeading": "6. Intellectual Property",
-  "legalTosIpBody": "The Kalé app, including its design, code, features, and branding, is owned by Kalé and protected by intellectual property laws. You retain full ownership of the personal data and financial information you enter into the app. You grant Kalé a limited license to process your data solely to provide and improve the services.",
+  "legalTosIpBody": "The Kale app, including its design, code, features, and branding, is owned by Kale and protected by intellectual property laws. You retain full ownership of the personal data and financial information you enter into the app. You grant Kale a limited license to process your data solely to provide and improve the services.",
   "legalTosLiabilityHeading": "7. Limitation of Liability",
-  "legalTosLiabilityBody": "Kalé is provided on an \"as is\" basis. We are not liable for any financial decisions you make based on information displayed in the app. We do not guarantee the accuracy of calculations, summaries, or insights derived from your data. To the maximum extent permitted by law, Kalé shall not be liable for any indirect, incidental, or consequential damages.",
+  "legalTosLiabilityBody": "Kale is provided on an \"as is\" basis. We are not liable for any financial decisions you make based on information displayed in the app. We do not guarantee the accuracy of calculations, summaries, or insights derived from your data. To the maximum extent permitted by law, Kale shall not be liable for any indirect, incidental, or consequential damages.",
   "legalTosTerminationHeading": "8. Termination",
   "legalTosTerminationBody": "You may delete your account at any time through the app settings. We may suspend or terminate your account if you violate these terms. Upon termination, your data will be deleted from our servers within 30 days unless retention is required by law.",
   "legalTosChangesHeading": "9. Changes to These Terms",
-  "legalTosChangesBody": "We may update these Terms of Service from time to time. We will notify you of material changes through the app or by email. Your continued use of Kalé after changes are posted constitutes your acceptance of the updated terms.",
+  "legalTosChangesBody": "We may update these Terms of Service from time to time. We will notify you of material changes through the app or by email. Your continued use of Kale after changes are posted constitutes your acceptance of the updated terms.",
   "legalTosContactHeading": "10. Contact Us",
   "legalTosContactBody": "If you have questions about these Terms of Service, please contact us at support@kale.app.",
 
   "legalPrivacyTitle": "Privacy Policy",
   "legalPrivacyIntroHeading": "1. Introduction",
-  "legalPrivacyIntroBody": "Your privacy is important to us. This Privacy Policy explains how Kalé collects, uses, stores, and protects your personal and financial information. We are committed to handling your data with transparency and care.",
+  "legalPrivacyIntroBody": "Your privacy is important to us. This Privacy Policy explains how Kale collects, uses, stores, and protects your personal and financial information. We are committed to handling your data with transparency and care.",
   "legalPrivacyCollectionHeading": "2. Information We Collect",
   "legalPrivacyCollectionBody": "We collect the following types of information:\n\nAccount Information: Your name, email address, and authentication credentials when you create an account.\n\nFinancial Data: Transaction records, budget configurations, savings goals, and category preferences that you enter into the app.\n\nUsage Data: Anonymous analytics about how you interact with the app, including screen views and feature usage, to help us improve the experience.\n\nDevice Information: Device type, operating system version, and app version for compatibility and troubleshooting purposes.",
   "legalPrivacyUsageHeading": "3. How We Use Your Data",
-  "legalPrivacyUsageBody": "We use your information to:\n\n- Provide, maintain, and improve Kalé's features and services\n- Generate personalized financial summaries, charts, and insights\n- Send you notifications such as budget alerts and daily reminders (when enabled)\n- Authenticate your identity and secure your account\n- Analyze aggregate usage patterns to improve the app experience",
+  "legalPrivacyUsageBody": "We use your information to:\n\n- Provide, maintain, and improve Kale's features and services\n- Generate personalized financial summaries, charts, and insights\n- Send you notifications such as budget alerts and daily reminders (when enabled)\n- Authenticate your identity and secure your account\n- Analyze aggregate usage patterns to improve the app experience",
   "legalPrivacyStorageHeading": "4. Data Storage & Security",
   "legalPrivacyStorageBody": "Your data is stored securely using industry-standard practices. All data is encrypted in transit using TLS and at rest on our servers. We use Supabase as our backend infrastructure, which provides enterprise-grade security, access controls, and data isolation. We regularly review our security practices and limit access to your data to authorized personnel only.",
   "legalPrivacyThirdPartyHeading": "5. Third-Party Services",
-  "legalPrivacyThirdPartyBody": "Kalé integrates with the following third-party services:\n\n- Google Sign-In and Apple Sign-In for authentication\n- Analytics services for anonymous usage tracking\n- Crash reporting services to identify and fix app issues\n\nWe do not sell, rent, or share your personal or financial data with third parties for marketing purposes. Third-party services only receive the minimum data necessary to perform their function.",
+  "legalPrivacyThirdPartyBody": "Kale integrates with the following third-party services:\n\n- Google Sign-In and Apple Sign-In for authentication\n- Analytics services for anonymous usage tracking\n- Crash reporting services to identify and fix app issues\n\nWe do not sell, rent, or share your personal or financial data with third parties for marketing purposes. Third-party services only receive the minimum data necessary to perform their function.",
   "legalPrivacyRightsHeading": "6. Your Rights",
   "legalPrivacyRightsBody": "You have the right to:\n\n- Access the personal data we hold about you\n- Correct inaccurate information in your account\n- Delete your account and all associated data\n- Export your financial data\n- Restrict or object to certain processing of your data\n\nTo exercise any of these rights, contact us at privacy@kale.app or use the account management features within the app.",
   "legalPrivacyRetentionHeading": "7. Data Retention",
   "legalPrivacyRetentionBody": "We retain your data for as long as your account is active. If you delete your account, we will remove your personal and financial data from our servers within 30 days. Some anonymized, aggregate data may be retained for analytical purposes. We may also retain certain data as required by law.",
   "legalPrivacyChildrenHeading": "8. Children's Privacy",
-  "legalPrivacyChildrenBody": "Kalé is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected data from a child under 13 without parental consent, we will take steps to delete that information promptly.",
+  "legalPrivacyChildrenBody": "Kale is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected data from a child under 13 without parental consent, we will take steps to delete that information promptly.",
   "legalPrivacyChangesHeading": "9. Changes to This Policy",
-  "legalPrivacyChangesBody": "We may update this Privacy Policy from time to time. We will notify you of material changes through an in-app notice or by email. We encourage you to review this policy periodically. Your continued use of Kalé after changes are posted constitutes your acceptance of the updated policy.",
+  "legalPrivacyChangesBody": "We may update this Privacy Policy from time to time. We will notify you of material changes through an in-app notice or by email. We encourage you to review this policy periodically. Your continued use of Kale after changes are posted constitutes your acceptance of the updated policy.",
   "legalPrivacyContactHeading": "10. Contact Us",
   "legalPrivacyContactBody": "If you have questions about this Privacy Policy or how your data is handled, please contact us at privacy@kale.app.",
 
   "offlineBanner": "You are offline",
 
   "emptyStateTitle": "Nothing here yet",
-  "emptyStateSubtitle": "Check back later for updates."
+  "emptyStateSubtitle": "Check back later for updates.",
+
+  "budgetEmptyRecommendation": "We recommend the 50/30/20 rule to get started",
+  "budgetStartWith5030": "Start with 50/30/20",
+  "budgetCustomBudget": "Custom Budget",
+  "budgetEmptyQuickTip": "It only takes a minute to set up",
+
+  "savingsEmptyTemplateTitle": "Popular goals to get you started",
+  "savingsTemplateEmergency": "Emergency Fund",
+  "savingsTemplateVacation": "Vacation",
+  "savingsTemplateNewPhone": "New Phone",
+  "savingsEmptyOrCreate": "Or create your own goal",
+
+  "transactionsEmptyQuickTip": "It takes just 10 seconds",
+
+  "dashboardEmptyTitle": "Welcome to Kale!",
+  "dashboardEmptySubtitle": "Complete these steps to get the most out of your finances:",
+  "dashboardEmptyStep1": "Add your first transaction",
+  "dashboardEmptyStep2": "Set up a budget",
+  "dashboardEmptyStep3": "Create a savings goal",
+
+  "dashboardStreak": "{count}-day streak",
+  "@dashboardStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardStreakStart": "Start your streak!",
+  "dashboardFinancialHealth": "Financial Health",
+  "dashboardHealthExcellent": "Excellent",
+  "dashboardHealthGood": "Good",
+  "dashboardHealthFair": "Fair",
+  "dashboardHealthNeedsWork": "Needs work"
 }

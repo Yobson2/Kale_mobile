@@ -1,3 +1,5 @@
+import 'package:kale/core/providers/storage_providers.dart';
+import 'package:kale/core/services/achievement_service.dart';
 import 'package:kale/core/usecase/usecase.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
@@ -55,6 +57,8 @@ class BudgetsNotifier extends _$BudgetsNotifier {
           );
           // Invalidate active budget so it reloads.
           ref.invalidate(activeBudgetProvider);
+          // Unlock first budget achievement.
+          _unlockFirstBudget();
           return true;
         },
       );
@@ -130,5 +134,18 @@ class BudgetsNotifier extends _$BudgetsNotifier {
     } catch (e) {
       state = BudgetsState.error(e.toString());
     }
+  }
+
+  /// Unlocks the first budget achievement.
+  void _unlockFirstBudget() {
+    Future(() async {
+      try {
+        final achievements =
+            AchievementService(ref.read(localStorageProvider));
+        await achievements.unlock(Achievement.firstBudget);
+      } catch (_) {
+        // Best-effort.
+      }
+    });
   }
 }

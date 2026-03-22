@@ -129,6 +129,8 @@ class AppTheme {
           onSurface: AppColors.onSurfaceDark,
         ),
         scaffoldBackgroundColor: AppColors.backgroundDark,
+        splashColor: AppColors.primaryDark.withValues(alpha: 0.08),
+        highlightColor: AppColors.primaryDark.withValues(alpha: 0.04),
         textTheme: AppTypography.darkTextTheme,
         dividerColor: AppColors.dividerDark,
         appBarTheme: AppBarTheme(

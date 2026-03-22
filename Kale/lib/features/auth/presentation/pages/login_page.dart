@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/validators.dart';
@@ -169,6 +170,30 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           child: Text(context.l10n.authRegister),
                         ),
                       ],
+                    ),
+                    AppSpacing.verticalLg,
+                    OutlinedButton.icon(
+                      onPressed: () async {
+                        await ref
+                            .read(localStorageProvider)
+                            .setGuestMode();
+                        ref
+                            .read(authNotifierProvider.notifier)
+                            .enterGuestMode();
+                      },
+                      icon: const Icon(Icons.explore_outlined),
+                      label: Text(context.l10n.authTryFirst),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 48),
+                      ),
+                    ),
+                    AppSpacing.verticalXs,
+                    Text(
+                      context.l10n.authTryFirstSubtitle,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                     AppSpacing.verticalXl,
                   ],

@@ -64,7 +64,8 @@ class _SplashPageState extends ConsumerState<SplashPage>
       if (!context.mounted) return;
       switch (next) {
         case AsyncData(:final value):
-          if (value != SplashResult.onboarding) {
+          if (value != SplashResult.onboarding &&
+              value != SplashResult.guest) {
             ref.read(authNotifierProvider.notifier).checkAuthStatus();
           }
           switch (value) {
@@ -74,6 +75,9 @@ class _SplashPageState extends ConsumerState<SplashPage>
               context.go('/dashboard');
             case SplashResult.unauthenticated:
               context.go('/login');
+            case SplashResult.guest:
+              ref.read(authNotifierProvider.notifier).enterGuestMode();
+              context.go('/dashboard');
           }
         case AsyncError():
           context.go('/login');

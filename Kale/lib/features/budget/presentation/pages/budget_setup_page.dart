@@ -7,6 +7,7 @@ import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
+import 'package:kale/core/widgets/layout/app_step_indicator.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_notifier.dart';
@@ -196,7 +197,13 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
         child: Column(
           children: [
             // Step indicator.
-            _StepIndicator(currentStep: _currentStep, totalSteps: 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xl,
+                vertical: AppSpacing.md,
+              ),
+              child: AppStepIndicator(currentStep: _currentStep, totalSteps: 4),
+            ),
 
             // Page content.
             Expanded(
@@ -242,50 +249,6 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ── Step Indicator ──────────────────────────────────────────────
-
-class _StepIndicator extends StatelessWidget {
-  const _StepIndicator({
-    required this.currentStep,
-    required this.totalSteps,
-  });
-
-  final int currentStep;
-  final int totalSteps;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xl,
-        vertical: AppSpacing.md,
-      ),
-      child: Row(
-        children: List.generate(totalSteps, (index) {
-          final isCompleted = index < currentStep;
-          final isCurrent = index == currentStep;
-          return Expanded(
-            child: Container(
-              height: 4,
-              margin: EdgeInsets.only(
-                right: index < totalSteps - 1 ? AppSpacing.xs : 0,
-              ),
-              decoration: BoxDecoration(
-                color: isCompleted || isCurrent
-                    ? context.colorScheme.primary
-                    : context.colorScheme.outlineVariant.withValues(
-                        alpha: 0.3,
-                      ),
-                borderRadius: AppRadius.borderRadiusFull,
-              ),
-            ),
-          );
-        }),
       ),
     );
   }

@@ -7,7 +7,7 @@ part of 'onboarding_provider.dart';
 // **************************************************************************
 
 String _$onboardingNotifierHash() =>
-    r'f897e84eccfa3f770fbb1242701f75726a6032e1';
+    r'83505b184af9f656aa0d7d0b9349f441a05c1d92';
 
 /// Manages onboarding page state and completion.
 ///

@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
 import 'package:kale/features/dashboard/presentation/widgets/cards/budget_health_card.dart';
 import 'package:kale/features/dashboard/presentation/widgets/cards/cash_flow_summary_card.dart';
+import 'package:kale/features/dashboard/presentation/widgets/cards/financial_health_card.dart';
 import 'package:kale/features/dashboard/presentation/widgets/cards/savings_overview_card.dart';
-import 'package:kale/features/dashboard/presentation/widgets/charts/category_breakdown_chart.dart';
-import 'package:kale/features/dashboard/presentation/widgets/charts/income_expense_chart.dart';
+import 'package:kale/features/dashboard/presentation/widgets/cards/streak_card.dart';
+import 'package:kale/features/dashboard/presentation/widgets/charts/chart_carousel.dart';
 import 'package:kale/features/dashboard/presentation/widgets/period_selector.dart';
+import 'package:kale/features/dashboard/presentation/widgets/sections/quick_actions_section.dart';
 import 'package:kale/features/dashboard/presentation/widgets/sections/recent_transactions_section.dart';
 
 /// Main dashboard page showing financial summary, charts, and recent
@@ -29,46 +30,91 @@ class DashboardPage extends ConsumerWidget {
     };
 
     return Scaffold(
-      appBar: AppAppBar(
-        title: context.l10n.homeTitle,
-        showBackButton: false,
-        centerTitle: false,
-        titleWidget: _buildGreeting(context, userName),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {
-              // TODO(dev): Navigate to notifications.
-            },
-          ),
-        ],
-      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(dashboardSummaryProvider);
           },
-          child: const SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            padding: AppSpacing.paddingLg,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PeriodSelector(),
-                AppSpacing.verticalLg,
-                CashFlowSummaryCard(),
-                AppSpacing.verticalLg,
-                IncomeExpenseChart(),
-                AppSpacing.verticalLg,
-                CategoryBreakdownChart(),
-                AppSpacing.verticalLg,
-                BudgetHealthCard(),
-                AppSpacing.verticalLg,
-                SavingsOverviewCard(),
-                AppSpacing.verticalLg,
-                RecentTransactionsSection(),
-              ],
-            ),
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                floating: true,
+                snap: true,
+                centerTitle: false,
+                title: _buildGreeting(context, userName),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    onPressed: () {
+                      // TODO(dev): Navigate to notifications.
+                    },
+                  ),
+                ],
+              ),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppSpacing.paddingHorizontalLg,
+                  child: PeriodSelector(),
+                ),
+              ),
+              const SliverToBoxAdapter(child: AppSpacing.verticalLg),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppSpacing.paddingHorizontalLg,
+                  child: CashFlowSummaryCard(),
+                ),
+              ),
+              const SliverToBoxAdapter(child: AppSpacing.verticalMd),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppSpacing.paddingHorizontalLg,
+                  child: StreakCard(),
+                ),
+              ),
+              const SliverToBoxAdapter(child: AppSpacing.verticalLg),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppSpacing.paddingHorizontalLg,
+                  child: QuickActionsSection(),
+                ),
+              ),
+              const SliverToBoxAdapter(child: AppSpacing.verticalLg),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppSpacing.paddingHorizontalLg,
+                  child: ChartCarousel(),
+                ),
+              ),
+              const SliverToBoxAdapter(child: AppSpacing.verticalLg),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppSpacing.paddingHorizontalLg,
+                  child: Row(
+                    children: [
+                      Expanded(child: BudgetHealthCard()),
+                      AppSpacing.horizontalMd,
+                      Expanded(child: SavingsOverviewCard()),
+                    ],
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(child: AppSpacing.verticalLg),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppSpacing.paddingHorizontalLg,
+                  child: FinancialHealthCard(),
+                ),
+              ),
+              const SliverToBoxAdapter(child: AppSpacing.verticalLg),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: AppSpacing.paddingHorizontalLg,
+                  child: RecentTransactionsSection(),
+                ),
+              ),
+              const SliverToBoxAdapter(child: AppSpacing.verticalLg),
+            ],
           ),
         ),
       ),
@@ -78,10 +124,10 @@ class DashboardPage extends ConsumerWidget {
   Widget _buildGreeting(BuildContext context, String userName) {
     final hour = DateTime.now().hour;
     final greeting = hour < 12
-        ? 'Good morning'
+        ? context.l10n.homeGreetingMorning
         : hour < 17
-            ? 'Good afternoon'
-            : 'Good evening';
+            ? context.l10n.homeGreetingAfternoon
+            : context.l10n.homeGreetingEvening;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

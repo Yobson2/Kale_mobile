@@ -82,32 +82,54 @@ class _EmptyBudgetState extends StatelessWidget {
             ),
             AppSpacing.verticalXl,
             Text(
-              'No Active Budget',
+              context.l10n.budgetNoActiveBudget,
               style: context.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
             AppSpacing.verticalSm,
             Text(
-              'Create a budget to start tracking your spending and stay on '
-              'top of your finances.',
+              context.l10n.budgetNoActiveBudgetSubtitle,
               textAlign: TextAlign.center,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colorScheme.onSurfaceVariant,
               ),
             ),
+            AppSpacing.verticalLg,
+            Text(
+              context.l10n.budgetEmptyRecommendation,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colorScheme.primary,
+              ),
+            ),
             AppSpacing.verticalXxl,
-            FilledButton.icon(
-              onPressed: () {
-                context.pushNamed(RouteNames.budgetSetupName);
-              },
-              icon: const Icon(Icons.add_rounded),
-              label: const Text('Create Budget'),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.xl,
-                  vertical: AppSpacing.md,
+            Wrap(
+              spacing: AppSpacing.md,
+              alignment: WrapAlignment.center,
+              children: [
+                FilledButton.icon(
+                  onPressed: () {
+                    context.pushNamed(RouteNames.budgetSetupName);
+                  },
+                  icon: const Icon(Icons.savings_rounded),
+                  label: Text(context.l10n.budgetStartWith5030),
                 ),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    context.pushNamed(RouteNames.budgetSetupName);
+                  },
+                  icon: const Icon(Icons.tune_rounded),
+                  label: Text(context.l10n.budgetCustomBudget),
+                ),
+              ],
+            ),
+            AppSpacing.verticalXl,
+            Text(
+              context.l10n.budgetEmptyQuickTip,
+              textAlign: TextAlign.center,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
