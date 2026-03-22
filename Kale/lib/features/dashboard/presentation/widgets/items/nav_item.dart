@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kale/core/theme/app_colors.dart';
 
+/// Bottom navigation item with active dot indicator.
+///
+/// Uses theme colors via [ColorScheme] instead of hardcoded [AppColors].
 class NavItem extends StatelessWidget {
   const NavItem({
     required this.icon,
@@ -20,10 +22,9 @@ class NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeColor = isDark ? AppColors.primaryDark : AppColors.primaryLight;
-    final inactiveColor =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
+    final colorScheme = Theme.of(context).colorScheme;
+    final activeColor = colorScheme.primary;
+    final inactiveColor = colorScheme.onSurfaceVariant;
 
     return Semantics(
       label: '$label tab',
@@ -34,23 +35,37 @@ class NavItem extends StatelessWidget {
           HapticFeedback.selectionClick();
           onTap();
         },
+        behavior: HitTestBehavior.opaque,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               isActive ? activeIcon : icon,
               color: isActive ? activeColor : inactiveColor,
+              size: 24,
             ),
             const SizedBox(height: 4),
             Text(
-              label,
+              label.toUpperCase(),
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 10,
+                letterSpacing: 0.5,
                 color: isActive ? activeColor : inactiveColor,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2),
+            // Active dot indicator
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: isActive ? 4 : 0,
+              height: isActive ? 4 : 0,
+              decoration: BoxDecoration(
+                color: activeColor,
+                shape: BoxShape.circle,
+              ),
             ),
           ],
         ),

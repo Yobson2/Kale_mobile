@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kale/core/theme/app_colors.dart';
 
 /// Convenience extensions on [BuildContext].
 extension BuildContextX on BuildContext {
@@ -11,6 +12,33 @@ extension BuildContextX on BuildContext {
 
   /// Current [TextTheme].
   TextTheme get textTheme => theme.textTheme;
+
+  /// Whether the current theme is dark mode.
+  bool get isDark => theme.brightness == Brightness.dark;
+
+  // ── Surface Tier Convenience ───────────────────────────────
+
+  /// Lowest surface tier (purest white / deepest dark).
+  Color get surfaceContainerLowest => colorScheme.surfaceContainerLowest;
+
+  /// Low surface tier.
+  Color get surfaceContainerLow => colorScheme.surfaceContainerLow;
+
+  /// Mid surface tier.
+  Color get surfaceContainer => colorScheme.surfaceContainer;
+
+  /// High surface tier.
+  Color get surfaceContainerHigh => colorScheme.surfaceContainerHigh;
+
+  /// Highest surface tier.
+  Color get surfaceContainerHighest => colorScheme.surfaceContainerHighest;
+
+  // ── Gradient Convenience ───────────────────────────────────
+
+  /// Primary gradient for the current theme.
+  LinearGradient get primaryGradient => isDark
+      ? AppColors.primaryGradientDark
+      : AppColors.primaryGradientLight;
 
   /// Screen size (uses [MediaQuery.sizeOf] for granular rebuilds).
   Size get screenSize => MediaQuery.sizeOf(this);

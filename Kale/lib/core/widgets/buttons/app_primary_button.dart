@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Primary filled button with optional icon and loading state.
+/// Primary gradient button with scale press feedback.
 ///
-/// Uses the primary color from the theme's [ColorScheme].
-class AppPrimaryButton extends StatelessWidget {
+/// Uses a gradient fill from primary -> primaryContainer instead of a flat
+/// [ElevatedButton]. Press feedback uses [AnimatedScale] at 0.98.
+class AppPrimaryButton extends StatefulWidget {
   /// Creates an [AppPrimaryButton].
   const AppPrimaryButton({
     required this.text,
@@ -36,48 +37,91 @@ class AppPrimaryButton extends StatelessWidget {
   final double height;
 
   @override
+  State<AppPrimaryButton> createState() => _AppPrimaryButtonState();
+}
+
+class _AppPrimaryButtonState extends State<AppPrimaryButton> {
+  bool _isPressed = false;
+
+  bool get _isEnabled => !widget.isLoading && widget.onPressed != null;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Semantics(
       button: true,
-      enabled: !isLoading && onPressed != null,
-      label: isLoading ? '$text, loading' : text,
-      child: SizedBox(
-        width: isExpanded ? double.infinity : null,
-        height: height,
-        child: ElevatedButton(
-          onPressed: isLoading ? null : onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: theme.colorScheme.primary,
-            foregroundColor: theme.colorScheme.onPrimary,
-            disabledBackgroundColor: theme.colorScheme.primary.withValues(
-              alpha: 0.6,
-            ),
-            shape: RoundedRectangleBorder(
+      enabled: _isEnabled,
+      label: widget.isLoading ? '${widget.text}, loading' : widget.text,
+      child: AnimatedScale(
+        scale: _isPressed ? 0.98 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: GestureDetector(
+          onTapDown:
+              _isEnabled ? (_) => setState(() => _isPressed = true) : null,
+          onTapUp: _isEnabled
+              ? (_) {
+                  setState(() => _isPressed = false);
+                  widget.onPressed?.call();
+                }
+              : null,
+          onTapCancel:
+              _isEnabled ? () => setState(() => _isPressed = false) : null,
+          child: Container(
+            width: widget.isExpanded ? double.infinity : null,
+            height: widget.height,
+            decoration: BoxDecoration(
+              gradient: _isEnabled
+                  ? LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        colorScheme.primary,
+                        colorScheme.primaryContainer,
+                      ],
+                    )
+                  : null,
+              color: _isEnabled
+                  ? null
+                  : colorScheme.primary.withValues(alpha: 0.4),
               borderRadius: AppRadius.borderRadiusMd,
             ),
-          ),
-          child: isLoading
-              ? SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: theme.colorScheme.onPrimary,
-                  ),
-                )
-              : Row(
-                  mainAxisSize:
-                      isExpanded ? MainAxisSize.max : MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(icon, size: 20),
-                      AppSpacing.horizontalSm,
+            alignment: Alignment.center,
+            child: widget.isLoading
+                ? SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colorScheme.onPrimary,
+                    ),
+                  )
+                : Row(
+                    mainAxisSize: widget.isExpanded
+                        ? MainAxisSize.max
+                        : MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (widget.icon != null) ...[
+                        Icon(
+                          widget.icon,
+                          size: 20,
+                          color: colorScheme.onPrimary,
+                        ),
+                        AppSpacing.horizontalSm,
+                      ],
+                      Text(
+                        widget.text,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: colorScheme.onPrimary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
-                    Text(text, style: theme.textTheme.labelLarge),
-                  ],
-                ),
+                  ),
+          ),
         ),
       ),
     );

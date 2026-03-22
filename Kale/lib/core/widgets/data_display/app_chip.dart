@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Themed chip for filtering or selection.
+/// Themed chip with tonal fill (no border) for filtering or selection.
 class AppChip extends StatelessWidget {
   /// Creates an [AppChip].
   const AppChip({
@@ -38,6 +38,7 @@ class AppChip extends StatelessWidget {
         onDeleted: onDeleted,
         selected: isSelected,
         onPressed: onTap,
+        side: BorderSide.none,
       );
     }
 
@@ -47,7 +48,9 @@ class AppChip extends StatelessWidget {
       selected: isSelected,
       onSelected: onTap != null ? (_) => onTap!() : null,
       selectedColor: theme.colorScheme.primaryContainer,
-      checkmarkColor: theme.colorScheme.primary,
+      checkmarkColor: theme.colorScheme.onPrimary,
+      side: BorderSide.none,
+      backgroundColor: theme.colorScheme.surfaceContainerHigh,
     );
   }
 }

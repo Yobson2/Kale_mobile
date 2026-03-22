@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kalé - Financial Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#565e74",
+              "on-tertiary-fixed-variant": "#653e00",
+              "tertiary": "#855300",
+              "inverse-primary": "#4edea3",
+              "primary-fixed": "#6ffbbe",
+              "on-tertiary-container": "#523200",
+              "surface-variant": "#e0e3e5",
+              "surface-container": "#eceef0",
+              "on-secondary-fixed-variant": "#3f465c",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb95f",
+              "tertiary-container": "#e29100",
+              "surface-tint": "#006c49",
+              "surface-container-low": "#f2f4f6",
+              "error": "#ba1a1a",
+              "primary": "#006c49",
+              "on-tertiary-fixed": "#2a1700",
+              "on-tertiary": "#ffffff",
+              "surface-container-highest": "#e0e3e5",
+              "on-secondary-fixed": "#131b2e",
+              "on-secondary-container": "#5c647a",
+              "outline-variant": "#bbcabf",
+              "on-primary-fixed-variant": "#005236",
+              "surface-dim": "#d8dadc",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dae2fd",
+              "on-primary-fixed": "#002113",
+              "inverse-surface": "#2d3133",
+              "secondary-fixed-dim": "#bec6e0",
+              "on-surface-variant": "#3c4a42",
+              "on-primary-container": "#00422b",
+              "on-surface": "#191c1e",
+              "on-error-container": "#93000a",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary": "#ffffff",
+              "surface": "#f7f9fb",
+              "on-error": "#ffffff",
+              "outline": "#6c7a71",
+              "surface-bright": "#f7f9fb",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#10b981",
+              "background": "#f7f9fb",
+              "secondary-fixed": "#dae2fd",
+              "surface-container-high": "#e6e8ea",
+              "inverse-on-surface": "#eff1f3",
+              "on-background": "#191c1e"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Close up portrait of a professional woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB02tzKJSQQweJ0c3jRivyCxcoPvq3oQseyZdsB9E_ewvtn8VlppVzXvEwF6aVPoUjBuBscLUUU-LdSPrZA4mbqSGypVuqJkRVwaPeqDBnigJ6wx9xJV1pdAuA386FS6DQhy640hcLZiGavsRnyUb7xnub5z-9vuYDchZRrh1y3_uSHXx7Fgsbc4EUiDgXE7Zaq98EqXpabD9-LB_aUe8EwWv-40o9i5mJZUsc1GI9FjuFXVTAmwzGG7E__gndjxL0bejpYe1mnzc0"/>
+</div>
+<h1 class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tighter font-['Inter']">Kalé</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-5xl mx-auto">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase mb-2 block">Performance Report</span>
+<h2 class="text-4xl md:text-5xl font-extrabold tracking-tighter text-on-surface">Insights</h2>
+</div>
+<div class="hidden md:flex gap-2">
+<button class="px-4 py-2 rounded-xl bg-surface-container-high text-on-surface font-semibold text-sm">Monthly</button>
+<button class="px-4 py-2 rounded-xl bg-primary text-on-primary font-semibold text-sm">Weekly</button>
+</div>
+</div>
+<!-- Asymmetric Bento Grid for Insights -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
+<!-- Main Chart Card -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex justify-between items-start mb-10">
+<div>
+<h3 class="text-xl font-bold tracking-tight mb-1">Spending Trends</h3>
+<p class="text-on-surface-variant text-sm">Outflow velocity compared to last month</p>
+</div>
+<div class="text-right">
+<span class="text-2xl font-black text-primary tracking-tight">XOF 452,000</span>
+<div class="flex items-center justify-end text-error text-xs font-bold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>12.5%</span>
+</div>
+</div>
+</div>
+<!-- SVG Line Chart Mockup -->
+<div class="w-full h-64 relative">
+<svg class="w-full h-full" viewbox="0 0 800 200">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#10b981" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#10b981" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,150 Q100,160 200,80 T400,120 T600,40 T800,90" fill="none" stroke="#006c49" stroke-linecap="round" stroke-width="4"></path>
+<path d="M0,150 Q100,160 200,80 T400,120 T600,40 T800,90 L800,200 L0,200 Z" fill="url(#chartGradient)"></path>
+<!-- Circles for points -->
+<circle cx="200" cy="80" fill="#006c49" r="6" stroke="white" stroke-width="2"></circle>
+<circle cx="600" cy="40" fill="#006c49" r="6" stroke="white" stroke-width="2"></circle>
+</svg>
+<div class="absolute bottom-0 left-0 w-full flex justify-between text-[10px] font-bold text-slate-400 pt-4">
+<span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+</div>
+</div>
+</div>
+<!-- Categories Horizontal Bar Chart -->
+<div class="md:col-span-4 bg-surface-container-low rounded-xl p-6 flex flex-col">
+<h3 class="text-lg font-bold tracking-tight mb-6">Top Categories</h3>
+<div class="space-y-6 flex-grow">
+<!-- Category Item -->
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+<span>Groceries</span>
+<span>42%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[42%]"></div>
+</div>
+</div>
+<!-- Category Item -->
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+<span>Utilities</span>
+<span>28%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full w-[28%]"></div>
+</div>
+</div>
+<!-- Category Item -->
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+<span>Entertainment</span>
+<span>15%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container rounded-full w-[15%]"></div>
+</div>
+</div>
+<!-- Category Item -->
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+<span>Transport</span>
+<span>10%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full w-[10%]"></div>
+</div>
+</div>
+</div>
+<button class="mt-6 text-primary text-sm font-bold flex items-center gap-1">
+                    Full breakdown <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Money Habits Pills -->
+<div class="md:col-span-12 flex gap-4 overflow-x-auto hide-scrollbar py-2">
+<div class="flex-shrink-0 bg-emerald-50 border border-emerald-100 rounded-full px-5 py-3 flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-600">calendar_today</span>
+<span class="text-sm font-semibold text-emerald-900">Average daily spend: <span class="font-black">XOF 5,000</span></span>
+</div>
+<div class="flex-shrink-0 bg-blue-50 border border-blue-100 rounded-full px-5 py-3 flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-600">savings</span>
+<span class="text-sm font-semibold text-blue-900">Savings Rate: <span class="font-black">18%</span></span>
+</div>
+<div class="flex-shrink-0 bg-orange-50 border border-orange-100 rounded-full px-5 py-3 flex items-center gap-3">
+<span class="material-symbols-outlined text-orange-600">bolt</span>
+<span class="text-sm font-semibold text-orange-900">Impulse Score: <span class="font-black">Low</span></span>
+</div>
+<div class="flex-shrink-0 bg-purple-50 border border-purple-100 rounded-full px-5 py-3 flex items-center gap-3">
+<span class="material-symbols-outlined text-purple-600">account_balance</span>
+<span class="text-sm font-semibold text-purple-900">Net Worth Growth: <span class="font-black">+2.4%</span></span>
+</div>
+</div>
+<!-- Actionable Recommendations -->
+<div class="md:col-span-12 mt-4">
+<h3 class="text-2xl font-bold tracking-tight mb-6">Recommendations</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Recommendation Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex gap-5 items-start group hover:bg-white transition-all shadow-sm">
+<div class="w-14 h-14 bg-tertiary-container/20 rounded-xl flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-tertiary text-3xl" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div>
+<h4 class="text-lg font-bold mb-1">Optimize Subscriptions</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4">We noticed 3 duplicate streaming services. Canceling two could save you <span class="font-bold text-on-surface">XOF 8,500</span> monthly.</p>
+<button class="bg-surface-container-high px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors">Review Subscriptions</button>
+</div>
+</div>
+<!-- Recommendation Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex gap-5 items-start group hover:bg-white transition-all shadow-sm">
+<div class="w-14 h-14 bg-primary-container/20 rounded-xl flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</div>
+<div>
+<h4 class="text-lg font-bold mb-1">Boost Your Emergency Fund</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4">You have a surplus of XOF 45,000 this week. Move it to your 'High-Yield' vault to earn 4% APY.</p>
+<button class="bg-surface-container-high px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors">Transfer Now</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white dark:bg-slate-950 z-50 rounded-t-2xl shadow-[0px_-4px_20px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-emerald-500 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-emerald-500 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider">Transactions</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-xl px-3 py-1 scale-98 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider">Add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-emerald-500 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider">Budget</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-emerald-500 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider">More</span>
+</a>
+</nav>
+</body></html>

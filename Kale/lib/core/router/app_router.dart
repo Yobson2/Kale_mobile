@@ -6,8 +6,6 @@ import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/router/analytics_observer.dart';
 import 'package:kale/core/router/page_transitions.dart';
 import 'package:kale/core/router/route_names.dart';
-import 'package:kale/core/widgets/layout/app_app_bar.dart';
-import 'package:kale/core/widgets/states/app_empty_state.dart';
 import 'package:kale/features/auth/presentation/pages/create_password_page.dart';
 import 'package:kale/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:kale/features/auth/presentation/pages/login_page.dart';
@@ -18,6 +16,7 @@ import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/budget/presentation/pages/budget_page.dart';
 import 'package:kale/features/budget/presentation/pages/budget_setup_page.dart';
 import 'package:kale/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:kale/features/insights/presentation/pages/insights_page.dart';
 import 'package:kale/features/legal/presentation/pages/privacy_policy_page.dart';
 import 'package:kale/features/legal/presentation/pages/terms_of_service_page.dart';
 import 'package:kale/features/main/home_shell.dart';
@@ -302,14 +301,7 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: 'insights',
                     name: RouteNames.insightsName,
-                    builder: (context, state) => const Scaffold(
-                      appBar: AppAppBar(title: 'Insights'),
-                      body: AppEmptyState(
-                        title: 'Insights Coming Soon',
-                        subtitle:
-                            'Your spending patterns will be analyzed here.',
-                      ),
-                    ),
+                    builder: (context, state) => const InsightsPage(),
                   ),
                 ],
               ),

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-fixed-variant": "#3f465c",
+              "secondary-container": "#dae2fd",
+              "primary-fixed-dim": "#4edea3",
+              "surface-bright": "#f7f9fb",
+              "tertiary-fixed": "#ffddb8",
+              "surface": "#f7f9fb",
+              "primary-fixed": "#6ffbbe",
+              "surface-container-low": "#f2f4f6",
+              "secondary-fixed": "#dae2fd",
+              "outline-variant": "#bbcabf",
+              "outline": "#6c7a71",
+              "inverse-on-surface": "#eff1f3",
+              "on-background": "#191c1e",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#523200",
+              "error": "#ba1a1a",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-dim": "#d8dadc",
+              "surface-container-high": "#e6e8ea",
+              "primary": "#006c49",
+              "on-primary-container": "#00422b",
+              "inverse-surface": "#2d3133",
+              "secondary": "#565e74",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-secondary-container": "#5c647a",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#002113",
+              "on-error-container": "#93000a",
+              "surface-tint": "#006c49",
+              "secondary-fixed-dim": "#bec6e0",
+              "surface-variant": "#e0e3e5",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-container-highest": "#e0e3e5",
+              "primary-container": "#10b981",
+              "inverse-primary": "#4edea3",
+              "on-surface-variant": "#3c4a42",
+              "tertiary": "#855300",
+              "background": "#f7f9fb",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#191c1e",
+              "tertiary-container": "#e29100",
+              "surface-container": "#eceef0",
+              "on-secondary-fixed": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl shadow-[0px_20px_40px_rgba(15,23,42,0.06)] flex items-center justify-between px-6 h-16">
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-200 text-slate-900">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tighter text-slate-900">Settings</h1>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="User profile avatar photograph" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbI8wnvscbVw-UaeHK4aKs0ewFvwzj4jAvNINuojoefJK-arkR0EkWSykBSOTzjaQA5Jc1iJuBBu17U0xQaCycNM2FNr0H62jq2KWz8vKDLKZEjQaqKsPmLXKkCvElKsq4stOS4RJxRw2FUCz6osp4BE2MxcZF-tv2G9JixVUHTIekTLXkJ0UrJbw97QvSozYTyQy6rSjXQOqAOxQaIzDB3qtKH-jOj_N6cFQmneWHFnsH5xA-vKqtwdt9ySHeWTs1blu1ccz92HY"/>
+</div>
+</header>
+<main class="pt-24 px-6 space-y-8">
+<!-- Preferences Section -->
+<section>
+<div class="flex justify-between items-end mb-4">
+<h2 class="text-[1.75rem] font-semibold tracking-[-0.02em] leading-tight">Preferences</h2>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0px_20px_40px_rgba(15,23,42,0.02)] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<div>
+<p class="text-[1rem] font-medium text-on-surface">Currency</p>
+<p class="text-[0.6875rem] font-bold uppercase tracking-wider text-on-surface-variant">XOF - West African CFA</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0px_20px_40px_rgba(15,23,42,0.02)] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="translate">translate</span>
+</div>
+<div>
+<p class="text-[1rem] font-medium text-on-surface">Language</p>
+<p class="text-[0.6875rem] font-bold uppercase tracking-wider text-on-surface-variant">English</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0px_20px_40px_rgba(15,23,42,0.02)] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="light_mode">light_mode</span>
+</div>
+<div>
+<p class="text-[1rem] font-medium text-on-surface">Theme</p>
+<p class="text-[0.6875rem] font-bold uppercase tracking-wider text-on-surface-variant">Light</p>
+</div>
+</div>
+<div class="w-12 h-6 bg-surface-container-high rounded-full relative p-1 flex items-center transition-colors">
+<div class="w-4 h-4 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section>
+<div class="flex justify-between items-end mb-4">
+<h2 class="text-[1.75rem] font-semibold tracking-[-0.02em] leading-tight">Notifications</h2>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0px_20px_40px_rgba(15,23,42,0.02)] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+</div>
+<p class="text-[1rem] font-medium text-on-surface">Push Notifications</p>
+</div>
+<div class="w-12 h-6 bg-primary rounded-full relative p-1 flex items-center justify-end transition-colors">
+<div class="w-4 h-4 bg-white rounded-full shadow-sm"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0px_20px_40px_rgba(15,23,42,0.02)] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+</div>
+<div>
+<p class="text-[1rem] font-medium text-on-surface">Daily Reminder</p>
+<p class="text-[0.6875rem] font-bold uppercase tracking-wider text-on-surface-variant">08:00 AM</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Data Section -->
+<section>
+<div class="flex justify-between items-end mb-4">
+<h2 class="text-[1.75rem] font-semibold tracking-[-0.02em] leading-tight">Data</h2>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0px_20px_40px_rgba(15,23,42,0.02)] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="delete_forever">delete_forever</span>
+</div>
+<p class="text-[1rem] font-medium text-error">Clear Local Data</p>
+</div>
+<span class="material-symbols-outlined text-error/30" data-icon="info">info</span>
+</div>
+</section>
+<!-- About Section -->
+<section>
+<div class="flex justify-between items-end mb-4">
+<h2 class="text-[1.75rem] font-semibold tracking-[-0.02em] leading-tight">About</h2>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between py-3 px-2">
+<span class="text-sm font-medium text-on-surface-variant">Version</span>
+<span class="text-sm font-bold text-on-surface">2.4.1 (Build 102)</span>
+</div>
+<div class="flex items-center justify-between py-3 px-2 border-t border-surface-container">
+<span class="text-sm font-medium text-on-surface">Terms of Service</span>
+<span class="material-symbols-outlined text-outline-variant" data-icon="open_in_new">open_in_new</span>
+</div>
+<div class="flex items-center justify-between py-3 px-2 border-t border-surface-container">
+<span class="text-sm font-medium text-on-surface">Privacy Policy</span>
+<span class="material-symbols-outlined text-outline-variant" data-icon="open_in_new">open_in_new</span>
+</div>
+</div>
+</section>
+<!-- Branding Watermark -->
+<div class="flex justify-center pt-8 opacity-5">
+<h1 class="text-8xl font-black italic tracking-tighter">K</h1>
+</div>
+</main>
+<!-- NavigationDrawer (Suppressed for focused settings task but keeping BottomNavBar if it's top-level) -->
+<!-- Applying BottomNavBar because Settings is usually a top-level drawer destination -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 backdrop-blur-lg shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50 rounded-t-2xl border-t border-slate-100/50">
+<a class="flex flex-col items-center justify-center text-slate-400 px-3 py-1 hover:text-emerald-500 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-tight">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 px-3 py-1 hover:text-emerald-500 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-tight">Transactions</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 px-3 py-1 hover:text-emerald-500 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-tight">Budget</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 px-3 py-1 hover:text-emerald-500 transition-opacity" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-tight">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-emerald-600 font-bold bg-emerald-50/50 rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-tight">More</span>
+</a>
+</nav>
+</body></html>

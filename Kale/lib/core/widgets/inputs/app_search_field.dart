@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Search bar with clear button and debounced input.
+/// Search bar with ghost border, clear button, and debounced input.
 class AppSearchField extends StatefulWidget {
   /// Creates an [AppSearchField].
   const AppSearchField({
@@ -62,7 +62,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return TextField(
       controller: _controller,
       onChanged: _onChanged,
@@ -80,15 +80,26 @@ class _AppSearchFieldState extends State<AppSearchField> {
                 },
               )
             : null,
+        filled: true,
+        fillColor: colorScheme.surfaceContainerLow,
         border: OutlineInputBorder(
           borderRadius: AppRadius.borderRadiusFull,
-          borderSide: BorderSide(color: theme.dividerColor),
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.15),
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: AppRadius.borderRadiusFull,
-          borderSide: BorderSide(color: theme.dividerColor),
+          borderSide: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.15),
+          ),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lgx),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: AppRadius.borderRadiusFull,
+          borderSide: BorderSide(color: colorScheme.primary),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: AppSpacing.lgx),
       ),
     );
   }

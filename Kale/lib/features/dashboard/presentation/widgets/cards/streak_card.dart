@@ -20,11 +20,8 @@ class StreakCard extends ConsumerWidget {
         vertical: AppSpacing.md,
       ),
       decoration: BoxDecoration(
-        color: context.colorScheme.surface,
+        color: context.colorScheme.surfaceContainerLow,
         borderRadius: AppRadius.borderRadiusLg,
-        border: Border.all(
-          color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-        ),
       ),
       child: Row(
         children: [
@@ -66,6 +63,12 @@ class StreakCard extends ConsumerWidget {
                 ),
               ),
             ),
+          const SizedBox(width: AppSpacing.xs),
+          Icon(
+            Icons.chevron_right,
+            color: context.colorScheme.onSurfaceVariant,
+            size: 20,
+          ),
         ],
       ),
     );

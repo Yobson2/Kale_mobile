@@ -40,11 +40,8 @@ class BudgetHealthCard extends ConsumerWidget {
         return Container(
           padding: AppSpacing.paddingLg,
           decoration: BoxDecoration(
-            color: context.colorScheme.surface,
+            color: context.colorScheme.surfaceContainerLow,
             borderRadius: AppRadius.borderRadiusLg,
-            border: Border.all(
-              color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

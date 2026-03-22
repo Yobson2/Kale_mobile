@@ -3,15 +3,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Row of social login buttons (Google & Apple).
+/// 2-column grid of social login buttons (Google & Apple).
+///
+/// Uses tonal surface backgrounds instead of outlined borders.
 class SocialLoginButtons extends StatelessWidget {
   /// Creates [SocialLoginButtons].
   const SocialLoginButtons({
     super.key,
     this.onGooglePressed,
     this.onApplePressed,
-    this.googleLabel = 'Continue with Google',
-    this.appleLabel = 'Continue with Apple',
+    this.googleLabel = 'Google',
+    this.appleLabel = 'Apple',
   });
 
   /// Callback for Google sign-in.
@@ -28,33 +30,23 @@ class SocialLoginButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _SocialButton(
-            onPressed: onGooglePressed,
-            icon: SvgPicture.asset(
-              'assets/images/google.svg',
-              width: 20,
-              height: 20,
-            ),
-            label: googleLabel,
-            theme: theme,
+        _SocialButton(
+          onPressed: onGooglePressed,
+          icon: SvgPicture.asset(
+            'assets/images/google.svg',
+            width: 20,
+            height: 20,
           ),
+          label: googleLabel,
         ),
-        AppSpacing.horizontalMd,
-        Expanded(
-          child: _SocialButton(
-            onPressed: onApplePressed,
-            icon: Icon(
-              Icons.apple,
-              size: 24,
-              color: theme.colorScheme.onSurface,
-            ),
-            label: appleLabel,
-            theme: theme,
-          ),
+        AppSpacing.verticalMd,
+        _SocialButton(
+          onPressed: onApplePressed,
+          icon: const Icon(Icons.apple, size: 24),
+          label: appleLabel,
+          isDark: true,
         ),
       ],
     );
@@ -66,28 +58,46 @@ class _SocialButton extends StatelessWidget {
     required this.onPressed,
     required this.icon,
     required this.label,
-    required this.theme,
+    this.isDark = false,
   });
 
   final VoidCallback? onPressed;
   final Widget icon;
   final String label;
-  final ThemeData theme;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final bgColor =
+        isDark ? colorScheme.inverseSurface : colorScheme.surfaceContainerLow;
+    final fgColor =
+        isDark ? colorScheme.onInverseSurface : colorScheme.onSurface;
+
     return SizedBox(
       height: 52,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: theme.colorScheme.onSurface,
-          side: BorderSide(color: theme.dividerColor),
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.borderRadiusMd,
+      child: Material(
+        color: bgColor,
+        borderRadius: AppRadius.borderRadiusMd,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: AppRadius.borderRadiusMd,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconTheme(
+                data: IconThemeData(color: fgColor),
+                child: icon,
+              ),
+              AppSpacing.horizontalSm,
+              Text(
+                label,
+                style: theme.textTheme.labelLarge?.copyWith(color: fgColor),
+              ),
+            ],
           ),
         ),
-        child: icon,
       ),
     );
   }

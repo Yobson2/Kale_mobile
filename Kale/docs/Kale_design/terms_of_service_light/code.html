@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-fixed-variant": "#3f465c",
+              "secondary-container": "#dae2fd",
+              "primary-fixed-dim": "#4edea3",
+              "surface-bright": "#f7f9fb",
+              "tertiary-fixed": "#ffddb8",
+              "surface": "#f7f9fb",
+              "primary-fixed": "#6ffbbe",
+              "surface-container-low": "#f2f4f6",
+              "secondary-fixed": "#dae2fd",
+              "outline-variant": "#bbcabf",
+              "outline": "#6c7a71",
+              "inverse-on-surface": "#eff1f3",
+              "on-background": "#191c1e",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#523200",
+              "error": "#ba1a1a",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-dim": "#d8dadc",
+              "surface-container-high": "#e6e8ea",
+              "primary": "#006c49",
+              "on-primary-container": "#00422b",
+              "inverse-surface": "#2d3133",
+              "secondary": "#565e74",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-secondary-container": "#5c647a",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#002113",
+              "on-error-container": "#93000a",
+              "surface-tint": "#006c49",
+              "secondary-fixed-dim": "#bec6e0",
+              "surface-variant": "#e0e3e5",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-variant": "#e0e3e5",
+              "background": "#f7f9fb",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#191c1e",
+              "tertiary-container": "#e29100",
+              "surface-container": "#eceef0",
+              "on-secondary-fixed": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 20px 40px rgba(15, 23, 42, 0.06);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased">
+<!-- TopAppBar Shell (Suppressed Navigation for Task Focus) -->
+<header class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl flex items-center justify-between px-6 h-16 shadow-[0px_20px_40px_rgba(15,23,42,0.06)]">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="text-xl font-bold tracking-tighter text-slate-900 font-headline">Kalé</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="Portrait of a young professional woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-b-0Egv9k16HTVW4vh93LSWQIXr-FW7pa_11XJzcfxq7nP5tW6iHEs9EBur7DUIWqn6BdfXkcytnDqfSqqCJa_o_ZNuMSR81ySBnqJ9_fDATCeifgs_P5eVHy6RE9dVbE92EQ-SrjtK0bq_QNWoPY1dNMQ1Solj6EygDLwWQyTgcqu0bQVJ8x4FTlTi4GtQeBoR8-UhTPo-YXhpJJamwyhNp_IxCl3Sr99G5gbXX-jjvgb7WvYMOiwyq4qe1l5cg3_vDjonYHAGA"/>
+</div>
+</header>
+<main class="pt-24 pb-12 px-6 max-w-2xl mx-auto">
+<!-- Editorial Header -->
+<section class="mb-12">
+<h1 class="text-[3.5rem] leading-[1.1] font-bold tracking-[-0.04em] text-on-surface font-headline mb-4">
+                Terms of Service
+            </h1>
+<div class="flex items-center gap-2">
+<span class="w-8 h-[2px] bg-primary"></span>
+<p class="text-sm font-medium text-on-surface-variant font-label uppercase tracking-widest">
+                    Last updated: March 2024
+                </p>
+</div>
+</section>
+<!-- Content Canvas -->
+<div class="space-y-10 relative">
+<!-- Geometric watermark K -->
+<div class="fixed top-1/2 right-0 opacity-[0.03] pointer-events-none -z-10 select-none">
+<span class="text-[40rem] font-black leading-none select-none">K</span>
+</div>
+<!-- Section 1 -->
+<section class="flex flex-col md:flex-row gap-6">
+<div class="shrink-0 w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center">
+<span class="text-primary font-bold font-headline">01</span>
+</div>
+<div class="space-y-4">
+<h2 class="text-xl font-semibold tracking-tight text-on-surface">Introduction</h2>
+<p class="text-on-surface-variant leading-relaxed text-[0.9375rem]">
+                        Welcome to Kalé. These Terms of Service govern your use of our digital finance platform and services. By accessing or using Kalé, you agree to be bound by these terms and our Privacy Policy. Our mission is to weave cultural heritage with modern financial empowerment through "The Digital Loom."
+                    </p>
+<p class="text-on-surface-variant leading-relaxed text-[0.9375rem]">
+                        Please read these terms carefully. If you do not agree to these terms, you may not access or use the services provided by Kalé.
+                    </p>
+</div>
+</section>
+<!-- Section 2 -->
+<section class="flex flex-col md:flex-row gap-6">
+<div class="shrink-0 w-12 h-12 rounded-xl bg-secondary-container/30 flex items-center justify-center">
+<span class="text-secondary font-bold font-headline">02</span>
+</div>
+<div class="space-y-4">
+<h2 class="text-xl font-semibold tracking-tight text-on-surface">Account Registration</h2>
+<p class="text-on-surface-variant leading-relaxed text-[0.9375rem]">
+                        To access certain features of Kalé, you must register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate and complete.
+                    </p>
+<div class="bg-surface-container-low p-6 rounded-2xl border-l-4 border-primary">
+<p class="text-sm font-medium text-on-surface italic">
+                            "Users are responsible for safeguarding their passwords and for any activities or actions under their account."
+                        </p>
+</div>
+</div>
+</section>
+<!-- Section 3 -->
+<section class="flex flex-col md:flex-row gap-6">
+<div class="shrink-0 w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center">
+<span class="text-tertiary font-bold font-headline">03</span>
+</div>
+<div class="space-y-4">
+<h2 class="text-xl font-semibold tracking-tight text-on-surface">Privacy</h2>
+<p class="text-on-surface-variant leading-relaxed text-[0.9375rem]">
+                        Your privacy is fundamental to us. We collect and use personal data as described in our Privacy Policy. We utilize high-end encryption to ensure that your financial narrative remains secure and private.
+                    </p>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">Biometric authentication support</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="check_circle">check_circle</span>
+<span class="text-sm text-on-surface-variant">End-to-end data encryption at rest</span>
+</li>
+</ul>
+</div>
+</section>
+<!-- Section 4 -->
+<section class="flex flex-col md:flex-row gap-6">
+<div class="shrink-0 w-12 h-12 rounded-xl bg-on-surface-variant/10 flex items-center justify-center">
+<span class="text-on-surface font-bold font-headline">04</span>
+</div>
+<div class="space-y-4">
+<h2 class="text-xl font-semibold tracking-tight text-on-surface">Data Usage</h2>
+<p class="text-on-surface-variant leading-relaxed text-[0.9375rem]">
+                        We use data to weave a better financial experience for you. This includes transaction categorization, budget tracking, and personalized insights. We do not sell your personal financial data to third parties.
+                    </p>
+<div class="p-6 bg-surface-container-high rounded-2xl">
+<p class="text-xs font-bold uppercase tracking-widest text-on-secondary-fixed-variant mb-2">Notice of Compliance</p>
+<p class="text-sm text-on-surface-variant">
+                            Kalé complies with global data protection standards, ensuring your information is treated with the highest level of regulatory care.
+                        </p>
+</div>
+</div>
+</section>
+<!-- Final Acceptance -->
+<section class="pt-8 border-t border-outline-variant/20">
+<div class="flex flex-col gap-4">
+<button class="h-[52px] w-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-xl active:scale-95 transition-all shadow-lg">
+                        I Accept the Terms
+                    </button>
+<button class="h-[52px] w-full bg-surface-container-high text-on-surface font-semibold rounded-xl active:scale-95 transition-all">
+                        Download PDF
+                    </button>
+</div>
+<p class="mt-6 text-center text-xs text-on-surface-variant font-medium">
+                    Questions? Contact us at <span class="text-primary underline">legal@kale.finance</span>
+</p>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation Suppressed for Focus Screen -->
+<!-- Ghost padding for potential keyboard appearance -->
+<div class="h-20"></div>
+</body></html>

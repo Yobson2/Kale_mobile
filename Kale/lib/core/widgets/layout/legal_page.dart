@@ -77,7 +77,7 @@ class LegalPage extends StatelessWidget {
                 AppSpacing.verticalXl,
               ],
               if (footer != null) ...[
-                const Divider(),
+                const SizedBox(height: 16),
                 AppSpacing.verticalLg,
                 Text(
                   footer!,

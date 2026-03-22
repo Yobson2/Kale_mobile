@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kalé - Save Smarter</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eff1f3",
+              "surface": "#f7f9fb",
+              "primary-fixed": "#6ffbbe",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-container": "#eceef0",
+              "background": "#f7f9fb",
+              "outline": "#6c7a71",
+              "on-tertiary-container": "#523200",
+              "surface-container-lowest": "#ffffff",
+              "surface-dim": "#d8dadc",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#4edea3",
+              "primary-container": "#10b981",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb95f",
+              "outline-variant": "#bbcabf",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-container": "#5c647a",
+              "on-secondary-fixed": "#131b2e",
+              "secondary-container": "#dae2fd",
+              "secondary": "#565e74",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#dae2fd",
+              "on-surface-variant": "#3c4a42",
+              "primary": "#006c49",
+              "surface-variant": "#e0e3e5",
+              "on-background": "#191c1e",
+              "tertiary": "#855300",
+              "on-secondary-fixed-variant": "#3f465c",
+              "secondary-fixed-dim": "#bec6e0",
+              "surface-tint": "#006c49",
+              "surface-bright": "#f7f9fb",
+              "on-primary-container": "#00422b",
+              "inverse-surface": "#2d3133",
+              "on-primary-fixed": "#002113",
+              "surface-container-low": "#f2f4f6",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary-fixed-variant": "#005236",
+              "tertiary-container": "#e29100",
+              "on-secondary": "#ffffff",
+              "surface-container-highest": "#e0e3e5",
+              "on-surface": "#191c1e",
+              "surface-container-high": "#e6e8ea",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#ffddb8"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-editorial-tight {
+            letter-spacing: -0.02em;
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+        }
+        .loom-pattern {
+            background-image: radial-gradient(circle at 2px 2px, #bbcabf 1px, transparent 0);
+            background-size: 24px 24px;
+            opacity: 0.15;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<!-- TopAppBar Fragment (Suppressed Global Nav per Transactional Rule, but keeping brand anchor) -->
+<header class="fixed top-0 w-full z-50 glass-header flex justify-between items-center px-6 py-4">
+<div class="text-2xl font-black text-primary tracking-tighter">Kalé</div>
+<button class="text-on-surface-variant font-medium text-sm">Skip</button>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center px-8 pt-24 pb-32 max-w-md mx-auto relative overflow-hidden">
+<!-- Background Decorative Geometric 'K' Element -->
+<div class="absolute -top-10 -right-10 opacity-5 pointer-events-none">
+<svg fill="none" height="300" viewbox="0 0 100 100" width="300" xmlns="http://www.w3.org/2000/svg">
+<path class="text-primary" d="M20 10V90M20 50L70 10M20 50L70 90" stroke="currentColor" stroke-width="12"></path>
+</svg>
+</div>
+<!-- Progress Visual: Savings Goal Ring Preview -->
+<div class="relative w-72 h-72 mb-16 flex items-center justify-center">
+<!-- Tonal Layers for Depth -->
+<div class="absolute inset-0 bg-surface-container-low rounded-full scale-110"></div>
+<div class="absolute inset-0 bg-surface-container-highest rounded-full scale-100 shadow-sm"></div>
+<!-- Progress Ring SVG -->
+<svg class="w-64 h-64 transform -rotate-90">
+<circle class="text-surface-variant" cx="128" cy="128" fill="transparent" r="110" stroke="currentColor" stroke-width="12"></circle>
+<circle cx="128" cy="128" fill="transparent" r="110" stroke="url(#gradient-primary)" stroke-dasharray="691" stroke-dashoffset="200" stroke-linecap="round" stroke-width="16"></circle>
+<defs>
+<lineargradient id="gradient-primary" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" style="stop-color:var(--tw-color-primary)"></stop>
+<stop offset="100%" style="stop-color:var(--tw-color-primary-container)"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Center Content -->
+<div class="absolute flex flex-col items-center">
+<span class="text-label-sm font-semibold uppercase tracking-widest text-on-surface-variant mb-1">Target Reached</span>
+<span class="text-4xl font-extrabold text-on-surface text-editorial-tight">72%</span>
+<div class="mt-4 flex items-center gap-1 bg-primary/10 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="trending_up">trending_up</span>
+<span class="text-[12px] font-bold text-primary">+$420.00</span>
+</div>
+</div>
+<!-- Floating Micro-Card (Asymmetric Detail) -->
+<div class="absolute -bottom-4 -right-4 bg-surface-container-lowest p-4 rounded-xl shadow-[0px_20px_40px_rgba(15,23,42,0.06)] border border-outline-variant/15 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="house">house</span>
+</div>
+<div>
+<div class="text-[10px] font-bold text-on-surface-variant uppercase">New Home</div>
+<div class="text-sm font-semibold text-on-surface">$12,400.00</div>
+</div>
+</div>
+</div>
+<!-- Text Content: Editorial Authority -->
+<div class="w-full text-left space-y-4">
+<h1 class="text-4xl font-bold text-on-surface leading-tight text-editorial-tight">
+                Save Smarter
+            </h1>
+<p class="text-lg text-on-surface-variant leading-relaxed opacity-80">
+                Weave your financial threads into a tapestry of growth.
+            </p>
+</div>
+<!-- Onboarding Controls -->
+<div class="fixed bottom-0 left-0 w-full px-8 pb-10 bg-gradient-to-t from-background via-background to-transparent pt-12">
+<div class="max-w-md mx-auto flex flex-col gap-8">
+<!-- Dot Indicators (3rd active) -->
+<div class="flex justify-center gap-3">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div class="w-8 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+</div>
+<!-- Action Bar -->
+<button class="w-full h-[52px] bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-xl shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+                    Next
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Content Decorative Layer -->
+<div class="fixed inset-0 loom-pattern pointer-events-none -z-10"></div>
+</body></html>

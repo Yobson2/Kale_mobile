@@ -1,30 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <!-- Kalé Adaptive Icon Foreground — The Cowrie Flow -->
+  <!-- Kalé Adaptive Icon Foreground — Bold K -->
   <!-- Export as 1024x1024 PNG with transparency for Android adaptive icon -->
   <!-- Android adaptive icons use a 66% safe zone (centered 676x676 area) -->
-
-  <!-- Cowrie Flow logomark centered in safe zone -->
   <!-- Safe zone: 174 to 850 (676px), center at 512 -->
-  <g transform="translate(512, 512) scale(8.5) translate(-50, -48)">
-    <!-- Cowrie shell body -->
-    <ellipse cx="50" cy="50" rx="20" ry="14" fill="#FFFFFF"/>
 
-    <!-- Shell ridges (ledger lines) -->
-    <line x1="34" y1="46" x2="66" y2="46" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
-    <line x1="33" y1="50" x2="67" y2="50" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
-    <line x1="34" y1="54" x2="66" y2="54" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
-
-    <!-- Shell opening (vertical slit) -->
-    <path d="M 50,37 C 48,43 48,57 50,63" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
-
-    <!-- Income flow line (upward-right, thicker) -->
-    <path d="M 50,37 C 48,30 55,22 65,20" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-
-    <!-- Expense flow line (downward-left, thinner) -->
-    <path d="M 50,63 C 52,70 45,78 35,80" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
-
-    <!-- Amber accent dot at income tip -->
-    <circle cx="65" cy="20" r="3.5" fill="#F59E0B"/>
-    <circle cx="65" cy="20" r="2" fill="none" stroke="#D97706" stroke-width="0.6"/>
-  </g>
+  <!-- Bold upright K letterform centered in safe zone -->
+  <path d="M 307 205 L 430 205 L 430 410 L 614 205 L 778 205 L 512 491 L 778 819 L 614 819 L 430 574 L 430 819 L 307 819 Z" fill="#FFFFFF"/>
 </svg>

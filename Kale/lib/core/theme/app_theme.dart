@@ -3,7 +3,12 @@ import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_typography.dart';
 
-/// Composes [ThemeData] from design tokens for light and dark modes.
+/// Composes [ThemeData] from Digital Loom design tokens for light and dark modes.
+///
+/// Key design rules applied here:
+/// - No 1px solid borders on cards/chips → use surface tier color shifts
+/// - Ghost borders (outlineVariant at 15%) for inputs only
+/// - Glassmorphism applied per-widget, not globally
 class AppTheme {
   const AppTheme._();
 
@@ -14,40 +19,61 @@ class AppTheme {
         colorScheme: const ColorScheme.light(
           primary: AppColors.primaryLight,
           primaryContainer: AppColors.primaryContainerLight,
+          onPrimary: AppColors.onPrimaryLight,
+          onPrimaryContainer: AppColors.onPrimaryContainerLight,
+          primaryFixed: AppColors.primaryFixedLight,
+          primaryFixedDim: AppColors.primaryFixedDimLight,
           secondary: AppColors.secondaryLight,
           secondaryContainer: AppColors.secondaryContainerLight,
+          tertiary: AppColors.tertiaryLight,
+          tertiaryContainer: AppColors.tertiaryContainerLight,
+          onTertiaryContainer: AppColors.onTertiaryContainerLight,
           error: AppColors.errorLight,
           errorContainer: AppColors.errorContainerLight,
           surface: AppColors.surfaceLight,
-          onPrimary: AppColors.onPrimaryLight,
+          surfaceBright: AppColors.surfaceBrightLight,
+          surfaceContainerLowest: AppColors.surfaceContainerLowestLight,
+          surfaceContainerLow: AppColors.surfaceContainerLowLight,
+          surfaceContainer: AppColors.surfaceContainerLight,
+          surfaceContainerHigh: AppColors.surfaceContainerHighLight,
+          surfaceContainerHighest: AppColors.surfaceContainerHighestLight,
           onSurface: AppColors.onSurfaceLight,
+          onSurfaceVariant: AppColors.onSurfaceVariantLight,
+          inverseSurface: AppColors.inverseSurfaceLight,
+          onInverseSurface: AppColors.inverseOnSurfaceLight,
+          outline: AppColors.outlineLight,
+          outlineVariant: AppColors.outlineVariantLight,
         ),
         scaffoldBackgroundColor: AppColors.backgroundLight,
         textTheme: AppTypography.lightTextTheme,
         dividerColor: AppColors.dividerLight,
         appBarTheme: AppBarTheme(
-          backgroundColor: AppColors.surfaceLight,
+          backgroundColor: Colors.transparent,
           foregroundColor: AppColors.textPrimaryLight,
           elevation: 0,
+          scrolledUnderElevation: 0,
           centerTitle: true,
           titleTextStyle: AppTypography.lightTextTheme.titleLarge,
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: AppColors.surfaceLight,
+          fillColor: AppColors.surfaceContainerLowestLight,
           border: OutlineInputBorder(
             borderRadius: AppRadius.borderRadiusMd,
-            borderSide: const BorderSide(color: AppColors.borderLight),
+            borderSide: BorderSide(
+              color: AppColors.outlineVariantLight.withValues(alpha: 0.15),
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: AppRadius.borderRadiusMd,
-            borderSide: const BorderSide(color: AppColors.borderLight),
+            borderSide: BorderSide(
+              color: AppColors.outlineVariantLight.withValues(alpha: 0.15),
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: AppRadius.borderRadiusMd,
             borderSide: const BorderSide(
               color: AppColors.primaryLight,
-              width: 2,
             ),
           ),
           errorBorder: OutlineInputBorder(
@@ -86,23 +112,22 @@ class AppTheme {
           ),
         ),
         cardTheme: CardThemeData(
-          color: AppColors.surfaceLight,
+          color: AppColors.surfaceContainerLowLight,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.borderRadiusMd,
-            side: const BorderSide(color: AppColors.borderLight),
           ),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.surfaceLight,
+          backgroundColor: Colors.transparent,
           selectedItemColor: AppColors.primaryLight,
           unselectedItemColor: AppColors.textSecondaryLight,
           type: BottomNavigationBarType.fixed,
           elevation: 0,
         ),
         chipTheme: ChipThemeData(
-          backgroundColor: AppColors.surfaceLight,
-          side: const BorderSide(color: AppColors.borderLight),
+          backgroundColor: AppColors.surfaceContainerHighLight,
+          side: BorderSide.none,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.borderRadiusFull,
           ),
@@ -120,13 +145,29 @@ class AppTheme {
         colorScheme: const ColorScheme.dark(
           primary: AppColors.primaryDark,
           primaryContainer: AppColors.primaryContainerDark,
+          onPrimary: AppColors.onPrimaryDark,
+          onPrimaryContainer: AppColors.onPrimaryContainerDark,
+          primaryFixed: AppColors.primaryFixedDark,
+          primaryFixedDim: AppColors.primaryFixedDimDark,
           secondary: AppColors.secondaryDark,
           secondaryContainer: AppColors.secondaryContainerDark,
+          tertiary: AppColors.tertiaryDark,
+          tertiaryContainer: AppColors.tertiaryContainerDark,
+          onTertiaryContainer: AppColors.onTertiaryContainerDark,
           error: AppColors.errorDark,
           errorContainer: AppColors.errorContainerDark,
           surface: AppColors.surfaceDark,
-          onPrimary: AppColors.onPrimaryDark,
+          surfaceContainerLowest: AppColors.surfaceContainerLowestDark,
+          surfaceContainerLow: AppColors.surfaceContainerLowDark,
+          surfaceContainer: AppColors.surfaceContainerDark,
+          surfaceContainerHigh: AppColors.surfaceContainerHighDark,
+          surfaceContainerHighest: AppColors.surfaceContainerHighestDark,
           onSurface: AppColors.onSurfaceDark,
+          onSurfaceVariant: AppColors.onSurfaceVariantDark,
+          inverseSurface: AppColors.inverseSurfaceDark,
+          onInverseSurface: AppColors.inverseOnSurfaceDark,
+          outline: AppColors.outlineDark,
+          outlineVariant: AppColors.outlineVariantDark,
         ),
         scaffoldBackgroundColor: AppColors.backgroundDark,
         splashColor: AppColors.primaryDark.withValues(alpha: 0.08),
@@ -134,28 +175,32 @@ class AppTheme {
         textTheme: AppTypography.darkTextTheme,
         dividerColor: AppColors.dividerDark,
         appBarTheme: AppBarTheme(
-          backgroundColor: AppColors.surfaceDark,
+          backgroundColor: Colors.transparent,
           foregroundColor: AppColors.textPrimaryDark,
           elevation: 0,
+          scrolledUnderElevation: 0,
           centerTitle: true,
           titleTextStyle: AppTypography.darkTextTheme.titleLarge,
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: AppColors.surfaceDark,
+          fillColor: AppColors.surfaceContainerLowestDark,
           border: OutlineInputBorder(
             borderRadius: AppRadius.borderRadiusMd,
-            borderSide: const BorderSide(color: AppColors.borderDark),
+            borderSide: BorderSide(
+              color: AppColors.outlineVariantDark.withValues(alpha: 0.15),
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: AppRadius.borderRadiusMd,
-            borderSide: const BorderSide(color: AppColors.borderDark),
+            borderSide: BorderSide(
+              color: AppColors.outlineVariantDark.withValues(alpha: 0.15),
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: AppRadius.borderRadiusMd,
             borderSide: const BorderSide(
               color: AppColors.primaryDark,
-              width: 2,
             ),
           ),
           errorBorder: OutlineInputBorder(
@@ -194,23 +239,22 @@ class AppTheme {
           ),
         ),
         cardTheme: CardThemeData(
-          color: AppColors.surfaceDark,
+          color: AppColors.surfaceContainerLowDark,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.borderRadiusMd,
-            side: const BorderSide(color: AppColors.borderDark),
           ),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.surfaceDark,
+          backgroundColor: Colors.transparent,
           selectedItemColor: AppColors.primaryDark,
           unselectedItemColor: AppColors.textSecondaryDark,
           type: BottomNavigationBarType.fixed,
           elevation: 0,
         ),
         chipTheme: ChipThemeData(
-          backgroundColor: AppColors.surfaceDark,
-          side: const BorderSide(color: AppColors.borderDark),
+          backgroundColor: AppColors.surfaceContainerHighDark,
+          side: BorderSide.none,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.borderRadiusFull,
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/theme/app_spacing.dart';
+import 'package:kale/core/widgets/data_display/app_avatar.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
@@ -28,6 +29,10 @@ class DashboardPage extends ConsumerWidget {
       AuthAuthenticated(:final user) => user.name,
       _ => 'User',
     };
+    final avatarUrl = switch (authState) {
+      AuthAuthenticated(:final user) => user.avatarUrl,
+      _ => null,
+    };
 
     return Scaffold(
       body: SafeArea(
@@ -38,19 +43,35 @@ class DashboardPage extends ConsumerWidget {
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                centerTitle: false,
-                title: _buildGreeting(context, userName),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    onPressed: () {
-                      // TODO(dev): Navigate to notifications.
-                    },
+              // Asymmetric header: Avatar + greeting left, notification right
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg,
+                    AppSpacing.lg,
+                    AppSpacing.lg,
+                    AppSpacing.md,
                   ),
-                ],
+                  child: Row(
+                    children: [
+                      AppAvatar(
+                        imageUrl: avatarUrl,
+                        name: userName,
+                        radius: 22,
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: _buildGreeting(context, userName),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.notifications_outlined),
+                        onPressed: () {
+                          // TODO(dev): Navigate to notifications.
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SliverToBoxAdapter(
                 child: Padding(

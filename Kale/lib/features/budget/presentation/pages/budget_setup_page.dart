@@ -273,9 +273,18 @@ class _StrategyStep extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Choose Your Strategy',
-            style: context.textTheme.headlineSmall?.copyWith(
+            'Create Budget',
+            style: context.textTheme.displaySmall?.copyWith(
               fontWeight: FontWeight.w700,
+            ),
+          ),
+          AppSpacing.verticalSm,
+          Text(
+            'STRATEGY SELECTION',
+            style: context.textTheme.labelSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.65,
+              color: context.colorScheme.onSurfaceVariant,
             ),
           ),
           AppSpacing.verticalSm,
@@ -324,14 +333,14 @@ class _StrategyCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? context.colorScheme.primaryContainer.withValues(alpha: 0.4)
-                : context.colorScheme.surface,
+                : context.colorScheme.surfaceContainerLow,
             borderRadius: AppRadius.borderRadiusLg,
-            border: Border.all(
-              color: isSelected
-                  ? context.colorScheme.primary
-                  : context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-              width: isSelected ? 2 : 1,
-            ),
+            border: isSelected
+                ? Border.all(
+                    color: context.colorScheme.primary,
+                    width: 2,
+                  )
+                : null,
           ),
           child: Row(
             children: [
@@ -449,16 +458,14 @@ class _PeriodIncomeStep extends StatelessWidget {
                         ? context.colorScheme.primaryContainer.withValues(
                             alpha: 0.4,
                           )
-                        : context.colorScheme.surface,
+                        : context.colorScheme.surfaceContainerLow,
                     borderRadius: AppRadius.borderRadiusMd,
-                    border: Border.all(
-                      color: isSelected
-                          ? context.colorScheme.primary
-                          : context.colorScheme.outlineVariant.withValues(
-                              alpha: 0.3,
-                            ),
-                      width: isSelected ? 2 : 1,
-                    ),
+                    border: isSelected
+                        ? Border.all(
+                            color: context.colorScheme.primary,
+                            width: 2,
+                          )
+                        : null,
                   ),
                   child: Row(
                     children: [
@@ -615,11 +622,8 @@ class _AllocationGroup extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.lg),
       child: Container(
         decoration: BoxDecoration(
-          color: context.colorScheme.surface,
+          color: context.colorScheme.surfaceContainerLow,
           borderRadius: AppRadius.borderRadiusLg,
-          border: Border.all(
-            color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -635,9 +639,10 @@ class _AllocationGroup extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    groupName,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
+                    groupName.toUpperCase(),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.2,
                     ),
                   ),
                   Text(
@@ -650,7 +655,6 @@ class _AllocationGroup extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(height: 1),
             ...allocations.map((alloc) {
               return _AllocationRow(
                 allocation: alloc,
@@ -867,12 +871,8 @@ class _ConfirmStep extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: AppSpacing.md),
               padding: AppSpacing.paddingMd,
               decoration: BoxDecoration(
-                color: context.colorScheme.surface,
+                color: context.colorScheme.surfaceContainerLow,
                 borderRadius: AppRadius.borderRadiusMd,
-                border: Border.all(
-                  color:
-                      context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

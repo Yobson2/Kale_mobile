@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Outlined secondary button with optional icon.
-class AppSecondaryButton extends StatelessWidget {
+/// Secondary tonal button with scale press feedback.
+///
+/// Uses [surfaceContainerHigh] background with no border.
+class AppSecondaryButton extends StatefulWidget {
   /// Creates an [AppSecondaryButton].
   const AppSecondaryButton({
     required this.text,
@@ -34,40 +36,75 @@ class AppSecondaryButton extends StatelessWidget {
   final double height;
 
   @override
+  State<AppSecondaryButton> createState() => _AppSecondaryButtonState();
+}
+
+class _AppSecondaryButtonState extends State<AppSecondaryButton> {
+  bool _isPressed = false;
+
+  bool get _isEnabled => !widget.isLoading && widget.onPressed != null;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return SizedBox(
-      width: isExpanded ? double.infinity : null,
-      height: height,
-      child: OutlinedButton(
-        onPressed: isLoading ? null : onPressed,
-        style: OutlinedButton.styleFrom(
-          foregroundColor: theme.colorScheme.primary,
-          side: BorderSide(color: theme.colorScheme.primary),
-          shape: RoundedRectangleBorder(
+    final colorScheme = theme.colorScheme;
+
+    return AnimatedScale(
+      scale: _isPressed ? 0.98 : 1.0,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+      child: GestureDetector(
+        onTapDown:
+            _isEnabled ? (_) => setState(() => _isPressed = true) : null,
+        onTapUp: _isEnabled
+            ? (_) {
+                setState(() => _isPressed = false);
+                widget.onPressed?.call();
+              }
+            : null,
+        onTapCancel:
+            _isEnabled ? () => setState(() => _isPressed = false) : null,
+        child: Container(
+          width: widget.isExpanded ? double.infinity : null,
+          height: widget.height,
+          decoration: BoxDecoration(
+            color: _isEnabled
+                ? colorScheme.surfaceContainerHigh
+                : colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
             borderRadius: AppRadius.borderRadiusMd,
           ),
-        ),
-        child: isLoading
-            ? SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: theme.colorScheme.primary,
-                ),
-              )
-            : Row(
-                mainAxisSize: isExpanded ? MainAxisSize.max : MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (icon != null) ...[
-                    Icon(icon, size: 20),
-                    AppSpacing.horizontalSm,
+          alignment: Alignment.center,
+          child: widget.isLoading
+              ? SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: colorScheme.onSurface,
+                  ),
+                )
+              : Row(
+                  mainAxisSize:
+                      widget.isExpanded ? MainAxisSize.max : MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (widget.icon != null) ...[
+                      Icon(
+                        widget.icon,
+                        size: 20,
+                        color: colorScheme.onSurface,
+                      ),
+                      AppSpacing.horizontalSm,
+                    ],
+                    Text(
+                      widget.text,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
                   ],
-                  Text(text, style: theme.textTheme.labelLarge),
-                ],
-              ),
+                ),
+        ),
       ),
     );
   }

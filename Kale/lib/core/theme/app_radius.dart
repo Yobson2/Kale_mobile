@@ -49,4 +49,18 @@ class AppRadius {
   /// Fully rounded [BorderRadius].
   static BorderRadius get borderRadiusFull =>
       const BorderRadius.all(Radius.circular(full));
+
+  // ── Top-Only Helpers (for modal sheets) ────────────────────
+
+  /// Top-only [BorderRadius] of 24px (modal sheets, bottom nav).
+  static BorderRadius get borderRadiusTopXl => const BorderRadius.only(
+        topLeft: Radius.circular(xl),
+        topRight: Radius.circular(xl),
+      );
+
+  /// Top-only [BorderRadius] of 16px.
+  static BorderRadius get borderRadiusTopLg => const BorderRadius.only(
+        topLeft: Radius.circular(lg),
+        topRight: Radius.circular(lg),
+      );
 }

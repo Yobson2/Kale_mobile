@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eff1f3",
+              "surface": "#f7f9fb",
+              "primary-fixed": "#6ffbbe",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-container": "#eceef0",
+              "background": "#f7f9fb",
+              "outline": "#6c7a71",
+              "on-tertiary-container": "#523200",
+              "surface-container-lowest": "#ffffff",
+              "surface-dim": "#d8dadc",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#4edea3",
+              "primary-container": "#10b981",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb95f",
+              "outline-variant": "#bbcabf",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-container": "#5c647a",
+              "on-secondary-fixed": "#131b2e",
+              "secondary-container": "#dae2fd",
+              "secondary": "#565e74",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#dae2fd",
+              "on-surface-variant": "#3c4a42",
+              "primary": "#006c49",
+              "surface-variant": "#e0e3e5",
+              "on-background": "#191c1e",
+              "tertiary": "#855300",
+              "on-secondary-fixed-variant": "#3f465c",
+              "secondary-fixed-dim": "#bec6e0",
+              "surface-tint": "#006c49",
+              "surface-bright": "#f7f9fb",
+              "on-primary-container": "#00422b",
+              "inverse-surface": "#2d3133",
+              "on-primary-fixed": "#002113",
+              "surface-container-low": "#f2f4f6",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary-fixed-variant": "#005236",
+              "tertiary-container": "#e29100",
+              "on-secondary": "#ffffff",
+              "surface-container-highest": "#e0e3e5",
+              "on-surface": "#191c1e",
+              "surface-container-high": "#e6e8ea",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#ffddb8"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .editorial-tracking { letter-spacing: -0.02em; }
+      .glass-effect { backdrop-filter: blur(16px); }
+      .geometric-k {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M20 10 L20 90 M20 50 L70 10 M20 50 L70 90' stroke='%23006c49' stroke-width='8' fill='none' opacity='0.05'/%3E%3C/svg%3E");
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Suppression (Task-Focused/Transactional) -->
+<header class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-md flex justify-between items-center px-6 py-4">
+<div class="text-2xl font-black text-emerald-900 tracking-tighter">Kalé</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant opacity-60">Step 2 of 4</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-xl mx-auto">
+<!-- Hero Section: Editorial Authority -->
+<section class="mb-12">
+<h1 class="text-[3.5rem] leading-[1.1] font-bold text-on-surface editorial-tracking mb-4">
+                Timing &amp; Threads
+            </h1>
+<p class="text-on-surface-variant text-lg max-w-[90%]">
+                Weave your financial patterns. Define the rhythm of your income and the scope of your period.
+            </p>
+</section>
+<!-- Configuration Canvas -->
+<div class="space-y-12 geometric-k bg-no-repeat bg-right-top">
+<!-- Period Selection: Asymmetric Layout -->
+<div class="space-y-6">
+<div class="flex justify-between items-end">
+<h2 class="text-xl font-semibold text-on-surface editorial-tracking">Select Period</h2>
+<span class="label-sm text-[10px] font-bold uppercase tracking-widest text-primary">Rhythm</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Weekly Card -->
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="period" type="radio" value="weekly"/>
+<div class="p-6 bg-surface-container-lowest rounded-xl border border-transparent peer-checked:bg-primary-container/10 peer-checked:border-primary transition-all duration-200 group-active:scale-95 h-full">
+<span class="material-symbols-outlined text-primary mb-3" data-icon="calendar_view_week">calendar_view_week</span>
+<div class="block font-semibold text-on-surface">Weekly</div>
+<div class="text-xs text-on-surface-variant mt-1">Short bursts</div>
+</div>
+</label>
+<!-- Bi-weekly Card -->
+<label class="relative group cursor-pointer">
+<input checked="" class="peer sr-only" name="period" type="radio" value="biweekly"/>
+<div class="p-6 bg-surface-container-lowest rounded-xl border border-transparent peer-checked:bg-primary-container/10 peer-checked:border-primary transition-all duration-200 group-active:scale-95 h-full">
+<span class="material-symbols-outlined text-primary mb-3" data-icon="event_repeat">event_repeat</span>
+<div class="block font-semibold text-on-surface">Bi-weekly</div>
+<div class="text-xs text-on-surface-variant mt-1">Balanced weave</div>
+</div>
+</label>
+<!-- Monthly Card -->
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="period" type="radio" value="monthly"/>
+<div class="p-6 bg-surface-container-lowest rounded-xl border border-transparent peer-checked:bg-primary-container/10 peer-checked:border-primary transition-all duration-200 group-active:scale-95 h-full">
+<span class="material-symbols-outlined text-primary mb-3" data-icon="calendar_month">calendar_month</span>
+<div class="block font-semibold text-on-surface">Monthly</div>
+<div class="text-xs text-on-surface-variant mt-1">Long term focus</div>
+</div>
+</label>
+</div>
+</div>
+<!-- Income Field: High-End UI Pattern -->
+<div class="space-y-6">
+<div class="flex justify-between items-end">
+<h2 class="text-xl font-semibold text-on-surface editorial-tracking">Expected Income</h2>
+<span class="label-sm text-[10px] font-bold uppercase tracking-widest text-primary">Threads</span>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+<span class="text-2xl font-bold text-on-surface-variant opacity-40">XOF</span>
+</div>
+<input class="w-full bg-surface-container-lowest border-outline-variant/15 border-0 border-b-2 border-b-outline-variant/30 focus:border-b-primary focus:ring-0 text-4xl font-bold py-8 pl-24 pr-6 transition-all duration-300 rounded-t-xl" placeholder="0.00" type="number"/>
+<div class="mt-4 p-4 bg-tertiary-container/10 rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary text-sm mt-0.5" data-icon="info">info</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                            This amount represents your total predictable income for the chosen period. We'll use this to calibrate your spending threads.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Footer: Floating Action Bar Style -->
+<footer class="fixed bottom-0 left-0 w-full p-6 z-50 flex items-center justify-between gap-4 bg-gradient-to-t from-background via-background/90 to-transparent">
+<button class="flex-1 max-w-[120px] h-[52px] bg-surface-container-high text-on-surface font-bold rounded-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span>
+            Back
+        </button>
+<button class="flex-[2] h-[52px] bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-xl active:scale-98 transition-transform shadow-[0px_20px_40px_rgba(0,108,73,0.15)] flex items-center justify-center gap-2">
+            Continue
+            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</footer>
+<!-- Bottom Nav Suppression Logic: Currently in Setup Mode (No global nav) -->
+</body></html>

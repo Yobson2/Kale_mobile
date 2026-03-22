@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eff1f3",
+              "surface": "#f7f9fb",
+              "primary-fixed": "#6ffbbe",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-container": "#eceef0",
+              "background": "#f7f9fb",
+              "outline": "#6c7a71",
+              "on-tertiary-container": "#523200",
+              "surface-container-lowest": "#ffffff",
+              "surface-dim": "#d8dadc",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#4edea3",
+              "primary-container": "#10b981",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb95f",
+              "outline-variant": "#bbcabf",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-container": "#5c647a",
+              "on-secondary-fixed": "#131b2e",
+              "secondary-container": "#dae2fd",
+              "secondary": "#565e74",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#dae2fd",
+              "on-surface-variant": "#3c4a42",
+              "primary": "#006c49",
+              "surface-variant": "#e0e3e5",
+              "on-background": "#191c1e",
+              "tertiary": "#855300",
+              "on-secondary-fixed-variant": "#3f465c",
+              "secondary-fixed-dim": "#bec6e0",
+              "surface-tint": "#006c49",
+              "surface-bright": "#f7f9fb",
+              "on-primary-container": "#00422b",
+              "inverse-surface": "#2d3133",
+              "on-primary-fixed": "#002113",
+              "surface-container-low": "#f2f4f6",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary-fixed-variant": "#005236",
+              "tertiary-container": "#e29100",
+              "on-secondary": "#ffffff",
+              "surface-container-highest": "#e0e3e5",
+              "on-surface": "#191c1e",
+              "surface-container-high": "#e6e8ea",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#ffddb8"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.75rem", "lg": "1rem", "xl": "1.25rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active { width: 40%; }
+        .bg-weave-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(16, 185, 129, 0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 20px 40px rgba(15, 23, 42, 0.06);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tighter">Kalé</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined text-slate-500">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="User profile photo showing a smiling woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOSJiebExGaTpqdYQApfXg_rOIeCM1Bw2DdaJWisHAT-nO4DGSnZDK7JG-6a9dT7KxeM_l-1LyQEdlnRQ3o3np3UfuclgL-VtOBpWhy2jKzgk_K5kWR6C6s2XY_xQB7MuncJZpP99Zu7LdM8gbBszcJS-r8jvHdGvSvw_aip7Ed-b1pWgsWTxOChZqOGrdjqXXushEI8Q5YgkdeUzacKzxNbIZWSLcyGj9HL1sag4F2G_UKIg5SXV9DT-htkb9MZG0vzEJSR2f1mg"/>
+</div>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto">
+<!-- Step Indicator -->
+<div class="mb-8">
+<span class="text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-on-surface-variant">Step 3 of 4</span>
+<div class="mt-2 h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-3/4"></div>
+</div>
+</div>
+<!-- Hero Section -->
+<div class="relative mb-12">
+<h1 class="text-4xl font-bold tracking-tight text-on-surface mb-2 leading-tight">Define the Weave</h1>
+<p class="text-on-surface-variant text-body-md max-w-md">Distribute your monthly income across your lifestyle needs. This is where your financial story takes shape.</p>
+<!-- Geometric Decorative Element -->
+<div class="absolute -top-4 -right-4 opacity-5 pointer-events-none">
+<svg height="120" viewbox="0 0 100 100" width="120">
+<path class="text-primary" d="M0,0 L100,0 L50,100 Z" fill="currentColor"></path>
+</svg>
+</div>
+</div>
+<!-- Allocation Groups -->
+<div class="space-y-10">
+<!-- Group: Needs -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h2 class="text-xl font-semibold tracking-tight">Needs</h2>
+<span class="text-xs font-bold text-primary-container tracking-wider uppercase bg-primary-container/10 px-2 py-1 rounded">50% Recommended</span>
+</div>
+<div class="space-y-4">
+<!-- Row 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl editorial-shadow flex items-center justify-between group transition-all hover:translate-x-1">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">home</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Housing</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wider">Rent &amp; Utilities</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<span class="text-xs font-bold text-on-surface-variant">28%</span>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium text-sm">$</span>
+<input class="w-28 pl-7 pr-3 py-2 bg-surface-container-low border-none rounded-lg text-right font-bold text-on-surface focus:ring-2 focus:ring-primary-container transition-all" type="text" value="1,400"/>
+</div>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl editorial-shadow flex items-center justify-between group transition-all hover:translate-x-1">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">restaurant</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Groceries</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wider">Daily Sustenance</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<span class="text-xs font-bold text-on-surface-variant">12%</span>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium text-sm">$</span>
+<input class="w-28 pl-7 pr-3 py-2 bg-surface-container-low border-none rounded-lg text-right font-bold text-on-surface focus:ring-2 focus:ring-primary-container transition-all" type="text" value="600"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Group: Wants -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h2 class="text-xl font-semibold tracking-tight">Wants</h2>
+<span class="text-xs font-bold text-secondary tracking-wider uppercase bg-secondary-container/30 px-2 py-1 rounded">30% Recommended</span>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl editorial-shadow flex items-center justify-between group transition-all hover:translate-x-1">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">movie</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Lifestyle</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wider">Dining &amp; Leisure</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<span class="text-xs font-bold text-on-surface-variant">20%</span>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium text-sm">$</span>
+<input class="w-28 pl-7 pr-3 py-2 bg-surface-container-low border-none rounded-lg text-right font-bold text-on-surface focus:ring-2 focus:ring-primary-container transition-all" type="text" value="1,000"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Group: Savings -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h2 class="text-xl font-semibold tracking-tight">Savings</h2>
+<span class="text-xs font-bold text-tertiary tracking-wider uppercase bg-tertiary-container/10 px-2 py-1 rounded">20% Recommended</span>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl editorial-shadow border-l-4 border-tertiary-container flex items-center justify-between group transition-all hover:translate-x-1">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">savings</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Emergency Fund</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wider">Future Security</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<span class="text-xs font-bold text-on-surface-variant">20%</span>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-medium text-sm">$</span>
+<input class="w-28 pl-7 pr-3 py-2 bg-surface-container-low border-none rounded-lg text-right font-bold text-on-surface focus:ring-2 focus:ring-primary-container transition-all" type="text" value="1,000"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Total Overview Card -->
+<div class="mt-12 p-6 rounded-2xl bg-primary-container text-on-primary-container flex justify-between items-center relative overflow-hidden">
+<div class="relative z-10">
+<p class="text-[11px] uppercase tracking-[0.2em] font-bold opacity-80">Total Allocated</p>
+<p class="text-3xl font-bold tracking-tighter">$4,000 / $5,000</p>
+</div>
+<div class="text-right relative z-10">
+<p class="text-4xl font-black">80%</p>
+<p class="text-[10px] uppercase font-bold opacity-70">Remaining: $1,000</p>
+</div>
+<!-- Background Geometric Pattern -->
+<div class="absolute right-0 top-0 opacity-10 -rotate-12 translate-x-4">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">texture</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="mt-12 flex gap-4">
+<button class="flex-1 py-4 px-6 rounded-xl font-bold bg-surface-container-high text-on-surface-variant transition-all hover:bg-surface-container-highest active:scale-95">
+                Back
+            </button>
+<button class="flex-[2] py-4 px-6 rounded-xl font-bold bg-gradient-to-r from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 transition-all hover:opacity-90 active:scale-[0.98]">
+                Continue
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation (Filtered: Should be suppressed on transactional/stepper flows but kept for the "Shell" context) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white dark:bg-slate-950 shadow-[0px_-4px_20px_rgba(0,0,0,0.05)] rounded-t-2xl z-50">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-emerald-500" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-emerald-500" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider mt-1">Transactions</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider mt-1">Add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-emerald-500" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider mt-1">Budget</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1 hover:text-emerald-500" href="#">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-['Inter'] text-[11px] font-medium uppercase tracking-wider mt-1">More</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-fixed-variant": "#3f465c",
+              "secondary-container": "#dae2fd",
+              "primary-fixed-dim": "#4edea3",
+              "surface-bright": "#f7f9fb",
+              "tertiary-fixed": "#ffddb8",
+              "surface": "#f7f9fb",
+              "primary-fixed": "#6ffbbe",
+              "surface-container-low": "#f2f4f6",
+              "secondary-fixed": "#dae2fd",
+              "outline-variant": "#bbcabf",
+              "outline": "#6c7a71",
+              "inverse-on-surface": "#eff1f3",
+              "on-background": "#191c1e",
+              "on-secondary": "#ffffff",
+              "on-tertiary-container": "#523200",
+              "error": "#ba1a1a",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-dim": "#d8dadc",
+              "surface-container-high": "#e6e8ea",
+              "primary": "#006c49",
+              "on-primary-container": "#00422b",
+              "inverse-surface": "#2d3133",
+              "secondary": "#565e74",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-secondary-container": "#5c647a",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#002113",
+              "on-error-container": "#93000a",
+              "surface-tint": "#006c49",
+              "secondary-fixed-dim": "#bec6e0",
+              "surface-variant": "#e0e3e5",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-container-highest": "#e0e3e5",
+              "primary-container": "#10b981",
+              "inverse-primary": "#4edea3",
+              "on-surface-variant": "#3c4a42",
+              "tertiary": "#855300",
+              "background": "#f7f9fb",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#191c1e",
+              "tertiary-container": "#e29100",
+              "surface-container": "#eceef0",
+              "on-secondary-fixed": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl flex items-center justify-between px-6 h-16 w-full shadow-[0px_20px_40px_rgba(15,23,42,0.06)]">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 active:scale-95 duration-200 transition-opacity hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="text-xl font-bold tracking-tighter text-slate-900">Kalé</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="User profile placeholder icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcn7srB5eK-yGwBLWya8R5Vqcjaawe9RBFZ3-YTwIffvfhlLNTJ9Wp6eXA-cZPEU35BLrDhl3HW7q8naZp1z50-6wQJrFeq7A5RPadt298Iu6mMbFUTV_Eco15WR3ZKsGdDH8EGdPuzFn-j3esnmg0e8GGmooKGeBF3cxEqmnVp34LzRaPs33xgAgUde-_apayjYywprY2FZwBDhqVLZnqj8M5XGofy0g9bIcRcFpIqDBGP--qbS6zROf6Ci7Y5tSNiKpqSogp2gY"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col px-6 pt-32 pb-12 max-w-md mx-auto w-full">
+<!-- Hero Section / Context -->
+<div class="mb-10">
+<h1 class="text-[1.75rem] font-semibold tracking-[-0.02em] text-on-surface mb-3">Verify Email</h1>
+<p class="text-on-surface-variant body-md leading-relaxed">
+                Enter the 6-digit code sent to <span class="font-semibold text-on-surface">alex.weaver@example.com</span>
+</p>
+</div>
+<!-- OTP Input Grid -->
+<div class="grid grid-cols-6 gap-3 mb-12">
+<input class="w-full h-12 text-center text-xl font-bold rounded-xl border-none bg-surface-container-low focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200 text-on-surface" maxlength="1" placeholder="·" type="text"/>
+<input class="w-full h-12 text-center text-xl font-bold rounded-xl border-none bg-surface-container-low focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200 text-on-surface" maxlength="1" placeholder="·" type="text"/>
+<input class="w-full h-12 text-center text-xl font-bold rounded-xl border-none bg-surface-container-low focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200 text-on-surface" maxlength="1" placeholder="·" type="text"/>
+<input class="w-full h-12 text-center text-xl font-bold rounded-xl border-none bg-surface-container-low focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200 text-on-surface" maxlength="1" placeholder="·" type="text"/>
+<input class="w-full h-12 text-center text-xl font-bold rounded-xl border-none bg-surface-container-low focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200 text-on-surface" maxlength="1" placeholder="·" type="text"/>
+<input class="w-full h-12 text-center text-xl font-bold rounded-xl border-none bg-surface-container-low focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all duration-200 text-on-surface" maxlength="1" placeholder="·" type="text"/>
+</div>
+<!-- Action Section -->
+<div class="space-y-6 mt-auto">
+<button class="w-full h-[52px] bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-xl active:scale-[0.98] transition-all duration-200 shadow-lg shadow-primary/20">
+                Verify
+            </button>
+<div class="flex flex-col items-center gap-2">
+<p class="text-sm text-on-surface-variant font-medium">Didn't receive code?</p>
+<div class="flex items-center gap-2">
+<button class="text-primary font-bold text-sm hover:opacity-80 transition-opacity">
+                        Resend
+                    </button>
+<span class="w-1 h-1 rounded-full bg-outline-variant opacity-50"></span>
+<span class="text-sm font-semibold text-on-surface-variant font-mono">01:54</span>
+</div>
+</div>
+</div>
+<!-- Decorative Branding Element (Asymmetric "K") -->
+<div class="fixed -bottom-10 -right-10 opacity-[0.03] pointer-events-none select-none">
+<svg class="text-primary" fill="currentColor" height="240" viewbox="0 0 100 100" width="240">
+<path d="M20 10 L20 90 M20 50 L70 10 M40 50 L70 90" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="12"></path>
+</svg>
+</div>
+</main>
+<!-- Bottom Spacing for focused experience -->
+<div class="h-8"></div>
+</body></html>

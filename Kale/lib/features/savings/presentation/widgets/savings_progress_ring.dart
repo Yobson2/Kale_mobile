@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:kale/core/theme/app_colors.dart';
 
-/// Circular progress indicator for savings goals.
+/// Circular progress indicator for savings goals with gradient stroke.
 class SavingsProgressRing extends StatelessWidget {
   /// Creates a [SavingsProgressRing].
   const SavingsProgressRing({
@@ -36,9 +37,9 @@ class SavingsProgressRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final bgColor =
-        backgroundColor ?? theme.colorScheme.surfaceContainerHighest;
-    final fgColor = progressColor ?? theme.colorScheme.primary;
+        backgroundColor ?? theme.colorScheme.outlineVariant.withValues(alpha: 0.15);
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
@@ -53,11 +54,12 @@ class SavingsProgressRing extends StatelessWidget {
             children: [
               CustomPaint(
                 size: Size(size, size),
-                painter: _RingPainter(
+                painter: _GradientRingPainter(
                   progress: animatedProgress,
                   strokeWidth: strokeWidth,
                   backgroundColor: bgColor,
-                  progressColor: fgColor,
+                  progressColor: progressColor,
+                  isDark: isDark,
                 ),
               ),
               if (child != null) child!,
@@ -69,23 +71,26 @@ class SavingsProgressRing extends StatelessWidget {
   }
 }
 
-class _RingPainter extends CustomPainter {
-  _RingPainter({
+class _GradientRingPainter extends CustomPainter {
+  _GradientRingPainter({
     required this.progress,
     required this.strokeWidth,
     required this.backgroundColor,
-    required this.progressColor,
+    required this.isDark,
+    this.progressColor,
   });
 
   final double progress;
   final double strokeWidth;
   final Color backgroundColor;
-  final Color progressColor;
+  final Color? progressColor;
+  final bool isDark;
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width - strokeWidth) / 2;
+    final rect = Rect.fromCircle(center: center, radius: radius);
 
     // Background circle.
     final bgPaint = Paint()
@@ -95,17 +100,36 @@ class _RingPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     canvas.drawCircle(center, radius, bgPaint);
 
-    // Progress arc.
+    // Progress arc with gradient.
     if (progress > 0) {
-      final progressPaint = Paint()
-        ..color = progressColor
-        ..strokeWidth = strokeWidth
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round;
+      final sweepAngle = 2 * pi * progress;
+
+      final Paint progressPaint;
+      if (progressColor != null) {
+        progressPaint = Paint()
+          ..color = progressColor!
+          ..strokeWidth = strokeWidth
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round;
+      } else {
+        final gradient = SweepGradient(
+          startAngle: -pi / 2,
+          endAngle: -pi / 2 + sweepAngle,
+          colors: isDark
+              ? [AppColors.primaryDark, AppColors.primaryContainerDark]
+              : [AppColors.primaryLight, AppColors.primaryContainerLight],
+        );
+        progressPaint = Paint()
+          ..shader = gradient.createShader(rect)
+          ..strokeWidth = strokeWidth
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round;
+      }
+
       canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
+        rect,
         -pi / 2, // Start from top.
-        2 * pi * progress,
+        sweepAngle,
         false,
         progressPaint,
       );
@@ -113,7 +137,8 @@ class _RingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _RingPainter oldDelegate) =>
+  bool shouldRepaint(covariant _GradientRingPainter oldDelegate) =>
       oldDelegate.progress != progress ||
-      oldDelegate.progressColor != progressColor;
+      oldDelegate.progressColor != progressColor ||
+      oldDelegate.isDark != isDark;
 }

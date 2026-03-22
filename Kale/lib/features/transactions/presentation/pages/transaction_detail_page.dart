@@ -7,6 +7,7 @@ import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
+import 'package:kale/core/widgets/buttons/app_primary_button.dart';
 import 'package:kale/core/widgets/feedback/app_dialog.dart';
 import 'package:kale/core/widgets/feedback/app_snackbar.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
@@ -255,11 +256,8 @@ class _TransactionDetailContent extends StatelessWidget {
             width: double.infinity,
             padding: AppSpacing.paddingLg,
             decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
+              color: theme.colorScheme.surfaceContainerLow,
               borderRadius: AppRadius.borderRadiusLg,
-              border: Border.all(
-                color: theme.colorScheme.outlineVariant,
-              ),
             ),
             child: Column(
               children: [
@@ -336,15 +334,96 @@ class _TransactionDetailContent extends StatelessWidget {
               ],
             ),
           ),
+          // Budget impact section
+          if (!isIncome) ...[
+            AppSpacing.verticalXl,
+            Container(
+              width: double.infinity,
+              padding: AppSpacing.paddingLg,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerLow,
+                borderRadius: AppRadius.borderRadiusLg,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.history,
+                    size: 20,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  AppSpacing.horizontalMd,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'HISTORY',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.65,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text.rich(
+                          TextSpan(
+                            text:
+                                'This transaction matches your recurring '
+                                "spending pattern for '",
+                            children: [
+                              TextSpan(
+                                text: category?.name ?? 'General',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const TextSpan(text: "'. Budget impact: "),
+                              TextSpan(
+                                text: '12%',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                              const TextSpan(text: ' of monthly limit.'),
+                            ],
+                          ),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            height: 1.5,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          AppSpacing.verticalXl,
+
+          // Generate Receipt CTA
+          AppPrimaryButton(
+            text: 'Generate Receipt',
+            icon: Icons.receipt_long,
+            onPressed: () {},
+          ),
           AppSpacing.verticalXxxl,
         ],
       ),
     );
   }
 
-  Widget _divider(ThemeData theme) => Divider(
+  Widget _divider(ThemeData theme) => SizedBox(
         height: AppSpacing.xl,
-        color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+        child: Center(
+          child: Container(
+            height: 1,
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.15),
+          ),
+        ),
       );
 
   Color _resolveColor(String? hexColor) {

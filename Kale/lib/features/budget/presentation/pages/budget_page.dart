@@ -7,12 +7,13 @@ import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
-import 'package:kale/core/widgets/layout/app_app_bar.dart';
+import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_notifier.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
+import 'package:kale/features/budget/presentation/widgets/budget_gauge.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
 
 /// Budget overview page showing the active budget with category
@@ -26,9 +27,17 @@ class BudgetPage extends ConsumerWidget {
     final activeBudgetAsync = ref.watch(activeBudgetProvider);
 
     return Scaffold(
-      appBar: AppAppBar(
-        title: 'Budget',
-        showBackButton: false,
+      appBar: AppBar(
+        title: Text(
+          'Budget',
+          style: context.textTheme.titleLarge?.copyWith(
+            color: context.colorScheme.primary,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: false,
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         actions: [
           activeBudgetAsync.whenOrNull(
                 data: (budget) {
@@ -223,7 +232,40 @@ class _BudgetContent extends ConsumerWidget {
             _BudgetHeader(budget: budget),
             AppSpacing.verticalLg,
 
-            // Total progress card.
+            // Speedometer gauge.
+            Center(
+              child: BudgetGauge(
+                percent: spentPercent,
+                statusText: spentPercent <= 0.8
+                    ? 'Optimal Spending Zone'
+                    : spentPercent <= 1.0
+                        ? 'Near Limit'
+                        : 'Over Budget',
+              ),
+            ),
+            AppSpacing.verticalMd,
+
+            // Editorial insight text.
+            Center(
+              child: Padding(
+                padding: AppSpacing.paddingHorizontalLg,
+                child: Text(
+                  spentPercent <= 0.8
+                      ? 'Your digital loom is weaving a strong foundation this month.'
+                      : spentPercent <= 1.0
+                          ? 'Your spending threads are tightening — review your budget.'
+                          : 'Your budget fabric has stretched past its limit.',
+                  textAlign: TextAlign.center,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+            ),
+            AppSpacing.verticalLg,
+
+            // Total progress card with gradient.
             _TotalProgressCard(
               totalSpent: totalSpent,
               totalAllocated: totalAllocated,
@@ -265,11 +307,8 @@ class _BudgetHeader extends StatelessWidget {
     return Container(
       padding: AppSpacing.paddingLg,
       decoration: BoxDecoration(
-        color: context.colorScheme.surface,
+        color: context.colorScheme.surfaceContainerLow,
         borderRadius: AppRadius.borderRadiusLg,
-        border: Border.all(
-          color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-        ),
       ),
       child: Row(
         children: [
@@ -302,13 +341,11 @@ class _BudgetHeader extends StatelessWidget {
                     _InfoChip(
                       icon: Icons.calendar_today_rounded,
                       label: _periodLabel(budget.period),
-                      context: context,
                     ),
                     AppSpacing.horizontalSm,
                     _InfoChip(
                       icon: Icons.auto_awesome_rounded,
                       label: _strategyLabel(budget.strategy),
-                      context: context,
                     ),
                   ],
                 ),
@@ -342,33 +379,31 @@ class _InfoChip extends StatelessWidget {
   const _InfoChip({
     required this.icon,
     required this.label,
-    required this.context,
   });
 
   final IconData icon;
   final String label;
-  final BuildContext context;
 
   @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.xxs,
       ),
       decoration: BoxDecoration(
-        color: buildContext.colorScheme.surfaceContainerHighest,
+        color: context.colorScheme.surfaceContainerHighest,
         borderRadius: AppRadius.borderRadiusFull,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: buildContext.colorScheme.onSurfaceVariant),
+          Icon(icon, size: 12, color: context.colorScheme.onSurfaceVariant),
           const SizedBox(width: 4),
           Text(
             label,
-            style: buildContext.textTheme.bodySmall?.copyWith(
-              color: buildContext.colorScheme.onSurfaceVariant,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colorScheme.onSurfaceVariant,
               fontSize: 11,
             ),
           ),
@@ -394,75 +429,76 @@ class _TotalProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isOverBudget = totalSpent > totalAllocated;
-    final progressColor = isOverBudget
-        ? (isDark ? AppColors.expenseDark : AppColors.expenseLight)
-        : (isDark ? AppColors.primaryDark : AppColors.primaryLight);
 
-    return Container(
-      padding: AppSpacing.paddingLg,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [AppColors.primaryContainerDark, AppColors.surfaceDark]
-              : [AppColors.primaryContainerLight, AppColors.surfaceLight],
+    return ClipRRect(
+      borderRadius: AppRadius.borderRadiusLg,
+      child: Container(
+        padding: AppSpacing.paddingLg,
+        decoration: BoxDecoration(
+          gradient: isDark
+              ? AppColors.primaryGradientDark
+              : AppColors.primaryGradientLight,
+          borderRadius: AppRadius.borderRadiusLg,
         ),
-        borderRadius: AppRadius.borderRadiusLg,
-        border: Border.all(
-          color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
+        child: Stack(
+          children: [
+            const GeometricKWatermark(
+              opacity: 0.05,
+              fontSize: 120,
+              alignment: Alignment.topRight,
+              offset: Offset(20, -15),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'TOTAL SPENT',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: Colors.white.withValues(alpha: 0.8),
+                        letterSpacing: 1.65,
+                      ),
+                    ),
+                    Text(
+                      '${(spentPercent * 100).toStringAsFixed(0)}%',
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                AppSpacing.verticalSm,
+                Text(
+                  CurrencyFormatter.format(totalSpent),
+                  style: context.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+                AppSpacing.verticalXs,
+                Text(
+                  'of ${CurrencyFormatter.format(totalAllocated)} budget',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.7),
+                  ),
+                ),
+                AppSpacing.verticalMd,
+                ClipRRect(
+                  borderRadius: AppRadius.borderRadiusFull,
+                  child: LinearProgressIndicator(
+                    value: spentPercent.clamp(0.0, 1.0),
+                    minHeight: 8,
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
+                    valueColor: const AlwaysStoppedAnimation(Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total Spent',
-                style: context.textTheme.titleSmall?.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              Text(
-                '${(spentPercent * 100).toStringAsFixed(0)}%',
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: progressColor,
-                ),
-              ),
-            ],
-          ),
-          AppSpacing.verticalSm,
-          Text(
-            CurrencyFormatter.format(totalSpent),
-            style: context.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: progressColor,
-            ),
-          ),
-          AppSpacing.verticalXs,
-          Text(
-            'of ${CurrencyFormatter.format(totalAllocated)} budget',
-            style: context.textTheme.bodySmall?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          AppSpacing.verticalMd,
-          ClipRRect(
-            borderRadius: AppRadius.borderRadiusFull,
-            child: LinearProgressIndicator(
-              value: spentPercent.clamp(0.0, 1.0),
-              minHeight: 8,
-              backgroundColor: context.colorScheme.outlineVariant.withValues(
-                alpha: 0.3,
-              ),
-              valueColor: AlwaysStoppedAnimation(progressColor),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -496,11 +532,8 @@ class _CategoryGroupSection extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.lg),
       child: Container(
         decoration: BoxDecoration(
-          color: context.colorScheme.surface,
+          color: context.colorScheme.surfaceContainerLow,
           borderRadius: AppRadius.borderRadiusLg,
-          border: Border.all(
-            color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -525,9 +558,10 @@ class _CategoryGroupSection extends StatelessWidget {
                       ),
                       AppSpacing.horizontalSm,
                       Text(
-                        groupName,
-                        style: context.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
+                        groupName.toUpperCase(),
+                        style: context.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ],
@@ -544,7 +578,8 @@ class _CategoryGroupSection extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(height: 1),
+            // Spacing instead of divider
+            AppSpacing.verticalSm,
 
             // Category items.
             ...categories.map(
@@ -553,6 +588,7 @@ class _CategoryGroupSection extends StatelessWidget {
                 categoryNames: categoryNames,
               ),
             ),
+            AppSpacing.verticalSm,
           ],
         ),
       ),
@@ -632,7 +668,7 @@ class _CategoryProgressItem extends StatelessWidget {
               value: progress,
               minHeight: 6,
               backgroundColor: context.colorScheme.outlineVariant.withValues(
-                alpha: 0.2,
+                alpha: 0.15,
               ),
               valueColor: AlwaysStoppedAnimation(progressColor),
             ),

@@ -1,27 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Kalé — The Cowrie Flow — Outlined Variant -->
-  <!-- Emerald strokes on transparent background -->
+  <!-- Kalé — Bold K — Outlined Variant -->
+  <!-- Emerald strokes on transparent background with decorative circles -->
 
-  <!-- Circle container (stroke only) -->
-  <circle cx="50" cy="50" r="40.5" fill="none" stroke="#10B981" stroke-width="3"/>
+  <defs>
+    <clipPath id="squircleClip">
+      <rect x="2" y="2" width="96" height="96" rx="20" ry="20"/>
+    </clipPath>
+  </defs>
 
-  <!-- Cowrie shell body (stroke only) -->
-  <ellipse cx="50" cy="50" rx="20" ry="14" fill="none" stroke="#10B981" stroke-width="2.5"/>
+  <!-- Squircle container (stroke only) -->
+  <rect x="2" y="2" width="96" height="96" rx="20" ry="20" fill="none" stroke="#10B981" stroke-width="3"/>
 
-  <!-- Shell ridges (ledger lines) -->
-  <line x1="35" y1="46" x2="65" y2="46" stroke="#10B981" stroke-width="0.8" opacity="0.4"/>
-  <line x1="34" y1="50" x2="66" y2="50" stroke="#10B981" stroke-width="0.8" opacity="0.4"/>
-  <line x1="35" y1="54" x2="65" y2="54" stroke="#10B981" stroke-width="0.8" opacity="0.4"/>
+  <!-- Two overlapping decorative circles clipped to squircle (stroke only) -->
+  <g clip-path="url(#squircleClip)">
+    <circle cx="28" cy="25" r="42" fill="none" stroke="#10B981" stroke-width="1" opacity="0.25"/>
+    <circle cx="75" cy="72" r="38" fill="none" stroke="#10B981" stroke-width="1" opacity="0.20"/>
+  </g>
 
-  <!-- Shell opening (vertical slit) -->
-  <path d="M 50,37 C 48,43 48,57 50,63" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
-
-  <!-- Income flow line (upward-right, thicker) -->
-  <path d="M 50,37 C 48,30 55,22 65,20" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
-
-  <!-- Expense flow line (downward-left, thinner) -->
-  <path d="M 50,63 C 52,70 45,78 35,80" fill="none" stroke="#10B981" stroke-width="1.8" stroke-linecap="round"/>
-
-  <!-- Accent dot (stroke only) -->
-  <circle cx="65" cy="20" r="3" fill="none" stroke="#F59E0B" stroke-width="1.5"/>
+  <!-- Bold upright K letterform (filled) -->
+  <path d="M 28 22 L 40 22 L 40 40 L 60 22 L 74 22 L 48 50 L 74 78 L 60 78 L 40 58 L 40 78 L 28 78 Z" fill="#10B981"/>
 </svg>

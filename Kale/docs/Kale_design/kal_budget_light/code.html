@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#6c7a71",
+              "secondary": "#565e74",
+              "secondary-fixed-dim": "#bec6e0",
+              "on-secondary-fixed-variant": "#3f465c",
+              "error": "#ba1a1a",
+              "on-error": "#ffffff",
+              "surface-tint": "#006c49",
+              "surface-container-highest": "#e0e3e5",
+              "surface-bright": "#f7f9fb",
+              "on-secondary-container": "#5c647a",
+              "secondary-fixed": "#dae2fd",
+              "surface-variant": "#e0e3e5",
+              "inverse-on-surface": "#eff1f3",
+              "surface": "#f7f9fb",
+              "on-primary": "#ffffff",
+              "inverse-primary": "#4edea3",
+              "inverse-surface": "#2d3133",
+              "on-surface": "#191c1e",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#eceef0",
+              "on-tertiary-container": "#523200",
+              "tertiary": "#855300",
+              "outline-variant": "#bbcabf",
+              "on-primary-fixed": "#002113",
+              "on-primary-container": "#00422b",
+              "background": "#f7f9fb",
+              "surface-container-high": "#e6e8ea",
+              "on-surface-variant": "#3c4a42",
+              "surface-container-low": "#f2f4f6",
+              "tertiary-container": "#e29100",
+              "tertiary-fixed": "#ffddb8",
+              "on-background": "#191c1e",
+              "on-primary-fixed-variant": "#005236",
+              "primary-fixed": "#6ffbbe",
+              "on-secondary-fixed": "#131b2e",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary-container": "#dae2fd",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#10b981",
+              "primary": "#006c49",
+              "on-error-container": "#93000a",
+              "primary-fixed-dim": "#4edea3",
+              "surface-dim": "#d8dadc",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed": "#2a1700"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .gauge-container {
+            position: relative;
+            width: 240px;
+            height: 120px;
+            overflow: hidden;
+        }
+        .gauge-bg {
+            fill: none;
+            stroke: #eceef0;
+            stroke-width: 12;
+            stroke-linecap: round;
+        }
+        .gauge-progress {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 70; /* Example 75% */
+            transition: stroke-dashoffset 1s ease-out;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 w-full bg-white/60 backdrop-blur-md shadow-none">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="Minimalist user profile avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCruv4sKDUmgL7BrMo3GyrXUjg-0urvx-5j_iU1hhgjZctzrMuPhtB8n8dJAuVXpZ1bU-hpS0w47DAhZBkwJzd6whxkUokq7zTzutWp0HBW4crHUqAd8Ot-TwBRfPskKpTzHwwxpA1JL4zOzz0BEWhptfDBVF308Pkxm4A3tNGHB90Nf9cxVOAYC9tYMsvZd0IDKxNbb7voa33epb7Q27e7mEnqVxMssu40w1Cyl4HhaN21cVxRuV0zHwWQVvJdPvHlCC9hEpmBOuU"/>
+</div>
+<h1 class="font-['Inter'] tracking-tight headline-md:text-[1.75rem] body-md:text-[0.875rem] font-bold text-emerald-600">Welcome, User</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-emerald-50 transition-colors active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-slate-500" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="px-6 space-y-8 mt-6 max-w-2xl mx-auto">
+<!-- Active Budget Card -->
+<section class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/15 shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-[44px] h-[44px] rounded-lg bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div>
+<h2 class="text-title-sm font-semibold tracking-tight text-on-surface">Main Living Budget</h2>
+<p class="text-body-md text-on-surface-variant">Monthly Cycle</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-tertiary-container text-on-tertiary-container text-label-sm font-bold rounded-full">50/30/20 STRATEGY</span>
+</div>
+</section>
+<!-- Budget Gauge Section (Asymmetric Editorial Layout) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+<div class="flex flex-col items-center">
+<div class="gauge-container mb-[-20px]">
+<svg class="w-full" viewbox="0 0 200 100">
+<path class="gauge-bg" d="M 20 90 A 80 80 0 0 1 180 90"></path>
+<!-- Green Zone 0-70%, Red 90%+ represented by color transitions -->
+<path class="gauge-progress stroke-primary" d="M 20 90 A 80 80 0 0 1 180 90" style="stroke-dashoffset: 85;"></path>
+</svg>
+<div class="absolute bottom-0 left-0 right-0 text-center">
+<span class="text-[2.5rem] font-bold tracking-tighter text-on-surface leading-none">68%</span>
+</div>
+</div>
+<p class="text-label-sm text-on-surface-variant font-semibold tracking-widest mt-2">OPTIMAL SPENDING ZONE</p>
+</div>
+<div class="space-y-4">
+<h3 class="text-headline-md font-semibold tracking-tight leading-tight">Your digital loom is weaving a <span class="text-primary">strong foundation</span> this month.</h3>
+<div class="flex gap-3">
+<button class="h-[52px] flex-1 border border-outline rounded-lg text-title-sm font-bold hover:bg-surface-container-low transition-all active:scale-95">New Budget</button>
+<button class="h-[52px] flex-1 bg-surface-container-high rounded-lg text-title-sm font-bold hover:bg-surface-container-highest transition-all active:scale-95">Edit Budget</button>
+</div>
+</div>
+</section>
+<!-- Total Progress Card (Gradient & Glass) -->
+<section class="relative overflow-hidden bg-gradient-to-br from-primary to-primary-container p-6 rounded-xl text-on-primary">
+<!-- Geometric watermark -->
+<div class="absolute -right-4 -top-4 opacity-10 text-[120px] font-black select-none pointer-events-none">K</div>
+<div class="relative z-10 flex flex-col gap-4">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-label-sm font-bold opacity-80 uppercase tracking-widest">Total Spent</p>
+<h4 class="text-display-lg leading-none tracking-tighter">$4,280.00</h4>
+</div>
+<div class="text-right">
+<p class="text-title-sm font-bold">72%</p>
+<p class="text-body-md opacity-80">of $6,000 budget</p>
+</div>
+</div>
+<div class="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-white rounded-full" style="width: 72%"></div>
+</div>
+</div>
+</section>
+<!-- Category Groups -->
+<div class="space-y-6">
+<!-- Needs Group -->
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<h5 class="text-title-sm font-bold uppercase tracking-wider text-on-surface-variant">Essential Needs</h5>
+<span class="text-label-sm font-bold text-primary">82% USED</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg space-y-4">
+<div class="space-y-2">
+<div class="flex justify-between text-body-md">
+<span>Housing &amp; Rent</span>
+<span class="font-semibold">$2,100 / $2,500</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full">
+<div class="h-full bg-primary rounded-full" style="width: 84%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-body-md">
+<span>Utilities &amp; Wifi</span>
+<span class="font-semibold">$340 / $400</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full">
+<div class="h-full bg-primary rounded-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Wants Group -->
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<h5 class="text-title-sm font-bold uppercase tracking-wider text-on-surface-variant">Personal Wants</h5>
+<span class="text-label-sm font-bold text-tertiary">45% USED</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg space-y-4">
+<div class="space-y-2">
+<div class="flex justify-between text-body-md">
+<span>Dining Out</span>
+<span class="font-semibold">$450 / $1,000</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full">
+<div class="h-full bg-tertiary-container rounded-full" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Savings Group -->
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<h5 class="text-title-sm font-bold uppercase tracking-wider text-on-surface-variant">Savings &amp; Debt</h5>
+<span class="text-label-sm font-bold text-primary-container">100% MET</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg space-y-4">
+<div class="space-y-2">
+<div class="flex justify-between text-body-md">
+<span>Emergency Fund</span>
+<span class="font-semibold">$1,200 / $1,200</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full">
+<div class="h-full bg-primary-container rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-xl shadow-[0px_10px_30px_rgba(0,108,73,0.25)] flex items-center justify-center active:scale-90 transition-all z-50">
+<span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 backdrop-blur-xl shadow-[0px_-10px_30px_rgba(0,0,0,0.03)] rounded-t-3xl border-t-0">
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="receipt_long">receipt_long</span>
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider">Transactions</span>
+</a>
+<div class="w-12 h-12"></div> <!-- Spacer for FAB if needed or middle item center alignment -->
+<a class="flex flex-col items-center justify-center text-emerald-600 font-semibold active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider">Budget</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="more_horiz">more_horiz</span>
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider">More</span>
+</a>
+</nav>
+</body></html>

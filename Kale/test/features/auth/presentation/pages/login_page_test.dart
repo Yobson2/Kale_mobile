@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kale/core/widgets/buttons/app_primary_button.dart';
 import 'package:kale/features/auth/presentation/pages/login_page.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
@@ -35,7 +36,7 @@ void main() {
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
-      expect(find.byType(ElevatedButton), findsOneWidget);
+      expect(find.byType(AppPrimaryButton), findsOneWidget);
     });
 
     testWidgets('should show validation errors for empty fields',
@@ -44,7 +45,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap login without entering anything
-      await tester.tap(find.byType(ElevatedButton).first);
+      await tester.tap(find.byType(AppPrimaryButton).first);
       await tester.pumpAndSettle();
 
       // Should show validation errors

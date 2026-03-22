@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Themed card with optional header and footer.
+/// Themed card using tonal surface layering (no borders).
+///
+/// Depth is achieved through background color tier shifts, not borders
+/// or heavy shadows. Per the Digital Loom "No-Line Rule".
 class AppCard extends StatelessWidget {
   /// Creates an [AppCard].
   const AppCard({
@@ -12,7 +15,9 @@ class AppCard extends StatelessWidget {
     this.footer,
     this.padding,
     this.onTap,
-    this.borderColor,
+    this.color,
+    this.gradient,
+    this.borderRadius,
   });
 
   /// Card body content.
@@ -30,8 +35,14 @@ class AppCard extends StatelessWidget {
   /// Optional tap callback.
   final VoidCallback? onTap;
 
-  /// Optional border color override.
-  final Color? borderColor;
+  /// Background color override. Defaults to theme's card color.
+  final Color? color;
+
+  /// Optional gradient background (for hero/finance cards).
+  final Gradient? gradient;
+
+  /// Border radius override.
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +51,11 @@ class AppCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: theme.cardTheme.color ?? theme.colorScheme.surface,
-          borderRadius: AppRadius.borderRadiusMd,
-          border: Border.all(
-            color: borderColor ?? theme.dividerColor,
-          ),
+          color: gradient == null
+              ? (color ?? theme.cardTheme.color ?? theme.colorScheme.surfaceContainerLow)
+              : null,
+          gradient: gradient,
+          borderRadius: borderRadius ?? AppRadius.borderRadiusMd,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,14 +66,14 @@ class AppCard extends StatelessWidget {
                 padding: AppSpacing.paddingLg,
                 child: header,
               ),
-              Divider(height: 1, color: theme.dividerColor),
+              AppSpacing.verticalSm,
             ],
             Padding(
               padding: padding ?? AppSpacing.paddingLg,
               child: child,
             ),
             if (footer != null) ...[
-              Divider(height: 1, color: theme.dividerColor),
+              AppSpacing.verticalSm,
               Padding(
                 padding: AppSpacing.paddingLg,
                 child: footer,

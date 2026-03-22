@@ -210,15 +210,27 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
           AppSpacing.verticalXl,
           Row(
             children: [
-              const Expanded(child: Divider()),
+              Expanded(
+                child: Container(
+                  height: 1,
+                  color: context.colorScheme.outlineVariant
+                      .withValues(alpha: 0.15),
+                ),
+              ),
               Padding(
                 padding: AppSpacing.paddingHorizontalLg,
                 child: Text(
-                  context.l10n.commonOr,
-                  style: context.textTheme.bodySmall,
+                  context.l10n.commonOr.toUpperCase(),
+                  style: context.textTheme.labelSmall,
                 ),
               ),
-              const Expanded(child: Divider()),
+              Expanded(
+                child: Container(
+                  height: 1,
+                  color: context.colorScheme.outlineVariant
+                      .withValues(alpha: 0.15),
+                ),
+              ),
             ],
           ),
           AppSpacing.verticalXl,

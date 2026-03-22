@@ -125,8 +125,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       onLanguageChanged: (v) =>
                           setState(() => _selectedLanguage = v),
                       selectedGoal: _selectedGoal,
-                      onGoalChanged: (v) =>
-                          setState(() => _selectedGoal = v),
+                      onGoalChanged: (v) => setState(() => _selectedGoal = v),
                     ),
                   ),
                 ],

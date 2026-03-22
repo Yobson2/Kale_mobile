@@ -190,7 +190,7 @@ class _DeadlinePicker extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
           border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.5),
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.15),
           ),
           borderRadius: AppRadius.borderRadiusMd,
         ),

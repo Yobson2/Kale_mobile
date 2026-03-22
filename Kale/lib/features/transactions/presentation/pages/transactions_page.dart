@@ -11,8 +11,6 @@ import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/animations/staggered_list_item.dart';
 import 'package:kale/core/widgets/data_display/app_chip.dart';
 import 'package:kale/core/widgets/inputs/app_search_field.dart';
-import 'package:kale/core/widgets/layout/app_app_bar.dart';
-import 'package:kale/core/widgets/layout/app_scaffold.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
 import 'package:kale/core/widgets/states/app_empty_state.dart';
 import 'package:kale/core/widgets/states/app_error_state.dart';
@@ -43,10 +41,18 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
     final categoriesAsync = ref.watch(categoriesStreamProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return AppScaffold(
-      appBar: AppAppBar(
-        title: context.l10n.transactionsTitle,
-        showBackButton: false,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          context.l10n.transactionsTitle,
+          style: context.textTheme.titleLarge?.copyWith(
+            color: context.colorScheme.primary,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: false,
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -171,20 +177,14 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: AppSpacing.lg,
                                   ),
-                                  child: Column(
-                                    children: [
-                                      _TransactionTile(
-                                        transaction: transaction,
-                                        category: category,
-                                        isDark: isDark,
-                                        onTap: () => context.pushNamed(
-                                          RouteNames.transactionDetailName,
-                                          extra: transaction.id,
-                                        ),
-                                      ),
-                                      if (index < group.transactions.length - 1)
-                                        const Divider(height: 1),
-                                    ],
+                                  child: _TransactionTile(
+                                    transaction: transaction,
+                                    category: category,
+                                    isDark: isDark,
+                                    onTap: () => context.pushNamed(
+                                      RouteNames.transactionDetailName,
+                                      extra: transaction.id,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -194,6 +194,36 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                           ),
                         ),
                       ],
+                      // End-of-list message
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xl,
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.history,
+                                  size: 16,
+                                  color:
+                                      context.colorScheme.onSurfaceVariant,
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                Text(
+                                  'End of recent history',
+                                  style: context.textTheme.labelSmall
+                                      ?.copyWith(
+                                    color: context
+                                        .colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                       // Bottom padding
                       const SliverPadding(
                         padding: EdgeInsets.only(bottom: AppSpacing.lg),
@@ -312,7 +342,7 @@ class _TransactionGroup {
   final List<Transaction> transactions;
 }
 
-/// Delegate for sticky section headers in the [CustomScrollView].
+/// Delegate for sticky section headers with uppercase label style.
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   const _StickyHeaderDelegate({required this.label});
 
@@ -337,9 +367,11 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       color: theme.scaffoldBackgroundColor,
       child: Text(
-        label,
-        style: theme.textTheme.titleSmall?.copyWith(
+        label.toUpperCase(),
+        style: theme.textTheme.labelSmall?.copyWith(
           fontWeight: FontWeight.w600,
+          color: theme.colorScheme.onSurfaceVariant,
+          letterSpacing: 1.65,
         ),
       ),
     );
@@ -393,7 +425,7 @@ class _FilterChipsRow extends StatelessWidget {
   }
 }
 
-/// A single transaction list tile.
+/// A single transaction tile with left accent border and circle category icon.
 class _TransactionTile extends StatelessWidget {
   const _TransactionTile({
     required this.transaction,
@@ -425,52 +457,86 @@ class _TransactionTile extends StatelessWidget {
     final categoryIcon = _resolveIcon(category?.icon);
     final categoryColor = _resolveColor(category?.color);
 
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: categoryColor.withValues(alpha: 0.12),
-          borderRadius: AppRadius.borderRadiusMd,
-        ),
-        child: Icon(
-          categoryIcon,
-          color: categoryColor,
-          size: 22,
-        ),
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.xs),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        borderRadius: AppRadius.borderRadiusMd,
       ),
-      title: Text(
-        category?.name ?? context.l10n.transactionsUncategorized,
-        style: theme.textTheme.bodyLarge,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Text(
-        transaction.description ?? transaction.date.formatted,
-        style: theme.textTheme.bodySmall,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            '$amountPrefix$formattedAmount',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: amountColor,
-              fontWeight: FontWeight.w600,
-            ),
+      child: ClipRRect(
+        borderRadius: AppRadius.borderRadiusMd,
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              // Left accent bar
+              Container(
+                width: 3,
+                decoration: BoxDecoration(
+                  color: categoryColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    bottomLeft: Radius.circular(8),
+                  ),
+                ),
+              ),
+              // Content
+              Expanded(
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.xs,
+                  ),
+                  leading: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: categoryColor.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      categoryIcon,
+                      color: categoryColor,
+                      size: 22,
+                    ),
+                  ),
+                  title: Text(
+                    category?.name ??
+                        context.l10n.transactionsUncategorized,
+                    style: theme.textTheme.bodyLarge,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    transaction.description ?? transaction.date.formatted,
+                    style: theme.textTheme.bodySmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '$amountPrefix$formattedAmount',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: amountColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      AppSpacing.verticalXs,
+                      Text(
+                        transaction.date.timeAgo,
+                        style: theme.textTheme.labelSmall,
+                      ),
+                    ],
+                  ),
+                  onTap: onTap,
+                ),
+              ),
+            ],
           ),
-          AppSpacing.verticalXs,
-          Text(
-            transaction.date.timeAgo,
-            style: theme.textTheme.labelSmall,
-          ),
-        ],
+        ),
       ),
-      onTap: onTap,
     );
   }
 

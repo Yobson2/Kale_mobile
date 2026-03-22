@@ -72,22 +72,14 @@ class RecentTransactionsSection extends ConsumerWidget {
         AppSpacing.verticalSm,
         Container(
           decoration: BoxDecoration(
-            color: context.colorScheme.surface,
+            color: context.colorScheme.surfaceContainerLow,
             borderRadius: AppRadius.borderRadiusLg,
-            border: Border.all(
-              color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-            ),
           ),
           child: ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: limitedTransactions.length,
-            separatorBuilder: (_, __) => Divider(
-              height: 1,
-              indent: AppSpacing.lg,
-              endIndent: AppSpacing.lg,
-              color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-            ),
+            separatorBuilder: (_, __) => const SizedBox(height: 2),
             itemBuilder: (context, index) {
               return TransactionTile(
                 transaction: limitedTransactions[index],
@@ -105,11 +97,8 @@ class RecentTransactionsSection extends ConsumerWidget {
       width: double.infinity,
       padding: AppSpacing.paddingXl,
       decoration: BoxDecoration(
-        color: context.colorScheme.surface,
+        color: context.colorScheme.surfaceContainerLow,
         borderRadius: AppRadius.borderRadiusLg,
-        border: Border.all(
-          color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

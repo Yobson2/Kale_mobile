@@ -1,34 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <!-- Kalé App Icon Source — The Cowrie Flow -->
+  <!-- Kalé App Icon Source — Bold K -->
   <!-- Export as 1024x1024 PNG for flutter_launcher_icons -->
 
-  <!-- Emerald background fill -->
-  <rect width="1024" height="1024" fill="#10B981"/>
+  <!-- Dark emerald background fill (OS applies its own mask shape) -->
+  <rect width="1024" height="1024" fill="#15785B"/>
 
-  <!-- Subtle circular glow for depth -->
-  <circle cx="512" cy="512" r="320" fill="rgba(255,255,255,0.12)"/>
+  <!-- Two overlapping decorative circles -->
+  <circle cx="287" cy="256" r="430" fill="#FFFFFF" opacity="0.12"/>
+  <circle cx="768" cy="737" r="389" fill="#FFFFFF" opacity="0.10"/>
 
-  <!-- Cowrie Flow logomark (scaled from 100x100 base) -->
-  <g transform="translate(512, 512) scale(8.0) translate(-50, -48)">
-    <!-- Cowrie shell body -->
-    <ellipse cx="50" cy="50" rx="20" ry="14" fill="#FFFFFF"/>
-
-    <!-- Shell ridges (ledger lines) -->
-    <line x1="34" y1="46" x2="66" y2="46" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
-    <line x1="33" y1="50" x2="67" y2="50" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
-    <line x1="34" y1="54" x2="66" y2="54" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
-
-    <!-- Shell opening (vertical slit) -->
-    <path d="M 50,37 C 48,43 48,57 50,63" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
-
-    <!-- Income flow line (upward-right, thicker) -->
-    <path d="M 50,37 C 48,30 55,22 65,20" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-
-    <!-- Expense flow line (downward-left, thinner) -->
-    <path d="M 50,63 C 52,70 45,78 35,80" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
-
-    <!-- Amber accent dot at income tip -->
-    <circle cx="65" cy="20" r="3.5" fill="#F59E0B"/>
-    <circle cx="65" cy="20" r="2" fill="none" stroke="#D97706" stroke-width="0.6"/>
-  </g>
+  <!-- Bold upright K letterform -->
+  <path d="M 307 205 L 430 205 L 430 410 L 614 205 L 778 205 L 512 491 L 778 819 L 614 819 L 430 574 L 430 819 L 307 819 Z" fill="#FFFFFF"/>
 </svg>

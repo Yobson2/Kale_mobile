@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Budget Setup Wizard - Step 1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "secondary": "#565e74",
+                "on-tertiary-fixed-variant": "#653e00",
+                "tertiary": "#855300",
+                "inverse-primary": "#4edea3",
+                "primary-fixed": "#6ffbbe",
+                "on-tertiary-container": "#523200",
+                "surface-variant": "#e0e3e5",
+                "surface-container": "#eceef0",
+                "on-secondary-fixed-variant": "#3f465c",
+                "error-container": "#ffdad6",
+                "tertiary-fixed-dim": "#ffb95f",
+                "tertiary-container": "#e29100",
+                "surface-tint": "#006c49",
+                "surface-container-low": "#f2f4f6",
+                "error": "#ba1a1a",
+                "primary": "#006c49",
+                "on-tertiary-fixed": "#2a1700",
+                "on-tertiary": "#ffffff",
+                "surface-container-highest": "#e0e3e5",
+                "on-secondary-fixed": "#131b2e",
+                "on-secondary-container": "#5c647a",
+                "outline-variant": "#bbcabf",
+                "on-primary-fixed-variant": "#005236",
+                "surface-dim": "#d8dadc",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#dae2fd",
+                "on-primary-fixed": "#002113",
+                "inverse-surface": "#2d3133",
+                "secondary-fixed-dim": "#bec6e0",
+                "on-surface-variant": "#3c4a42",
+                "on-primary-container": "#00422b",
+                "on-surface": "#191c1e",
+                "on-error-container": "#93000a",
+                "primary-fixed-dim": "#4edea3",
+                "on-primary": "#ffffff",
+                "surface": "#f7f9fb",
+                "on-error": "#ffffff",
+                "outline": "#6c7a71",
+                "surface-bright": "#f7f9fb",
+                "on-secondary": "#ffffff",
+                "tertiary-fixed": "#ffddb8",
+                "primary-container": "#10b981",
+                "background": "#f7f9fb",
+                "secondary-fixed": "#dae2fd",
+                "surface-container-high": "#e6e8ea",
+                "inverse-on-surface": "#eff1f3",
+                "on-background": "#191c1e"
+              },
+              fontFamily: {
+                "headline": ["Inter"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 20px 40px rgba(15, 23, 42, 0.06);
+        }
+        .geometric-k {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 120px;
+            font-weight: 900;
+            opacity: 0.05;
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer">arrow_back</span>
+<span class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tighter">Kalé</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="Profile" data-alt="User profile photo avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALHoSZHIcAgFvLzNu8ekFZQXHcVXwcGUOGTocx8P_v8kvufgha5jipFFZCe7R5uCgXxgTeTzD_qCiZLe1ESZK6PbM222x5v7-jq2gSeWkGhZi-YqI1HwWVTduStKa7YuB_YA7s-0dhHdkoQUtvIFNWzbQ57o0K6SFb8ERtMl9c2ZIu63QojSkvWktNL9jPEoZBvYngzCUmlMjHc5yCEFxobPnzpzTcSw3QpEun43BnAUkFNhnPiGet7I5tu9DB3K5MD1HavXutCm0"/>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-2xl mx-auto">
+<!-- Step Indicator -->
+<div class="mb-12">
+<div class="flex items-center justify-between mb-4">
+<span class="text-label-sm font-semibold text-primary uppercase tracking-wider">Step 1 of 4</span>
+<span class="text-label-sm font-semibold text-on-surface-variant uppercase tracking-wider">Strategy Selection</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/4 rounded-full"></div>
+</div>
+</div>
+<!-- Editorial Header -->
+<div class="mb-10">
+<h1 class="text-[3.5rem] font-bold leading-[1.1] tracking-tight text-on-surface mb-4">Create Budget</h1>
+<p class="text-lg text-on-surface-variant leading-relaxed opacity-80 max-w-md">
+                Select a financial loom that matches your lifestyle. We'll weave your goals into a plan.
+            </p>
+</div>
+<!-- Strategy Selection Grid (Asymmetric feel via spacing) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+<!-- Strategy Card 1 (Active/Selected State Example) -->
+<div class="relative group cursor-pointer bg-white border-2 border-primary rounded-xl p-6 editorial-shadow transition-all duration-200 active:scale-95">
+<div class="flex flex-col h-full">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="pie_chart">pie_chart</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface mb-2">50/30/20 Rule</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Essentials, Wants, and Savings. The golden standard for balanced living.</p>
+</div>
+<div class="absolute top-4 right-4 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="geometric-k text-primary">K</div>
+</div>
+<!-- Strategy Card 2 -->
+<div class="relative group cursor-pointer bg-surface-container-lowest rounded-xl p-6 hover:bg-surface-container-low transition-all duration-200 active:scale-95">
+<div class="flex flex-col h-full">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center mb-6 group-hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface mb-2">80/20 Entrepreneur</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Aggressive growth. 20% flat savings, total flexibility for the rest.</p>
+</div>
+</div>
+<!-- Strategy Card 3 -->
+<div class="relative group cursor-pointer bg-surface-container-lowest rounded-xl p-6 hover:bg-surface-container-low transition-all duration-200 active:scale-95">
+<div class="flex flex-col h-full">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center mb-6 group-hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="mail">mail</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface mb-2">Envelope System</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Zero-based control. Every cent is woven into a specific category.</p>
+</div>
+</div>
+<!-- Strategy Card 4 -->
+<div class="relative group cursor-pointer bg-surface-container-lowest rounded-xl p-6 hover:bg-surface-container-low transition-all duration-200 active:scale-95">
+<div class="flex flex-col h-full">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center mb-6 group-hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="dashboard_customize">dashboard_customize</span>
+</div>
+<h3 class="text-xl font-semibold text-on-surface mb-2">Custom</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Design your own fabric. Define your unique categories and limits.</p>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex flex-col gap-4">
+<button class="w-full h-[52px] bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold rounded-xl flex items-center justify-center transition-transform active:scale-[0.98] editorial-shadow">
+                Continue
+            </button>
+<p class="text-center text-on-surface-variant text-sm py-2">
+                You can change this later in settings.
+            </p>
+</div>
+</main>
+<!-- BottomNavBar (Suppressed for focused wizard flow as per hierarchy rules, but structure kept for context if needed elsewhere) -->
+<!-- Not rendered to prioritize the Canvas focus on the Setup Wizard -->
+</body></html>

@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/router/route_names.dart';
+import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/animations/staggered_list_item.dart';
-import 'package:kale/core/widgets/layout/app_app_bar.dart';
-import 'package:kale/core/widgets/layout/app_scaffold.dart';
+import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
 import 'package:kale/core/widgets/states/app_error_state.dart';
 import 'package:kale/features/savings/domain/entities/savings_goal.dart';
@@ -25,16 +25,30 @@ class SavingsGoalsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goalsAsync = ref.watch(savingsGoalsStreamProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return AppScaffold(
-      appBar: AppAppBar(
-        title: context.l10n.savingsGoalsTitle,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          context.l10n.savingsGoalsTitle,
+          style: context.textTheme.titleLarge?.copyWith(
+            color: context.colorScheme.primary,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: false,
+        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: context.l10n.savingsAddGoal,
             onPressed: () =>
                 context.pushNamed(RouteNames.addSavingsGoalName),
+          ),
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () {},
           ),
         ],
       ),
@@ -46,27 +60,133 @@ class SavingsGoalsPage extends ConsumerWidget {
             return const _SavingsEmptyState();
           }
 
+          final totalSaved = goals.fold<double>(
+            0,
+            (sum, g) => sum + g.currentAmount,
+          );
+
           return RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(savingsGoalsStreamProvider);
             },
-            child: ListView.separated(
+            child: ListView(
               padding: AppSpacing.paddingLg,
-              itemCount: goals.length,
-              separatorBuilder: (_, __) => AppSpacing.verticalMd,
-              itemBuilder: (context, index) => StaggeredListItem(
-                index: index,
-                child: _GoalCard(
-                  goal: goals[index],
-                  onTap: () => context.pushNamed(
-                    RouteNames.savingsGoalDetailName,
-                    extra: goals[index].id,
+              children: [
+                // Gradient total saved card
+                _TotalSavedCard(
+                  totalSaved: totalSaved,
+                  isDark: isDark,
+                  currencyCode: goals.first.currencyCode,
+                ),
+                AppSpacing.verticalLg,
+
+                // Active goals section
+                Text(
+                  'ACTIVE GOALS',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.65,
+                    color: context.colorScheme.onSurfaceVariant,
                   ),
                 ),
-              ),
+                AppSpacing.verticalMd,
+
+                ...List.generate(goals.length, (index) {
+                  return StaggeredListItem(
+                    index: index,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                      child: _GoalCard(
+                        goal: goals[index],
+                        onTap: () => context.pushNamed(
+                          RouteNames.savingsGoalDetailName,
+                          extra: goals[index].id,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+
+                AppSpacing.verticalLg,
+
+                // Quick Start grid
+                Text(
+                  'QUICK START',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.65,
+                    color: context.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                AppSpacing.verticalMd,
+                _QuickStartGrid(),
+                AppSpacing.verticalLg,
+              ],
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// Gradient card showing total saved across all goals.
+class _TotalSavedCard extends StatelessWidget {
+  const _TotalSavedCard({
+    required this.totalSaved,
+    required this.isDark,
+    required this.currencyCode,
+  });
+
+  final double totalSaved;
+  final bool isDark;
+  final String currencyCode;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: AppRadius.borderRadiusLg,
+      child: Container(
+        padding: AppSpacing.paddingLg,
+        decoration: BoxDecoration(
+          gradient: isDark
+              ? AppColors.primaryGradientDark
+              : AppColors.primaryGradientLight,
+          borderRadius: AppRadius.borderRadiusLg,
+        ),
+        child: Stack(
+          children: [
+            const GeometricKWatermark(
+              opacity: 0.05,
+              fontSize: 140,
+              alignment: Alignment.topRight,
+              offset: Offset(30, -20),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'TOTAL SAVED',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    letterSpacing: 1.65,
+                  ),
+                ),
+                AppSpacing.verticalSm,
+                Text(
+                  CurrencyFormatter.format(
+                    totalSaved,
+                    currencyCode: currencyCode,
+                  ),
+                  style: context.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -85,18 +205,13 @@ class _GoalCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final progressPercent = (goal.progress * 100).round();
 
-    final progressColor = goal.isFullyFunded
-        ? Colors.green
-        : goal.progress > 0.5
-            ? theme.colorScheme.primary
-            : Colors.orange;
-
-    return Card(
-      elevation: isDark ? 0 : 1,
-      shape: RoundedRectangleBorder(borderRadius: AppRadius.borderRadiusLg),
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        borderRadius: AppRadius.borderRadiusLg,
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: AppRadius.borderRadiusLg,
@@ -107,7 +222,6 @@ class _GoalCard extends ConsumerWidget {
               SavingsProgressRing(
                 progress: goal.progress,
                 size: 64,
-                progressColor: progressColor,
                 child: Text(
                   '$progressPercent%',
                   style: theme.textTheme.labelMedium?.copyWith(
@@ -160,7 +274,10 @@ class _GoalCard extends ConsumerWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right),
+              Icon(
+                Icons.chevron_right,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ],
           ),
         ),
@@ -175,7 +292,7 @@ class _GoalCard extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) => Padding(
         padding: EdgeInsets.only(
@@ -232,6 +349,66 @@ class _GoalCard extends ConsumerWidget {
   }
 }
 
+/// Quick Start 2x2 grid for common savings goal templates.
+class _QuickStartGrid extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
+
+    final templates = [
+      _QuickTemplate(Icons.shield_outlined, 'Emergency', Colors.blue, context),
+      _QuickTemplate(Icons.flight_outlined, 'Vacation', Colors.orange, context),
+      _QuickTemplate(
+          Icons.directions_car_outlined, 'Car Fund', Colors.green, context),
+      _QuickTemplate(Icons.school_outlined, 'Education', Colors.purple, context),
+    ];
+
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: AppSpacing.md,
+      crossAxisSpacing: AppSpacing.md,
+      childAspectRatio: 1.6,
+      children: templates.map((t) {
+        return GestureDetector(
+          onTap: () => context.pushNamed(RouteNames.addSavingsGoalName),
+          child: Container(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerLow,
+              borderRadius: AppRadius.borderRadiusMd,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(t.icon, color: t.color, size: 28),
+                AppSpacing.verticalSm,
+                Text(
+                  t.label.toUpperCase(),
+                  style: context.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+class _QuickTemplate {
+  _QuickTemplate(this.icon, this.label, this.color, this.context);
+  final IconData icon;
+  final String label;
+  final Color color;
+  final BuildContext context;
+}
+
 /// Custom empty state for the savings goals page with template chips.
 class _SavingsEmptyState extends StatelessWidget {
   const _SavingsEmptyState();
@@ -286,7 +463,7 @@ class _SavingsEmptyState extends StatelessWidget {
                   onPressed: () =>
                       context.pushNamed(RouteNames.addSavingsGoalName),
                   shape: const StadiumBorder(),
-                  side: BorderSide(color: colorScheme.outlineVariant),
+                  side: BorderSide.none,
                 ),
                 ActionChip(
                   avatar: const Icon(Icons.flight_outlined),
@@ -294,7 +471,7 @@ class _SavingsEmptyState extends StatelessWidget {
                   onPressed: () =>
                       context.pushNamed(RouteNames.addSavingsGoalName),
                   shape: const StadiumBorder(),
-                  side: BorderSide(color: colorScheme.outlineVariant),
+                  side: BorderSide.none,
                 ),
                 ActionChip(
                   avatar: const Icon(Icons.phone_iphone_outlined),
@@ -302,7 +479,7 @@ class _SavingsEmptyState extends StatelessWidget {
                   onPressed: () =>
                       context.pushNamed(RouteNames.addSavingsGoalName),
                   shape: const StadiumBorder(),
-                  side: BorderSide(color: colorScheme.outlineVariant),
+                  side: BorderSide.none,
                 ),
               ],
             ),
@@ -336,23 +513,40 @@ class _DeadlineChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final daysLeft = deadline.difference(DateTime.now()).inDays;
     final isOverdue = daysLeft < 0;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          isOverdue ? Icons.warning_amber : Icons.schedule,
-          size: 14,
-          color: isOverdue ? Colors.red : Colors.grey,
-        ),
-        const SizedBox(width: 4),
-        Text(
-          isOverdue ? '${-daysLeft}d overdue' : '${daysLeft}d left',
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: isOverdue ? Colors.red : Colors.grey,
-              ),
-        ),
-      ],
+    final chipColor = isOverdue
+        ? (isDark ? AppColors.expenseDark : AppColors.expenseLight)
+        : theme.colorScheme.tertiaryContainer;
+    final textColor = isOverdue
+        ? Colors.white
+        : theme.colorScheme.onTertiaryContainer;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: isOverdue ? chipColor : chipColor,
+        borderRadius: AppRadius.borderRadiusFull,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isOverdue ? Icons.warning_amber : Icons.schedule,
+            size: 14,
+            color: textColor,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            isOverdue ? '${-daysLeft}d overdue' : '${daysLeft}d left',
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: textColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

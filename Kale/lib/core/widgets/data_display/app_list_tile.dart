@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
 /// Themed list tile with leading and trailing support.
+///
+/// Uses vertical spacing instead of dividers per the "No-Line Rule".
 class AppListTile extends StatelessWidget {
   /// Creates an [AppListTile].
   const AppListTile({
@@ -12,6 +14,7 @@ class AppListTile extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.dense = false,
+    @Deprecated('Dividers removed per Digital Loom design. Use spacing instead.')
     this.showDivider = false,
   });
 
@@ -33,36 +36,30 @@ class AppListTile extends StatelessWidget {
   /// Whether to use compact sizing.
   final bool dense;
 
-  /// Whether to show a bottom divider.
+  /// Deprecated – kept for backwards compatibility but no longer renders.
   final bool showDivider;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ListTile(
-          title: Text(title, style: theme.textTheme.bodyLarge),
-          subtitle: subtitle != null
-              ? Padding(
-                  padding: const EdgeInsets.only(top: AppSpacing.xxs),
-                  child: Text(
-                    subtitle!,
-                    style: theme.textTheme.bodySmall,
-                  ),
-                )
-              : null,
-          leading: leading,
-          trailing: trailing ?? const Icon(Icons.chevron_right),
-          onTap: onTap,
-          dense: dense,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-          ),
-        ),
-        if (showDivider) const Divider(height: 1, indent: 16, endIndent: 16),
-      ],
+    return ListTile(
+      title: Text(title, style: theme.textTheme.bodyLarge),
+      subtitle: subtitle != null
+          ? Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.xxs),
+              child: Text(
+                subtitle!,
+                style: theme.textTheme.bodySmall,
+              ),
+            )
+          : null,
+      leading: leading,
+      trailing: trailing ?? const Icon(Icons.chevron_right),
+      onTap: onTap,
+      dense: dense,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+      ),
     );
   }
 }

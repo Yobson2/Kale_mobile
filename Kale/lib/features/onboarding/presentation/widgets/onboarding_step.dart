@@ -30,36 +30,44 @@ class OnboardingStep extends StatelessWidget {
 
     return Padding(
       padding: AppSpacing.paddingHorizontalXl,
-      child: Column(
-        children: [
-          const Spacer(flex: 2),
-          // Illustration
-          OnboardingIllustration(stepIndex: stepIndex),
-          const Spacer(),
-          // Title
-          Text(
-            title,
-            style: theme.textTheme.headlineMedium,
-            textAlign: TextAlign.center,
-          ),
-          AppSpacing.verticalMd,
-          // Description
-          Text(
-            description,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.brightness == Brightness.dark
-                  ? theme.textTheme.bodySmall?.color
-                  : theme.textTheme.bodySmall?.color,
-              height: 1.5,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Illustration
+                  OnboardingIllustration(stepIndex: stepIndex),
+                  AppSpacing.verticalLg,
+                  // Title
+                  Text(
+                    title,
+                    style: theme.textTheme.headlineMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  AppSpacing.verticalMd,
+                  // Description
+                  Text(
+                    description,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.brightness == Brightness.dark
+                          ? theme.textTheme.bodySmall?.color
+                          : theme.textTheme.bodySmall?.color,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  if (child != null) ...[
+                    AppSpacing.verticalLg,
+                    child!,
+                  ],
+                ],
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
-          if (child != null) ...[
-            AppSpacing.verticalLg,
-            child!,
-          ],
-          const Spacer(flex: 2),
-        ],
+          );
+        },
       ),
     );
   }

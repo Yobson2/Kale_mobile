@@ -4,7 +4,10 @@ import 'package:kale/core/theme/app_colors.dart';
 
 /// Typography tokens using Google Fonts (Inter).
 ///
-/// Provides all Material 3 text styles for light and dark themes.
+/// Follows the "Editorial Authority" design language:
+/// - Display/Headline tokens use tight negative letter-spacing (-1% to -2%)
+/// - Display tokens use bold weight (w700) for premium print density
+/// - Label tokens use semibold (w600) for micro-data and status labels
 class AppTypography {
   const AppTypography._();
 
@@ -16,39 +19,44 @@ class AppTypography {
   static TextTheme get lightTextTheme => TextTheme(
         displayLarge: TextStyle(
           fontFamily: _fontFamily,
-          fontSize: 57,
-          fontWeight: FontWeight.w400,
-          letterSpacing: -0.25,
+          fontSize: 56,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -1.12, // -2%
           color: AppColors.textPrimaryLight,
         ),
         displayMedium: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 45,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.9, // -2%
           color: AppColors.textPrimaryLight,
         ),
         displaySmall: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 36,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.36, // -1%
           color: AppColors.textPrimaryLight,
         ),
         headlineLarge: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 32,
           fontWeight: FontWeight.w600,
+          letterSpacing: -0.32, // -1%
           color: AppColors.textPrimaryLight,
         ),
         headlineMedium: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 28,
           fontWeight: FontWeight.w600,
+          letterSpacing: -0.28, // -1%
           color: AppColors.textPrimaryLight,
         ),
         headlineSmall: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 24,
           fontWeight: FontWeight.w600,
+          letterSpacing: -0.24, // -1%
           color: AppColors.textPrimaryLight,
         ),
         titleLarge: TextStyle(
@@ -67,7 +75,7 @@ class AppTypography {
         titleSmall: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 14,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
           letterSpacing: 0.1,
           color: AppColors.textPrimaryLight,
         ),
@@ -109,8 +117,8 @@ class AppTypography {
         labelSmall: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 11,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.5,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.65, // 0.15em for uppercase micro-data
           color: AppColors.textSecondaryLight,
         ),
       );
@@ -121,39 +129,44 @@ class AppTypography {
   static TextTheme get darkTextTheme => TextTheme(
         displayLarge: TextStyle(
           fontFamily: _fontFamily,
-          fontSize: 57,
-          fontWeight: FontWeight.w400,
-          letterSpacing: -0.25,
+          fontSize: 56,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -1.12, // -2%
           color: AppColors.textPrimaryDark,
         ),
         displayMedium: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 45,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.9, // -2%
           color: AppColors.textPrimaryDark,
         ),
         displaySmall: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 36,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.36, // -1%
           color: AppColors.textPrimaryDark,
         ),
         headlineLarge: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 32,
           fontWeight: FontWeight.w600,
+          letterSpacing: -0.32, // -1%
           color: AppColors.textPrimaryDark,
         ),
         headlineMedium: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 28,
           fontWeight: FontWeight.w600,
+          letterSpacing: -0.28, // -1%
           color: AppColors.textPrimaryDark,
         ),
         headlineSmall: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 24,
           fontWeight: FontWeight.w600,
+          letterSpacing: -0.24, // -1%
           color: AppColors.textPrimaryDark,
         ),
         titleLarge: TextStyle(
@@ -172,7 +185,7 @@ class AppTypography {
         titleSmall: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 14,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
           letterSpacing: 0.1,
           color: AppColors.textPrimaryDark,
         ),
@@ -214,8 +227,8 @@ class AppTypography {
         labelSmall: TextStyle(
           fontFamily: _fontFamily,
           fontSize: 11,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.5,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.65, // 0.15em for uppercase micro-data
           color: AppColors.textSecondaryDark,
         ),
       );

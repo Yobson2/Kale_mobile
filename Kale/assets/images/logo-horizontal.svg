@@ -1,35 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50">
-  <!-- Kalé — The Cowrie Flow — Horizontal Lockup -->
+  <!-- Kalé — Bold K — Horizontal Lockup -->
 
-  <!-- Logomark (scaled to 50x50) -->
-  <g transform="translate(0,0) scale(0.5)">
-    <!-- Background circle -->
-    <circle cx="50" cy="50" r="42" fill="#10B981" stroke="#064E3B" stroke-width="1.5"/>
+  <defs>
+    <clipPath id="squircleClip">
+      <rect width="92" height="92" x="4" y="2" rx="20" ry="20"/>
+    </clipPath>
+    <filter id="shadow" x="-4%" y="-2%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
 
-    <!-- Cowrie shell body -->
-    <ellipse cx="50" cy="50" rx="20" ry="14" fill="#FFFFFF"/>
+  <!-- Logomark (scaled to ~46x46 from 100x100 base) -->
+  <g transform="translate(2,1) scale(0.46)">
+    <!-- Background squircle with drop shadow -->
+    <rect width="92" height="92" x="4" y="2" rx="20" ry="20" fill="#15785B" filter="url(#shadow)"/>
 
-    <!-- Shell ridges -->
-    <line x1="34" y1="46" x2="66" y2="46" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
-    <line x1="33" y1="50" x2="67" y2="50" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
-    <line x1="34" y1="54" x2="66" y2="54" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
+    <!-- Two overlapping decorative circles clipped to squircle -->
+    <g clip-path="url(#squircleClip)">
+      <circle cx="28" cy="25" r="42" fill="#FFFFFF" opacity="0.12"/>
+      <circle cx="75" cy="72" r="38" fill="#FFFFFF" opacity="0.10"/>
+    </g>
 
-    <!-- Shell opening (vertical slit) -->
-    <path d="M 50,37 C 48,43 48,57 50,63" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
-
-    <!-- Income flow line -->
-    <path d="M 50,37 C 48,30 55,22 65,20" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-
-    <!-- Expense flow line -->
-    <path d="M 50,63 C 52,70 45,78 35,80" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
-
-    <!-- Amber accent dot -->
-    <circle cx="65" cy="20" r="3.5" fill="#F59E0B"/>
-    <circle cx="65" cy="20" r="2" fill="none" stroke="#D97706" stroke-width="0.6"/>
+    <!-- Bold upright K letterform -->
+    <path d="M 30 20 L 42 20 L 42 40 L 60 20 L 76 20 L 50 48 L 76 76 L 60 76 L 42 56 L 42 76 L 30 76 Z" fill="#FFFFFF"/>
   </g>
 
-  <!-- Wordmark: "Kalé" in Space Grotesk Bold -->
-  <text x="64" y="34"
+  <!-- Wordmark: "Kalé" -->
+  <text x="60" y="34"
         font-family="'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif"
         font-weight="700" font-size="26" letter-spacing="0.8" fill="#0F172A">Kalé</text>
 </svg>

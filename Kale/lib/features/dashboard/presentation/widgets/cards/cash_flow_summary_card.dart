@@ -5,9 +5,10 @@ import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
+import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/features/dashboard/domain/entities/dashboard_summary.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
-import 'package:kale/features/dashboard/presentation/widgets/items/summary_item.dart';
+
 
 class CashFlowSummaryCard extends ConsumerWidget {
   const CashFlowSummaryCard({super.key});
@@ -29,76 +30,76 @@ class CashFlowSummaryCard extends ConsumerWidget {
     final expenseColor =
         isDark ? AppColors.expenseDark : AppColors.expenseLight;
     final netValue = summary.netCashFlow;
-    final netColor = netValue >= 0 ? incomeColor : expenseColor;
 
-    return Container(
-      padding: AppSpacing.paddingLg,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  AppColors.primaryContainerDark,
-                  AppColors.surfaceDark,
-                ]
-              : [
-                  AppColors.primaryContainerLight,
-                  AppColors.surfaceLight,
-                ],
+    return ClipRRect(
+      borderRadius: AppRadius.borderRadiusLg,
+      child: Container(
+        padding: AppSpacing.paddingLg,
+        decoration: BoxDecoration(
+          gradient: isDark
+              ? AppColors.primaryGradientDark
+              : AppColors.primaryGradientLight,
+          borderRadius: AppRadius.borderRadiusLg,
         ),
-        borderRadius: AppRadius.borderRadiusLg,
-        border: Border.all(
-          color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
+        child: Stack(
+          children: [
+            // K watermark at 5% opacity
+            const GeometricKWatermark(
+              opacity: 0.05,
+              fontSize: 160,
+              alignment: Alignment.topRight,
+              offset: Offset(30, -20),
+            ),
+
+            // Content
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.dashboardCashFlow,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    letterSpacing: 1.65,
+                  ),
+                ),
+                AppSpacing.verticalSm,
+                Text(
+                  CurrencyFormatter.format(netValue),
+                  style: context.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+                AppSpacing.verticalLg,
+                Row(
+                  children: [
+                    Expanded(
+                      child: _CashFlowItem(
+                        label: context.l10n.dashboardIncome,
+                        amount: summary.totalIncome,
+                        color: incomeColor,
+                        icon: Icons.arrow_downward_rounded,
+                      ),
+                    ),
+                    Container(
+                      width: 1,
+                      height: 40,
+                      color: Colors.white.withValues(alpha: 0.2),
+                    ),
+                    Expanded(
+                      child: _CashFlowItem(
+                        label: context.l10n.dashboardExpenses,
+                        amount: summary.totalExpenses,
+                        color: expenseColor,
+                        icon: Icons.arrow_upward_rounded,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            context.l10n.dashboardCashFlow,
-            style: context.textTheme.titleSmall?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          AppSpacing.verticalSm,
-          Text(
-            CurrencyFormatter.format(netValue),
-            style: context.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: netColor,
-            ),
-          ),
-          AppSpacing.verticalLg,
-          Row(
-            children: [
-              Expanded(
-                child: SummaryItem(
-                  label: context.l10n.dashboardIncome,
-                  amount: summary.totalIncome,
-                  color: incomeColor,
-                  icon: Icons.arrow_downward_rounded,
-                ),
-              ),
-              Container(
-                width: 1,
-                height: 40,
-                color: context.colorScheme.outlineVariant.withValues(
-                  alpha: 0.3,
-                ),
-              ),
-              Expanded(
-                child: SummaryItem(
-                  label: context.l10n.dashboardExpenses,
-                  amount: summary.totalExpenses,
-                  color: expenseColor,
-                  icon: Icons.arrow_upward_rounded,
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -134,6 +135,64 @@ class CashFlowSummaryCard extends ConsumerWidget {
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colorScheme.onErrorContainer,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Cash flow item for income/expense within the gradient card.
+/// Uses white text instead of theme colors since it sits on a gradient.
+class _CashFlowItem extends StatelessWidget {
+  const _CashFlowItem({
+    required this.label,
+    required this.amount,
+    required this.color,
+    required this.icon,
+  });
+
+  final String label;
+  final double amount;
+  final Color color;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.xs),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: AppRadius.borderRadiusSm,
+            ),
+            child: Icon(icon, color: Colors.white, size: 16),
+          ),
+          AppSpacing.horizontalSm,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.7),
+                  ),
+                ),
+                Text(
+                  CurrencyFormatter.format(amount, compact: true),
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
         ],

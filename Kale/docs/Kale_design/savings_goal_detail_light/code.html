@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#565e74",
+              "on-tertiary-fixed-variant": "#653e00",
+              "tertiary": "#855300",
+              "inverse-primary": "#4edea3",
+              "primary-fixed": "#6ffbbe",
+              "on-tertiary-container": "#523200",
+              "surface-variant": "#e0e3e5",
+              "surface-container": "#eceef0",
+              "on-secondary-fixed-variant": "#3f465c",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#ffb95f",
+              "tertiary-container": "#e29100",
+              "surface-tint": "#006c49",
+              "surface-container-low": "#f2f4f6",
+              "error": "#ba1a1a",
+              "primary": "#006c49",
+              "on-tertiary-fixed": "#2a1700",
+              "on-tertiary": "#ffffff",
+              "surface-container-highest": "#e0e3e5",
+              "on-secondary-fixed": "#131b2e",
+              "on-secondary-container": "#5c647a",
+              "outline-variant": "#bbcabf",
+              "on-primary-fixed-variant": "#005236",
+              "surface-dim": "#d8dadc",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dae2fd",
+              "on-primary-fixed": "#002113",
+              "inverse-surface": "#2d3133",
+              "secondary-fixed-dim": "#bec6e0",
+              "on-surface-variant": "#3c4a42",
+              "on-primary-container": "#00422b",
+              "on-surface": "#191c1e",
+              "on-error-container": "#93000a",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary": "#ffffff",
+              "surface": "#f7f9fb",
+              "on-error": "#ffffff",
+              "outline": "#6c7a71",
+              "surface-bright": "#f7f9fb",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#10b981",
+              "background": "#f7f9fb",
+              "secondary-fixed": "#dae2fd",
+              "surface-container-high": "#e6e8ea",
+              "inverse-on-surface": "#eff1f3",
+              "on-background": "#191c1e"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen pb-32">
+<!-- Top Navigation (Shell suppressed for focused detail view as per instructions) -->
+<header class="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-md flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight text-on-surface">New Car Fund</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined text-on-surface">more_vert</span>
+</button>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto relative">
+<!-- Confetti Particles (Aesthetic Layer) -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden h-96">
+<div class="confetti bg-primary-container top-10 left-[10%] rotate-12 opacity-40"></div>
+<div class="confetti bg-tertiary top-20 left-[25%] -rotate-45 opacity-30"></div>
+<div class="confetti bg-secondary top-14 left-[60%] rotate-90 opacity-40"></div>
+<div class="confetti bg-primary-container top-32 left-[85%] rotate-12 opacity-50"></div>
+<div class="confetti bg-tertiary top-40 left-[15%] rotate-12 opacity-40"></div>
+<div class="confetti bg-primary top-5 left-[45%] -rotate-12 opacity-30"></div>
+</div>
+<!-- Progress Visualization Section -->
+<section class="flex flex-col items-center mb-12 relative">
+<div class="relative w-[200px] h-[200px] flex items-center justify-center">
+<!-- Outer Ring Base -->
+<svg class="absolute" height="200" width="200">
+<circle class="text-surface-container" cx="100" cy="100" fill="transparent" r="80" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-primary-container progress-ring-circle" cx="100" cy="100" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502.65" stroke-dashoffset="125.66" stroke-width="12"></circle>
+<!-- Milestone Markers -->
+<circle class="text-primary" cx="100" cy="20" fill="currentColor" r="4"></circle>
+<circle class="text-primary" cx="180" cy="100" fill="currentColor" r="4"></circle>
+<circle class="text-primary" cx="100" cy="180" fill="currentColor" r="4"></circle>
+<circle class="text-outline-variant" cx="20" cy="100" fill="currentColor" r="4"></circle>
+</svg>
+<div class="text-center z-10">
+<span class="block text-4xl font-black text-on-surface tracking-tighter">75%</span>
+<span class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mt-1">saved</span>
+</div>
+</div>
+<!-- Goal Meta -->
+<div class="mt-8 text-center">
+<span class="bg-tertiary-container/20 text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-2 inline-block">Milestone Achieved</span>
+<p class="text-on-surface-variant text-sm font-medium">Next milestone: $10,000 (80%)</p>
+</div>
+</section>
+<!-- Bento Stats Grid -->
+<section class="grid grid-cols-3 gap-4 mb-10">
+<div class="bg-white p-5 rounded-xl flex flex-col items-start gap-1 shadow-sm">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Saved</span>
+<span class="text-lg font-bold text-primary tracking-tight">$7,500</span>
+</div>
+<div class="bg-white p-5 rounded-xl flex flex-col items-start gap-1 shadow-sm">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Remaining</span>
+<span class="text-lg font-bold text-on-surface tracking-tight">$2,500</span>
+</div>
+<div class="bg-white p-5 rounded-xl flex flex-col items-start gap-1 shadow-sm">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Target</span>
+<span class="text-lg font-bold text-on-surface tracking-tight">$10,000</span>
+</div>
+</section>
+<!-- Dynamic Insights Card -->
+<div class="bg-primary/5 p-6 rounded-2xl mb-12 border border-primary/10">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h3 class="text-sm font-bold text-primary tracking-tight">Financial Forecast</h3>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                At your current contribution rate of <span class="text-primary font-semibold">$500/month</span>, you are on track to reach your goal by <span class="text-on-surface font-semibold">November 2024</span>. That's 2 months earlier than planned!
+            </p>
+</div>
+<!-- Contribution History -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h2 class="text-2xl font-black text-on-surface tracking-tighter">History</h2>
+<button class="text-primary text-xs font-bold uppercase tracking-widest">View All</button>
+</div>
+<div class="space-y-4">
+<!-- Transaction Item -->
+<div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary-container/20 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-weight="fill">add_circle</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-sm">Monthly Auto-save</p>
+<p class="text-xs text-on-surface-variant">March 01, 2024</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">+$500.00</p>
+<div class="flex items-center justify-end text-[10px] text-primary font-bold">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span>
+<span>UP 2%</span>
+</div>
+</div>
+</div>
+<!-- Transaction Item -->
+<div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary-container/20 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-weight="fill">add_circle</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-sm">Bonus Deposit</p>
+<p class="text-xs text-on-surface-variant">Feb 24, 2024</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">+$1,200.00</p>
+<div class="flex items-center justify-end text-[10px] text-primary font-bold">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span>
+<span>MILESTONE</span>
+</div>
+</div>
+</div>
+<!-- Transaction Item -->
+<div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary-container/20 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-weight="fill">add_circle</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-sm">Monthly Auto-save</p>
+<p class="text-xs text-on-surface-variant">Feb 01, 2024</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold text-primary">+$500.00</p>
+<div class="flex items-center justify-end text-[10px] text-primary font-bold">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span>
+<span>CONSISTENT</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Extended FAB: Add Money -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50">
+<button class="bg-primary text-on-primary h-[56px] px-8 rounded-full flex items-center gap-3 shadow-2xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-weight="fill">add</span>
+<span class="font-bold text-sm uppercase tracking-widest">Add Money</span>
+</button>
+</div>
+<!-- Background Decorative Element (Geometric 'K' Watermark) -->
+<div class="fixed -bottom-20 -right-20 opacity-[0.03] pointer-events-none select-none z-0">
+<svg height="400" viewbox="0 0 100 100" width="400">
+<path d="M20 10 L20 90 M20 50 L70 10 M40 50 L80 90" fill="none" stroke="currentColor" stroke-width="8"></path>
+</svg>
+</div>
+</body></html>

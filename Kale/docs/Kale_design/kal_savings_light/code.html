@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kalé Savings Goals</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#6c7a71",
+              "secondary": "#565e74",
+              "secondary-fixed-dim": "#bec6e0",
+              "on-secondary-fixed-variant": "#3f465c",
+              "error": "#ba1a1a",
+              "on-error": "#ffffff",
+              "surface-tint": "#006c49",
+              "surface-container-highest": "#e0e3e5",
+              "surface-bright": "#f7f9fb",
+              "on-secondary-container": "#5c647a",
+              "secondary-fixed": "#dae2fd",
+              "surface-variant": "#e0e3e5",
+              "inverse-on-surface": "#eff1f3",
+              "surface": "#f7f9fb",
+              "on-primary": "#ffffff",
+              "inverse-primary": "#4edea3",
+              "inverse-surface": "#2d3133",
+              "on-surface": "#191c1e",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#eceef0",
+              "on-tertiary-container": "#523200",
+              "tertiary": "#855300",
+              "outline-variant": "#bbcabf",
+              "on-primary-fixed": "#002113",
+              "on-primary-container": "#00422b",
+              "background": "#f7f9fb",
+              "surface-container-high": "#e6e8ea",
+              "on-surface-variant": "#3c4a42",
+              "surface-container-low": "#f2f4f6",
+              "tertiary-container": "#e29100",
+              "tertiary-fixed": "#ffddb8",
+              "on-background": "#191c1e",
+              "on-primary-fixed-variant": "#005236",
+              "primary-fixed": "#6ffbbe",
+              "on-secondary-fixed": "#131b2e",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary-container": "#dae2fd",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#10b981",
+              "primary": "#006c49",
+              "on-error-container": "#93000a",
+              "primary-fixed-dim": "#4edea3",
+              "surface-dim": "#d8dadc",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed": "#2a1700"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .progress-ring__circle {
+        transition: stroke-dashoffset 0.35s;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+      }
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-6 py-4 w-full bg-white/60 backdrop-blur-md shadow-none">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="User avatar profile picture in green circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLt9CPF1A9LJ1_2OnWPTnOEMhkXH-TIjIvn-k5zQl6uP7VvO7p0N_CAcxK6OVQ4iFjT-t_Z0hSY0Lbcp7uSrxZgyx2F3_bFyU3pr5ukgQwuJTM3f-M7115e3TgWnj_bCKvcs5jWpBJQO_xEN2Bi9DpQvBen0xEuAeXN4DqjQhIjTtbd0rccInLmKtnhr3i35q0S4VvhDQOTe9EFVSy0VEF6gwpezF72IMwsc43KP2QocIIVly5npbzAHacGVAwaTVIyMdxOEPP56Y"/>
+</div>
+<h1 class="font-['Inter'] tracking-tight headline-md:text-[1.75rem] body-md:text-[0.875rem] font-bold text-emerald-600">Savings Goals</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-emerald-50 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-emerald-600">add</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-emerald-50 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-emerald-600">notifications</span>
+</button>
+</div>
+</header>
+<main class="px-6 space-y-8 max-w-2xl mx-auto pt-4">
+<!-- Summary Bar -->
+<section class="relative overflow-hidden p-6 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-lg">
+<div class="relative z-10 flex flex-col gap-1">
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider opacity-80">Total Saved</span>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold tracking-tight">XOF 125,000</span>
+</div>
+</div>
+<!-- Geometric watermark pattern -->
+<div class="absolute -right-4 -bottom-6 opacity-10 pointer-events-none">
+<svg fill="currentColor" height="120" viewbox="0 0 100 100" width="120">
+<path d="M20 0 L80 50 L20 100 V70 L50 50 L20 30 Z"></path>
+</svg>
+</div>
+</section>
+<!-- Goals List -->
+<section class="space-y-4">
+<h2 class="font-['Inter'] tracking-tight text-xl font-semibold text-on-surface-variant px-1">Active Goals</h2>
+<!-- Goal Card 1 -->
+<div class="group relative bg-surface-container-low rounded-xl p-5 flex items-center gap-5 transition-all hover:bg-surface-container-high active:scale-[0.98]">
+<div class="relative w-16 h-16 flex-shrink-0">
+<svg class="w-full h-full" viewbox="0 0 64 64">
+<circle class="text-surface-container-highest" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary progress-ring__circle" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.92" stroke-dashoffset="43.98" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-primary">75%</span>
+</div>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-semibold text-on-surface truncate pr-2">Emergency Fund</h3>
+<span class="bg-tertiary-container/20 text-on-tertiary-container px-2 py-0.5 rounded-full text-[0.625rem] font-bold whitespace-nowrap">DEC 2024</span>
+</div>
+<p class="text-sm text-on-surface-variant font-medium">XOF 75,000 / <span class="opacity-60">100,000</span></p>
+<button class="mt-3 w-full bg-primary/10 text-primary py-2 rounded-lg text-xs font-bold hover:bg-primary/20 transition-colors uppercase tracking-widest">Add Money</button>
+</div>
+</div>
+<!-- Goal Card 2 -->
+<div class="group relative bg-surface-container-low rounded-xl p-5 flex items-center gap-5 transition-all hover:bg-surface-container-high active:scale-[0.98]">
+<div class="relative w-16 h-16 flex-shrink-0">
+<svg class="w-full h-full" viewbox="0 0 64 64">
+<circle class="text-surface-container-highest" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary progress-ring__circle" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.92" stroke-dashoffset="140.73" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-primary">20%</span>
+</div>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-semibold text-on-surface truncate pr-2">Japan Vacation</h3>
+<span class="bg-surface-container-highest text-on-surface-variant px-2 py-0.5 rounded-full text-[0.625rem] font-bold whitespace-nowrap">AUG 2025</span>
+</div>
+<p class="text-sm text-on-surface-variant font-medium">XOF 50,000 / <span class="opacity-60">250,000</span></p>
+<button class="mt-3 w-full bg-primary/10 text-primary py-2 rounded-lg text-xs font-bold hover:bg-primary/20 transition-colors uppercase tracking-widest">Add Money</button>
+</div>
+</div>
+</section>
+<!-- Empty State / Suggestions (Bento Style) -->
+<section class="space-y-4 pb-8">
+<h2 class="font-['Inter'] tracking-tight text-xl font-semibold text-on-surface-variant px-1">Quick Start</h2>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-start p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/10 hover:border-primary/40 transition-all text-left group">
+<span class="material-symbols-outlined text-tertiary mb-3 group-hover:scale-110 transition-transform">medical_services</span>
+<span class="text-sm font-bold text-on-surface">Emergency</span>
+<span class="text-[0.625rem] text-on-surface-variant uppercase tracking-wider">Safety first</span>
+</button>
+<button class="flex flex-col items-start p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/10 hover:border-primary/40 transition-all text-left group">
+<span class="material-symbols-outlined text-secondary mb-3 group-hover:scale-110 transition-transform">flight</span>
+<span class="text-sm font-bold text-on-surface">Vacation</span>
+<span class="text-[0.625rem] text-on-surface-variant uppercase tracking-wider">Dream travel</span>
+</button>
+<button class="flex flex-col items-start p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/10 hover:border-primary/40 transition-all text-left group">
+<span class="material-symbols-outlined text-primary mb-3 group-hover:scale-110 transition-transform">directions_car</span>
+<span class="text-sm font-bold text-on-surface">Car Fund</span>
+<span class="text-[0.625rem] text-on-surface-variant uppercase tracking-wider">New wheels</span>
+</button>
+<button class="flex flex-col items-start p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/10 hover:border-primary/40 transition-all text-left group">
+<span class="material-symbols-outlined text-error mb-3 group-hover:scale-110 transition-transform">school</span>
+<span class="text-sm font-bold text-on-surface">Education</span>
+<span class="text-[0.625rem] text-on-surface-variant uppercase tracking-wider">Growth</span>
+</button>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-28 right-6 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-xl shadow-[0px_10px_30px_rgba(0,108,73,0.3)] flex items-center justify-center active:scale-90 transition-all z-40">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 600;">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-3 bg-white/80 backdrop-blur-xl shadow-[0px_-10px_30px_rgba(0,0,0,0.03)] rounded-t-3xl border-t-0">
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider mt-1">Transactions</span>
+</a>
+<div class="w-8"></div> <!-- Spacer for FAB alignment if centered, but FAB is offset here -->
+<a class="flex flex-col items-center justify-center text-emerald-600 font-semibold transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider mt-1">Budget</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-emerald-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-['Inter'] text-[0.6875rem] font-semibold uppercase tracking-wider mt-1">More</span>
+</a>
+</nav>
+</body></html>
