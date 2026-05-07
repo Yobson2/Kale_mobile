@@ -10,7 +10,6 @@ analyzer:
     - ".dart_tool/**"
   errors:
     invalid_annotation_target: ignore
-    avoid_manual_providers_as_generated_provider_dependency: ignore
 
 linter:
   rules:
