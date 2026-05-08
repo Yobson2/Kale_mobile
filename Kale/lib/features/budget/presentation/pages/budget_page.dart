@@ -691,22 +691,28 @@ class _ActionButtons extends ConsumerWidget {
     return Row(
       children: [
         Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () {
-              context.pushNamed(RouteNames.budgetSetupName);
-            },
-            icon: const Icon(Icons.add_rounded),
-            label: const Text('New Budget'),
+          child: SizedBox(
+            height: 48,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                context.pushNamed(RouteNames.budgetSetupName);
+              },
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('New Budget'),
+            ),
           ),
         ),
         AppSpacing.horizontalMd,
         Expanded(
-          child: FilledButton.tonalIcon(
-            onPressed: () {
-              // TODO(dev): Navigate to edit budget page.
-            },
-            icon: const Icon(Icons.edit_rounded),
-            label: const Text('Edit Budget'),
+          child: SizedBox(
+            height: 48,
+            child: FilledButton.tonalIcon(
+              onPressed: () {
+                // TODO(dev): Navigate to edit budget page.
+              },
+              icon: const Icon(Icons.edit_rounded),
+              label: const Text('Edit Budget'),
+            ),
           ),
         ),
       ],

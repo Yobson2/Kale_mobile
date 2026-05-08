@@ -1003,53 +1003,63 @@ class _NavigationButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.lg,
-        AppSpacing.md,
-        AppSpacing.lg,
-        AppSpacing.lg,
-      ),
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: context.colorScheme.outlineVariant.withValues(alpha: 0.3),
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          if (currentStep > 0)
-            Expanded(
-              child: OutlinedButton(
-                onPressed: onPrevious,
-                child: const Text('Back'),
-              ),
-            ),
-          if (currentStep > 0) AppSpacing.horizontalMd,
-          Expanded(
-            flex: currentStep == 0 ? 1 : 1,
-            child: currentStep == 3
-                ? FilledButton(
-                    onPressed: isCreating ? null : onConfirm,
-                    child: isCreating
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text('Create Budget'),
-                  )
-                : FilledButton(
-                    onPressed: onNext,
-                    child: const Text('Continue'),
-                  ),
+        boxShadow: [
+          BoxShadow(
+            color: context.colorScheme.shadow.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
           ),
         ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.md,
+          AppSpacing.lg,
+          AppSpacing.xl,
+        ),
+        child: Row(
+          children: [
+            if (currentStep > 0)
+              Expanded(
+                child: SizedBox(
+                  height: 52,
+                  child: OutlinedButton(
+                    onPressed: onPrevious,
+                    child: const Text('Back'),
+                  ),
+                ),
+              ),
+            if (currentStep > 0) AppSpacing.horizontalMd,
+            Expanded(
+              flex: currentStep == 0 ? 2 : 1,
+              child: SizedBox(
+                height: 52,
+                child: currentStep == 3
+                    ? FilledButton(
+                        onPressed: isCreating ? null : onConfirm,
+                        child: isCreating
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('Create Budget'),
+                      )
+                    : FilledButton(
+                        onPressed: onNext,
+                        child: const Text('Continue'),
+                      ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

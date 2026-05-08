@@ -96,6 +96,14 @@ class AppTheme {
             textStyle: AppTypography.lightTextTheme.labelLarge,
           ),
         ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size(double.infinity, 52),
+            shape: RoundedRectangleBorder(
+              borderRadius: AppRadius.borderRadiusMd,
+            ),
+          ),
+        ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.primaryLight,
@@ -221,6 +229,14 @@ class AppTheme {
               borderRadius: AppRadius.borderRadiusMd,
             ),
             textStyle: AppTypography.darkTextTheme.labelLarge,
+          ),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size(double.infinity, 52),
+            shape: RoundedRectangleBorder(
+              borderRadius: AppRadius.borderRadiusMd,
+            ),
           ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
