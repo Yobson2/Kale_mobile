@@ -9,7 +9,6 @@ import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/data_display/app_avatar.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
-import 'package:kale/core/widgets/feedback/app_bottom_sheet.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 
@@ -86,9 +85,7 @@ class MorePage extends ConsumerWidget {
             _MenuItem(
               icon: Icons.group_outlined,
               title: context.l10n.moreTontineGroups,
-              trailing: _ComingSoonBadge(),
-              onTap: () =>
-                  _showComingSoon(context, context.l10n.moreTontineGroups),
+              onTap: () => context.goNamed(RouteNames.tontineGroupsName),
             ),
             _MenuItem(
               icon: Icons.insights_outlined,
@@ -103,20 +100,17 @@ class MorePage extends ConsumerWidget {
             _MenuItem(
               icon: Icons.help_outline,
               title: context.l10n.moreHelpSupport,
-              onTap: () =>
-                  _showComingSoon(context, context.l10n.moreHelpSupport),
+              onTap: () => context.goNamed(RouteNames.helpSupportName),
             ),
             _MenuItem(
               icon: Icons.star_outline,
               title: context.l10n.moreRateApp,
-              onTap: () =>
-                  _showComingSoon(context, context.l10n.moreRateApp),
+              onTap: () => context.goNamed(RouteNames.rateAppName),
             ),
             _MenuItem(
               icon: Icons.share_outlined,
               title: context.l10n.moreShareApp,
-              onTap: () =>
-                  _showComingSoon(context, context.l10n.moreShareApp),
+              onTap: () => context.goNamed(RouteNames.shareAppName),
             ),
             AppSpacing.verticalXl,
 
@@ -131,35 +125,6 @@ class MorePage extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context, String feature) {
-    showAppBottomSheet<void>(
-      context,
-      builder: (ctx) {
-        final theme = Theme.of(ctx);
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.construction_rounded,
-              size: 64,
-              color: theme.colorScheme.outline,
-            ),
-            AppSpacing.verticalLg,
-            Text(feature, style: theme.textTheme.titleMedium),
-            AppSpacing.verticalSm,
-            Text(
-              ctx.l10n.moreComingSoonMessage,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            AppSpacing.verticalXl,
-          ],
-        );
-      },
     );
   }
 }
@@ -268,13 +233,11 @@ class _MenuItem extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.onTap,
-    this.trailing,
   });
 
   final IconData icon;
   final String title;
   final VoidCallback onTap;
-  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -303,10 +266,6 @@ class _MenuItem extends StatelessWidget {
                     style: context.textTheme.bodyLarge,
                   ),
                 ),
-                if (trailing != null) ...[
-                  trailing!,
-                  AppSpacing.horizontalSm,
-                ],
                 Icon(
                   Icons.chevron_right,
                   size: 20,
@@ -315,28 +274,6 @@ class _MenuItem extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Coming Soon badge using tertiaryContainer.
-class _ComingSoonBadge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiaryContainer,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        context.l10n.moreComingSoon,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: Theme.of(context).colorScheme.onTertiaryContainer,
         ),
       ),
     );

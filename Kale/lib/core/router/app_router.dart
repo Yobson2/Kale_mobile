@@ -21,9 +21,13 @@ import 'package:kale/features/insights/presentation/pages/insights_page.dart';
 import 'package:kale/features/legal/presentation/pages/privacy_policy_page.dart';
 import 'package:kale/features/legal/presentation/pages/terms_of_service_page.dart';
 import 'package:kale/features/main/home_shell.dart';
+import 'package:kale/features/more/presentation/pages/help_support_page.dart';
 import 'package:kale/features/more/presentation/pages/more_page.dart';
 import 'package:kale/features/more/presentation/pages/profile_page.dart';
+import 'package:kale/features/more/presentation/pages/rate_app_page.dart';
 import 'package:kale/features/more/presentation/pages/settings_page.dart';
+import 'package:kale/features/more/presentation/pages/share_app_page.dart';
+import 'package:kale/features/more/presentation/pages/tontine_groups_page.dart';
 import 'package:kale/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:kale/features/savings/presentation/pages/add_savings_goal_page.dart';
 import 'package:kale/features/savings/presentation/pages/savings_goal_detail_page.dart';
@@ -305,6 +309,26 @@ GoRouter appRouter(Ref ref) {
                     path: 'insights',
                     name: RouteNames.insightsName,
                     builder: (context, state) => const InsightsPage(),
+                  ),
+                  GoRoute(
+                    path: 'tontine-groups',
+                    name: RouteNames.tontineGroupsName,
+                    builder: (context, state) => const TontineGroupsPage(),
+                  ),
+                  GoRoute(
+                    path: 'help-support',
+                    name: RouteNames.helpSupportName,
+                    builder: (context, state) => const HelpSupportPage(),
+                  ),
+                  GoRoute(
+                    path: 'rate-app',
+                    name: RouteNames.rateAppName,
+                    builder: (context, state) => const RateAppPage(),
+                  ),
+                  GoRoute(
+                    path: 'share-app',
+                    name: RouteNames.shareAppName,
+                    builder: (context, state) => const ShareAppPage(),
                   ),
                 ],
               ),

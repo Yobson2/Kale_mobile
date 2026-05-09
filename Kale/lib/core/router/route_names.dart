@@ -41,9 +41,6 @@ abstract final class RouteNames {
   static const String budgetName = 'budget';
   static const String budgetSetup = '/budget/setup';
   static const String budgetSetupName = 'budgetSetup';
-  static const String budgetDetail = '/budget/detail';
-  static const String budgetDetailName = 'budgetDetail';
-
   static const String more = '/more';
   static const String moreName = 'more';
 
@@ -60,4 +57,12 @@ abstract final class RouteNames {
   static const String savingsGoalDetailName = 'savingsGoalDetail';
   static const String insights = '/more/insights';
   static const String insightsName = 'insights';
+  static const String tontineGroups = '/more/tontine-groups';
+  static const String tontineGroupsName = 'tontineGroups';
+  static const String helpSupport = '/more/help-support';
+  static const String helpSupportName = 'helpSupport';
+  static const String rateApp = '/more/rate-app';
+  static const String rateAppName = 'rateApp';
+  static const String shareApp = '/more/share-app';
+  static const String shareAppName = 'shareApp';
 }
