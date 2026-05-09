@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/router/route_names.dart';
-import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/validators.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
@@ -14,6 +13,7 @@ import 'package:kale/core/widgets/inputs/app_text_field.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/auth/presentation/widgets/auth_header.dart';
+import 'package:kale/features/auth/presentation/widgets/guest_mode_button.dart';
 import 'package:kale/features/auth/presentation/widgets/social_login_buttons.dart';
 
 /// Login page with editorial header, gradient CTA, and social login grid.
@@ -180,7 +180,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         AppSpacing.verticalXl,
 
                         // Guest mode with gradient border
-                        _GuestModeButton(
+                        GuestModeButton(
                           onPressed: () async {
                             await ref.read(localStorageProvider).setGuestMode();
                             ref
@@ -218,65 +218,6 @@ class _LoginPageState extends ConsumerState<LoginPage>
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Guest mode button with gradient border effect.
-class _GuestModeButton extends StatelessWidget {
-  const _GuestModeButton({
-    required this.onPressed,
-    required this.colorScheme,
-    required this.label,
-  });
-
-  final VoidCallback onPressed;
-  final ColorScheme colorScheme;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: double.infinity,
-        height: 52,
-        decoration: BoxDecoration(
-          borderRadius: AppRadius.borderRadiusMd,
-          gradient: LinearGradient(
-            colors: [
-              colorScheme.primary.withValues(alpha: 0.2),
-              colorScheme.primaryContainer.withValues(alpha: 0.2),
-            ],
-          ),
-        ),
-        padding: const EdgeInsets.all(1.5),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: AppRadius.borderRadiusMd,
-          ),
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.bolt,
-                size: 20,
-                color: colorScheme.primary,
-              ),
-              AppSpacing.horizontalSm,
-              Text(
-                label,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

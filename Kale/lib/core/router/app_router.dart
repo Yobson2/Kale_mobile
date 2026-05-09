@@ -13,6 +13,7 @@ import 'package:kale/features/auth/presentation/pages/otp_verification_page.dart
 import 'package:kale/features/auth/presentation/pages/register_page.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
+import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/presentation/pages/budget_page.dart';
 import 'package:kale/features/budget/presentation/pages/budget_setup_page.dart';
 import 'package:kale/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -252,7 +253,9 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: 'setup',
                     name: RouteNames.budgetSetupName,
-                    builder: (context, state) => const BudgetSetupPage(),
+                    builder: (context, state) => BudgetSetupPage(
+                      existingBudget: state.extra as Budget?,
+                    ),
                   ),
                 ],
               ),

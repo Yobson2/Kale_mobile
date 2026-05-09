@@ -14,6 +14,7 @@ import 'package:kale/features/budget/domain/repositories/budgets_repository.dart
 import 'package:kale/features/budget/domain/usecases/create_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/delete_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/get_active_budget_usecase.dart';
+import 'package:kale/features/budget/domain/usecases/update_budget_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'budgets_providers.g.dart';
@@ -103,6 +104,12 @@ CreateBudgetUseCase createBudgetUseCase(Ref ref) {
 @riverpod
 DeleteBudgetUseCase deleteBudgetUseCase(Ref ref) {
   return DeleteBudgetUseCase(ref.watch(budgetsRepositoryProvider));
+}
+
+/// Provides the [UpdateBudgetUseCase].
+@riverpod
+UpdateBudgetUseCase updateBudgetUseCase(Ref ref) {
+  return UpdateBudgetUseCase(ref.watch(budgetsRepositoryProvider));
 }
 
 /// Provides the [GetActiveBudgetUseCase].

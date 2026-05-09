@@ -8,6 +8,7 @@ import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/core/widgets/layout/app_step_indicator.dart';
+import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_notifier.dart';
@@ -21,7 +22,13 @@ import 'package:kale/features/budget/presentation/providers/budgets_notifier.dar
 /// 4. Confirm and create
 class BudgetSetupPage extends ConsumerStatefulWidget {
   /// Creates a [BudgetSetupPage].
-  const BudgetSetupPage({super.key});
+  ///
+  /// When [existingBudget] is provided, the wizard opens in edit mode
+  /// with fields pre-filled from the existing budget.
+  const BudgetSetupPage({super.key, this.existingBudget});
+
+  /// The budget to edit, or `null` for create mode.
+  final Budget? existingBudget;
 
   @override
   ConsumerState<BudgetSetupPage> createState() => _BudgetSetupPageState();
@@ -44,10 +51,33 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
 
   bool _isCreating = false;
 
+  bool get _isEditMode => widget.existingBudget != null;
+
   @override
   void initState() {
     super.initState();
-    _allocations = _buildDefaultAllocations(_selectedStrategy);
+    final existing = widget.existingBudget;
+    if (existing != null) {
+      _selectedStrategy = existing.strategy;
+      _selectedPeriod = existing.period;
+      _income = existing.totalIncome;
+      if (_income != null) {
+        _incomeController.text = _income!.toStringAsFixed(0);
+      }
+      _allocations = existing.categories
+          .map(
+            (c) => _CategoryAllocationData(
+              categoryId: c.categoryId,
+              name: _categoryName(c.categoryId),
+              groupName: c.groupName,
+              percentage: c.allocatedPercentage ?? 0,
+              amount: c.allocatedAmount,
+            ),
+          )
+          .toList();
+    } else {
+      _allocations = _buildDefaultAllocations(_selectedStrategy);
+    }
   }
 
   @override
@@ -90,6 +120,27 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     }
   }
 
+  static String _categoryName(String categoryId) {
+    const names = {
+      'cat_food': 'Food & Groceries',
+      'cat_rent': 'Rent',
+      'cat_transport': 'Transport',
+      'cat_utilities': 'Utilities',
+      'cat_health': 'Health',
+      'cat_entertainment': 'Entertainment',
+      'cat_clothing': 'Clothing',
+      'cat_airtime': 'Airtime & Data',
+      'cat_personal_care': 'Personal Care',
+      'cat_family_support': 'Family Support',
+      'cat_savings_contrib': 'Savings',
+      'cat_debt': 'Debt Repayment',
+      'cat_religious': 'Religious Giving',
+      'cat_business': 'Business Expenses',
+      'cat_momo_fees': 'Mobile Money Fees',
+    };
+    return names[categoryId] ?? categoryId;
+  }
+
   void _applyIncomeToAllocations() {
     if (_income == null || _income! <= 0) return;
     for (final alloc in _allocations) {
@@ -99,7 +150,7 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     }
   }
 
-  Future<void> _createBudget() async {
+  Future<void> _saveBudget() async {
     if (_isCreating) return;
     setState(() => _isCreating = true);
 
@@ -107,17 +158,23 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     late DateTime startDate;
     late DateTime endDate;
 
-    switch (_selectedPeriod) {
-      case BudgetPeriod.weekly:
-        final weekday = now.weekday;
-        startDate = DateTime(now.year, now.month, now.day - (weekday - 1));
-        endDate = startDate.add(const Duration(days: 7));
-      case BudgetPeriod.biWeekly:
-        startDate = DateTime(now.year, now.month, now.day);
-        endDate = startDate.add(const Duration(days: 14));
-      case BudgetPeriod.monthly:
-        startDate = DateTime(now.year, now.month);
-        endDate = DateTime(now.year, now.month + 1);
+    if (_isEditMode) {
+      // Keep existing dates when editing.
+      startDate = widget.existingBudget!.startDate;
+      endDate = widget.existingBudget!.endDate;
+    } else {
+      switch (_selectedPeriod) {
+        case BudgetPeriod.weekly:
+          final weekday = now.weekday;
+          startDate = DateTime(now.year, now.month, now.day - (weekday - 1));
+          endDate = startDate.add(const Duration(days: 7));
+        case BudgetPeriod.biWeekly:
+          startDate = DateTime(now.year, now.month, now.day);
+          endDate = startDate.add(const Duration(days: 14));
+        case BudgetPeriod.monthly:
+          startDate = DateTime(now.year, now.month);
+          endDate = DateTime(now.year, now.month + 1);
+      }
     }
 
     final months = [
@@ -135,14 +192,16 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
       'November',
       'December',
     ];
-    final budgetName = '${months[now.month]} ${now.year} Budget';
+    final budgetName = _isEditMode
+        ? widget.existingBudget!.name
+        : '${months[now.month]} ${now.year} Budget';
 
     final categories = _allocations
         .where((a) => a.amount > 0)
         .map(
           (a) => BudgetCategoryAllocation(
             id: '',
-            budgetId: '',
+            budgetId: _isEditMode ? widget.existingBudget!.id : '',
             categoryId: a.categoryId,
             groupName: a.groupName,
             allocatedAmount: a.amount,
@@ -154,24 +213,47 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
         .toList();
 
     final notifier = ref.read(budgetsNotifierProvider.notifier);
-    final success = await notifier.createBudget(
-      name: budgetName,
-      strategy: _selectedStrategy,
-      period: _selectedPeriod,
-      startDate: startDate,
-      endDate: endDate,
-      categories: categories,
-      totalIncome: _income,
-      isPercentageBased: _income == null,
-    );
+    final bool success;
+
+    if (_isEditMode) {
+      success = await notifier.updateBudget(
+        id: widget.existingBudget!.id,
+        name: budgetName,
+        strategy: _selectedStrategy,
+        period: _selectedPeriod,
+        startDate: startDate,
+        endDate: endDate,
+        categories: categories,
+        totalIncome: _income,
+        isPercentageBased: _income == null,
+      );
+    } else {
+      success = await notifier.createBudget(
+        name: budgetName,
+        strategy: _selectedStrategy,
+        period: _selectedPeriod,
+        startDate: startDate,
+        endDate: endDate,
+        categories: categories,
+        totalIncome: _income,
+        isPercentageBased: _income == null,
+      );
+    }
 
     if (mounted) {
       setState(() => _isCreating = false);
       if (success) {
-        context.showSnackBar('Budget created successfully!');
+        context.showSnackBar(
+          _isEditMode
+              ? 'Budget updated successfully!'
+              : 'Budget created successfully!',
+        );
         if (mounted) context.pop();
       } else {
-        context.showSnackBar('Failed to create budget', isError: true);
+        context.showSnackBar(
+          _isEditMode ? 'Failed to update budget' : 'Failed to create budget',
+          isError: true,
+        );
       }
     }
   }
@@ -180,7 +262,7 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppAppBar(
-        title: 'Create Budget',
+        title: _isEditMode ? 'Edit Budget' : 'Create Budget',
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: AppSpacing.md),
@@ -243,9 +325,10 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
             _NavigationButtons(
               currentStep: _currentStep,
               isCreating: _isCreating,
+              isEditMode: _isEditMode,
               onNext: _nextStep,
               onPrevious: _previousStep,
-              onConfirm: _createBudget,
+              onConfirm: _saveBudget,
             ),
           ],
         ),
@@ -990,6 +1073,7 @@ class _NavigationButtons extends StatelessWidget {
   const _NavigationButtons({
     required this.currentStep,
     required this.isCreating,
+    required this.isEditMode,
     required this.onNext,
     required this.onPrevious,
     required this.onConfirm,
@@ -997,6 +1081,7 @@ class _NavigationButtons extends StatelessWidget {
 
   final int currentStep;
   final bool isCreating;
+  final bool isEditMode;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
   final VoidCallback onConfirm;
@@ -1050,7 +1135,7 @@ class _NavigationButtons extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text('Create Budget'),
+                            : Text(isEditMode ? 'Update Budget' : 'Create Budget'),
                       )
                     : FilledButton(
                         onPressed: onNext,

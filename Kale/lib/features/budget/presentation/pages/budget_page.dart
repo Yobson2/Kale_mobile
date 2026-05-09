@@ -285,7 +285,7 @@ class _BudgetContent extends ConsumerWidget {
             AppSpacing.verticalLg,
 
             // Action buttons.
-            _ActionButtons(budgetId: budget.id),
+            _ActionButtons(budget: budget),
 
             AppSpacing.verticalXl,
           ],
@@ -682,9 +682,9 @@ class _CategoryProgressItem extends StatelessWidget {
 // ── Action Buttons ──────────────────────────────────────────────
 
 class _ActionButtons extends ConsumerWidget {
-  const _ActionButtons({required this.budgetId});
+  const _ActionButtons({required this.budget});
 
-  final String budgetId;
+  final Budget budget;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -708,7 +708,10 @@ class _ActionButtons extends ConsumerWidget {
             height: 48,
             child: FilledButton.tonalIcon(
               onPressed: () {
-                // TODO(dev): Navigate to edit budget page.
+                context.pushNamed(
+                  RouteNames.budgetSetupName,
+                  extra: budget,
+                );
               },
               icon: const Icon(Icons.edit_rounded),
               label: const Text('Edit Budget'),

@@ -4,6 +4,7 @@ import 'package:kale/core/usecase/usecase.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/domain/usecases/create_budget_usecase.dart';
+import 'package:kale/features/budget/domain/usecases/update_budget_usecase.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -59,6 +60,53 @@ class BudgetsNotifier extends _$BudgetsNotifier {
           ref.invalidate(activeBudgetProvider);
           // Unlock first budget achievement.
           _unlockFirstBudget();
+          return true;
+        },
+      );
+    } catch (e) {
+      state = BudgetsState.error(e.toString());
+      return false;
+    }
+  }
+
+  /// Updates an existing budget with the given parameters.
+  Future<bool> updateBudget({
+    required String id,
+    required String name,
+    required BudgetStrategy strategy,
+    required BudgetPeriod period,
+    required DateTime startDate,
+    required DateTime endDate,
+    required List<BudgetCategoryAllocation> categories,
+    double? totalIncome,
+    bool isPercentageBased = true,
+  }) async {
+    state = const BudgetsState.loading();
+    try {
+      final result = await ref.read(updateBudgetUseCaseProvider).call(
+            UpdateBudgetParams(
+              id: id,
+              name: name,
+              strategy: strategy,
+              period: period,
+              startDate: startDate,
+              endDate: endDate,
+              categories: categories,
+              totalIncome: totalIncome,
+              isPercentageBased: isPercentageBased,
+            ),
+          );
+
+      return result.fold(
+        (failure) {
+          state = BudgetsState.error(failure.message);
+          return false;
+        },
+        (budget) {
+          state = const BudgetsState.success(
+            message: 'Budget updated successfully',
+          );
+          ref.invalidate(activeBudgetProvider);
           return true;
         },
       );

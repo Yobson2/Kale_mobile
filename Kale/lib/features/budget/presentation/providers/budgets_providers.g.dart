@@ -171,6 +171,27 @@ final deleteBudgetUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteBudgetUseCaseRef = AutoDisposeProviderRef<DeleteBudgetUseCase>;
+String _$updateBudgetUseCaseHash() =>
+    r'72da0a10ffcf6d9c07d3ddb5e4abd0455d215f59';
+
+/// Provides the [UpdateBudgetUseCase].
+///
+/// Copied from [updateBudgetUseCase].
+@ProviderFor(updateBudgetUseCase)
+final updateBudgetUseCaseProvider =
+    AutoDisposeProvider<UpdateBudgetUseCase>.internal(
+  updateBudgetUseCase,
+  name: r'updateBudgetUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$updateBudgetUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UpdateBudgetUseCaseRef = AutoDisposeProviderRef<UpdateBudgetUseCase>;
 String _$getActiveBudgetUseCaseHash() =>
     r'1372b8a98e125ada94b53a86e2d324717fffda14';
 
