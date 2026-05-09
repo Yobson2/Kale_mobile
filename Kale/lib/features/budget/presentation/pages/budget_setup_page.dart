@@ -41,10 +41,10 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
   // Step 1: Strategy.
   BudgetStrategy _selectedStrategy = BudgetStrategy.fiftyThirtyTwenty;
 
-  // Step 2: Period & Income.
+  // Step 2: Period & Money to budget.
   BudgetPeriod _selectedPeriod = BudgetPeriod.monthly;
-  final _incomeController = TextEditingController();
-  double? _income;
+  final _budgetAmountController = TextEditingController();
+  double _budgetAmount = 0;
 
   // Step 3: Category allocations.
   late List<_CategoryAllocationData> _allocations;
@@ -60,9 +60,9 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     if (existing != null) {
       _selectedStrategy = existing.strategy;
       _selectedPeriod = existing.period;
-      _income = existing.totalIncome;
-      if (_income != null) {
-        _incomeController.text = _income!.toStringAsFixed(0);
+      _budgetAmount = existing.totalIncome ?? 0;
+      if (_budgetAmount > 0) {
+        _budgetAmountController.text = _budgetAmount.toStringAsFixed(0);
       }
       _allocations = existing.categories
           .map(
@@ -83,7 +83,7 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
   @override
   void dispose() {
     _pageController.dispose();
-    _incomeController.dispose();
+    _budgetAmountController.dispose();
     super.dispose();
   }
 
@@ -105,10 +105,15 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
         });
       }
       if (_currentStep == 1) {
-        _income = double.tryParse(_incomeController.text);
-        if (_income != null && _income! > 0) {
-          _applyIncomeToAllocations();
+        _budgetAmount = double.tryParse(_budgetAmountController.text) ?? 0;
+        if (_budgetAmount <= 0) {
+          context.showSnackBar(
+            'Please enter the amount you want to budget',
+            isError: true,
+          );
+          return;
         }
+        _applyIncomeToAllocations();
       }
       _goToStep(_currentStep + 1);
     }
@@ -142,16 +147,30 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
   }
 
   void _applyIncomeToAllocations() {
-    if (_income == null || _income! <= 0) return;
+    if (_budgetAmount <= 0) return;
     for (final alloc in _allocations) {
       if (alloc.percentage > 0) {
-        alloc.amount = _income! * (alloc.percentage / 100);
+        alloc.amount = _budgetAmount * (alloc.percentage / 100);
       }
     }
   }
 
   Future<void> _saveBudget() async {
     if (_isCreating) return;
+
+    // Validate allocations don't exceed budget.
+    final totalAllocated = _allocations.fold<double>(
+      0,
+      (sum, a) => sum + a.amount,
+    );
+    if (totalAllocated > _budgetAmount) {
+      context.showSnackBar(
+        'Allocations exceed your budget. Go back and adjust amounts.',
+        isError: true,
+      );
+      return;
+    }
+
     setState(() => _isCreating = true);
 
     final now = DateTime.now();
@@ -224,8 +243,8 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
         startDate: startDate,
         endDate: endDate,
         categories: categories,
-        totalIncome: _income,
-        isPercentageBased: _income == null,
+        totalIncome: _budgetAmount,
+        isPercentageBased: false,
       );
     } else {
       success = await notifier.createBudget(
@@ -235,8 +254,8 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
         startDate: startDate,
         endDate: endDate,
         categories: categories,
-        totalIncome: _income,
-        isPercentageBased: _income == null,
+        totalIncome: _budgetAmount,
+        isPercentageBased: false,
       );
     }
 
@@ -301,7 +320,7 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
                   ),
                   _PeriodIncomeStep(
                     selectedPeriod: _selectedPeriod,
-                    incomeController: _incomeController,
+                    budgetAmountController: _budgetAmountController,
                     currencyCode: ref.watch(userCurrencyCodeProvider),
                     onPeriodChanged: (period) {
                       setState(() => _selectedPeriod = period);
@@ -309,12 +328,13 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
                   ),
                   _AllocationsStep(
                     allocations: _allocations,
+                    budgetAmount: _budgetAmount,
                     onChanged: () => setState(() {}),
                   ),
                   _ConfirmStep(
                     strategy: _selectedStrategy,
                     period: _selectedPeriod,
-                    income: _income,
+                    budgetAmount: _budgetAmount,
                     allocations: _allocations,
                   ),
                 ],
@@ -486,18 +506,18 @@ class _StrategyCard extends StatelessWidget {
   }
 }
 
-// ── Step 2: Period & Income ──────────────────────────────────────
+// ── Step 2: Period & Money to Budget ─────────────────────────────
 
 class _PeriodIncomeStep extends StatelessWidget {
   const _PeriodIncomeStep({
     required this.selectedPeriod,
-    required this.incomeController,
+    required this.budgetAmountController,
     required this.currencyCode,
     required this.onPeriodChanged,
   });
 
   final BudgetPeriod selectedPeriod;
-  final TextEditingController incomeController;
+  final TextEditingController budgetAmountController;
   final String currencyCode;
   final ValueChanged<BudgetPeriod> onPeriodChanged;
 
@@ -584,26 +604,26 @@ class _PeriodIncomeStep extends StatelessWidget {
 
           AppSpacing.verticalXl,
 
-          // Income field.
+          // Money to budget field.
           Text(
-            'Expected Income (optional)',
+            'How much do you want to budget?',
             style: context.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           AppSpacing.verticalSm,
           Text(
-            'Enter your expected income to auto-calculate allocations.',
+            'Enter the total amount you have available to budget for this period.',
             style: context.textTheme.bodySmall?.copyWith(
               color: context.colorScheme.onSurfaceVariant,
             ),
           ),
           AppSpacing.verticalMd,
           TextField(
-            controller: incomeController,
+            controller: budgetAmountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              hintText: '0.00',
+              hintText: '0',
               prefixText: '$currencyCode ',
               border: OutlineInputBorder(
                 borderRadius: AppRadius.borderRadiusMd,
@@ -637,10 +657,12 @@ class _PeriodIncomeStep extends StatelessWidget {
 class _AllocationsStep extends StatelessWidget {
   const _AllocationsStep({
     required this.allocations,
+    required this.budgetAmount,
     required this.onChanged,
   });
 
   final List<_CategoryAllocationData> allocations;
+  final double budgetAmount;
   final VoidCallback onChanged;
 
   @override
@@ -650,6 +672,13 @@ class _AllocationsStep extends StatelessWidget {
     for (final alloc in allocations) {
       groups.putIfAbsent(alloc.groupName, () => []).add(alloc);
     }
+
+    final totalAllocated = allocations.fold<double>(
+      0,
+      (sum, a) => sum + a.amount,
+    );
+    final remaining = budgetAmount - totalAllocated;
+    final isOverBudget = remaining < 0;
 
     return SingleChildScrollView(
       padding: AppSpacing.paddingLg,
@@ -669,7 +698,76 @@ class _AllocationsStep extends StatelessWidget {
               color: context.colorScheme.onSurfaceVariant,
             ),
           ),
-          AppSpacing.verticalXl,
+          AppSpacing.verticalMd,
+
+          // Live remaining counter.
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.md,
+            ),
+            decoration: BoxDecoration(
+              color: isOverBudget
+                  ? context.colorScheme.errorContainer
+                  : context.colorScheme.primaryContainer.withValues(alpha: 0.4),
+              borderRadius: AppRadius.borderRadiusMd,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isOverBudget ? 'OVER BUDGET' : 'REMAINING',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.2,
+                        color: isOverBudget
+                            ? context.colorScheme.error
+                            : context.colorScheme.primary,
+                      ),
+                    ),
+                    AppSpacing.verticalXs,
+                    Text(
+                      CurrencyFormatter.format(remaining.abs()),
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: isOverBudget
+                            ? context.colorScheme.error
+                            : context.colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'ALLOCATED',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.2,
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    AppSpacing.verticalXs,
+                    Text(
+                      '${CurrencyFormatter.format(totalAllocated, compact: true)}'
+                      ' / '
+                      '${CurrencyFormatter.format(budgetAmount, compact: true)}',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          AppSpacing.verticalLg,
+
           ...groups.entries.map((entry) {
             return _AllocationGroup(
               groupName: entry.key,
@@ -849,13 +947,13 @@ class _ConfirmStep extends StatelessWidget {
   const _ConfirmStep({
     required this.strategy,
     required this.period,
-    required this.income,
+    required this.budgetAmount,
     required this.allocations,
   });
 
   final BudgetStrategy strategy;
   final BudgetPeriod period;
-  final double? income;
+  final double budgetAmount;
   final List<_CategoryAllocationData> allocations;
 
   @override
@@ -915,24 +1013,64 @@ class _ConfirmStep extends StatelessWidget {
                   value: _periodLabel(period),
                   context: context,
                 ),
-                if (income != null && income! > 0) ...[
-                  AppSpacing.verticalSm,
-                  _ConfirmRow(
-                    label: 'Income',
-                    value: CurrencyFormatter.format(income!),
-                    context: context,
-                  ),
-                ],
                 AppSpacing.verticalSm,
                 _ConfirmRow(
-                  label: 'Total Budget',
+                  label: 'Money to Budget',
+                  value: CurrencyFormatter.format(budgetAmount),
+                  context: context,
+                ),
+                AppSpacing.verticalSm,
+                _ConfirmRow(
+                  label: 'Total Allocated',
                   value: CurrencyFormatter.format(totalAllocated),
                   context: context,
                   isBold: true,
                 ),
+                AppSpacing.verticalSm,
+                _ConfirmRow(
+                  label: totalAllocated > budgetAmount
+                      ? 'Over Budget'
+                      : 'Remaining',
+                  value: CurrencyFormatter.format(
+                    (budgetAmount - totalAllocated).abs(),
+                  ),
+                  context: context,
+                  isWarning: totalAllocated > budgetAmount,
+                ),
               ],
             ),
           ),
+
+          if (totalAllocated > budgetAmount) ...[
+            AppSpacing.verticalMd,
+            Container(
+              padding: AppSpacing.paddingMd,
+              decoration: BoxDecoration(
+                color: context.colorScheme.errorContainer,
+                borderRadius: AppRadius.borderRadiusMd,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.warning_rounded,
+                    color: context.colorScheme.error,
+                    size: 20,
+                  ),
+                  AppSpacing.horizontalSm,
+                  Expanded(
+                    child: Text(
+                      'Your allocations exceed your available budget by '
+                      '${CurrencyFormatter.format(totalAllocated - budgetAmount)}. '
+                      'Go back and adjust your amounts.',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colorScheme.onErrorContainer,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
 
           AppSpacing.verticalXl,
 
@@ -1037,12 +1175,14 @@ class _ConfirmRow extends StatelessWidget {
     required this.value,
     required this.context,
     this.isBold = false,
+    this.isWarning = false,
   });
 
   final String label;
   final String value;
   final BuildContext context;
   final bool isBold;
+  final bool isWarning;
 
   @override
   Widget build(BuildContext buildContext) {
@@ -1052,14 +1192,20 @@ class _ConfirmRow extends StatelessWidget {
         Text(
           label,
           style: buildContext.textTheme.bodyMedium?.copyWith(
-            color: buildContext.colorScheme.onSurfaceVariant,
+            color: isWarning
+                ? buildContext.colorScheme.error
+                : buildContext.colorScheme.onSurfaceVariant,
           ),
         ),
         Text(
           value,
           style: buildContext.textTheme.bodyMedium?.copyWith(
-            fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
-            color: isBold ? buildContext.colorScheme.primary : null,
+            fontWeight: (isBold || isWarning) ? FontWeight.w700 : FontWeight.w500,
+            color: isWarning
+                ? buildContext.colorScheme.error
+                : isBold
+                    ? buildContext.colorScheme.primary
+                    : null,
           ),
         ),
       ],
