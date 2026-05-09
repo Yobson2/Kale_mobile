@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/data_display/app_avatar.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
@@ -66,7 +68,7 @@ class DashboardPage extends ConsumerWidget {
                       IconButton(
                         icon: const Icon(Icons.notifications_outlined),
                         onPressed: () {
-                          // TODO(dev): Navigate to notifications.
+                          context.pushNamed(RouteNames.notificationsName);
                         },
                       ),
                     ],

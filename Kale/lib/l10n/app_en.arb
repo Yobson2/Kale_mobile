@@ -557,5 +557,9 @@
   "dashboardHealthExcellent": "Excellent",
   "dashboardHealthGood": "Good",
   "dashboardHealthFair": "Fair",
-  "dashboardHealthNeedsWork": "Needs work"
+  "dashboardHealthNeedsWork": "Needs work",
+
+  "notificationsTitle": "Notifications",
+  "notificationsEmpty": "No notifications yet",
+  "notificationsEmptySubtitle": "You're all caught up! Notifications about your budgets, savings, and reminders will appear here."
 }

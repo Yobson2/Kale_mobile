@@ -65,4 +65,8 @@ abstract final class RouteNames {
   static const String rateAppName = 'rateApp';
   static const String shareApp = '/more/share-app';
   static const String shareAppName = 'shareApp';
+
+  // -- Notifications --
+  static const String notifications = '/notifications';
+  static const String notificationsName = 'notifications';
 }

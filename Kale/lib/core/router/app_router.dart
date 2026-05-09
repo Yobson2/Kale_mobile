@@ -28,6 +28,7 @@ import 'package:kale/features/more/presentation/pages/rate_app_page.dart';
 import 'package:kale/features/more/presentation/pages/settings_page.dart';
 import 'package:kale/features/more/presentation/pages/share_app_page.dart';
 import 'package:kale/features/more/presentation/pages/tontine_groups_page.dart';
+import 'package:kale/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:kale/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:kale/features/savings/presentation/pages/add_savings_goal_page.dart';
 import 'package:kale/features/savings/presentation/pages/savings_goal_detail_page.dart';
@@ -191,6 +192,14 @@ GoRouter appRouter(Ref ref) {
         path: RouteNames.privacyPolicy,
         name: RouteNames.privacyPolicyName,
         builder: (context, state) => const PrivacyPolicyPage(),
+      ),
+
+      // Notifications
+      GoRoute(
+        path: RouteNames.notifications,
+        name: RouteNames.notificationsName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const NotificationsPage(),
       ),
 
       // Add Transaction (root-level modal with parentNavigatorKey)

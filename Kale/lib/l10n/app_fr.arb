@@ -444,5 +444,9 @@
   "dashboardHealthExcellent": "Excellent",
   "dashboardHealthGood": "Bien",
   "dashboardHealthFair": "Moyen",
-  "dashboardHealthNeedsWork": "A ameliorer"
+  "dashboardHealthNeedsWork": "A ameliorer",
+
+  "notificationsTitle": "Notifications",
+  "notificationsEmpty": "Aucune notification",
+  "notificationsEmptySubtitle": "Vous etes a jour ! Les notifications concernant vos budgets, epargnes et rappels apparaitront ici."
 }
