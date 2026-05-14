@@ -72,17 +72,54 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User?>> verifyOtp({
     required String email,
     required String code,
+    bool isRecovery = false,
   }) async {
     if (!await _networkInfo.isConnected) {
       return const Left(NetworkFailure());
     }
     try {
-      final result = await _remote.verifyOtp(email: email, code: code);
+      final result = await _remote.verifyOtp(
+        email: email,
+        code: code,
+        isRecovery: isRecovery,
+      );
       if (result != null) {
         await _local.cacheTokens(result.tokens);
         await _local.cacheUser(result.user);
         return Right(result.user.toEntity());
       }
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resendOtp({required String email}) async {
+    if (!await _networkInfo.isConnected) {
+      return const Left(NetworkFailure());
+    }
+    try {
+      await _remote.resendOtp(email: email);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updatePassword({
+    required String newPassword,
+  }) async {
+    if (!await _networkInfo.isConnected) {
+      return const Left(NetworkFailure());
+    }
+    try {
+      await _remote.updatePassword(newPassword: newPassword);
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

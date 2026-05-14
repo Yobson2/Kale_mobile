@@ -14,6 +14,8 @@ import 'package:kale/features/auth/domain/usecases/get_cached_user_usecase.dart'
 import 'package:kale/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/register_usecase.dart';
+import 'package:kale/features/auth/domain/usecases/resend_otp_usecase.dart';
+import 'package:kale/features/auth/domain/usecases/update_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/sign_in_with_apple_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/sign_in_with_google_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
@@ -80,6 +82,12 @@ VerifyOtpUseCase verifyOtpUseCase(Ref ref) {
   return VerifyOtpUseCase(ref.watch(authRepositoryProvider));
 }
 
+/// Provides the [ResendOtpUseCase].
+@riverpod
+ResendOtpUseCase resendOtpUseCase(Ref ref) {
+  return ResendOtpUseCase(ref.watch(authRepositoryProvider));
+}
+
 /// Provides the [LogoutUseCase].
 @riverpod
 LogoutUseCase logoutUseCase(Ref ref) {
@@ -90,6 +98,12 @@ LogoutUseCase logoutUseCase(Ref ref) {
 @riverpod
 GetCachedUserUseCase getCachedUserUseCase(Ref ref) {
   return GetCachedUserUseCase(ref.watch(authRepositoryProvider));
+}
+
+/// Provides the [UpdatePasswordUseCase].
+@riverpod
+UpdatePasswordUseCase updatePasswordUseCase(Ref ref) {
+  return UpdatePasswordUseCase(ref.watch(authRepositoryProvider));
 }
 
 /// Provides the [SignInWithGoogleUseCase].

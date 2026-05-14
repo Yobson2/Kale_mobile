@@ -163,10 +163,10 @@ GoRouter appRouter(Ref ref) {
         path: RouteNames.otpVerification,
         name: RouteNames.otpVerificationName,
         builder: (context, state) {
-          final extra = state.extra as Map<String, String>? ?? {};
+          final extra = state.extra as Map<String, dynamic>? ?? {};
           return OtpVerificationPage(
-            email: extra['email'] ?? '',
-            name: extra['name'],
+            email: extra['email']?.toString() ?? '',
+            name: extra['name']?.toString(),
           );
         },
       ),
@@ -174,10 +174,10 @@ GoRouter appRouter(Ref ref) {
         path: RouteNames.createPassword,
         name: RouteNames.createPasswordName,
         builder: (context, state) {
-          final extra = state.extra as Map<String, String>? ?? {};
+          final extra = state.extra as Map<String, dynamic>? ?? {};
           return CreatePasswordPage(
-            name: extra['name'] ?? '',
-            email: extra['email'] ?? '',
+            name: extra['name']?.toString() ?? '',
+            email: extra['email']?.toString() ?? '',
           );
         },
       ),

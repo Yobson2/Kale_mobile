@@ -68,14 +68,14 @@ class _CreatePasswordPageState extends ConsumerState<CreatePasswordPage>
     super.dispose();
   }
 
-  void _onSubmit() {
-    if (_formKey.currentState?.validate() ?? false) {
-      context.unfocus();
-      ref.read(authNotifierProvider.notifier).register(
-            name: widget.name,
-            email: widget.email,
-            password: _passwordController.text,
-          );
+  Future<void> _onSubmit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    context.unfocus();
+    final success = await ref
+        .read(authNotifierProvider.notifier)
+        .updatePassword(newPassword: _passwordController.text);
+    if (success && mounted) {
+      context.go(RouteNames.login);
     }
   }
 
@@ -87,9 +87,6 @@ class _CreatePasswordPageState extends ConsumerState<CreatePasswordPage>
     ref.listen<AuthState>(authNotifierProvider, (_, state) {
       if (state is AuthError) {
         context.showSnackBar(state.message, isError: true);
-      }
-      if (state is AuthAuthenticated) {
-        context.go(RouteNames.dashboard);
       }
     });
 

@@ -27,12 +27,22 @@ abstract class AuthRemoteDataSource {
 
   /// Verifies the OTP [code] sent to [email].
   ///
+  /// [isRecovery] should be `true` for the forgot-password flow
+  /// (`OtpType.recovery`) and `false` (default) for signup (`OtpType.signup`).
+  ///
   /// For the signup flow, completes registration and returns the
   /// authenticated user + tokens. Returns `null` otherwise.
   Future<({UserModel user, TokensModel tokens})?> verifyOtp({
     required String email,
     required String code,
+    bool isRecovery = false,
   });
+
+  /// Resends the signup confirmation OTP to [email].
+  Future<void> resendOtp({required String email});
+
+  /// Updates the current user's password (after recovery OTP verification).
+  Future<void> updatePassword({required String newPassword});
 
   /// Sends a password-reset email.
   Future<void> forgotPassword({required String email});
@@ -92,11 +102,21 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
     required String password,
   }) async {
     try {
-      await _supabase.auth.signUp(
+      final response = await _supabase.auth.signUp(
         email: email,
         password: password,
         data: {'display_name': name},
       );
+
+      // When "Confirm email" is enabled and the email is already taken by a
+      // confirmed user, Supabase returns a fake success with an empty
+      // identities list. Detect this and surface it as an error.
+      final identities = response.user?.identities;
+      if (identities != null && identities.isEmpty) {
+        throw const ServerException(
+          message: 'An account with this email already exists.',
+        );
+      }
     } on AuthException catch (e) {
       throw ServerException(
         message: e.message,
@@ -109,17 +129,44 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
   Future<({UserModel user, TokensModel tokens})?> verifyOtp({
     required String email,
     required String code,
+    bool isRecovery = false,
   }) async {
     try {
       final response = await _supabase.auth.verifyOTP(
         email: email,
         token: code,
-        type: OtpType.signup,
+        type: isRecovery ? OtpType.recovery : OtpType.signup,
       );
       if (response.session != null && response.user != null) {
         return _mapAuthResponse(response);
       }
       return null;
+    } on AuthException catch (e) {
+      throw ServerException(
+        message: e.message,
+        statusCode: int.tryParse(e.statusCode ?? ''),
+      );
+    }
+  }
+
+  @override
+  Future<void> updatePassword({required String newPassword}) async {
+    try {
+      await _supabase.auth.updateUser(
+        UserAttributes(password: newPassword),
+      );
+    } on AuthException catch (e) {
+      throw ServerException(
+        message: e.message,
+        statusCode: int.tryParse(e.statusCode ?? ''),
+      );
+    }
+  }
+
+  @override
+  Future<void> resendOtp({required String email}) async {
+    try {
+      await _supabase.auth.resend(type: OtpType.signup, email: email);
     } on AuthException catch (e) {
       throw ServerException(
         message: e.message,

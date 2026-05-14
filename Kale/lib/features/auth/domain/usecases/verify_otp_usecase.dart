@@ -16,18 +16,29 @@ class VerifyOtpUseCase extends UseCase<User?, VerifyOtpParams> {
 
   @override
   Future<Either<Failure, User?>> call(VerifyOtpParams params) {
-    return _repository.verifyOtp(email: params.email, code: params.code);
+    return _repository.verifyOtp(
+      email: params.email,
+      code: params.code,
+      isRecovery: params.isRecovery,
+    );
   }
 }
 
 /// Parameters for [VerifyOtpUseCase].
 class VerifyOtpParams {
   /// Creates [VerifyOtpParams].
-  const VerifyOtpParams({required this.email, required this.code});
+  const VerifyOtpParams({
+    required this.email,
+    required this.code,
+    this.isRecovery = false,
+  });
 
   /// User email.
   final String email;
 
   /// OTP code.
   final String code;
+
+  /// Whether this is a password-recovery OTP (vs. signup confirmation).
+  final bool isRecovery;
 }

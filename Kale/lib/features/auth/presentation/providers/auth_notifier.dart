@@ -2,6 +2,8 @@ import 'package:kale/core/usecase/usecase.dart';
 import 'package:kale/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/register_usecase.dart';
+import 'package:kale/features/auth/domain/usecases/resend_otp_usecase.dart';
+import 'package:kale/features/auth/domain/usecases/update_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
@@ -76,16 +78,22 @@ class AuthNotifier extends _$AuthNotifier {
 
   /// Verifies the OTP [code] sent to [email].
   ///
+  /// Set [isRecovery] to `true` for the forgot-password flow.
   /// For the signup flow, sets state to [AuthAuthenticated].
   /// For the forgot-password flow, returns `true` without authenticating.
   Future<bool> verifyOtp({
     required String email,
     required String code,
+    bool isRecovery = false,
   }) async {
     state = const AuthState.loading();
     try {
       final result = await ref.read(verifyOtpUseCaseProvider).call(
-            VerifyOtpParams(email: email, code: code),
+            VerifyOtpParams(
+              email: email,
+              code: code,
+              isRecovery: isRecovery,
+            ),
           );
       return result.fold(
         (failure) {
@@ -98,6 +106,48 @@ class AuthNotifier extends _$AuthNotifier {
           } else {
             state = const AuthState.unauthenticated();
           }
+          return true;
+        },
+      );
+    } catch (e) {
+      state = AuthState.error(e.toString());
+      return false;
+    }
+  }
+
+  /// Resends the signup confirmation OTP to [email].
+  Future<bool> resendOtp({required String email}) async {
+    try {
+      final result = await ref.read(resendOtpUseCaseProvider).call(
+            ResendOtpParams(email: email),
+          );
+      return result.fold(
+        (failure) {
+          state = AuthState.error(failure.message);
+          return false;
+        },
+        (_) => true,
+      );
+    } catch (e) {
+      state = AuthState.error(e.toString());
+      return false;
+    }
+  }
+
+  /// Updates the user's password after recovery OTP verification.
+  Future<bool> updatePassword({required String newPassword}) async {
+    state = const AuthState.loading();
+    try {
+      final result = await ref.read(updatePasswordUseCaseProvider).call(
+            UpdatePasswordParams(newPassword: newPassword),
+          );
+      return result.fold(
+        (failure) {
+          state = AuthState.error(failure.message);
+          return false;
+        },
+        (_) {
+          // Password updated — user is now fully authenticated.
           return true;
         },
       );

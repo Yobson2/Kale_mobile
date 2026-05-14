@@ -57,6 +57,7 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   Future<({UserModel user, TokensModel tokens})?> verifyOtp({
     required String email,
     required String code,
+    bool isRecovery = false,
   }) async {
     await Future<void>.delayed(_delay);
 
@@ -69,6 +70,16 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
       user: UserModel(id: 'mock-user-002', email: email, name: 'New User'),
       tokens: _mockTokens,
     );
+  }
+
+  @override
+  Future<void> updatePassword({required String newPassword}) async {
+    await Future<void>.delayed(_delay);
+  }
+
+  @override
+  Future<void> resendOtp({required String email}) async {
+    await Future<void>.delayed(_delay);
   }
 
   @override

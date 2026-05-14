@@ -147,6 +147,25 @@ final verifyOtpUseCaseProvider = AutoDisposeProvider<VerifyOtpUseCase>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef VerifyOtpUseCaseRef = AutoDisposeProviderRef<VerifyOtpUseCase>;
+String _$resendOtpUseCaseHash() => r'8d9c6cf1a58cb1983d7ab9c6dedcb286a7745407';
+
+/// Provides the [ResendOtpUseCase].
+///
+/// Copied from [resendOtpUseCase].
+@ProviderFor(resendOtpUseCase)
+final resendOtpUseCaseProvider = AutoDisposeProvider<ResendOtpUseCase>.internal(
+  resendOtpUseCase,
+  name: r'resendOtpUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$resendOtpUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ResendOtpUseCaseRef = AutoDisposeProviderRef<ResendOtpUseCase>;
 String _$logoutUseCaseHash() => r'2b963e9e0eff2155f687d45b1b5c652ddb695d62';
 
 /// Provides the [LogoutUseCase].
@@ -187,6 +206,28 @@ final getCachedUserUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetCachedUserUseCaseRef = AutoDisposeProviderRef<GetCachedUserUseCase>;
+String _$updatePasswordUseCaseHash() =>
+    r'de265bf7d4e99f9339ca6a935a2c4831234328c0';
+
+/// Provides the [UpdatePasswordUseCase].
+///
+/// Copied from [updatePasswordUseCase].
+@ProviderFor(updatePasswordUseCase)
+final updatePasswordUseCaseProvider =
+    AutoDisposeProvider<UpdatePasswordUseCase>.internal(
+  updatePasswordUseCase,
+  name: r'updatePasswordUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$updatePasswordUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UpdatePasswordUseCaseRef
+    = AutoDisposeProviderRef<UpdatePasswordUseCase>;
 String _$signInWithGoogleUseCaseHash() =>
     r'665c8b7cec97ca0c16454bfd4072aeac9e931ed9';
 

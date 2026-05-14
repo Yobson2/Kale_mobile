@@ -123,8 +123,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
     if (!(_step2FormKey.currentState?.validate() ?? false)) return;
     context.unfocus();
 
-    final analytics = ref.read(analyticsServiceProvider);
-    analytics.logEvent('registration_submitted');
+    final analytics = ref.read(analyticsServiceProvider)
+      ..logEvent('registration_submitted');
 
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();

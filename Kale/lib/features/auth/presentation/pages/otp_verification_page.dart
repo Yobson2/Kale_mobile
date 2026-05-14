@@ -78,22 +78,41 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
     context.unfocus();
     final success = await ref
         .read(authNotifierProvider.notifier)
-        .verifyOtp(email: widget.email, code: _otpCode);
-    if (success && mounted) {
-      if (_isRegistrationFlow) {
-        context.go(RouteNames.dashboard);
-      } else {
-        context.go(RouteNames.login);
-      }
+        .verifyOtp(
+          email: widget.email,
+          code: _otpCode,
+          isRecovery: !_isRegistrationFlow,
+        );
+    if (!success || !mounted) return;
+
+    if (_isRegistrationFlow) {
+      // Auth state is now AuthAuthenticated — GoRouter redirect handles
+      // navigation to dashboard automatically. No explicit navigation needed.
+    } else {
+      // Forgot-password flow: navigate to create-password page.
+      context.go(
+        RouteNames.createPassword,
+        extra: {'email': widget.email},
+      );
     }
   }
 
-  void _onResend() {
-    ref.read(authNotifierProvider.notifier).forgotPassword(
-          email: widget.email,
-        );
-    context.showSnackBar('OTP resent to ${widget.email}');
-    _startTimer();
+  Future<void> _onResend() async {
+    if (_isRegistrationFlow) {
+      // Resend the signup confirmation OTP.
+      await ref
+          .read(authNotifierProvider.notifier)
+          .resendOtp(email: widget.email);
+    } else {
+      // Resend the password-reset OTP.
+      await ref
+          .read(authNotifierProvider.notifier)
+          .forgotPassword(email: widget.email);
+    }
+    if (mounted) {
+      context.showSnackBar('OTP resent to ${widget.email}');
+      _startTimer();
+    }
   }
 
   @override
@@ -106,9 +125,8 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
       if (state is AuthError) {
         context.showSnackBar(state.message, isError: true);
       }
-      if (state is AuthAuthenticated) {
-        context.go(RouteNames.dashboard);
-      }
+      // Navigation on success is handled by _onVerify (forgot-password)
+      // or GoRouter redirect (signup → AuthAuthenticated on public route).
     });
 
     return Scaffold(

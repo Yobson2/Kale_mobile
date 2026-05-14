@@ -26,11 +26,21 @@ abstract class AuthRepository {
 
   /// Verifies the OTP [code] sent to [email].
   ///
+  /// Set [isRecovery] to `true` for the forgot-password flow.
   /// For the signup flow this completes registration and returns the
   /// authenticated [User]. For forgot-password it returns `null`.
   Future<Either<Failure, User?>> verifyOtp({
     required String email,
     required String code,
+    bool isRecovery = false,
+  });
+
+  /// Resends the signup confirmation OTP to [email].
+  Future<Either<Failure, void>> resendOtp({required String email});
+
+  /// Updates the current user's password (after recovery OTP verification).
+  Future<Either<Failure, void>> updatePassword({
+    required String newPassword,
   });
 
   /// Logs out the current user and clears tokens.
