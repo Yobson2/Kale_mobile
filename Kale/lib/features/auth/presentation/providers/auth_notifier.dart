@@ -7,6 +7,9 @@ import 'package:kale/features/auth/domain/usecases/update_password_usecase.dart'
 import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
+import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
+import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
+import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_notifier.g.dart';
@@ -38,7 +41,10 @@ class AuthNotifier extends _$AuthNotifier {
           );
       state = result.fold(
         (failure) => AuthState.error(failure.message),
-        AuthState.authenticated,
+        (user) {
+          _syncFromServer();
+          return AuthState.authenticated(user);
+        },
       );
     } catch (e) {
       state = AuthState.error(e.toString());
@@ -102,6 +108,7 @@ class AuthNotifier extends _$AuthNotifier {
         },
         (user) {
           if (user != null) {
+            _syncFromServer();
             state = AuthState.authenticated(user);
           } else {
             state = const AuthState.unauthenticated();
@@ -188,7 +195,10 @@ class AuthNotifier extends _$AuthNotifier {
           .call(const NoParams());
       state = result.fold(
         (failure) => AuthState.error(failure.message),
-        AuthState.authenticated,
+        (user) {
+          _syncFromServer();
+          return AuthState.authenticated(user);
+        },
       );
     } catch (e) {
       state = AuthState.error(e.toString());
@@ -203,7 +213,10 @@ class AuthNotifier extends _$AuthNotifier {
           await ref.read(signInWithAppleUseCaseProvider).call(const NoParams());
       state = result.fold(
         (failure) => AuthState.error(failure.message),
-        AuthState.authenticated,
+        (user) {
+          _syncFromServer();
+          return AuthState.authenticated(user);
+        },
       );
     } catch (e) {
       state = AuthState.error(e.toString());
@@ -244,5 +257,22 @@ class AuthNotifier extends _$AuthNotifier {
   /// Enters guest mode for "try before register" flow.
   void enterGuestMode() {
     state = const AuthState.guest();
+  }
+
+  /// Syncs local data from the server after a successful login or signup.
+  ///
+  /// Runs in the background so it doesn't block the auth flow.
+  void _syncFromServer() {
+    Future(() async {
+      try {
+        await Future.wait([
+          ref.read(budgetsRepositoryProvider).refreshFromServer(),
+          ref.read(transactionsRepositoryProvider).refreshFromServer(),
+          ref.read(savingsRepositoryProvider).refreshFromServer(),
+        ]);
+      } catch (_) {
+        // Sync failures are non-critical — data will refresh on next pull.
+      }
+    });
   }
 }

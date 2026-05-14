@@ -1,3 +1,4 @@
+import 'package:kale/core/database/app_database.dart';
 import 'package:kale/core/network/network_info.dart';
 import 'package:kale/core/storage/local_storage.dart';
 import 'package:kale/core/storage/secure_storage.dart';
@@ -22,6 +23,9 @@ class MockLocalStorage extends Mock implements LocalStorage {}
 
 /// Mock implementation of [SecureStorage].
 class MockSecureStorage extends Mock implements SecureStorage {}
+
+/// Mock implementation of [AppDatabase].
+class MockAppDatabase extends Mock implements AppDatabase {}
 
 // -- Auth mocks --
 

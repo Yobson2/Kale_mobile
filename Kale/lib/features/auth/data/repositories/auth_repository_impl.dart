@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:kale/core/database/app_database.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
 import 'package:kale/core/network/network_info.dart';
@@ -15,13 +16,16 @@ class AuthRepositoryImpl implements AuthRepository {
     required AuthRemoteDataSource remoteDataSource,
     required AuthLocalDataSource localDataSource,
     required NetworkInfo networkInfo,
+    required AppDatabase appDatabase,
   })  : _remote = remoteDataSource,
         _local = localDataSource,
-        _networkInfo = networkInfo;
+        _networkInfo = networkInfo,
+        _appDatabase = appDatabase;
 
   final AuthRemoteDataSource _remote;
   final AuthLocalDataSource _local;
   final NetworkInfo _networkInfo;
+  final AppDatabase _appDatabase;
 
   @override
   Future<Either<Failure, User>> login({
@@ -152,11 +156,13 @@ class AuthRepositoryImpl implements AuthRepository {
         await _remote.logout();
       }
       await _local.clearAll();
+      await _appDatabase.clearAllData();
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     } catch (_) {
       await _local.clearAll();
+      await _appDatabase.clearAllData();
       return const Right(null);
     }
   }

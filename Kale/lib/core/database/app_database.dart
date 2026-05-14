@@ -68,6 +68,23 @@ class AppDatabase extends _$AppDatabase {
         },
       );
 
+  /// Deletes all user-generated data from every table.
+  ///
+  /// Called on logout to prevent the next user from seeing stale data.
+  /// Default categories are re-seeded after clearing.
+  Future<void> clearAllData() async {
+    await transaction(() async {
+      await delete(syncQueueEntries).go();
+      await delete(savingsContributions).go();
+      await delete(savingsGoals).go();
+      await delete(budgetCategories).go();
+      await delete(budgets).go();
+      await delete(transactions).go();
+      await delete(categories).go();
+    });
+    await _seedDefaultCategories();
+  }
+
   /// Seeds the database with default Africa-relevant categories.
   Future<void> _seedDefaultCategories() async {
     final now = DateTime.now();

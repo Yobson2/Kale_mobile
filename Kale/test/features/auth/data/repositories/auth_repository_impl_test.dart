@@ -15,15 +15,18 @@ void main() {
   late MockAuthRemoteDataSource mockRemote;
   late MockAuthLocalDataSource mockLocal;
   late MockNetworkInfo mockNetworkInfo;
+  late MockAppDatabase mockAppDatabase;
 
   setUp(() {
     mockRemote = MockAuthRemoteDataSource();
     mockLocal = MockAuthLocalDataSource();
     mockNetworkInfo = MockNetworkInfo();
+    mockAppDatabase = MockAppDatabase();
     repository = AuthRepositoryImpl(
       remoteDataSource: mockRemote,
       localDataSource: mockLocal,
       networkInfo: mockNetworkInfo,
+      appDatabase: mockAppDatabase,
     );
   });
 

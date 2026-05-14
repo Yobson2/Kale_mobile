@@ -1,6 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/config/env_provider.dart';
+import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
@@ -55,6 +56,7 @@ AuthRepository authRepository(Ref ref) {
     remoteDataSource: ref.watch(authRemoteDataSourceProvider),
     localDataSource: ref.watch(authLocalDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
+    appDatabase: ref.watch(appDatabaseProvider),
   );
 }
 

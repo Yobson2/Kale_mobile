@@ -50,7 +50,7 @@ final authLocalDataSourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthLocalDataSourceRef = AutoDisposeProviderRef<AuthLocalDataSource>;
-String _$authRepositoryHash() => r'035b079c06c4c0f98f1e45d75766cbd46a4ea376';
+String _$authRepositoryHash() => r'f97a209d5e7fffbe5ad69faab19a1e8febee17b9';
 
 /// Provides the [AuthRepository].
 ///
