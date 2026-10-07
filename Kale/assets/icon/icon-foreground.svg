@@ -1,9 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <!-- Kalé Adaptive Icon Foreground — Bold K -->
-  <!-- Export as 1024x1024 PNG with transparency for Android adaptive icon -->
-  <!-- Android adaptive icons use a 66% safe zone (centered 676x676 area) -->
-  <!-- Safe zone: 174 to 850 (676px), center at 512 -->
-
-  <!-- Bold upright K letterform centered in safe zone -->
-  <path d="M 307 205 L 430 205 L 430 410 L 614 205 L 778 205 L 512 491 L 778 819 L 614 819 L 430 574 L 430 819 L 307 819 Z" fill="#FFFFFF"/>
+  <!-- Kalé — Le Fil — Android adaptive foreground (transparent; mark kept inside the 626px safe circle) -->
+  <g transform="translate(263.3 262) scale(5)">
+    <path d="M32 12H46V18.41L32 26.23Z M32 51.43L46 43.61V88H32Z" fill="#FFFFFF"/>
+    <path d="M65.67 12H94.47L26.35 50L28 50.92V66.96L8.59 56.11A7 7 0 0 1 8.59 43.89Z M50 63.21L94.47 88H65.67L50 79.25Z" fill="#F5B547"/>
+  </g>
 </svg>

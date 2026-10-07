@@ -17,6 +17,15 @@ void main() {
   late MockNetworkInfo mockNetworkInfo;
   late MockAppDatabase mockAppDatabase;
 
+  setUpAll(() {
+    registerFallbackValue(
+      const UserModel(id: '', email: '', name: ''),
+    );
+    registerFallbackValue(
+      const TokensModel(accessToken: '', refreshToken: ''),
+    );
+  });
+
   setUp(() {
     mockRemote = MockAuthRemoteDataSource();
     mockLocal = MockAuthLocalDataSource();

@@ -27,4 +27,10 @@ abstract class UseCase<T, Params> {
 class NoParams {
   /// Creates a [NoParams] instance.
   const NoParams();
+
+  @override
+  bool operator ==(Object other) => other is NoParams;
+
+  @override
+  int get hashCode => (NoParams).hashCode;
 }

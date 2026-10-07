@@ -1,14 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <!-- Kalé App Icon Source — Bold K -->
-  <!-- Export as 1024x1024 PNG for flutter_launcher_icons -->
-
-  <!-- Dark emerald background fill (OS applies its own mask shape) -->
-  <rect width="1024" height="1024" fill="#15785B"/>
-
-  <!-- Two overlapping decorative circles -->
-  <circle cx="287" cy="256" r="430" fill="#FFFFFF" opacity="0.12"/>
-  <circle cx="768" cy="737" r="389" fill="#FFFFFF" opacity="0.10"/>
-
-  <!-- Bold upright K letterform -->
-  <path d="M 307 205 L 430 205 L 430 410 L 614 205 L 778 205 L 512 491 L 778 819 L 614 819 L 430 574 L 430 819 L 307 819 Z" fill="#FFFFFF"/>
+  <!-- Kalé — Le Fil — App icon source (export 1024 PNG; OS applies its mask) -->
+  <rect width="1024" height="1024" fill="#006C49"/>
+  <g transform="translate(213.56 212) scale(6)">
+    <path d="M32 12H46V18.41L32 26.23Z M32 51.43L46 43.61V88H32Z" fill="#FFFFFF"/>
+    <path d="M65.67 12H94.47L26.35 50L28 50.92V66.96L8.59 56.11A7 7 0 0 1 8.59 43.89Z M50 63.21L94.47 88H65.67L50 79.25Z" fill="#F5B547"/>
+  </g>
 </svg>

@@ -6,7 +6,6 @@ import 'package:kale/core/services/streak_service.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 import 'package:kale/features/transactions/domain/usecases/create_transaction_usecase.dart';
-import 'package:kale/features/transactions/domain/usecases/delete_transaction_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/update_transaction_usecase.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_state.dart';

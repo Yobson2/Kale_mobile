@@ -5,4 +5,4 @@ import 'package:kale/core/config/app_config.dart';
 
 void main() async {
   await bootstrap(const AppConfig());
-}
+} 

@@ -1,29 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Kalé — Bold K — Gradient (Premium) Variant -->
-  <!-- White K on emerald-to-teal gradient squircle with two overlapping circles -->
-
+  <!-- Kalé — Le Fil — Badge (premium gradient) -->
   <defs>
     <linearGradient id="emeraldGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#15785B"/>
+      <stop offset="0%" stop-color="#006C49"/>
       <stop offset="100%" stop-color="#064E3B"/>
     </linearGradient>
-    <clipPath id="squircleClip">
-      <rect width="92" height="92" x="4" y="2" rx="20" ry="20"/>
-    </clipPath>
-    <filter id="shadow" x="-4%" y="-2%" width="108%" height="112%">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.15"/>
-    </filter>
   </defs>
-
-  <!-- Background squircle with gradient and drop shadow -->
-  <rect width="92" height="92" x="4" y="2" rx="20" ry="20" fill="url(#emeraldGrad)" filter="url(#shadow)"/>
-
-  <!-- Two overlapping decorative circles clipped to squircle -->
-  <g clip-path="url(#squircleClip)">
-    <circle cx="28" cy="25" r="42" fill="#FFFFFF" opacity="0.12"/>
-    <circle cx="75" cy="72" r="38" fill="#FFFFFF" opacity="0.10"/>
+  <rect x="4" y="4" width="92" height="92" rx="20" ry="20" fill="url(#emeraldGrad)"/>
+  <g transform="translate(18.17 18) scale(0.64)">
+    <path d="M32 12H46V18.41L32 26.23Z M32 51.43L46 43.61V88H32Z" fill="#FFFFFF"/>
+    <path d="M65.67 12H94.47L26.35 50L28 50.92V66.96L8.59 56.11A7 7 0 0 1 8.59 43.89Z M50 63.21L94.47 88H65.67L50 79.25Z" fill="#F5B547"/>
   </g>
-
-  <!-- Bold upright K letterform -->
-  <path d="M 30 20 L 42 20 L 42 40 L 60 20 L 76 20 L 50 48 L 76 76 L 60 76 L 42 56 L 42 76 L 30 76 Z" fill="#FFFFFF"/>
 </svg>

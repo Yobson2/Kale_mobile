@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-/// Decorative geometric "K" watermark for brand anchoring.
+/// Decorative "Le Fil" K mark watermark for brand anchoring.
 ///
-/// Renders a large "K" character at low opacity, positioned via [alignment].
-/// Used on hero cards, headers, splash, budget setup, and empty states.
+/// Renders the one-colour brand mark at low opacity, positioned via
+/// [alignment]. Used on hero cards, headers, splash, budget setup, and
+/// empty states.
 class GeometricKWatermark extends StatelessWidget {
   /// Creates a [GeometricKWatermark].
   const GeometricKWatermark({
@@ -19,7 +20,9 @@ class GeometricKWatermark extends StatelessWidget {
   /// Opacity of the watermark (3-10% typical). Defaults to 5%.
   final double opacity;
 
-  /// Font size of the "K" character. Defaults to 120.
+  /// Edge length of the square mark. Defaults to 120.
+  ///
+  /// Named `fontSize` for compatibility with the former text-based "K".
   final double fontSize;
 
   /// Alignment within the parent Stack. Defaults to bottomRight.
@@ -33,8 +36,7 @@ class GeometricKWatermark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor =
-        color ?? Theme.of(context).colorScheme.onSurface;
+    final markColor = color ?? Theme.of(context).colorScheme.onSurface;
 
     return Positioned.fill(
       child: IgnorePointer(
@@ -42,14 +44,13 @@ class GeometricKWatermark extends StatelessWidget {
           alignment: alignment,
           child: Transform.translate(
             offset: offset,
-            child: Text(
-              'K',
-              style: GoogleFonts.inter(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.normal,
-                color: textColor.withValues(alpha: opacity),
-                height: 1,
+            child: SvgPicture.asset(
+              'assets/images/logo-mark-mono.svg',
+              width: fontSize,
+              height: fontSize,
+              colorFilter: ColorFilter.mode(
+                markColor.withValues(alpha: opacity),
+                BlendMode.srcIn,
               ),
             ),
           ),

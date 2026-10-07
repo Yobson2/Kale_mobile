@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kale/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
 import 'package:kale/features/auth/presentation/pages/login_page.dart';
