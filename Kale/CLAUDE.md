@@ -45,6 +45,9 @@ shared infrastructure lives in `lib/core/`.
 
 ## Essential commands
 
+Flutter is pinned to 3.44.2 via FVM (`.fvmrc`). Run `fvm flutter …` / `fvm dart …`, never the global SDK;
+the `make` targets already do. See `docs/development.md`.
+
 ```bash
 make gen        # code generation (build_runner)
 make analyze    # static analysis

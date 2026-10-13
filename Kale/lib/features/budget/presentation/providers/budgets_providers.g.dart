@@ -7,11 +7,11 @@ part of 'budgets_providers.dart';
 // **************************************************************************
 
 String _$budgetsRemoteDataSourceHash() =>
-    r'b3244ce8f85fc3e10f0d726cbce2b59e28812aa7';
+    r'343007ab39526e6046668f453538f6b1552b2171';
 
 /// Provides the [BudgetsRemoteDataSource].
 ///
-/// Uses mock implementation when `USE_MOCK_BUDGETS=true` in `.env`.
+/// Uses the in-memory mock when the `USE_MOCK_BUDGETS` define is true.
 ///
 /// Copied from [budgetsRemoteDataSource].
 @ProviderFor(budgetsRemoteDataSource)
@@ -53,7 +53,7 @@ final budgetsLocalDataSourceProvider =
 typedef BudgetsLocalDataSourceRef
     = AutoDisposeProviderRef<BudgetsLocalDataSource>;
 String _$budgetsSyncHandlerHash() =>
-    r'5de8df4423876cd50a28ca6504d42352f9acbfc5';
+    r'353a4a357cdc29fba72ac7ab384a9b0c5f7d3328';
 
 /// Provides the [BudgetsSyncHandler].
 ///
@@ -74,7 +74,7 @@ final budgetsSyncHandlerProvider = Provider<BudgetsSyncHandler>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BudgetsSyncHandlerRef = ProviderRef<BudgetsSyncHandler>;
-String _$budgetsRepositoryHash() => r'cda7e2c60e19753d1d36fcb0305bdb27816349d3';
+String _$budgetsRepositoryHash() => r'1db7aaca1faeea65dca6b5c72b5fc891453a4eaf';
 
 /// Provides the [BudgetsRepository].
 ///

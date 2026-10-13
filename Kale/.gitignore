@@ -67,3 +67,6 @@ key.properties
 .CLAUDE.md
 
 supabase/.temp
+
+# FVM: the per-project SDK link is local; .fvmrc (the pin) is tracked.
+.fvm/

@@ -2,11 +2,41 @@
 
 Setup, configuration, tooling, and testing. Commands are defined in the `Makefile` (`make help` lists them).
 
+## Flutter version (FVM)
+
+The project is pinned to **Flutter 3.44.2** (Dart 3.12) with [FVM](https://fvm.app). The version lives in
+`Kale/.fvmrc`. The locked code generators (analyzer 7.x, riverpod_generator 2.x) can't parse newer Dart syntax,
+so on Flutter 3.47+ `build_runner` hangs with `Missing implementation of visitDotShorthandPropertyAccess`.
+
+```bash
+dart pub global activate fvm   # once per machine (or: choco install fvm / brew install fvm)
+fvm install                    # in Kale/: installs the version from .fvmrc
+fvm flutter --version          # should print Flutter 3.44.2
+```
+
+- Run Flutter and Dart through FVM: `fvm flutter …`, `fvm dart …`. The `make` targets already do this. To use
+  another SDK, pass it explicitly: `make test FLUTTER=flutter DART=dart`.
+- `pub get` on another Flutter version fails with
+  `Because kale requires SDK version >=3.6.1 <3.13.0, version solving failed.` Pub ignores the upper bound of
+  the `flutter:` constraint, so the pin is enforced through the Dart `sdk:` upper bound in `pubspec.yaml`.
+- `dart pub global activate` installs `fvm` into the pub cache `bin` folder (on Windows
+  `%LOCALAPPDATA%\Pub\Cache\bin`). Add it to your `PATH`, or call `fvm` by its full path.
+- **Windows:** FVM links the SDK into `Kale/.fvm/` (git-ignored) with a symlink, and Flutter needs symlinks for
+  plugins, so enable **Developer Mode** (`start ms-settings:developers`). Without it, `fvm use` fails to create
+  the link and `pub get` warns "Building with plugins requires symlink support". `fvm flutter` / `fvm dart`
+  still resolve the SDK from the FVM cache, so codegen, analyze and tests work, but building or running the app
+  on a device needs Developer Mode.
+- IDEs: point the Flutter SDK path at `Kale/.fvm/flutter_sdk` (VS Code: `"dart.flutterSdkPath"`), or at the
+  cached SDK under `~/fvm/versions/3.44.2`.
+- Lifting the pin means upgrading the generators first (Riverpod 3 and so on); see #23. Change `.fvmrc`, the `environment:` bounds in `pubspec.yaml` and `flutter-version` in the CI
+  workflow together.
+
 ## Setup
 
 ```bash
+fvm install            # see "Flutter version (FVM)" above
 cp .env.example .env   # then fill in Supabase + Google values
-make get               # flutter pub get
+make get               # fvm flutter pub get
 make gen               # code generation
 make run
 ```

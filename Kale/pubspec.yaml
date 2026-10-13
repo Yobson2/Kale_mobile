@@ -4,7 +4,13 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.1
+  # Pinned to Flutter 3.44.2 (Dart 3.12), see .fvmrc: the locked code
+  # generators break on newer SDKs. Use `fvm flutter` / `fvm dart`
+  # (docs/development.md). Pub ignores the upper bound of the `flutter`
+  # constraint, so the Dart `sdk` upper bound is what rejects a newer SDK.
+  # The lower bound sets the language version; don't raise it with the pin.
+  sdk: ">=3.6.1 <3.13.0"
+  flutter: ">=3.44.2 <3.45.0"
 
 dependencies:
   cached_network_image: ^3.4.1

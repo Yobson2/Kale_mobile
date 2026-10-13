@@ -7,11 +7,11 @@ part of 'transactions_providers.dart';
 // **************************************************************************
 
 String _$transactionsRemoteDataSourceHash() =>
-    r'cde025ec48db353c77dd4e608bbb7d3739e0d61d';
+    r'fbd14da2bfbf2da4bed5a2dd61a38777e60bc8bd';
 
 /// Provides the [TransactionsRemoteDataSource].
 ///
-/// Set `USE_MOCK_TRANSACTIONS=true` in `.env` to use mock data for testing.
+/// Uses the in-memory mock when the `USE_MOCK_TRANSACTIONS` define is true.
 ///
 /// Copied from [transactionsRemoteDataSource].
 @ProviderFor(transactionsRemoteDataSource)
@@ -73,7 +73,7 @@ final categoriesStreamProvider =
 // ignore: unused_element
 typedef CategoriesStreamRef = AutoDisposeStreamProviderRef<List<Category>>;
 String _$transactionsSyncHandlerHash() =>
-    r'1198aefa42233cdae558a41ba9182ee6bd322c24';
+    r'9ccbe2be46612149b23e93e2617cfd52539477dc';
 
 /// Provides the [TransactionsSyncHandler].
 ///
@@ -97,7 +97,7 @@ final transactionsSyncHandlerProvider =
 typedef TransactionsSyncHandlerRef
     = AutoDisposeProviderRef<TransactionsSyncHandler>;
 String _$transactionsRepositoryHash() =>
-    r'5134af1fee52f9d5435407eb7a74dcd3fdb5437d';
+    r'562f292da9133ab3720d82224ab2dd4dd1267192';
 
 /// Provides the [TransactionsRepository].
 ///
