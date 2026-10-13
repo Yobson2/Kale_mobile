@@ -45,6 +45,13 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 3;
 
+  /// PRE-RELEASE ONLY: any [schemaVersion] change (up or down) drops every
+  /// table and recreates the schema, wiping all local data, including
+  /// changes not yet synced.
+  ///
+  /// This lets tables be reset one feature at a time while no external
+  /// users exist. Replace it with real `onUpgrade` steps before the first
+  /// public release.
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (m) async {
@@ -52,21 +59,23 @@ class AppDatabase extends _$AppDatabase {
           await _seedDefaultCategories();
         },
         onUpgrade: (m, from, to) async {
-          if (from < 2) {
-            await m.createTable(transactions);
-            await m.createTable(categories);
-            await m.createTable(budgets);
-            await m.createTable(budgetCategories);
-            // Drop old notes table.
-            await m.deleteTable('notes');
-            await _seedDefaultCategories();
-          }
-          if (from < 3) {
-            await m.createTable(savingsGoals);
-            await m.createTable(savingsContributions);
-          }
+          await _dropAllTables(m);
+          await m.createAll();
+          await _seedDefaultCategories();
         },
       );
+
+  /// Drops every user table in the file, including ones that no longer
+  /// exist in the current schema.
+  Future<void> _dropAllTables(Migrator m) async {
+    final names = await customSelect(
+      "SELECT name FROM sqlite_master WHERE type = 'table' "
+      "AND name NOT LIKE 'sqlite_%'",
+    ).map((row) => row.read<String>('name')).get();
+    for (final name in names) {
+      await m.deleteTable(name);
+    }
+  }
 
   /// Deletes all user-generated data from every table.
   ///
