@@ -7,11 +7,11 @@ part of 'auth_providers.dart';
 // **************************************************************************
 
 String _$authRemoteDataSourceHash() =>
-    r'd7423e28c50e9ebeda98c64e46baaa91ee35f3b9';
+    r'204fa04e458fa2c00dce0f536c09d7e64fa1bd85';
 
 /// Provides the [AuthRemoteDataSource].
 ///
-/// Set `USE_MOCK_AUTH=true` in `.env` to use mock data for testing.
+/// Uses the in-memory mock when the `USE_MOCK_AUTH` define is true.
 ///
 /// Copied from [authRemoteDataSource].
 @ProviderFor(authRemoteDataSource)

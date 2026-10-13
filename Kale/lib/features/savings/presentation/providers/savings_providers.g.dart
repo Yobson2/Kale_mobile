@@ -7,9 +7,11 @@ part of 'savings_providers.dart';
 // **************************************************************************
 
 String _$savingsRemoteDataSourceHash() =>
-    r'c7b3e1506c8d83628c395225d9e63ea751ef0163';
+    r'e071a367263f5bcec5a897b2ecd825c606561ef3';
 
 /// Provides the [SavingsRemoteDataSource].
+///
+/// Uses the in-memory mock when the `USE_MOCK_SAVINGS` define is true.
 ///
 /// Copied from [savingsRemoteDataSource].
 @ProviderFor(savingsRemoteDataSource)

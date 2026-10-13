@@ -6,7 +6,7 @@ part of 'sync_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$syncConfigHash() => r'3f1c0d9a7b2e4c6a8d0f1e3b5a7c9e1d2f4a6b8c';
+String _$syncConfigHash() => r'b2d2f0ff7108f9a3f606efb51a3b70ca0d909f64';
 
 /// Retry and backoff settings for the [SyncEngine].
 ///
@@ -26,7 +26,7 @@ final syncConfigProvider = Provider<SyncConfig>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SyncConfigRef = ProviderRef<SyncConfig>;
-String _$syncHandlersHash() => r'8b4e2d6f0a1c3e5b7d9f2a4c6e8b0d1f3a5c7e9b';
+String _$syncHandlersHash() => r'1789c1511d47d6a07cd4f5e935c2fbbb4e6b711a';
 
 /// Every [SyncHandler] in the app, one per syncable entity type.
 ///
@@ -47,7 +47,7 @@ final syncHandlersProvider = Provider<List<SyncHandler>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SyncHandlersRef = ProviderRef<List<SyncHandler>>;
-String _$syncEngineHash() => r'5c2a7e9b1d3f6a8c0e2b4d6f8a1c3e5b7d9f0a2c';
+String _$syncEngineHash() => r'782c85efda14321941a32b8a414fdc6c7777f332';
 
 /// Provides the [SyncEngine] singleton, with every handler from
 /// [syncHandlers] registered at construction.
