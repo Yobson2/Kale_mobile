@@ -197,7 +197,7 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
   /// Number of retry attempts so far.
   final int retryCount;
 
-  /// Status: 'pending', 'in_progress', 'failed'.
+  /// Status: 'pending', 'in_progress' or 'stuck' (see `SyncQueueStatus`).
   final String status;
 
   /// Optional error message from the last failed attempt.

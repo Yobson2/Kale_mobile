@@ -4,8 +4,10 @@ import 'package:kale/core/database/app_database.dart';
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/network/network_info.dart';
+import 'package:kale/core/sync/backup_status.dart';
+import 'package:kale/core/sync/last_backup_store.dart';
+import 'package:kale/core/sync/sync_clock.dart';
 import 'package:kale/core/sync/sync_config.dart';
-import 'package:kale/core/sync/sync_status.dart';
 import 'package:kale/core/utils/logger.dart';
 
 /// Contract that each syncable feature must implement.
@@ -35,6 +37,23 @@ abstract class SyncHandler {
 }
 
 /// Orchestrates background synchronization of offline mutations.
+///
+/// A sync run pushes every pending queue entry. Runs are triggered by:
+/// * a local write (debounced by [SyncConfig.writeDebounce]),
+/// * the app starting or returning to the foreground ([onAppResumed]),
+/// * connectivity coming back,
+/// * manual retry ([retry]),
+/// * an entry's backoff expiring.
+///
+/// Triggers that arrive while a run is in progress coalesce into a single
+/// follow-up run.
+///
+/// Failures: a network error leaves the entry pending without using a
+/// retry. Any other error uses a retry and holds the entry back for an
+/// exponential backoff; at [SyncConfig.maxRetries] the entry is marked
+/// stuck. Stuck entries are kept and counted in [currentBackupStatus];
+/// they are re-attempted on [retry] and on the next app start, which
+/// resets every retry count.
 class SyncEngine {
   /// Creates a [SyncEngine] that pushes queue entries through [handlers].
   ///
@@ -46,9 +65,13 @@ class SyncEngine {
     required NetworkInfo networkInfo,
     required Iterable<SyncHandler> handlers,
     SyncConfig config = const SyncConfig(),
+    SyncClock clock = const SyncClock(),
+    LastBackupStore? lastBackupStore,
   })  : _syncQueueDao = syncQueueDao,
         _networkInfo = networkInfo,
-        _config = config {
+        _config = config,
+        _clock = clock,
+        _lastBackupStore = lastBackupStore ?? InMemoryLastBackupStore() {
     for (final handler in handlers) {
       if (_handlers.containsKey(handler.entityType)) {
         throw ArgumentError.value(
@@ -59,74 +82,142 @@ class SyncEngine {
       }
       _handlers[handler.entityType] = handler;
     }
+    _status = BackupStatus(lastBackupAt: _lastBackupStore.read());
   }
 
   final SyncQueueDao _syncQueueDao;
   final NetworkInfo _networkInfo;
   final SyncConfig _config;
+  final SyncClock _clock;
+  final LastBackupStore _lastBackupStore;
 
   final Map<String, SyncHandler> _handlers = {};
-  final _statusController = StreamController<SyncStatus>.broadcast();
+  final _statusController = StreamController<BackupStatus>.broadcast();
+  late BackupStatus _status;
 
+  Future<void> _ready = Future.value();
   Future<void>? _inFlight;
-  StreamSubscription<bool>? _connectivitySubscription;
+  bool _rerunRequested = false;
+  bool _disposed = false;
 
-  /// Stream of sync status updates for UI consumption.
-  Stream<SyncStatus> get statusStream => _statusController.stream;
+  Timer? _writeDebounce;
+
+  /// Entries holding back after a failed attempt, with the timer that
+  /// re-triggers a run when their backoff expires.
+  final Map<int, Timer> _backoffs = {};
+
+  StreamSubscription<bool>? _connectivitySubscription;
+  StreamSubscription<void>? _enqueueSubscription;
 
   /// The registered handlers, one per entity type.
   Iterable<SyncHandler> get handlers => _handlers.values;
 
-  /// Starts listening to connectivity changes.
+  /// The latest backup status.
+  BackupStatus get currentBackupStatus => _status;
+
+  /// Emits the current backup status, then every change.
+  Stream<BackupStatus> watchBackupStatus() async* {
+    yield _status;
+    yield* _statusController.stream;
+  }
+
+  /// Completes when no sync run is in progress.
+  Future<void> get idle => _inFlight ?? Future<void>.value();
+
+  /// Starts the engine for this app session: resets retry counts, starts
+  /// listening for local writes and connectivity changes, and runs a
+  /// first sync.
   ///
   /// Call this once during app initialization.
   void start(Stream<bool> connectivityStream) {
+    _ready = _syncQueueDao.resetRetries().then((_) => _refreshCounts());
     _connectivitySubscription = connectivityStream.listen((isOnline) {
       if (isOnline) {
         processQueue();
       } else {
-        _emitOfflineStatus();
+        _update(_status.copyWith(isOffline: true));
       }
     });
+    _enqueueSubscription = _syncQueueDao.watchEnqueued().listen((_) {
+      _refreshCounts();
+      _writeDebounce?.cancel();
+      _writeDebounce = _clock.timer(_config.writeDebounce, processQueue);
+    });
+    processQueue();
+  }
+
+  /// Pushes pending changes after the app returns to the foreground.
+  void onAppResumed() => processQueue();
+
+  /// Manual retry: re-attempts every pending and stuck entry now, with a
+  /// fresh set of retries for the stuck ones, ignoring backoffs.
+  Future<void> retry() async {
+    for (final timer in _backoffs.values) {
+      timer.cancel();
+    }
+    _backoffs.clear();
+    await _ready;
+    await _syncQueueDao.releaseStuck();
+    await _refreshCounts();
+    await processQueue();
   }
 
   /// Stops listening and cleans up resources.
   Future<void> dispose() async {
+    _disposed = true;
+    _writeDebounce?.cancel();
+    for (final timer in _backoffs.values) {
+      timer.cancel();
+    }
+    _backoffs.clear();
     await _connectivitySubscription?.cancel();
+    await _enqueueSubscription?.cancel();
     await _statusController.close();
   }
 
-  /// Triggers a sync cycle. Called automatically when connectivity
-  /// returns, or can be called manually (e.g., pull-to-refresh).
+  /// Triggers a sync run.
   ///
-  /// If a cycle is already running, returns that cycle's future instead
-  /// of starting another, so callers can always await completion.
-  Future<void> processQueue() =>
-      _inFlight ??= _runCycle().whenComplete(() => _inFlight = null);
+  /// If a run is already in progress, a single follow-up run is scheduled
+  /// for after it (so changes queued meanwhile are not missed) and the
+  /// returned future completes when both are done.
+  Future<void> processQueue() {
+    final inFlight = _inFlight;
+    if (inFlight != null) {
+      _rerunRequested = true;
+      return inFlight;
+    }
+    return _inFlight = _runUntilSettled().whenComplete(() => _inFlight = null);
+  }
+
+  Future<void> _runUntilSettled() async {
+    do {
+      _rerunRequested = false;
+      await _runCycle();
+    } while (_rerunRequested && !_disposed);
+  }
 
   Future<void> _runCycle() async {
+    await _ready;
+    if (_disposed) return;
+
     if (!await _networkInfo.isConnected) {
-      await _emitOfflineStatus();
+      _update(_status.copyWith(isOffline: true));
       return;
     }
 
     try {
-      final pending = await _syncQueueDao.getPending();
-      if (pending.isEmpty) {
-        _statusController.add(const SyncStatus.idle());
-        return;
-      }
+      final pending = (await _syncQueueDao.getPending())
+          .where((entry) => !_backoffs.containsKey(entry.id))
+          .toList();
+      _update(_status.copyWith(isOffline: false));
+      if (pending.isEmpty) return;
 
-      _statusController.add(SyncStatus.syncing(
-        total: pending.length,
-        completed: 0,
-      ));
-
-      var completed = 0;
+      _update(_status.copyWith(isSyncing: true));
       for (final entry in pending) {
+        if (_disposed) return;
         if (!await _networkInfo.isConnected) {
-          await _emitOfflineStatus();
-          return;
+          _update(_status.copyWith(isOffline: true));
+          break;
         }
 
         final handler = _handlers[entry.entityType];
@@ -138,26 +229,20 @@ class SyncEngine {
           continue;
         }
 
-        if (entry.retryCount >= _config.maxRetries) {
-          AppLogger.error(
-            'Max retries exceeded for queue entry ${entry.id}',
-            tag: 'SyncEngine',
-          );
-          continue;
-        }
-
         await _processEntry(entry, handler);
-        completed++;
-        _statusController.add(SyncStatus.syncing(
-          total: pending.length,
-          completed: completed,
-        ));
+        await _refreshCounts();
       }
 
-      _statusController.add(const SyncStatus.synced());
+      await _refreshCounts();
+      if (_status.isFullyBackedUp) {
+        final now = _clock.now();
+        await _lastBackupStore.write(now);
+        _update(_status.copyWith(lastBackupAt: now));
+      }
     } catch (e) {
-      _statusController.add(SyncStatus.error(e.toString()));
-      AppLogger.error('Sync cycle failed', tag: 'SyncEngine', error: e);
+      AppLogger.error('Sync run failed', tag: 'SyncEngine', error: e);
+    } finally {
+      _update(_status.copyWith(isSyncing: false));
     }
   }
 
@@ -185,12 +270,12 @@ class SyncEngine {
       if (e.statusCode == 409) {
         await _resolveConflict(entry, handler);
       } else {
-        await _handleRetry(entry, e.message);
+        await _recordFailedAttempt(entry, e.message);
       }
     } on NetworkException {
       await _syncQueueDao.markFailed(entry.id, 'Network lost during sync');
     } catch (e) {
-      await _handleRetry(entry, e.toString());
+      await _recordFailedAttempt(entry, e.toString());
     }
   }
 
@@ -212,26 +297,52 @@ class SyncEngine {
       }
       await _syncQueueDao.markCompleted(entry.id);
     } catch (e) {
-      await _handleRetry(entry, 'Conflict resolution failed: $e');
+      await _recordFailedAttempt(entry, 'Conflict resolution failed: $e');
     }
   }
 
-  Future<void> _handleRetry(SyncQueueEntry entry, String error) async {
-    if (entry.retryCount + 1 >= _config.maxRetries) {
-      _statusController.add(SyncStatus.error(
-        'Sync failed for ${entry.entityType}/${entry.entityId} after '
-        '${_config.maxRetries} retries',
-      ));
-    }
-    await _syncQueueDao.markFailed(entry.id, error);
-    await _syncQueueDao.incrementRetryCount(entry.id);
+  /// Uses one retry. Below the limit, the entry waits out its backoff
+  /// (without blocking the run) and a run is triggered when it expires;
+  /// at the limit it is marked stuck.
+  Future<void> _recordFailedAttempt(SyncQueueEntry entry, String error) async {
+    final retryCount = entry.retryCount + 1;
+    final stuck = retryCount >= _config.maxRetries;
+    await _syncQueueDao.recordFailedAttempt(
+      entry.id,
+      error: error,
+      retryCount: retryCount,
+      stuck: stuck,
+    );
 
-    final backoff = _config.backoffFor(entry.retryCount);
-    await Future<void>.delayed(backoff);
+    if (stuck) {
+      AppLogger.error(
+        'Queue entry ${entry.id} (${entry.entityType}/${entry.entityId}) '
+        'is stuck after $retryCount attempts: $error',
+        tag: 'SyncEngine',
+      );
+      return;
+    }
+
+    _backoffs[entry.id] = _clock.timer(
+      _config.backoffFor(entry.retryCount),
+      () {
+        _backoffs.remove(entry.id);
+        processQueue();
+      },
+    );
   }
 
-  Future<void> _emitOfflineStatus() async {
-    final pending = await _syncQueueDao.getPending();
-    _statusController.add(SyncStatus.offline(pendingCount: pending.length));
+  Future<void> _refreshCounts() async {
+    if (_disposed) return;
+    final counts = await _syncQueueDao.getCounts();
+    _update(
+      _status.copyWith(pendingCount: counts.pending, stuckCount: counts.stuck),
+    );
+  }
+
+  void _update(BackupStatus status) {
+    if (status == _status) return;
+    _status = status;
+    if (!_statusController.isClosed) _statusController.add(status);
   }
 }

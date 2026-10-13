@@ -8,6 +8,7 @@ import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
+import 'package:kale/core/widgets/feedback/sync_status_banner.dart';
 import 'package:kale/core/widgets/layout/app_scaffold.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
@@ -31,6 +32,7 @@ class HomeShell extends ConsumerWidget {
       body: Column(
         children: [
           if (isGuest) _GuestBanner(colorScheme: colorScheme),
+          const SyncStatusBanner(),
           Expanded(child: navigationShell),
         ],
       ),

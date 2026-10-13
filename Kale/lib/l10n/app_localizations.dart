@@ -2707,6 +2707,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You\'re all caught up! Notifications about your budgets, savings, and reminders will appear here.'**
   String get notificationsEmptySubtitle;
+
+  /// Sync banner and Settings: changes that failed every retry
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change not backed up} other{{count} changes not backed up}}'**
+  String backupStuck(int count);
+
+  /// Sync banner while offline with changes not yet backed up
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Offline · 1 change waiting} other{Offline · {count} changes waiting}}'**
+  String backupOfflinePending(int count);
+
+  /// No description provided for @backupSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Backing up…'**
+  String get backupSyncing;
+
+  /// No description provided for @settingsBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get settingsBackup;
+
+  /// No description provided for @settingsBackupUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'All changes backed up'**
+  String get settingsBackupUpToDate;
+
+  /// No description provided for @settingsBackupPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change waiting to back up} other{{count} changes waiting to back up}}'**
+  String settingsBackupPending(int count);
+
+  /// No description provided for @settingsBackupLast.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup: {date}'**
+  String settingsBackupLast(String date);
+
+  /// No description provided for @settingsBackupNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Not backed up yet'**
+  String get settingsBackupNever;
 }
 
 class _AppLocalizationsDelegate

@@ -2,20 +2,31 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/providers/network_providers.dart';
+import 'package:kale/core/providers/storage_providers.dart';
+import 'package:kale/core/sync/backup_status.dart';
+import 'package:kale/core/sync/last_backup_store.dart';
+import 'package:kale/core/sync/sync_clock.dart';
 import 'package:kale/core/sync/sync_config.dart';
 import 'package:kale/core/sync/sync_engine.dart';
-import 'package:kale/core/sync/sync_status.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sync_providers.g.dart';
 
-/// Retry and backoff settings for the [SyncEngine].
-///
-/// Overridden in tests to remove backoff delays.
+/// Retry, backoff and debounce settings for the [SyncEngine].
 @Riverpod(keepAlive: true)
 SyncConfig syncConfig(Ref ref) => const SyncConfig();
+
+/// Time source for the [SyncEngine]. Overridden in tests with a fake
+/// clock so debounce and backoff need no real waits.
+@Riverpod(keepAlive: true)
+SyncClock syncClock(Ref ref) => const SyncClock();
+
+/// Where the [SyncEngine] persists the last successful backup time.
+@Riverpod(keepAlive: true)
+LastBackupStore lastBackupStore(Ref ref) =>
+    PreferencesLastBackupStore(ref.watch(localStorageProvider));
 
 /// Every [SyncHandler] in the app, one per syncable entity type.
 ///
@@ -28,7 +39,8 @@ List<SyncHandler> syncHandlers(Ref ref) => [
     ];
 
 /// Provides the [SyncEngine] singleton, with every handler from
-/// [syncHandlers] registered at construction.
+/// [syncHandlers] registered at construction. Reading it starts the
+/// engine (see [SyncEngine.start]); the app root does so at launch.
 @Riverpod(keepAlive: true)
 SyncEngine syncEngine(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
@@ -39,9 +51,9 @@ SyncEngine syncEngine(Ref ref) {
     networkInfo: networkInfo,
     handlers: ref.watch(syncHandlersProvider),
     config: ref.watch(syncConfigProvider),
-  )
-    // Push pending changes whenever connectivity returns.
-    ..start(
+    clock: ref.watch(syncClockProvider),
+    lastBackupStore: ref.watch(lastBackupStoreProvider),
+  )..start(
       networkInfo.onConnectivityChanged.map(
         (results) => !results.contains(ConnectivityResult.none),
       ),
@@ -51,16 +63,7 @@ SyncEngine syncEngine(Ref ref) {
   return engine;
 }
 
-/// Streams the current [SyncStatus] for UI widgets.
+/// Streams the [BackupStatus] for the sync banner and Settings.
 @riverpod
-Stream<SyncStatus> syncStatus(Ref ref) {
-  final engine = ref.watch(syncEngineProvider);
-  return engine.statusStream;
-}
-
-/// Provides the count of pending sync operations for badges.
-@riverpod
-Stream<int> pendingSyncCount(Ref ref) {
-  final db = ref.watch(appDatabaseProvider);
-  return db.syncQueueDao.watchPendingCount();
-}
+Stream<BackupStatus> backupStatus(Ref ref) =>
+    ref.watch(syncEngineProvider).watchBackupStatus();

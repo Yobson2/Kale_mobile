@@ -1422,4 +1422,55 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get notificationsEmptySubtitle =>
       'Vous etes a jour ! Les notifications concernant vos budgets, epargnes et rappels apparaitront ici.';
+
+  @override
+  String backupStuck(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications non sauvegardées',
+      one: '1 modification non sauvegardée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String backupOfflinePending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Hors ligne · $count modifications en attente',
+      one: 'Hors ligne · 1 modification en attente',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get backupSyncing => 'Sauvegarde en cours…';
+
+  @override
+  String get settingsBackup => 'Sauvegarde';
+
+  @override
+  String get settingsBackupUpToDate =>
+      'Toutes les modifications sont sauvegardées';
+
+  @override
+  String settingsBackupPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications en attente de sauvegarde',
+      one: '1 modification en attente de sauvegarde',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsBackupLast(String date) {
+    return 'Dernière sauvegarde : $date';
+  }
+
+  @override
+  String get settingsBackupNever => 'Pas encore sauvegardé';
 }
