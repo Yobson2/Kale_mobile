@@ -499,11 +499,12 @@ class $TransactionsTable extends Transactions
   late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
       'server_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  static const VerificationMeta _amountMinorMeta =
+      const VerificationMeta('amountMinor');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-      'amount', aliasedName, false,
-      type: DriftSqlType.double, requiredDuringInsert: true);
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+      'amount_minor', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumn<String> type = GeneratedColumn<String>(
@@ -532,14 +533,6 @@ class $TransactionsTable extends Transactions
   late final GeneratedColumn<String> paymentMethod = GeneratedColumn<String>(
       'payment_method', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _currencyCodeMeta =
-      const VerificationMeta('currencyCode');
-  @override
-  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
-      'currency_code', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('XOF'));
   static const VerificationMeta _isRecurringMeta =
       const VerificationMeta('isRecurring');
   @override
@@ -586,6 +579,12 @@ class $TransactionsTable extends Transactions
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _deletedAtMeta =
+      const VerificationMeta('deletedAt');
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+      'deleted_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _isSyncedMeta =
       const VerificationMeta('isSynced');
   @override
@@ -600,13 +599,12 @@ class $TransactionsTable extends Transactions
   List<GeneratedColumn> get $columns => [
         id,
         serverId,
-        amount,
+        amountMinor,
         type,
         categoryId,
         description,
         date,
         paymentMethod,
-        currencyCode,
         isRecurring,
         recurringRuleId,
         mobileMoneyProvider,
@@ -614,6 +612,7 @@ class $TransactionsTable extends Transactions
         accountId,
         createdAt,
         updatedAt,
+        deletedAt,
         isSynced
       ];
   @override
@@ -635,11 +634,13 @@ class $TransactionsTable extends Transactions
       context.handle(_serverIdMeta,
           serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
     }
-    if (data.containsKey('amount')) {
-      context.handle(_amountMeta,
-          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+    if (data.containsKey('amount_minor')) {
+      context.handle(
+          _amountMinorMeta,
+          amountMinor.isAcceptableOrUnknown(
+              data['amount_minor']!, _amountMinorMeta));
     } else if (isInserting) {
-      context.missing(_amountMeta);
+      context.missing(_amountMinorMeta);
     }
     if (data.containsKey('type')) {
       context.handle(
@@ -674,12 +675,6 @@ class $TransactionsTable extends Transactions
               data['payment_method']!, _paymentMethodMeta));
     } else if (isInserting) {
       context.missing(_paymentMethodMeta);
-    }
-    if (data.containsKey('currency_code')) {
-      context.handle(
-          _currencyCodeMeta,
-          currencyCode.isAcceptableOrUnknown(
-              data['currency_code']!, _currencyCodeMeta));
     }
     if (data.containsKey('is_recurring')) {
       context.handle(
@@ -721,6 +716,10 @@ class $TransactionsTable extends Transactions
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(_deletedAtMeta,
+          deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
+    }
     if (data.containsKey('is_synced')) {
       context.handle(_isSyncedMeta,
           isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
@@ -738,8 +737,8 @@ class $TransactionsTable extends Transactions
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       serverId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}server_id']),
-      amount: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}amount'])!,
+      amountMinor: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount_minor'])!,
       type: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
       categoryId: attachedDatabase.typeMapping
@@ -750,8 +749,6 @@ class $TransactionsTable extends Transactions
           .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
       paymentMethod: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}payment_method'])!,
-      currencyCode: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}currency_code'])!,
       isRecurring: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_recurring'])!,
       recurringRuleId: attachedDatabase.typeMapping.read(
@@ -766,6 +763,8 @@ class $TransactionsTable extends Transactions
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      deletedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}deleted_at']),
       isSynced: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
     );
@@ -784,8 +783,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   /// Server-assigned ID. Null until first sync.
   final String? serverId;
 
-  /// Transaction amount (always positive).
-  final double amount;
+  /// Amount in minor units of the base currency (always positive; the
+  /// type determines the direction).
+  final int amountMinor;
 
   /// Transaction type: 'income', 'expense', 'transfer'.
   final String type;
@@ -801,9 +801,6 @@ class Transaction extends DataClass implements Insertable<Transaction> {
 
   /// Payment method: 'cash', 'mobileMoney', 'bank', 'card'.
   final String paymentMethod;
-
-  /// ISO 4217 currency code.
-  final String currencyCode;
 
   /// Whether this is a recurring transaction.
   final bool isRecurring;
@@ -826,18 +823,20 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   /// When the record was last updated.
   final DateTime updatedAt;
 
+  /// Soft-delete marker. Every read excludes rows where it is set.
+  final DateTime? deletedAt;
+
   /// Whether this record has been synced to the server.
   final bool isSynced;
   const Transaction(
       {required this.id,
       this.serverId,
-      required this.amount,
+      required this.amountMinor,
       required this.type,
       required this.categoryId,
       this.description,
       required this.date,
       required this.paymentMethod,
-      required this.currencyCode,
       required this.isRecurring,
       this.recurringRuleId,
       this.mobileMoneyProvider,
@@ -845,6 +844,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       this.accountId,
       required this.createdAt,
       required this.updatedAt,
+      this.deletedAt,
       required this.isSynced});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -853,7 +853,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     if (!nullToAbsent || serverId != null) {
       map['server_id'] = Variable<String>(serverId);
     }
-    map['amount'] = Variable<double>(amount);
+    map['amount_minor'] = Variable<int>(amountMinor);
     map['type'] = Variable<String>(type);
     map['category_id'] = Variable<String>(categoryId);
     if (!nullToAbsent || description != null) {
@@ -861,7 +861,6 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     }
     map['date'] = Variable<DateTime>(date);
     map['payment_method'] = Variable<String>(paymentMethod);
-    map['currency_code'] = Variable<String>(currencyCode);
     map['is_recurring'] = Variable<bool>(isRecurring);
     if (!nullToAbsent || recurringRuleId != null) {
       map['recurring_rule_id'] = Variable<String>(recurringRuleId);
@@ -877,6 +876,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     map['is_synced'] = Variable<bool>(isSynced);
     return map;
   }
@@ -887,7 +889,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       serverId: serverId == null && nullToAbsent
           ? const Value.absent()
           : Value(serverId),
-      amount: Value(amount),
+      amountMinor: Value(amountMinor),
       type: Value(type),
       categoryId: Value(categoryId),
       description: description == null && nullToAbsent
@@ -895,7 +897,6 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           : Value(description),
       date: Value(date),
       paymentMethod: Value(paymentMethod),
-      currencyCode: Value(currencyCode),
       isRecurring: Value(isRecurring),
       recurringRuleId: recurringRuleId == null && nullToAbsent
           ? const Value.absent()
@@ -911,6 +912,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           : Value(accountId),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
       isSynced: Value(isSynced),
     );
   }
@@ -921,13 +925,12 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return Transaction(
       id: serializer.fromJson<String>(json['id']),
       serverId: serializer.fromJson<String?>(json['serverId']),
-      amount: serializer.fromJson<double>(json['amount']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
       type: serializer.fromJson<String>(json['type']),
       categoryId: serializer.fromJson<String>(json['categoryId']),
       description: serializer.fromJson<String?>(json['description']),
       date: serializer.fromJson<DateTime>(json['date']),
       paymentMethod: serializer.fromJson<String>(json['paymentMethod']),
-      currencyCode: serializer.fromJson<String>(json['currencyCode']),
       isRecurring: serializer.fromJson<bool>(json['isRecurring']),
       recurringRuleId: serializer.fromJson<String?>(json['recurringRuleId']),
       mobileMoneyProvider:
@@ -936,6 +939,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       accountId: serializer.fromJson<String?>(json['accountId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
     );
   }
@@ -945,13 +949,12 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'serverId': serializer.toJson<String?>(serverId),
-      'amount': serializer.toJson<double>(amount),
+      'amountMinor': serializer.toJson<int>(amountMinor),
       'type': serializer.toJson<String>(type),
       'categoryId': serializer.toJson<String>(categoryId),
       'description': serializer.toJson<String?>(description),
       'date': serializer.toJson<DateTime>(date),
       'paymentMethod': serializer.toJson<String>(paymentMethod),
-      'currencyCode': serializer.toJson<String>(currencyCode),
       'isRecurring': serializer.toJson<bool>(isRecurring),
       'recurringRuleId': serializer.toJson<String?>(recurringRuleId),
       'mobileMoneyProvider': serializer.toJson<String?>(mobileMoneyProvider),
@@ -959,6 +962,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       'accountId': serializer.toJson<String?>(accountId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'isSynced': serializer.toJson<bool>(isSynced),
     };
   }
@@ -966,13 +970,12 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   Transaction copyWith(
           {String? id,
           Value<String?> serverId = const Value.absent(),
-          double? amount,
+          int? amountMinor,
           String? type,
           String? categoryId,
           Value<String?> description = const Value.absent(),
           DateTime? date,
           String? paymentMethod,
-          String? currencyCode,
           bool? isRecurring,
           Value<String?> recurringRuleId = const Value.absent(),
           Value<String?> mobileMoneyProvider = const Value.absent(),
@@ -980,17 +983,17 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           Value<String?> accountId = const Value.absent(),
           DateTime? createdAt,
           DateTime? updatedAt,
+          Value<DateTime?> deletedAt = const Value.absent(),
           bool? isSynced}) =>
       Transaction(
         id: id ?? this.id,
         serverId: serverId.present ? serverId.value : this.serverId,
-        amount: amount ?? this.amount,
+        amountMinor: amountMinor ?? this.amountMinor,
         type: type ?? this.type,
         categoryId: categoryId ?? this.categoryId,
         description: description.present ? description.value : this.description,
         date: date ?? this.date,
         paymentMethod: paymentMethod ?? this.paymentMethod,
-        currencyCode: currencyCode ?? this.currencyCode,
         isRecurring: isRecurring ?? this.isRecurring,
         recurringRuleId: recurringRuleId.present
             ? recurringRuleId.value
@@ -1003,13 +1006,15 @@ class Transaction extends DataClass implements Insertable<Transaction> {
         accountId: accountId.present ? accountId.value : this.accountId,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
         isSynced: isSynced ?? this.isSynced,
       );
   Transaction copyWithCompanion(TransactionsCompanion data) {
     return Transaction(
       id: data.id.present ? data.id.value : this.id,
       serverId: data.serverId.present ? data.serverId.value : this.serverId,
-      amount: data.amount.present ? data.amount.value : this.amount,
+      amountMinor:
+          data.amountMinor.present ? data.amountMinor.value : this.amountMinor,
       type: data.type.present ? data.type.value : this.type,
       categoryId:
           data.categoryId.present ? data.categoryId.value : this.categoryId,
@@ -1019,9 +1024,6 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       paymentMethod: data.paymentMethod.present
           ? data.paymentMethod.value
           : this.paymentMethod,
-      currencyCode: data.currencyCode.present
-          ? data.currencyCode.value
-          : this.currencyCode,
       isRecurring:
           data.isRecurring.present ? data.isRecurring.value : this.isRecurring,
       recurringRuleId: data.recurringRuleId.present
@@ -1036,6 +1038,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       accountId: data.accountId.present ? data.accountId.value : this.accountId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
     );
   }
@@ -1045,13 +1048,12 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     return (StringBuffer('Transaction(')
           ..write('id: $id, ')
           ..write('serverId: $serverId, ')
-          ..write('amount: $amount, ')
+          ..write('amountMinor: $amountMinor, ')
           ..write('type: $type, ')
           ..write('categoryId: $categoryId, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
           ..write('paymentMethod: $paymentMethod, ')
-          ..write('currencyCode: $currencyCode, ')
           ..write('isRecurring: $isRecurring, ')
           ..write('recurringRuleId: $recurringRuleId, ')
           ..write('mobileMoneyProvider: $mobileMoneyProvider, ')
@@ -1059,6 +1061,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           ..write('accountId: $accountId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced')
           ..write(')'))
         .toString();
@@ -1068,13 +1071,12 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   int get hashCode => Object.hash(
       id,
       serverId,
-      amount,
+      amountMinor,
       type,
       categoryId,
       description,
       date,
       paymentMethod,
-      currencyCode,
       isRecurring,
       recurringRuleId,
       mobileMoneyProvider,
@@ -1082,6 +1084,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       accountId,
       createdAt,
       updatedAt,
+      deletedAt,
       isSynced);
   @override
   bool operator ==(Object other) =>
@@ -1089,13 +1092,12 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       (other is Transaction &&
           other.id == this.id &&
           other.serverId == this.serverId &&
-          other.amount == this.amount &&
+          other.amountMinor == this.amountMinor &&
           other.type == this.type &&
           other.categoryId == this.categoryId &&
           other.description == this.description &&
           other.date == this.date &&
           other.paymentMethod == this.paymentMethod &&
-          other.currencyCode == this.currencyCode &&
           other.isRecurring == this.isRecurring &&
           other.recurringRuleId == this.recurringRuleId &&
           other.mobileMoneyProvider == this.mobileMoneyProvider &&
@@ -1103,19 +1105,19 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           other.accountId == this.accountId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
           other.isSynced == this.isSynced);
 }
 
 class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String> id;
   final Value<String?> serverId;
-  final Value<double> amount;
+  final Value<int> amountMinor;
   final Value<String> type;
   final Value<String> categoryId;
   final Value<String?> description;
   final Value<DateTime> date;
   final Value<String> paymentMethod;
-  final Value<String> currencyCode;
   final Value<bool> isRecurring;
   final Value<String?> recurringRuleId;
   final Value<String?> mobileMoneyProvider;
@@ -1123,18 +1125,18 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String?> accountId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
   final Value<bool> isSynced;
   final Value<int> rowid;
   const TransactionsCompanion({
     this.id = const Value.absent(),
     this.serverId = const Value.absent(),
-    this.amount = const Value.absent(),
+    this.amountMinor = const Value.absent(),
     this.type = const Value.absent(),
     this.categoryId = const Value.absent(),
     this.description = const Value.absent(),
     this.date = const Value.absent(),
     this.paymentMethod = const Value.absent(),
-    this.currencyCode = const Value.absent(),
     this.isRecurring = const Value.absent(),
     this.recurringRuleId = const Value.absent(),
     this.mobileMoneyProvider = const Value.absent(),
@@ -1142,19 +1144,19 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.accountId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TransactionsCompanion.insert({
     required String id,
     this.serverId = const Value.absent(),
-    required double amount,
+    required int amountMinor,
     required String type,
     required String categoryId,
     this.description = const Value.absent(),
     required DateTime date,
     required String paymentMethod,
-    this.currencyCode = const Value.absent(),
     this.isRecurring = const Value.absent(),
     this.recurringRuleId = const Value.absent(),
     this.mobileMoneyProvider = const Value.absent(),
@@ -1162,10 +1164,11 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.accountId = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
-        amount = Value(amount),
+        amountMinor = Value(amountMinor),
         type = Value(type),
         categoryId = Value(categoryId),
         date = Value(date),
@@ -1175,13 +1178,12 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   static Insertable<Transaction> custom({
     Expression<String>? id,
     Expression<String>? serverId,
-    Expression<double>? amount,
+    Expression<int>? amountMinor,
     Expression<String>? type,
     Expression<String>? categoryId,
     Expression<String>? description,
     Expression<DateTime>? date,
     Expression<String>? paymentMethod,
-    Expression<String>? currencyCode,
     Expression<bool>? isRecurring,
     Expression<String>? recurringRuleId,
     Expression<String>? mobileMoneyProvider,
@@ -1189,19 +1191,19 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Expression<String>? accountId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
     Expression<bool>? isSynced,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (serverId != null) 'server_id': serverId,
-      if (amount != null) 'amount': amount,
+      if (amountMinor != null) 'amount_minor': amountMinor,
       if (type != null) 'type': type,
       if (categoryId != null) 'category_id': categoryId,
       if (description != null) 'description': description,
       if (date != null) 'date': date,
       if (paymentMethod != null) 'payment_method': paymentMethod,
-      if (currencyCode != null) 'currency_code': currencyCode,
       if (isRecurring != null) 'is_recurring': isRecurring,
       if (recurringRuleId != null) 'recurring_rule_id': recurringRuleId,
       if (mobileMoneyProvider != null)
@@ -1210,6 +1212,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       if (accountId != null) 'account_id': accountId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (isSynced != null) 'is_synced': isSynced,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1218,13 +1221,12 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   TransactionsCompanion copyWith(
       {Value<String>? id,
       Value<String?>? serverId,
-      Value<double>? amount,
+      Value<int>? amountMinor,
       Value<String>? type,
       Value<String>? categoryId,
       Value<String?>? description,
       Value<DateTime>? date,
       Value<String>? paymentMethod,
-      Value<String>? currencyCode,
       Value<bool>? isRecurring,
       Value<String?>? recurringRuleId,
       Value<String?>? mobileMoneyProvider,
@@ -1232,18 +1234,18 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       Value<String?>? accountId,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
+      Value<DateTime?>? deletedAt,
       Value<bool>? isSynced,
       Value<int>? rowid}) {
     return TransactionsCompanion(
       id: id ?? this.id,
       serverId: serverId ?? this.serverId,
-      amount: amount ?? this.amount,
+      amountMinor: amountMinor ?? this.amountMinor,
       type: type ?? this.type,
       categoryId: categoryId ?? this.categoryId,
       description: description ?? this.description,
       date: date ?? this.date,
       paymentMethod: paymentMethod ?? this.paymentMethod,
-      currencyCode: currencyCode ?? this.currencyCode,
       isRecurring: isRecurring ?? this.isRecurring,
       recurringRuleId: recurringRuleId ?? this.recurringRuleId,
       mobileMoneyProvider: mobileMoneyProvider ?? this.mobileMoneyProvider,
@@ -1251,6 +1253,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       accountId: accountId ?? this.accountId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       isSynced: isSynced ?? this.isSynced,
       rowid: rowid ?? this.rowid,
     );
@@ -1265,8 +1268,8 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     if (serverId.present) {
       map['server_id'] = Variable<String>(serverId.value);
     }
-    if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
     }
     if (type.present) {
       map['type'] = Variable<String>(type.value);
@@ -1282,9 +1285,6 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     }
     if (paymentMethod.present) {
       map['payment_method'] = Variable<String>(paymentMethod.value);
-    }
-    if (currencyCode.present) {
-      map['currency_code'] = Variable<String>(currencyCode.value);
     }
     if (isRecurring.present) {
       map['is_recurring'] = Variable<bool>(isRecurring.value);
@@ -1308,6 +1308,9 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -1322,13 +1325,12 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     return (StringBuffer('TransactionsCompanion(')
           ..write('id: $id, ')
           ..write('serverId: $serverId, ')
-          ..write('amount: $amount, ')
+          ..write('amountMinor: $amountMinor, ')
           ..write('type: $type, ')
           ..write('categoryId: $categoryId, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
           ..write('paymentMethod: $paymentMethod, ')
-          ..write('currencyCode: $currencyCode, ')
           ..write('isRecurring: $isRecurring, ')
           ..write('recurringRuleId: $recurringRuleId, ')
           ..write('mobileMoneyProvider: $mobileMoneyProvider, ')
@@ -1336,6 +1338,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
           ..write('accountId: $accountId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -4007,6 +4010,289 @@ class SavingsContributionsCompanion
   }
 }
 
+class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _baseCurrencyMeta =
+      const VerificationMeta('baseCurrency');
+  @override
+  late final GeneratedColumn<String> baseCurrency = GeneratedColumn<String>(
+      'base_currency', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _isSyncedMeta =
+      const VerificationMeta('isSynced');
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+      'is_synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_synced" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [id, baseCurrency, updatedAt, isSynced];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'profiles';
+  @override
+  VerificationContext validateIntegrity(Insertable<Profile> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('base_currency')) {
+      context.handle(
+          _baseCurrencyMeta,
+          baseCurrency.isAcceptableOrUnknown(
+              data['base_currency']!, _baseCurrencyMeta));
+    } else if (isInserting) {
+      context.missing(_baseCurrencyMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(_isSyncedMeta,
+          isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Profile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Profile(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      baseCurrency: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}base_currency'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      isSynced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
+    );
+  }
+
+  @override
+  $ProfilesTable createAlias(String alias) {
+    return $ProfilesTable(attachedDatabase, alias);
+  }
+}
+
+class Profile extends DataClass implements Insertable<Profile> {
+  /// Always `ProfileModel.localId`; the server row is keyed by the user.
+  final String id;
+
+  /// ISO 4217 code of the account's base currency. Every amount in the
+  /// app is in this currency.
+  final String baseCurrency;
+
+  /// When the profile was last changed.
+  final DateTime updatedAt;
+
+  /// Whether this record has been synced to the server.
+  final bool isSynced;
+  const Profile(
+      {required this.id,
+      required this.baseCurrency,
+      required this.updatedAt,
+      required this.isSynced});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['base_currency'] = Variable<String>(baseCurrency);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['is_synced'] = Variable<bool>(isSynced);
+    return map;
+  }
+
+  ProfilesCompanion toCompanion(bool nullToAbsent) {
+    return ProfilesCompanion(
+      id: Value(id),
+      baseCurrency: Value(baseCurrency),
+      updatedAt: Value(updatedAt),
+      isSynced: Value(isSynced),
+    );
+  }
+
+  factory Profile.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Profile(
+      id: serializer.fromJson<String>(json['id']),
+      baseCurrency: serializer.fromJson<String>(json['baseCurrency']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'baseCurrency': serializer.toJson<String>(baseCurrency),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'isSynced': serializer.toJson<bool>(isSynced),
+    };
+  }
+
+  Profile copyWith(
+          {String? id,
+          String? baseCurrency,
+          DateTime? updatedAt,
+          bool? isSynced}) =>
+      Profile(
+        id: id ?? this.id,
+        baseCurrency: baseCurrency ?? this.baseCurrency,
+        updatedAt: updatedAt ?? this.updatedAt,
+        isSynced: isSynced ?? this.isSynced,
+      );
+  Profile copyWithCompanion(ProfilesCompanion data) {
+    return Profile(
+      id: data.id.present ? data.id.value : this.id,
+      baseCurrency: data.baseCurrency.present
+          ? data.baseCurrency.value
+          : this.baseCurrency,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Profile(')
+          ..write('id: $id, ')
+          ..write('baseCurrency: $baseCurrency, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isSynced: $isSynced')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, baseCurrency, updatedAt, isSynced);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Profile &&
+          other.id == this.id &&
+          other.baseCurrency == this.baseCurrency &&
+          other.updatedAt == this.updatedAt &&
+          other.isSynced == this.isSynced);
+}
+
+class ProfilesCompanion extends UpdateCompanion<Profile> {
+  final Value<String> id;
+  final Value<String> baseCurrency;
+  final Value<DateTime> updatedAt;
+  final Value<bool> isSynced;
+  final Value<int> rowid;
+  const ProfilesCompanion({
+    this.id = const Value.absent(),
+    this.baseCurrency = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ProfilesCompanion.insert({
+    required String id,
+    required String baseCurrency,
+    required DateTime updatedAt,
+    this.isSynced = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        baseCurrency = Value(baseCurrency),
+        updatedAt = Value(updatedAt);
+  static Insertable<Profile> custom({
+    Expression<String>? id,
+    Expression<String>? baseCurrency,
+    Expression<DateTime>? updatedAt,
+    Expression<bool>? isSynced,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (baseCurrency != null) 'base_currency': baseCurrency,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ProfilesCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? baseCurrency,
+      Value<DateTime>? updatedAt,
+      Value<bool>? isSynced,
+      Value<int>? rowid}) {
+    return ProfilesCompanion(
+      id: id ?? this.id,
+      baseCurrency: baseCurrency ?? this.baseCurrency,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isSynced: isSynced ?? this.isSynced,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (baseCurrency.present) {
+      map['base_currency'] = Variable<String>(baseCurrency.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('baseCurrency: $baseCurrency, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4020,6 +4306,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SavingsGoalsTable savingsGoals = $SavingsGoalsTable(this);
   late final $SavingsContributionsTable savingsContributions =
       $SavingsContributionsTable(this);
+  late final $ProfilesTable profiles = $ProfilesTable(this);
+  late final Index idxTransactionsDate = Index('idx_transactions_date',
+      'CREATE INDEX idx_transactions_date ON transactions (date)');
+  late final Index idxTransactionsCategoryDate = Index(
+      'idx_transactions_category_date',
+      'CREATE INDEX idx_transactions_category_date ON transactions (category_id, date)');
   late final SyncQueueDao syncQueueDao = SyncQueueDao(this as AppDatabase);
   late final TransactionsDao transactionsDao =
       TransactionsDao(this as AppDatabase);
@@ -4031,6 +4323,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       SavingsGoalsDao(this as AppDatabase);
   late final SavingsContributionsDao savingsContributionsDao =
       SavingsContributionsDao(this as AppDatabase);
+  late final ProfileDao profileDao = ProfileDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4042,7 +4335,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         budgets,
         budgetCategories,
         savingsGoals,
-        savingsContributions
+        savingsContributions,
+        profiles,
+        idxTransactionsDate,
+        idxTransactionsCategoryDate
       ];
 }
 
@@ -4278,13 +4574,12 @@ typedef $$TransactionsTableCreateCompanionBuilder = TransactionsCompanion
     Function({
   required String id,
   Value<String?> serverId,
-  required double amount,
+  required int amountMinor,
   required String type,
   required String categoryId,
   Value<String?> description,
   required DateTime date,
   required String paymentMethod,
-  Value<String> currencyCode,
   Value<bool> isRecurring,
   Value<String?> recurringRuleId,
   Value<String?> mobileMoneyProvider,
@@ -4292,6 +4587,7 @@ typedef $$TransactionsTableCreateCompanionBuilder = TransactionsCompanion
   Value<String?> accountId,
   required DateTime createdAt,
   required DateTime updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -4299,13 +4595,12 @@ typedef $$TransactionsTableUpdateCompanionBuilder = TransactionsCompanion
     Function({
   Value<String> id,
   Value<String?> serverId,
-  Value<double> amount,
+  Value<int> amountMinor,
   Value<String> type,
   Value<String> categoryId,
   Value<String?> description,
   Value<DateTime> date,
   Value<String> paymentMethod,
-  Value<String> currencyCode,
   Value<bool> isRecurring,
   Value<String?> recurringRuleId,
   Value<String?> mobileMoneyProvider,
@@ -4313,6 +4608,7 @@ typedef $$TransactionsTableUpdateCompanionBuilder = TransactionsCompanion
   Value<String?> accountId,
   Value<DateTime> createdAt,
   Value<DateTime> updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -4332,8 +4628,8 @@ class $$TransactionsTableFilterComposer
   ColumnFilters<String> get serverId => $composableBuilder(
       column: $table.serverId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get amount => $composableBuilder(
-      column: $table.amount, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get amountMinor => $composableBuilder(
+      column: $table.amountMinor, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get type => $composableBuilder(
       column: $table.type, builder: (column) => ColumnFilters(column));
@@ -4349,9 +4645,6 @@ class $$TransactionsTableFilterComposer
 
   ColumnFilters<String> get paymentMethod => $composableBuilder(
       column: $table.paymentMethod, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get currencyCode => $composableBuilder(
-      column: $table.currencyCode, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<bool> get isRecurring => $composableBuilder(
       column: $table.isRecurring, builder: (column) => ColumnFilters(column));
@@ -4377,6 +4670,9 @@ class $$TransactionsTableFilterComposer
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnFilters(column));
 }
@@ -4396,8 +4692,8 @@ class $$TransactionsTableOrderingComposer
   ColumnOrderings<String> get serverId => $composableBuilder(
       column: $table.serverId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get amount => $composableBuilder(
-      column: $table.amount, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get amountMinor => $composableBuilder(
+      column: $table.amountMinor, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get type => $composableBuilder(
       column: $table.type, builder: (column) => ColumnOrderings(column));
@@ -4413,10 +4709,6 @@ class $$TransactionsTableOrderingComposer
 
   ColumnOrderings<String> get paymentMethod => $composableBuilder(
       column: $table.paymentMethod,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get currencyCode => $composableBuilder(
-      column: $table.currencyCode,
       builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<bool> get isRecurring => $composableBuilder(
@@ -4443,6 +4735,9 @@ class $$TransactionsTableOrderingComposer
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnOrderings(column));
 }
@@ -4462,8 +4757,8 @@ class $$TransactionsTableAnnotationComposer
   GeneratedColumn<String> get serverId =>
       $composableBuilder(column: $table.serverId, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => column);
+  GeneratedColumn<int> get amountMinor => $composableBuilder(
+      column: $table.amountMinor, builder: (column) => column);
 
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
@@ -4479,9 +4774,6 @@ class $$TransactionsTableAnnotationComposer
 
   GeneratedColumn<String> get paymentMethod => $composableBuilder(
       column: $table.paymentMethod, builder: (column) => column);
-
-  GeneratedColumn<String> get currencyCode => $composableBuilder(
-      column: $table.currencyCode, builder: (column) => column);
 
   GeneratedColumn<bool> get isRecurring => $composableBuilder(
       column: $table.isRecurring, builder: (column) => column);
@@ -4503,6 +4795,9 @@ class $$TransactionsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
@@ -4536,13 +4831,12 @@ class $$TransactionsTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String?> serverId = const Value.absent(),
-            Value<double> amount = const Value.absent(),
+            Value<int> amountMinor = const Value.absent(),
             Value<String> type = const Value.absent(),
             Value<String> categoryId = const Value.absent(),
             Value<String?> description = const Value.absent(),
             Value<DateTime> date = const Value.absent(),
             Value<String> paymentMethod = const Value.absent(),
-            Value<String> currencyCode = const Value.absent(),
             Value<bool> isRecurring = const Value.absent(),
             Value<String?> recurringRuleId = const Value.absent(),
             Value<String?> mobileMoneyProvider = const Value.absent(),
@@ -4550,19 +4844,19 @@ class $$TransactionsTableTableManager extends RootTableManager<
             Value<String?> accountId = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               TransactionsCompanion(
             id: id,
             serverId: serverId,
-            amount: amount,
+            amountMinor: amountMinor,
             type: type,
             categoryId: categoryId,
             description: description,
             date: date,
             paymentMethod: paymentMethod,
-            currencyCode: currencyCode,
             isRecurring: isRecurring,
             recurringRuleId: recurringRuleId,
             mobileMoneyProvider: mobileMoneyProvider,
@@ -4570,19 +4864,19 @@ class $$TransactionsTableTableManager extends RootTableManager<
             accountId: accountId,
             createdAt: createdAt,
             updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),
           createCompanionCallback: ({
             required String id,
             Value<String?> serverId = const Value.absent(),
-            required double amount,
+            required int amountMinor,
             required String type,
             required String categoryId,
             Value<String?> description = const Value.absent(),
             required DateTime date,
             required String paymentMethod,
-            Value<String> currencyCode = const Value.absent(),
             Value<bool> isRecurring = const Value.absent(),
             Value<String?> recurringRuleId = const Value.absent(),
             Value<String?> mobileMoneyProvider = const Value.absent(),
@@ -4590,19 +4884,19 @@ class $$TransactionsTableTableManager extends RootTableManager<
             Value<String?> accountId = const Value.absent(),
             required DateTime createdAt,
             required DateTime updatedAt,
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               TransactionsCompanion.insert(
             id: id,
             serverId: serverId,
-            amount: amount,
+            amountMinor: amountMinor,
             type: type,
             categoryId: categoryId,
             description: description,
             date: date,
             paymentMethod: paymentMethod,
-            currencyCode: currencyCode,
             isRecurring: isRecurring,
             recurringRuleId: recurringRuleId,
             mobileMoneyProvider: mobileMoneyProvider,
@@ -4610,6 +4904,7 @@ class $$TransactionsTableTableManager extends RootTableManager<
             accountId: accountId,
             createdAt: createdAt,
             updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),
@@ -5890,6 +6185,157 @@ typedef $$SavingsContributionsTableProcessedTableManager
         ),
         SavingsContribution,
         PrefetchHooks Function()>;
+typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
+  required String id,
+  required String baseCurrency,
+  required DateTime updatedAt,
+  Value<bool> isSynced,
+  Value<int> rowid,
+});
+typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
+  Value<String> id,
+  Value<String> baseCurrency,
+  Value<DateTime> updatedAt,
+  Value<bool> isSynced,
+  Value<int> rowid,
+});
+
+class $$ProfilesTableFilterComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get baseCurrency => $composableBuilder(
+      column: $table.baseCurrency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnFilters(column));
+}
+
+class $$ProfilesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get baseCurrency => $composableBuilder(
+      column: $table.baseCurrency,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnOrderings(column));
+}
+
+class $$ProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get baseCurrency => $composableBuilder(
+      column: $table.baseCurrency, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+}
+
+class $$ProfilesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ProfilesTable,
+    Profile,
+    $$ProfilesTableFilterComposer,
+    $$ProfilesTableOrderingComposer,
+    $$ProfilesTableAnnotationComposer,
+    $$ProfilesTableCreateCompanionBuilder,
+    $$ProfilesTableUpdateCompanionBuilder,
+    (Profile, BaseReferences<_$AppDatabase, $ProfilesTable, Profile>),
+    Profile,
+    PrefetchHooks Function()> {
+  $$ProfilesTableTableManager(_$AppDatabase db, $ProfilesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> baseCurrency = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<bool> isSynced = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProfilesCompanion(
+            id: id,
+            baseCurrency: baseCurrency,
+            updatedAt: updatedAt,
+            isSynced: isSynced,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String baseCurrency,
+            required DateTime updatedAt,
+            Value<bool> isSynced = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ProfilesCompanion.insert(
+            id: id,
+            baseCurrency: baseCurrency,
+            updatedAt: updatedAt,
+            isSynced: isSynced,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$ProfilesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $ProfilesTable,
+    Profile,
+    $$ProfilesTableFilterComposer,
+    $$ProfilesTableOrderingComposer,
+    $$ProfilesTableAnnotationComposer,
+    $$ProfilesTableCreateCompanionBuilder,
+    $$ProfilesTableUpdateCompanionBuilder,
+    (Profile, BaseReferences<_$AppDatabase, $ProfilesTable, Profile>),
+    Profile,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -5908,4 +6354,6 @@ class $AppDatabaseManager {
       $$SavingsGoalsTableTableManager(_db, _db.savingsGoals);
   $$SavingsContributionsTableTableManager get savingsContributions =>
       $$SavingsContributionsTableTableManager(_db, _db.savingsContributions);
+  $$ProfilesTableTableManager get profiles =>
+      $$ProfilesTableTableManager(_db, _db.profiles);
 }

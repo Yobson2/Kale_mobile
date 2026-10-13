@@ -3,11 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/theme/app_spacing.dart';
+import 'package:kale/core/utils/locale_currency_detector.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
 import 'package:kale/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:kale/features/onboarding/presentation/widgets/onboarding_step.dart';
+import 'package:kale/features/profile/domain/repositories/profile_repository.dart';
+import 'package:kale/features/profile/presentation/widgets/base_currency_picker.dart';
 
 /// Onboarding page with 4 swipeable finance-themed steps.
 class OnboardingPage extends ConsumerStatefulWidget {
@@ -18,11 +22,14 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
-  static const _totalPages = 4;
+  static const _totalPages = 5;
   final _pageController = PageController();
 
-  // Personalization state for step 4
-  String _selectedCurrency = 'XOF';
+  // Base currency (step 4), preselected from the device locale.
+  Currency _selectedCurrency =
+      Currencies.byCode(LocaleCurrencyDetector.detect()) ?? defaultBaseCurrency;
+
+  // Personalization state for step 5
   String _selectedLanguage = 'en';
   String? _selectedGoal;
 
@@ -35,15 +42,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   Future<void> _onComplete() async {
     // Save personalization preferences
     final localStorage = ref.read(localStorageProvider);
-    await localStorage.setString('user_currency', _selectedCurrency);
     await localStorage.setString('user_language', _selectedLanguage);
     if (_selectedGoal != null) {
       await localStorage.setString('user_primary_goal', _selectedGoal!);
     }
-    // Also update currency provider
-    await ref
-        .read(userCurrencyCodeProvider.notifier)
-        .setCurrency(_selectedCurrency);
+    // The base currency goes on the profile (device, then server).
+    if (!mounted) return;
+    await requestBaseCurrencyChange(context, ref, _selectedCurrency);
 
     await ref.read(onboardingNotifierProvider.notifier).complete();
     if (mounted) context.go('/login');
@@ -114,13 +119,20 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     description: l10n.onboardingDesc3,
                   ),
                   OnboardingStep(
+                    stepIndex: 0,
+                    title: l10n.baseCurrencyStepTitle,
+                    description: l10n.baseCurrencyStepDescription,
+                    child: BaseCurrencyList(
+                      shrinkWrap: true,
+                      selected: _selectedCurrency,
+                      onSelected: (c) => setState(() => _selectedCurrency = c),
+                    ),
+                  ),
+                  OnboardingStep(
                     stepIndex: 3,
                     title: l10n.onboardingTitle4,
                     description: l10n.onboardingDesc4,
                     child: _PersonalizationForm(
-                      selectedCurrency: _selectedCurrency,
-                      onCurrencyChanged: (v) =>
-                          setState(() => _selectedCurrency = v),
                       selectedLanguage: _selectedLanguage,
                       onLanguageChanged: (v) =>
                           setState(() => _selectedLanguage = v),
@@ -190,22 +202,16 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 /// and primary financial goal.
 class _PersonalizationForm extends StatelessWidget {
   const _PersonalizationForm({
-    required this.selectedCurrency,
-    required this.onCurrencyChanged,
     required this.selectedLanguage,
     required this.onLanguageChanged,
     required this.selectedGoal,
     required this.onGoalChanged,
   });
 
-  final String selectedCurrency;
-  final ValueChanged<String> onCurrencyChanged;
   final String selectedLanguage;
   final ValueChanged<String> onLanguageChanged;
   final String? selectedGoal;
   final ValueChanged<String> onGoalChanged;
-
-  static const _currencies = ['XOF', 'XAF', 'USD', 'EUR', 'GBP', 'NGN'];
 
   @override
   Widget build(BuildContext context) {
@@ -216,31 +222,6 @@ class _PersonalizationForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // ── Currency selector ─────────────────────────────────
-        DropdownButtonFormField<String>(
-          value: selectedCurrency,
-          decoration: InputDecoration(
-            labelText: l10n.onboardingCurrency,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.lg,
-              vertical: AppSpacing.md,
-            ),
-          ),
-          items: _currencies
-              .map(
-                (c) => DropdownMenuItem(value: c, child: Text(c)),
-              )
-              .toList(),
-          onChanged: (v) {
-            if (v != null) onCurrencyChanged(v);
-          },
-        ),
-
-        AppSpacing.verticalLg,
-
         // ── Language toggle ───────────────────────────────────
         Text(
           l10n.onboardingLanguage,

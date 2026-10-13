@@ -4,9 +4,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/features/dashboard/domain/entities/dashboard_summary.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
 import 'package:kale/features/dashboard/presentation/widgets/items/legend_item.dart';
@@ -36,24 +36,25 @@ class CategoryBreakdownChart extends ConsumerWidget {
 
     // Top 5 categories + "Other".
     final top = sorted.take(5).toList();
-    final otherTotal = sorted.skip(5).fold<double>(0, (s, e) => s + e.value);
+    final otherTotal =
+        Money.sum(sorted.skip(5).map((e) => e.value), summary.currency);
     final total =
-        summary.topExpenseCategories.values.fold<double>(0, (s, v) => s + v);
+        Money.sum(summary.topExpenseCategories.values, summary.currency);
 
-    if (total == 0) return const SizedBox.shrink();
+    if (total.isZero) return const SizedBox.shrink();
 
     final sections = <PieChartSectionData>[];
     final legends = <LegendItem>[];
 
     for (final entry in top) {
-      final percent = (entry.value / total * 100).round();
+      final percent = (entry.value.minorUnits / total.minorUnits * 100).round();
       final colorHex = summary.categoryColors[entry.key];
       final color = _parseHexColor(colorHex) ?? context.colorScheme.primary;
       final name = summary.categoryNames[entry.key] ?? entry.key;
 
       sections.add(
         PieChartSectionData(
-          value: entry.value,
+          value: entry.value.minorUnits.toDouble(),
           color: color,
           radius: 32,
           title: '$percent%',
@@ -67,11 +68,11 @@ class CategoryBreakdownChart extends ConsumerWidget {
       legends.add(LegendItem(name: name, color: color, amount: entry.value));
     }
 
-    if (otherTotal > 0) {
-      final percent = (otherTotal / total * 100).round();
+    if (otherTotal.isPositive) {
+      final percent = (otherTotal.minorUnits / total.minorUnits * 100).round();
       sections.add(
         PieChartSectionData(
-          value: otherTotal,
+          value: otherTotal.minorUnits.toDouble(),
           color: Colors.grey,
           radius: 32,
           title: '$percent%',
@@ -147,10 +148,7 @@ class CategoryBreakdownChart extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  CurrencyFormatter.format(
-                                    l.amount,
-                                    compact: true,
-                                  ),
+                                  context.formatMoney(l.amount),
                                   style: context.textTheme.bodySmall?.copyWith(
                                     fontWeight: FontWeight.w600,
                                   ),

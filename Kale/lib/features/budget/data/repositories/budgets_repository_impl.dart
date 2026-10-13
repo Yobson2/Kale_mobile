@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
+import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/network/network_info.dart';
 import 'package:kale/features/budget/data/datasources/budgets_local_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
@@ -12,6 +13,7 @@ import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/domain/repositories/budgets_repository.dart';
+import 'package:kale/features/profile/domain/repositories/profile_repository.dart';
 import 'package:kale/features/transactions/data/daos/transactions_dao.dart';
 import 'package:uuid/uuid.dart';
 
@@ -27,15 +29,18 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
     required BudgetsLocalDataSource localDataSource,
     required NetworkInfo networkInfo,
     required TransactionsDao transactionsDao,
+    required ProfileRepository profileRepository,
   })  : _remote = remoteDataSource,
         _local = localDataSource,
         _networkInfo = networkInfo,
-        _transactionsDao = transactionsDao;
+        _transactionsDao = transactionsDao,
+        _profile = profileRepository;
 
   final BudgetsRemoteDataSource _remote;
   final BudgetsLocalDataSource _local;
   final NetworkInfo _networkInfo;
   final TransactionsDao _transactionsDao;
+  final ProfileRepository _profile;
 
   static const _uuid = Uuid();
 
@@ -148,9 +153,8 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
       );
 
       // Return the entity with enriched categories (spent = 0 for new).
-      final enrichedCategories = categoryModels
-          .map((c) => c.toEntity(0))
-          .toList();
+      final enrichedCategories =
+          categoryModels.map((c) => c.toEntity(0)).toList();
 
       return Right(budgetModel.toEntity(categories: enrichedCategories));
     } on CacheException catch (e) {
@@ -273,6 +277,9 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
     DateTime endDate,
   ) async {
     final categoryModels = await _local.getBudgetCategories(budgetId);
+    final currency =
+        (await _profile.getBaseCurrency()).fold((_) => null, (c) => c) ??
+            defaultBaseCurrency;
 
     // Get expense totals per category for this budget's date range.
     final categoryTotals = await _transactionsDao.getCategoryTotals(
@@ -284,12 +291,22 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
     // Build a lookup map: categoryId -> total spent.
     final spentMap = <String, double>{};
     for (final ct in categoryTotals) {
-      spentMap[ct.categoryId] = ct.total;
+      spentMap[ct.categoryId] = _toMajorUnits(ct.totalMinor, currency);
     }
 
     return categoryModels.map((model) {
       final spent = spentMap[model.categoryId] ?? 0;
       return model.toEntity(spent);
     }).toList();
+  }
+
+  /// Budgets still hold major-unit doubles until their own schema reset;
+  /// transaction totals are exact minor units of the base currency.
+  static double _toMajorUnits(int minorUnits, Currency currency) {
+    var scale = 1;
+    for (var i = 0; i < currency.decimalPlaces; i++) {
+      scale *= 10;
+    }
+    return minorUnits / scale;
   }
 }

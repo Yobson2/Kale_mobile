@@ -4,10 +4,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/features/dashboard/domain/entities/dashboard_summary.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
 
@@ -33,8 +33,9 @@ class IncomeExpenseChart extends ConsumerWidget {
     final incomeColor = isDark ? AppColors.incomeDark : AppColors.incomeLight;
     final expenseColor =
         isDark ? AppColors.expenseDark : AppColors.expenseLight;
-    final income = summary.totalIncome;
-    final expenses = summary.totalExpenses;
+    // Bar heights in minor units; labels go back through Money.
+    final income = summary.totalIncome.minorUnits.toDouble();
+    final expenses = summary.totalExpenses.minorUnits.toDouble();
     final maxY = (income > expenses ? income : expenses) * 1.2;
 
     if (income == 0 && expenses == 0) {
@@ -76,9 +77,10 @@ class IncomeExpenseChart extends ConsumerWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: CurrencyFormatter.format(
-                              rod.toY,
-                              compact: true,
+                            text: context.formatMoney(
+                              groupIndex == 0
+                                  ? summary.totalIncome
+                                  : summary.totalExpenses,
                             ),
                             style: context.textTheme.bodySmall?.copyWith(
                               color: Colors.white70,
@@ -101,10 +103,13 @@ class IncomeExpenseChart extends ConsumerWidget {
                         return Padding(
                           padding: const EdgeInsets.only(right: 4),
                           child: Text(
-                            CurrencyFormatter.format(
-                              value,
-                              compact: true,
-                              showSymbol: false,
+                            Money.fromMinorUnits(
+                              value.round(),
+                              summary.currency,
+                            ).format(
+                              locale:
+                                  Localizations.localeOf(context).toString(),
+                              withSymbol: false,
                             ),
                             style: context.textTheme.bodySmall?.copyWith(
                               color: context.colorScheme.onSurfaceVariant,

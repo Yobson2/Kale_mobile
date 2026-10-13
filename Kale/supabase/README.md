@@ -78,6 +78,27 @@ Added after the restore, from a security review:
 - `update_savings_goal_amount` runs one primary-key `UPDATE` as the invoking user (RLS applies) instead of two
   as `SECURITY DEFINER`.
 
+### 20261013000100_reset_transactions_minor_units.sql
+Schema reset for issue #5 (decision Q11: dropped and recreated, data not kept):
+- `currencies` reference table (code, symbol, decimal places), readable by everyone, mirroring
+  `lib/core/money/currency.dart`
+- `profiles.base_currency` (FK to `currencies`, NULL until onboarding) replaces `preferred_currency`
+- `transactions` recreated: `amount_minor BIGINT` (minor units of the base currency), no `currency_code`, UUID id,
+  client-owned `updated_at` (no trigger), nullable `deleted_at`, index on `(user_id, updated_at)`, and one owner-only
+  RLS policy for the `authenticated` role (anonymous users included); `anon` has no access
+
+## SQL tests
+
+pgTAP tests live in `supabase/tests/database/`. Run them against the local stack (Docker):
+
+```bash
+npx supabase start
+npx supabase test db
+```
+
+`transactions_rls.test.sql` checks the reset transactions table: its shape, and that one user (permanent or
+anonymous) can neither read nor write another user's transactions.
+
 ## Database Schema
 
 ```

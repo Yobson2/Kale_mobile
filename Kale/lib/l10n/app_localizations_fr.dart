@@ -1422,4 +1422,29 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get notificationsEmptySubtitle =>
       'Vous etes a jour ! Les notifications concernant vos budgets, epargnes et rappels apparaitront ici.';
+
+  @override
+  String get baseCurrencyStepTitle => 'Choisissez votre devise';
+
+  @override
+  String get baseCurrencyStepDescription =>
+      'Tous les montants dans Kalé sont enregistrés dans cette devise. Vous pourrez la changer plus tard.';
+
+  @override
+  String get baseCurrencyLabel => 'Devise de base';
+
+  @override
+  String get baseCurrencyRelabelTitle => 'Changer la devise de base ?';
+
+  @override
+  String baseCurrencyRelabelMessage(String currency) {
+    return 'Vos transactions existantes gardent les mêmes chiffres et seront affichées en $currency. Aucune conversion n\'est faite.';
+  }
+
+  @override
+  String get baseCurrencyRelabelConfirm => 'Changer quand même';
+
+  @override
+  String get baseCurrencyChangeFailed =>
+      'Impossible de changer la devise. Veuillez réessayer.';
 }

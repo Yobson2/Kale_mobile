@@ -15,12 +15,11 @@ class CreateTransactionUseCase
   @override
   Future<Either<Failure, Transaction>> call(CreateTransactionParams params) {
     return _repository.createTransaction(
-      amount: params.amount,
+      amountMinor: params.amountMinor,
       type: params.type,
       categoryId: params.categoryId,
       date: params.date,
       paymentMethod: params.paymentMethod,
-      currencyCode: params.currencyCode,
       description: params.description,
       mobileMoneyProvider: params.mobileMoneyProvider,
       mobileMoneyRef: params.mobileMoneyRef,
@@ -31,23 +30,22 @@ class CreateTransactionUseCase
 /// Parameters for [CreateTransactionUseCase].
 class CreateTransactionParams {
   const CreateTransactionParams({
-    required this.amount,
+    required this.amountMinor,
     required this.type,
     required this.categoryId,
     required this.date,
     required this.paymentMethod,
-    required this.currencyCode,
     this.description,
     this.mobileMoneyProvider,
     this.mobileMoneyRef,
   });
 
-  final double amount;
+  /// Amount in minor units of the base currency.
+  final int amountMinor;
   final TransactionType type;
   final String categoryId;
   final DateTime date;
   final PaymentMethod paymentMethod;
-  final String currencyCode;
   final String? description;
   final String? mobileMoneyProvider;
   final String? mobileMoneyRef;

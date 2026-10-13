@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 
 /// Domain entity representing a financial transaction.
@@ -6,12 +7,11 @@ import 'package:kale/features/transactions/domain/entities/transaction_enums.dar
 class Transaction {
   const Transaction({
     required this.id,
-    required this.amount,
+    required this.amountMinor,
     required this.type,
     required this.categoryId,
     required this.date,
     required this.paymentMethod,
-    required this.currencyCode,
     required this.createdAt,
     required this.updatedAt,
     this.description,
@@ -26,8 +26,13 @@ class Transaction {
   /// Client-generated UUID.
   final String id;
 
-  /// Transaction amount (always positive; type determines direction).
-  final double amount;
+  /// Amount in minor units of the base currency (always positive; the type
+  /// determines the direction).
+  final int amountMinor;
+
+  /// The amount as [Money] in the account's base [currency].
+  Money amountIn(Currency currency) =>
+      Money.fromMinorUnits(amountMinor, currency);
 
   /// Income, expense, or transfer.
   final TransactionType type;
@@ -43,9 +48,6 @@ class Transaction {
 
   /// How the payment was made.
   final PaymentMethod paymentMethod;
-
-  /// ISO 4217 currency code.
-  final String currencyCode;
 
   /// Whether this is a recurring transaction.
   final bool isRecurring;

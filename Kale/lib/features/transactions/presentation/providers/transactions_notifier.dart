@@ -26,12 +26,11 @@ class TransactionsNotifier extends _$TransactionsNotifier {
 
   /// Creates a new transaction.
   Future<void> createTransaction({
-    required double amount,
+    required int amountMinor,
     required TransactionType type,
     required String categoryId,
     required DateTime date,
     required PaymentMethod paymentMethod,
-    required String currencyCode,
     String? description,
     String? mobileMoneyProvider,
     String? mobileMoneyRef,
@@ -40,12 +39,11 @@ class TransactionsNotifier extends _$TransactionsNotifier {
     try {
       final result = await ref.read(createTransactionUseCaseProvider).call(
             CreateTransactionParams(
-              amount: amount,
+              amountMinor: amountMinor,
               type: type,
               categoryId: categoryId,
               date: date,
               paymentMethod: paymentMethod,
-              currencyCode: currencyCode,
               description: description,
               mobileMoneyProvider: mobileMoneyProvider,
               mobileMoneyRef: mobileMoneyRef,
@@ -73,12 +71,11 @@ class TransactionsNotifier extends _$TransactionsNotifier {
   /// Updates an existing transaction.
   Future<void> updateTransaction({
     required String id,
-    required double amount,
+    required int amountMinor,
     required TransactionType type,
     required String categoryId,
     required DateTime date,
     required PaymentMethod paymentMethod,
-    required String currencyCode,
     String? description,
     String? mobileMoneyProvider,
     String? mobileMoneyRef,
@@ -88,12 +85,11 @@ class TransactionsNotifier extends _$TransactionsNotifier {
       final result = await ref.read(updateTransactionUseCaseProvider).call(
             UpdateTransactionParams(
               id: id,
-              amount: amount,
+              amountMinor: amountMinor,
               type: type,
               categoryId: categoryId,
               date: date,
               paymentMethod: paymentMethod,
-              currencyCode: currencyCode,
               description: description,
               mobileMoneyProvider: mobileMoneyProvider,
               mobileMoneyRef: mobileMoneyRef,
@@ -114,8 +110,7 @@ class TransactionsNotifier extends _$TransactionsNotifier {
   Future<void> deleteTransaction(String id) async {
     state = const TransactionsState.loading();
     try {
-      final result =
-          await ref.read(deleteTransactionUseCaseProvider).call(id);
+      final result = await ref.read(deleteTransactionUseCaseProvider).call(id);
       state = result.fold(
         (failure) => TransactionsState.error(failure.message),
         (_) => const TransactionsState.success(
@@ -168,8 +163,7 @@ class TransactionsNotifier extends _$TransactionsNotifier {
         }
 
         // 100 transactions badge.
-        final transactions =
-            await ref.read(transactionsStreamProvider.future);
+        final transactions = await ref.read(transactionsStreamProvider.future);
         if (transactions.length >= 100) {
           await achievements.unlock(Achievement.transactions100);
         }
@@ -193,11 +187,9 @@ class TransactionsNotifier extends _$TransactionsNotifier {
         );
 
         // Resolve category name for the notification.
-        final categories =
-            await ref.read(categoriesStreamProvider.future);
-        final category = categories
-            .where((c) => c.id == categoryId)
-            .firstOrNull;
+        final categories = await ref.read(categoriesStreamProvider.future);
+        final category =
+            categories.where((c) => c.id == categoryId).firstOrNull;
 
         await checker.checkAndAlert(
           budget: budget,

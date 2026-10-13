@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/failures.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/features/dashboard/domain/entities/dashboard_summary.dart';
 import 'package:kale/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:kale/features/transactions/data/daos/categories_dao.dart';
@@ -23,16 +24,17 @@ class DashboardRepositoryImpl implements DashboardRepository {
   Future<Either<Failure, DashboardSummary>> getDashboardSummary({
     required DateTime startDate,
     required DateTime endDate,
+    required Currency currency,
   }) async {
+    Money money(int minorUnits) => Money.fromMinorUnits(minorUnits, currency);
+
     try {
-      // Get total income for the period.
+      // Sums are integer minor units: exact, never float.
       final totalIncome = await _transactionsDao.getTotalForPeriod(
         startDate: startDate,
         endDate: endDate,
         type: 'income',
       );
-
-      // Get total expenses for the period.
       final totalExpenses = await _transactionsDao.getTotalForPeriod(
         startDate: startDate,
         endDate: endDate,
@@ -55,28 +57,22 @@ class DashboardRepositoryImpl implements DashboardRepository {
         endDate: endDate,
         type: 'expense',
       );
-      final topExpenseCategories = <String, double>{};
-      for (final ct in categoryTotals) {
-        topExpenseCategories[ct.categoryId] = ct.total;
-      }
 
       // Build category ID → name and color lookups.
       final allCategories = await _categoriesDao.getAll();
-      final categoryNames = <String, String>{
-        for (final cat in allCategories) cat.id: cat.name,
-      };
-      final categoryColors = <String, String>{
-        for (final cat in allCategories) cat.id: cat.color,
-      };
 
       return Right(
         DashboardSummary(
-          totalIncome: totalIncome,
-          totalExpenses: totalExpenses,
+          currency: currency,
+          totalIncome: money(totalIncome),
+          totalExpenses: money(totalExpenses),
           recentTransactions: recentTransactions,
-          topExpenseCategories: topExpenseCategories,
-          categoryNames: categoryNames,
-          categoryColors: categoryColors,
+          topExpenseCategories: {
+            for (final ct in categoryTotals)
+              ct.categoryId: money(ct.totalMinor),
+          },
+          categoryNames: {for (final cat in allCategories) cat.id: cat.name},
+          categoryColors: {for (final cat in allCategories) cat.id: cat.color},
         ),
       );
     } catch (e) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kale/core/money/money.dart';
 
 class LegendItem {
   const LegendItem({
@@ -9,5 +10,5 @@ class LegendItem {
 
   final String name;
   final Color color;
-  final double amount;
+  final Money amount;
 }

@@ -9,7 +9,7 @@ void main() {
   tearDown(() => harness.dispose());
 
   test('a created transaction is pushed once and marked synced', () async {
-    final created = await harness.addTransaction(amount: 2500);
+    final created = await harness.addTransaction(amountMinor: 2500);
 
     await harness.sync();
 

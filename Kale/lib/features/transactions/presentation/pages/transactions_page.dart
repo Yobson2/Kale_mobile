@@ -7,13 +7,13 @@ import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/animations/staggered_list_item.dart';
 import 'package:kale/core/widgets/data_display/app_chip.dart';
 import 'package:kale/core/widgets/inputs/app_search_field.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
 import 'package:kale/core/widgets/states/app_empty_state.dart';
 import 'package:kale/core/widgets/states/app_error_state.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/transactions/domain/entities/category.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
@@ -106,10 +106,8 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 if (_searchQuery.isNotEmpty) {
                   final query = _searchQuery.toLowerCase();
                   filtered = filtered.where((t) {
-                    final descriptionMatch = t.description
-                            ?.toLowerCase()
-                            .contains(query) ??
-                        false;
+                    final descriptionMatch =
+                        t.description?.toLowerCase().contains(query) ?? false;
                     final category = categoryMap[t.categoryId];
                     final categoryMatch =
                         category?.name.toLowerCase().contains(query) ?? false;
@@ -156,38 +154,38 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                               return StaggeredListItem(
                                 index: index,
                                 child: Dismissible(
-                                key: ValueKey(transaction.id),
-                                direction: DismissDirection.endToStart,
-                                background: Container(
-                                  alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.only(
-                                    right: AppSpacing.lg,
+                                  key: ValueKey(transaction.id),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(
+                                      right: AppSpacing.lg,
+                                    ),
+                                    color: Colors.red,
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                  color: Colors.red,
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                confirmDismiss: (_) =>
-                                    _confirmDelete(context),
-                                onDismissed: (_) =>
-                                    _deleteTransaction(transaction.id),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: AppSpacing.lg,
-                                  ),
-                                  child: _TransactionTile(
-                                    transaction: transaction,
-                                    category: category,
-                                    isDark: isDark,
-                                    onTap: () => context.pushNamed(
-                                      RouteNames.transactionDetailName,
-                                      extra: transaction.id,
+                                  confirmDismiss: (_) =>
+                                      _confirmDelete(context),
+                                  onDismissed: (_) =>
+                                      _deleteTransaction(transaction.id),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSpacing.lg,
+                                    ),
+                                    child: _TransactionTile(
+                                      transaction: transaction,
+                                      category: category,
+                                      isDark: isDark,
+                                      onTap: () => context.pushNamed(
+                                        RouteNames.transactionDetailName,
+                                        extra: transaction.id,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                               );
                             },
                             childCount: group.transactions.length,
@@ -207,16 +205,13 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                                 Icon(
                                   Icons.history,
                                   size: 16,
-                                  color:
-                                      context.colorScheme.onSurfaceVariant,
+                                  color: context.colorScheme.onSurfaceVariant,
                                 ),
                                 const SizedBox(width: AppSpacing.sm),
                                 Text(
                                   'End of recent history',
-                                  style: context.textTheme.labelSmall
-                                      ?.copyWith(
-                                    color: context
-                                        .colorScheme.onSurfaceVariant,
+                                  style: context.textTheme.labelSmall?.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                               ],
@@ -426,7 +421,7 @@ class _FilterChipsRow extends StatelessWidget {
 }
 
 /// A single transaction tile with left accent border and circle category icon.
-class _TransactionTile extends StatelessWidget {
+class _TransactionTile extends ConsumerWidget {
   const _TransactionTile({
     required this.transaction,
     required this.category,
@@ -440,7 +435,7 @@ class _TransactionTile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isIncome = transaction.type.isIncome;
 
@@ -449,9 +444,8 @@ class _TransactionTile extends StatelessWidget {
         : (isDark ? AppColors.expenseDark : AppColors.expenseLight);
 
     final amountPrefix = isIncome ? '+' : '-';
-    final formattedAmount = CurrencyFormatter.format(
-      transaction.amount,
-      currencyCode: transaction.currencyCode,
+    final formattedAmount = context.formatMoney(
+      transaction.amountIn(ref.watch(baseCurrencyProvider)),
     );
 
     final categoryIcon = _resolveIcon(category?.icon);
@@ -500,8 +494,7 @@ class _TransactionTile extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    category?.name ??
-                        context.l10n.transactionsUncategorized,
+                    category?.name ?? context.l10n.transactionsUncategorized,
                     style: theme.textTheme.bodyLarge,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
+import 'package:kale/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:kale/features/profile/data/models/profile_model.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_remote_datasource.dart';
 import 'package:kale/features/transactions/data/models/transaction_model.dart';
 
@@ -131,8 +133,26 @@ class FakeBudgetsRemote extends FakeRemote<BudgetModel>
       handle(RemoteCall.delete(id), () => rows.remove(id));
 }
 
+/// Fake server `profiles` row of the signed-in user, held in
+/// `rows[ProfileModel.localId]`.
+class FakeProfileRemote extends FakeRemote<ProfileModel>
+    implements ProfileRemoteDataSource {
+  @override
+  Future<ProfileModel?> getProfile() => handle(
+        const RemoteCall.fetch(ProfileModel.localId),
+        () => rows[ProfileModel.localId],
+      );
+
+  @override
+  Future<ProfileModel> updateProfile(ProfileModel model) => handle(
+        const RemoteCall.update(ProfileModel.localId),
+        () => rows[ProfileModel.localId] = model,
+      );
+}
+
 /// The fake backend: one [FakeRemote] per synced table.
 class FakeServer {
   final transactions = FakeTransactionsRemote();
   final budgets = FakeBudgetsRemote();
+  final profile = FakeProfileRemote();
 }

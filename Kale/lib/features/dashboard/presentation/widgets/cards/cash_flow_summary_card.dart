@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/features/dashboard/domain/entities/dashboard_summary.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
-
 
 class CashFlowSummaryCard extends ConsumerWidget {
   const CashFlowSummaryCard({super.key});
@@ -64,7 +63,7 @@ class CashFlowSummaryCard extends ConsumerWidget {
                 ),
                 AppSpacing.verticalSm,
                 Text(
-                  CurrencyFormatter.format(netValue),
+                  context.formatMoney(netValue),
                   style: context.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
@@ -154,7 +153,7 @@ class _CashFlowItem extends StatelessWidget {
   });
 
   final String label;
-  final double amount;
+  final Money amount;
   final Color color;
   final IconData icon;
 
@@ -184,7 +183,7 @@ class _CashFlowItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  CurrencyFormatter.format(amount, compact: true),
+                  context.formatMoney(amount),
                   style: context.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: Colors.white,

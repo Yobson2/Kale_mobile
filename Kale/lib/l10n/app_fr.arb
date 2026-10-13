@@ -491,5 +491,13 @@
   "shareAppCopyLink": "Copier le lien de telechargement",
   "shareAppCopyMessage": "Copier le message de partage",
   "shareAppLinkCopied": "Lien copie dans le presse-papiers",
-  "shareAppMessageCopied": "Message copie dans le presse-papiers"
+  "shareAppMessageCopied": "Message copie dans le presse-papiers",
+
+  "baseCurrencyStepTitle": "Choisissez votre devise",
+  "baseCurrencyStepDescription": "Tous les montants dans Kalé sont enregistrés dans cette devise. Vous pourrez la changer plus tard.",
+  "baseCurrencyLabel": "Devise de base",
+  "baseCurrencyRelabelTitle": "Changer la devise de base ?",
+  "baseCurrencyRelabelMessage": "Vos transactions existantes gardent les mêmes chiffres et seront affichées en {currency}. Aucune conversion n'est faite.",
+  "baseCurrencyRelabelConfirm": "Changer quand même",
+  "baseCurrencyChangeFailed": "Impossible de changer la devise. Veuillez réessayer."
 }

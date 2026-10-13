@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
 
 /// Financial Insights page — spending analysis, top categories,
@@ -39,12 +39,15 @@ class InsightsPage extends ConsumerWidget {
         data: (summary) {
           final totalExpenses = summary.totalExpenses;
           final totalIncome = summary.totalIncome;
-          final savingsRate = totalIncome > 0
-              ? ((totalIncome - totalExpenses) / totalIncome * 100).round()
+          final savingsRate = totalIncome.isPositive
+              ? ((totalIncome - totalExpenses).minorUnits /
+                      totalIncome.minorUnits *
+                      100)
+                  .round()
               : 0;
           final sorted = summary.topExpenseCategories.entries.toList()
             ..sort((a, b) => b.value.compareTo(a.value));
-          final total = sorted.fold<double>(0, (s, e) => s + e.value);
+          final total = Money.sum(sorted.map((e) => e.value), summary.currency);
 
           return SingleChildScrollView(
             padding: AppSpacing.paddingLg,
@@ -94,9 +97,11 @@ class InsightsPage extends ConsumerWidget {
                       _HabitPill(
                         icon: Icons.calendar_today,
                         label: 'Avg daily spend',
-                        value: CurrencyFormatter.format(
-                          totalExpenses / 30,
-                          compact: true,
+                        value: context.formatMoney(
+                          Money.fromMinorUnits(
+                            totalExpenses.minorUnits ~/ 30,
+                            summary.currency,
+                          ),
                         ),
                         color: context.colorScheme.primary,
                         bgColor: context.colorScheme.primaryContainer
@@ -114,7 +119,8 @@ class InsightsPage extends ConsumerWidget {
                       _HabitPill(
                         icon: Icons.bolt,
                         label: 'Impulse Score',
-                        value: totalExpenses > totalIncome * 0.8
+                        value: totalExpenses.minorUnits * 5 >
+                                totalIncome.minorUnits * 4
                             ? 'High'
                             : 'Low',
                         color: isDark
@@ -141,9 +147,8 @@ class InsightsPage extends ConsumerWidget {
 
                 _RecommendationCard(
                   icon: Icons.lightbulb,
-                  iconColor: isDark
-                      ? AppColors.tertiaryDark
-                      : AppColors.tertiaryLight,
+                  iconColor:
+                      isDark ? AppColors.tertiaryDark : AppColors.tertiaryLight,
                   title: 'Optimize Subscriptions',
                   description:
                       'Review recurring expenses to identify potential '
@@ -158,7 +163,7 @@ class InsightsPage extends ConsumerWidget {
                   title: 'Boost Your Emergency Fund',
                   description: totalIncome > totalExpenses
                       ? 'You have a surplus of '
-                          '${CurrencyFormatter.format(totalIncome - totalExpenses, compact: true)}'
+                          '${context.formatMoney(totalIncome - totalExpenses)}'
                           ' this period. Consider moving it to savings.'
                       : 'Building an emergency fund provides a safety net '
                           'for unexpected expenses.',
@@ -182,7 +187,7 @@ class _SpendingTrendsCard extends StatelessWidget {
     required this.isDark,
   });
 
-  final double totalExpenses;
+  final Money totalExpenses;
   final bool isDark;
 
   @override
@@ -224,7 +229,7 @@ class _SpendingTrendsCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    CurrencyFormatter.format(totalExpenses, compact: true),
+                    context.formatMoney(totalExpenses),
                     style: context.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w800,
                       color: context.colorScheme.primary,
@@ -242,8 +247,7 @@ class _SpendingTrendsCard extends StatelessWidget {
             child: CustomPaint(
               painter: _SparklinePainter(
                 color: context.colorScheme.primary,
-                fillColor:
-                    context.colorScheme.primary.withValues(alpha: 0.08),
+                fillColor: context.colorScheme.primary.withValues(alpha: 0.08),
               ),
             ),
           ),
@@ -278,10 +282,10 @@ class _TopCategoriesCard extends StatelessWidget {
     required this.total,
   });
 
-  final List<MapEntry<String, double>> categories;
+  final List<MapEntry<String, Money>> categories;
   final Map<String, String> categoryNames;
   final Map<String, String> categoryColors;
-  final double total;
+  final Money total;
 
   @override
   Widget build(BuildContext context) {
@@ -315,8 +319,9 @@ class _TopCategoriesCard extends StatelessWidget {
             final i = entry.key;
             final cat = entry.value;
             final name = categoryNames[cat.key] ?? cat.key;
-            final percent =
-                total > 0 ? (cat.value / total * 100).round() : 0;
+            final percent = total.isPositive
+                ? (cat.value.minorUnits / total.minorUnits * 100).round()
+                : 0;
             final color = barColors[i % barColors.length];
 
             return Padding(

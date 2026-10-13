@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/currency_formatter.dart';
@@ -12,6 +11,7 @@ import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_notifier.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 
 /// Multi-step budget setup wizard.
 ///
@@ -321,7 +321,7 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
                   _PeriodIncomeStep(
                     selectedPeriod: _selectedPeriod,
                     budgetAmountController: _budgetAmountController,
-                    currencyCode: ref.watch(userCurrencyCodeProvider),
+                    currencyCode: ref.watch(baseCurrencyProvider).code,
                     onPeriodChanged: (period) {
                       setState(() => _selectedPeriod = period);
                     },
@@ -1200,7 +1200,8 @@ class _ConfirmRow extends StatelessWidget {
         Text(
           value,
           style: buildContext.textTheme.bodyMedium?.copyWith(
-            fontWeight: (isBold || isWarning) ? FontWeight.w700 : FontWeight.w500,
+            fontWeight:
+                (isBold || isWarning) ? FontWeight.w700 : FontWeight.w500,
             color: isWarning
                 ? buildContext.colorScheme.error
                 : isBold
@@ -1281,7 +1282,8 @@ class _NavigationButtons extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               )
-                            : Text(isEditMode ? 'Update Budget' : 'Create Budget'),
+                            : Text(
+                                isEditMode ? 'Update Budget' : 'Create Budget'),
                       )
                     : FilledButton(
                         onPressed: onNext,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kale/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kale/core/constants/currencies.dart';
+import 'package:kale/core/constants/currencies.dart' show SupportedCurrencies;
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/providers/notification_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/router/route_names.dart';
@@ -11,6 +11,9 @@ import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/theme/theme_provider.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
+import 'package:kale/features/profile/presentation/widgets/base_currency_picker.dart';
+import 'package:kale/l10n/app_localizations.dart';
 
 /// Settings page with card-per-item layout, colored icon circles,
 /// and section headers per the Digital Loom design.
@@ -21,10 +24,10 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeNotifierProvider);
-    final currencyCode = ref.watch(userCurrencyCodeProvider);
+    final baseCurrency = ref.watch(baseCurrencyProvider);
     final localStorage = ref.watch(localStorageProvider);
     final l10n = context.l10n;
-    final currency = SupportedCurrencies.byCode(currencyCode);
+    final currency = SupportedCurrencies.byCode(baseCurrency.code);
 
     return Scaffold(
       appBar: AppBar(
@@ -58,24 +61,25 @@ class SettingsPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Preferences ──
-                  _SectionHeader(title: l10n.settingsCurrency.isEmpty
-                      ? 'Preferences'
-                      : 'Preferences'),
+                  _SectionHeader(
+                      title: l10n.settingsCurrency.isEmpty
+                          ? 'Preferences'
+                          : 'Preferences'),
                   AppSpacing.verticalMd,
 
                   _SettingsCard(
                     icon: Icons.currency_exchange,
                     iconColor: context.colorScheme.primary,
-                    title: l10n.settingsCurrency,
+                    title: l10n.baseCurrencyLabel,
                     subtitle: currency != null
                         ? '${currency.code} - ${currency.name.toUpperCase()}'
-                        : currencyCode,
+                        : baseCurrency.code,
                     trailing: Icon(
                       Icons.chevron_right,
                       color: context.colorScheme.onSurfaceVariant,
                     ),
                     onTap: () =>
-                        _showCurrencyPicker(context, ref, currencyCode),
+                        _showCurrencyPicker(context, ref, baseCurrency),
                   ),
                   AppSpacing.verticalSm,
 
@@ -133,9 +137,8 @@ class SettingsPage extends ConsumerWidget {
                     icon: Icons.access_time,
                     iconColor: context.colorScheme.primary,
                     title: l10n.settingsDailyReminder,
-                    subtitle: localStorage.isDailyReminderEnabled
-                        ? '08:00 AM'
-                        : null,
+                    subtitle:
+                        localStorage.isDailyReminderEnabled ? '08:00 AM' : null,
                     trailing: Icon(
                       Icons.chevron_right,
                       color: context.colorScheme.onSurfaceVariant,
@@ -234,8 +237,11 @@ class SettingsPage extends ConsumerWidget {
   void _showCurrencyPicker(
     BuildContext context,
     WidgetRef ref,
-    String current,
+    Currency current,
   ) {
+    // The page's context: still mounted after the sheet closes, to show
+    // the relabel warning.
+    final sheetParent = context;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -258,32 +264,12 @@ class SettingsPage extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: ListView.builder(
+              child: BaseCurrencyList(
                 controller: scrollController,
-                itemCount: SupportedCurrencies.all.length,
-                itemBuilder: (context, index) {
-                  final currency = SupportedCurrencies.all[index];
-                  final isSelected = currency.code == current;
-                  return ListTile(
-                    leading: Text(
-                      currency.flag,
-                      style: const TextStyle(fontSize: 24),
-                    ),
-                    title: Text(currency.code),
-                    subtitle: Text(currency.name),
-                    trailing: isSelected
-                        ? Icon(
-                            Icons.check_circle,
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : null,
-                    onTap: () {
-                      ref
-                          .read(userCurrencyCodeProvider.notifier)
-                          .setCurrency(currency.code);
-                      Navigator.pop(context);
-                    },
-                  );
+                selected: current,
+                onSelected: (currency) async {
+                  Navigator.pop(context);
+                  await requestBaseCurrencyChange(sheetParent, ref, currency);
                 },
               ),
             ),
@@ -414,9 +400,7 @@ class _SettingsCard extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: 22,
-                  color: isDestructive
-                      ? context.colorScheme.error
-                      : iconColor,
+                  color: isDestructive ? context.colorScheme.error : iconColor,
                 ),
               ),
               AppSpacing.horizontalMd,
@@ -430,9 +414,7 @@ class _SettingsCard extends StatelessWidget {
                       title,
                       style: context.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w500,
-                        color: isDestructive
-                            ? context.colorScheme.error
-                            : null,
+                        color: isDestructive ? context.colorScheme.error : null,
                       ),
                     ),
                     if (subtitle != null) ...[
