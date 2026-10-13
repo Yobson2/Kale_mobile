@@ -180,11 +180,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authTryFirstSubtitle => 'Explorez l\'application sans compte';
 
   @override
-  String get guestBannerMessage =>
-      'Creez un compte pour synchroniser vos donnees';
+  String get anonymousSaveDataCta =>
+      'Creez un compte pour sauvegarder vos donnees';
 
   @override
-  String get guestBannerAction => 'S\'inscrire';
+  String get anonymousBannerAction => 'S\'inscrire';
 
   @override
   String get authRegisterStep1Title => 'Creez votre compte';

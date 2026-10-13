@@ -1,32 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/providers/notification_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
-import 'package:kale/core/usecase/usecase.dart';
 import 'package:kale/core/utils/logger.dart';
-import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'splash_provider.g.dart';
 
-/// Result of splash initialization.
+/// Where the app goes once the splash is done.
 enum SplashResult {
-  /// First launch — show onboarding.
+  /// First launch: show onboarding.
   onboarding,
 
-  /// Authenticated — go to home.
-  authenticated,
-
-  /// Not authenticated — go to login.
-  unauthenticated,
-
-  /// Returning guest user — go to home without auth.
-  guest,
+  /// Go to the home shell. The router sends an unauthenticated user on to
+  /// login.
+  home,
 }
 
-/// Runs initialization checks: first launch, cached auth.
+/// Runs initialization checks: notifications, first launch.
 ///
-/// This provider is a pure reader — it never modifies other providers.
-/// Auth state hydration is handled by [SplashPage] after navigation.
+/// This provider is a pure reader: it never modifies other providers.
+/// The session (restored, or a new anonymous one) is started by
+/// `SplashPage` through the auth notifier.
 @riverpod
 Future<SplashResult> splashInit(Ref ref) async {
   // Run init checks and a minimum 3-second delay in parallel so the
@@ -52,24 +46,9 @@ Future<SplashResult> _resolve(Ref ref) async {
       await notifService.scheduleDailyReminder();
     }
 
-    // Check first launch
-    if (localStorage.isFirstLaunch) {
-      return SplashResult.onboarding;
-    }
-
-    // Check if returning guest user.
-    if (localStorage.isGuestMode) {
-      return SplashResult.guest;
-    }
-
-    // Check for a cached user session directly (read-only).
-    final result =
-        await ref.read(getCachedUserUseCaseProvider).call(const NoParams());
-
-    return result.fold(
-      (_) => SplashResult.unauthenticated,
-      (_) => SplashResult.authenticated,
-    );
+    return localStorage.isFirstLaunch
+        ? SplashResult.onboarding
+        : SplashResult.home;
   } catch (e, st) {
     AppLogger.error(
       'Splash initialization failed',
@@ -77,6 +56,6 @@ Future<SplashResult> _resolve(Ref ref) async {
       error: e,
       stackTrace: st,
     );
-    return SplashResult.unauthenticated;
+    return SplashResult.home;
   }
 }

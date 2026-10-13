@@ -179,10 +179,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authTryFirstSubtitle => 'Explore the app without an account';
 
   @override
-  String get guestBannerMessage => 'Create an account to sync your data';
+  String get anonymousSaveDataCta => 'Create an account to save your data';
 
   @override
-  String get guestBannerAction => 'Sign Up';
+  String get anonymousBannerAction => 'Sign Up';
 
   @override
   String get authRegisterStep1Title => 'Create Your Account';

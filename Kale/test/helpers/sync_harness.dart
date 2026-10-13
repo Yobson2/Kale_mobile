@@ -6,11 +6,18 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/database/app_database.dart' show AppDatabase;
 import 'package:kale/core/database/database_providers.dart';
+import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/network/network_info.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/sync/sync_config.dart';
 import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/core/sync/sync_providers.dart';
+import 'package:kale/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:kale/features/auth/data/models/tokens_model.dart';
+import 'package:kale/features/auth/data/models/user_model.dart';
+import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
+import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/domain/repositories/budgets_repository.dart';
@@ -57,6 +64,11 @@ class SyncHarness {
   final FakeServer server = FakeServer();
 
   final FakeNetworkInfo _network = FakeNetworkInfo();
+
+  /// The device's cached session; survives [restartApp] like
+  /// SharedPreferences and the keychain do.
+  final InMemoryAuthLocalDataSource _authStorage =
+      InMemoryAuthLocalDataSource();
   late ProviderContainer _container;
 
   /// Whether the device has connectivity. Setting it emits a
@@ -70,6 +82,12 @@ class SyncHarness {
 
   /// The budgets repository, as the feature's use cases get it.
   BudgetsRepository get budgets => _container.read(budgetsRepositoryProvider);
+
+  /// The auth notifier, as the app's pages get it.
+  AuthNotifier get auth => _container.read(authNotifierProvider.notifier);
+
+  /// The current auth state.
+  AuthState get authState => _container.read(authNotifierProvider);
 
   /// The app's sync engine.
   SyncEngine get engine => _container.read(syncEngineProvider);
@@ -102,8 +120,35 @@ class SyncHarness {
           transactionsRemoteDataSourceProvider
               .overrideWithValue(server.transactions),
           budgetsRemoteDataSourceProvider.overrideWithValue(server.budgets),
+          authRemoteDataSourceProvider.overrideWithValue(server.auth),
+          authLocalDataSourceProvider.overrideWithValue(_authStorage),
         ],
       );
+}
+
+/// Device-side session cache kept in memory.
+class InMemoryAuthLocalDataSource implements AuthLocalDataSource {
+  UserModel? _user;
+  TokensModel? _tokens;
+
+  @override
+  Future<void> cacheUser(UserModel user) async => _user = user;
+
+  @override
+  Future<UserModel> getCachedUser() async =>
+      _user ?? (throw const CacheException(message: 'No cached user found'));
+
+  @override
+  Future<void> cacheTokens(TokensModel tokens) async => _tokens = tokens;
+
+  @override
+  Future<bool> hasToken() async => _tokens != null;
+
+  @override
+  Future<void> clearAll() async {
+    _user = null;
+    _tokens = null;
+  }
 }
 
 /// A [NetworkInfo] whose connectivity the test controls.

@@ -105,6 +105,8 @@ Changing a Drift table also needs a `schemaVersion` bump and a migration step (s
 - Use `mocktail`. Shared mocks and helpers are in `test/helpers/` (`mock_providers.dart`, `test_helpers.dart`).
 - Mirror the `lib/` path under `test/`. Cover use cases, repository implementations (map each exception to the
   right `Failure`), and notifiers (state transitions).
+- Server SQL tests (pgTAP, RLS and triggers) live in `supabase/tests/`; run them with `make db-test` against the
+  local stack (`make db-start`, needs Docker).
 - Integration tests (`make integration`, needs a device or emulator) live in `integration_test/` and use the
   **robot pattern** (`integration_test/robots/`). The current auth flow test is a placeholder.
 - Current coverage is **auth only**. Transactions, budget, savings, dashboard, and the sync engine have no tests.

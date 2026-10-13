@@ -213,4 +213,23 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Left(NetworkFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, User>> signInAnonymously() async {
+    if (!await _networkInfo.isConnected) {
+      return const Left(NetworkFailure());
+    }
+    try {
+      final result = await _remote.signInAnonymously();
+      await _local.cacheTokens(result.tokens);
+      await _local.cacheUser(result.user);
+      return Right(result.user.toEntity());
+    } on ServerException catch (e) {
+      return Left(
+        ServerFailure(message: e.message, statusCode: e.statusCode),
+      );
+    } on NetworkException {
+      return const Left(NetworkFailure());
+    }
+  }
 }

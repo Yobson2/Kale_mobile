@@ -10,6 +10,7 @@ import 'package:kale/features/auth/domain/usecases/get_cached_user_usecase.dart'
 import 'package:kale/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/register_usecase.dart';
+import 'package:kale/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -55,3 +56,7 @@ class MockLogoutUseCase extends Mock implements LogoutUseCase {}
 
 /// Mock implementation of [GetCachedUserUseCase].
 class MockGetCachedUserUseCase extends Mock implements GetCachedUserUseCase {}
+
+/// Mock implementation of [SignInAnonymouslyUseCase].
+class MockSignInAnonymouslyUseCase extends Mock
+    implements SignInAnonymouslyUseCase {}

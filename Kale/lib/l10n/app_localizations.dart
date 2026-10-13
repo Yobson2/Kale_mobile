@@ -422,17 +422,17 @@ abstract class AppLocalizations {
   /// **'Explore the app without an account'**
   String get authTryFirstSubtitle;
 
-  /// No description provided for @guestBannerMessage.
+  /// No description provided for @anonymousSaveDataCta.
   ///
   /// In en, this message translates to:
-  /// **'Create an account to sync your data'**
-  String get guestBannerMessage;
+  /// **'Create an account to save your data'**
+  String get anonymousSaveDataCta;
 
-  /// No description provided for @guestBannerAction.
+  /// No description provided for @anonymousBannerAction.
   ///
   /// In en, this message translates to:
   /// **'Sign Up'**
-  String get guestBannerAction;
+  String get anonymousBannerAction;
 
   /// No description provided for @authRegisterStep1Title.
   ///
