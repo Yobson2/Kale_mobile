@@ -55,7 +55,9 @@ typedef BudgetsLocalDataSourceRef
 String _$budgetsSyncHandlerHash() =>
     r'5de8df4423876cd50a28ca6504d42352f9acbfc5';
 
-/// Registers the [BudgetsSyncHandler] with the [SyncEngine].
+/// Provides the [BudgetsSyncHandler].
+///
+/// Registered with the sync engine through `syncHandlersProvider`.
 ///
 /// Copied from [budgetsSyncHandler].
 @ProviderFor(budgetsSyncHandler)
