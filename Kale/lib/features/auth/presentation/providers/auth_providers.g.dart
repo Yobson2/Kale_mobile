@@ -272,5 +272,27 @@ final signInWithAppleUseCaseProvider =
 // ignore: unused_element
 typedef SignInWithAppleUseCaseRef
     = AutoDisposeProviderRef<SignInWithAppleUseCase>;
+String _$signInAnonymouslyUseCaseHash() =>
+    r'41dceae4be76518427dce164729a976c9ccbfac6';
+
+/// Provides the [SignInAnonymouslyUseCase].
+///
+/// Copied from [signInAnonymouslyUseCase].
+@ProviderFor(signInAnonymouslyUseCase)
+final signInAnonymouslyUseCaseProvider =
+    AutoDisposeProvider<SignInAnonymouslyUseCase>.internal(
+  signInAnonymouslyUseCase,
+  name: r'signInAnonymouslyUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$signInAnonymouslyUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SignInAnonymouslyUseCaseRef
+    = AutoDisposeProviderRef<SignInAnonymouslyUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

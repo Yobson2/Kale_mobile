@@ -46,7 +46,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         .setCurrency(_selectedCurrency);
 
     await ref.read(onboardingNotifierProvider.notifier).complete();
-    if (mounted) context.go('/login');
+    // The anonymous session started at splash, so go straight in. Without
+    // a session (offline first launch), the router redirects to login.
+    if (mounted) context.go('/dashboard');
   }
 
   @override

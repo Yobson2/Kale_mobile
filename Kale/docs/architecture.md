@@ -77,10 +77,16 @@ Notifiers turn failures into user-facing error state, so presentation code only 
 
 ## Auth and session
 
-- `AuthState` is a sealed union: `initial`, `loading`, `authenticated`, `unauthenticated`, `guest`, `error`.
+- `AuthState` is a sealed union: `initial`, `loading`, `authenticated`, `unauthenticated`, `error`.
 - Sign-in methods: email/password with OTP verification (signup and password recovery), Google, and Apple.
   Google and Apple use `signInWithIdToken` on Supabase.
-- Guest mode allows using the core tabs without an account.
+- **Anonymous users** replace guest mode. At launch the splash calls `AuthNotifier.restoreSession()`: a cached
+  session is kept; with none, the app signs in anonymously (`signInAnonymously`). An anonymous user is
+  `authenticated` with `User.isAnonymous == true`: they have a real `user_id`, their data syncs like anyone's, and
+  RLS treats them the same. "Try Kalé first" on the login page also starts an anonymous session. If anonymous
+  sign-in fails (offline on first launch), the user is `unauthenticated` and lands on login.
+- Anonymous users are never offered "Log out" (they could never sign back in): `AccountActionButton` shows
+  "Create an account to save your data" instead, and the home shell shows the same invitation as a banner.
 - Logout clears secure storage **and** the whole Drift database (`AppDatabase.clearAllData`, which also re-seeds
   default categories), so the next user never sees stale data.
 
@@ -89,8 +95,8 @@ Notifiers turn failures into user-facing error state, so presentation code only 
 - GoRouter is provided by `appRouterProvider`. Riverpod auth state is bridged to GoRouter's
   `refreshListenable` through a `ValueNotifier`.
 - The redirect logic is **inline in `app_router.dart`**. The splash screen owns initial navigation; after
-  that, the redirect sends authenticated or guest users away from auth pages, unauthenticated users to
-  login, and first-launch users to onboarding. The providers in `core/router/guards/` are not wired in.
+  that, the redirect sends permanent users away from auth pages (anonymous users may visit them to create an
+  account), unauthenticated users to login, and first-launch users to onboarding. The providers in `core/router/guards/` are not wired in.
 - `StatefulShellRoute` bottom-nav tabs: **dashboard, transactions, budget, more**. Secondary screens
   (profile, settings, savings, insights, tontine groups, help, rate/share) are nested under `more`.
 - Route paths are constants in `RouteNames`. `AnalyticsObserver` logs screen views.

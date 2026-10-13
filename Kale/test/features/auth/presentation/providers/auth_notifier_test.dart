@@ -22,6 +22,7 @@ void main() {
   late MockVerifyOtpUseCase mockVerifyOtpUseCase;
   late MockLogoutUseCase mockLogoutUseCase;
   late MockGetCachedUserUseCase mockGetCachedUserUseCase;
+  late MockSignInAnonymouslyUseCase mockSignInAnonymouslyUseCase;
 
   setUp(() {
     mockLoginUseCase = MockLoginUseCase();
@@ -30,6 +31,7 @@ void main() {
     mockVerifyOtpUseCase = MockVerifyOtpUseCase();
     mockLogoutUseCase = MockLogoutUseCase();
     mockGetCachedUserUseCase = MockGetCachedUserUseCase();
+    mockSignInAnonymouslyUseCase = MockSignInAnonymouslyUseCase();
   });
 
   setUpAll(() {
@@ -65,9 +67,18 @@ void main() {
         logoutUseCaseProvider.overrideWithValue(mockLogoutUseCase),
         getCachedUserUseCaseProvider
             .overrideWithValue(mockGetCachedUserUseCase),
+        signInAnonymouslyUseCaseProvider
+            .overrideWithValue(mockSignInAnonymouslyUseCase),
       ],
     );
   }
+
+  const tAnonymousUser = User(
+    id: 'anon-1',
+    email: '',
+    name: '',
+    isAnonymous: true,
+  );
 
   group('AuthNotifier', () {
     test('initial state should be AuthInitial', () {
@@ -131,6 +142,95 @@ void main() {
       // Assert
       final state = container.read(authNotifierProvider);
       expect(state, isA<AuthUnauthenticated>());
+    });
+  });
+
+  group('AuthNotifier.restoreSession', () {
+    test('a fresh install signs in anonymously and is authenticated', () async {
+      when(() => mockGetCachedUserUseCase(any())).thenAnswer(
+        (_) async => const Left(CacheFailure(message: 'No cached user')),
+      );
+      when(() => mockSignInAnonymouslyUseCase(any()))
+          .thenAnswer((_) async => const Right(tAnonymousUser));
+      final container = createContainer();
+
+      await container.read(authNotifierProvider.notifier).restoreSession();
+
+      final state = container.read(authNotifierProvider);
+      expect(state, const AuthState.authenticated(tAnonymousUser));
+      expect((state as AuthAuthenticated).user.isAnonymous, isTrue);
+    });
+
+    test('a returning anonymous user keeps their session', () async {
+      when(() => mockGetCachedUserUseCase(any()))
+          .thenAnswer((_) async => const Right(tAnonymousUser));
+      final container = createContainer();
+
+      await container.read(authNotifierProvider.notifier).restoreSession();
+
+      expect(
+        container.read(authNotifierProvider),
+        const AuthState.authenticated(tAnonymousUser),
+      );
+      verifyNever(() => mockSignInAnonymouslyUseCase(any()));
+    });
+
+    test('a returning permanent user keeps their session', () async {
+      when(() => mockGetCachedUserUseCase(any()))
+          .thenAnswer((_) async => const Right(tUser));
+      final container = createContainer();
+
+      await container.read(authNotifierProvider.notifier).restoreSession();
+
+      expect(
+        container.read(authNotifierProvider),
+        const AuthState.authenticated(tUser),
+      );
+      verifyNever(() => mockSignInAnonymouslyUseCase(any()));
+    });
+
+    test('if anonymous sign-in fails, the user is unauthenticated', () async {
+      when(() => mockGetCachedUserUseCase(any())).thenAnswer(
+        (_) async => const Left(CacheFailure(message: 'No cached user')),
+      );
+      when(() => mockSignInAnonymouslyUseCase(any()))
+          .thenAnswer((_) async => const Left(NetworkFailure()));
+      final container = createContainer();
+
+      await container.read(authNotifierProvider.notifier).restoreSession();
+
+      expect(container.read(authNotifierProvider), isA<AuthUnauthenticated>());
+    });
+  });
+
+  group('AuthNotifier.signInAnonymously', () {
+    test('starts an anonymous session', () async {
+      when(() => mockSignInAnonymouslyUseCase(any()))
+          .thenAnswer((_) async => const Right(tAnonymousUser));
+      final container = createContainer();
+
+      final started = await container
+          .read(authNotifierProvider.notifier)
+          .signInAnonymously();
+
+      expect(started, isTrue);
+      expect(
+        container.read(authNotifierProvider),
+        const AuthState.authenticated(tAnonymousUser),
+      );
+    });
+
+    test('reports a failure as an error', () async {
+      when(() => mockSignInAnonymouslyUseCase(any()))
+          .thenAnswer((_) async => const Left(NetworkFailure()));
+      final container = createContainer();
+
+      final started = await container
+          .read(authNotifierProvider.notifier)
+          .signInAnonymously();
+
+      expect(started, isFalse);
+      expect(container.read(authNotifierProvider), isA<AuthError>());
     });
   });
 }

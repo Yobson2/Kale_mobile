@@ -49,6 +49,16 @@ jwt_expiry = 3600
 enable_refresh_token_rotation = true
 refresh_token_reuse_interval = 10
 enable_signup = true
+# Every fresh install signs in anonymously (#11). Anonymous users are
+# 'authenticated' and RLS treats them exactly like permanent users.
+enable_anonymous_sign_ins = true
+
+# Anonymous sign-ups are an open door: rate-limit them per IP. The hosted
+# projects need the same settings in the dashboard (Authentication > Rate
+# Limits), since config.toml only drives the local stack.
+[auth.rate_limit]
+# Anonymous sign-ins per hour per IP address.
+anonymous_users = 30
 
 [auth.email]
 enable_signup = true

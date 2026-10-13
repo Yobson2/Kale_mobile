@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Guest mode button with gradient border effect.
-class GuestModeButton extends StatelessWidget {
-  const GuestModeButton({
+/// "Try Kalé first" button (starts an anonymous session), with a gradient
+/// border.
+class TryFirstButton extends StatelessWidget {
+  const TryFirstButton({
     required this.onPressed,
     required this.colorScheme,
     required this.label,
