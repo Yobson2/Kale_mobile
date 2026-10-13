@@ -491,5 +491,14 @@
   "shareAppCopyLink": "Copier le lien de telechargement",
   "shareAppCopyMessage": "Copier le message de partage",
   "shareAppLinkCopied": "Lien copie dans le presse-papiers",
-  "shareAppMessageCopied": "Message copie dans le presse-papiers"
+  "shareAppMessageCopied": "Message copie dans le presse-papiers",
+
+  "backupStuck": "{count, plural, =1{1 modification non sauvegardée} other{{count} modifications non sauvegardées}}",
+  "backupOfflinePending": "{count, plural, =1{Hors ligne · 1 modification en attente} other{Hors ligne · {count} modifications en attente}}",
+  "backupSyncing": "Sauvegarde en cours…",
+  "settingsBackup": "Sauvegarde",
+  "settingsBackupUpToDate": "Toutes les modifications sont sauvegardées",
+  "settingsBackupPending": "{count, plural, =1{1 modification en attente de sauvegarde} other{{count} modifications en attente de sauvegarde}}",
+  "settingsBackupLast": "Dernière sauvegarde : {date}",
+  "settingsBackupNever": "Pas encore sauvegardé"
 }

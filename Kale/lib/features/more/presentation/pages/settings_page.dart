@@ -11,6 +11,7 @@ import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/theme/theme_provider.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
+import 'package:kale/features/more/presentation/widgets/backup_status_tile.dart';
 
 /// Settings page with card-per-item layout, colored icon circles,
 /// and section headers per the Digital Loom design.
@@ -39,16 +40,11 @@ class SettingsPage extends ConsumerWidget {
       ),
       body: Stack(
         children: [
-          // K watermark at bottom
-          const Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: GeometricKWatermark(
-              opacity: 0.03,
-              fontSize: 180,
-              alignment: Alignment.bottomCenter,
-            ),
+          // K watermark at bottom (it positions itself in the Stack).
+          const GeometricKWatermark(
+            opacity: 0.03,
+            fontSize: 180,
+            alignment: Alignment.bottomCenter,
           ),
 
           SafeArea(
@@ -58,9 +54,10 @@ class SettingsPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Preferences ──
-                  _SectionHeader(title: l10n.settingsCurrency.isEmpty
-                      ? 'Preferences'
-                      : 'Preferences'),
+                  _SectionHeader(
+                      title: l10n.settingsCurrency.isEmpty
+                          ? 'Preferences'
+                          : 'Preferences'),
                   AppSpacing.verticalMd,
 
                   _SettingsCard(
@@ -133,9 +130,8 @@ class SettingsPage extends ConsumerWidget {
                     icon: Icons.access_time,
                     iconColor: context.colorScheme.primary,
                     title: l10n.settingsDailyReminder,
-                    subtitle: localStorage.isDailyReminderEnabled
-                        ? '08:00 AM'
-                        : null,
+                    subtitle:
+                        localStorage.isDailyReminderEnabled ? '08:00 AM' : null,
                     trailing: Icon(
                       Icons.chevron_right,
                       color: context.colorScheme.onSurfaceVariant,
@@ -152,6 +148,13 @@ class SettingsPage extends ConsumerWidget {
                       ref.invalidate(localStorageProvider);
                     },
                   ),
+
+                  AppSpacing.verticalXl,
+
+                  // ── Backup ──
+                  _SectionHeader(title: l10n.settingsBackup),
+                  AppSpacing.verticalMd,
+                  const BackupStatusTile(),
 
                   AppSpacing.verticalXl,
 
@@ -414,9 +417,7 @@ class _SettingsCard extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: 22,
-                  color: isDestructive
-                      ? context.colorScheme.error
-                      : iconColor,
+                  color: isDestructive ? context.colorScheme.error : iconColor,
                 ),
               ),
               AppSpacing.horizontalMd,
@@ -430,9 +431,7 @@ class _SettingsCard extends StatelessWidget {
                       title,
                       style: context.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w500,
-                        color: isDestructive
-                            ? context.colorScheme.error
-                            : null,
+                        color: isDestructive ? context.colorScheme.error : null,
                       ),
                     ),
                     if (subtitle != null) ...[

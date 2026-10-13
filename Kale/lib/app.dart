@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/router/app_router.dart';
+import 'package:kale/core/sync/sync_app_lifecycle.dart';
 import 'package:kale/core/theme/app_theme.dart';
 import 'package:kale/core/theme/theme_provider.dart';
 
@@ -20,22 +21,24 @@ class App extends ConsumerWidget {
     final themeMode = ref.watch(themeModeNotifierProvider);
     final env = ref.watch(envProvider);
 
-    return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      builder: (context, child) => MaterialApp.router(
-        title: 'Kalé',
-        debugShowCheckedModeBanner: env.showDebugBanner,
+    return SyncAppLifecycle(
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        builder: (context, child) => MaterialApp.router(
+          title: 'Kalé',
+          debugShowCheckedModeBanner: env.showDebugBanner,
 
-        // Theme
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: themeMode,
-        // Router
-        routerConfig: router,
-        // Localization
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+          // Theme
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeMode,
+          // Router
+          routerConfig: router,
+          // Localization
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
       ),
     );
   }

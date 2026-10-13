@@ -561,5 +561,36 @@
 
   "notificationsTitle": "Notifications",
   "notificationsEmpty": "No notifications yet",
-  "notificationsEmptySubtitle": "You're all caught up! Notifications about your budgets, savings, and reminders will appear here."
+  "notificationsEmptySubtitle": "You're all caught up! Notifications about your budgets, savings, and reminders will appear here.",
+
+  "backupStuck": "{count, plural, =1{1 change not backed up} other{{count} changes not backed up}}",
+  "@backupStuck": {
+    "description": "Sync banner and Settings: changes that failed every retry",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "backupOfflinePending": "{count, plural, =1{Offline · 1 change waiting} other{Offline · {count} changes waiting}}",
+  "@backupOfflinePending": {
+    "description": "Sync banner while offline with changes not yet backed up",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "backupSyncing": "Backing up…",
+  "settingsBackup": "Backup",
+  "settingsBackupUpToDate": "All changes backed up",
+  "settingsBackupPending": "{count, plural, =1{1 change waiting to back up} other{{count} changes waiting to back up}}",
+  "@settingsBackupPending": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsBackupLast": "Last backup: {date}",
+  "@settingsBackupLast": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "settingsBackupNever": "Not backed up yet"
 }

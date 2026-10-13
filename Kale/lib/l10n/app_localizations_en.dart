@@ -1405,4 +1405,54 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationsEmptySubtitle =>
       'You\'re all caught up! Notifications about your budgets, savings, and reminders will appear here.';
+
+  @override
+  String backupStuck(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes not backed up',
+      one: '1 change not backed up',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String backupOfflinePending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Offline · $count changes waiting',
+      one: 'Offline · 1 change waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get backupSyncing => 'Backing up…';
+
+  @override
+  String get settingsBackup => 'Backup';
+
+  @override
+  String get settingsBackupUpToDate => 'All changes backed up';
+
+  @override
+  String settingsBackupPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes waiting to back up',
+      one: '1 change waiting to back up',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsBackupLast(String date) {
+    return 'Last backup: $date';
+  }
+
+  @override
+  String get settingsBackupNever => 'Not backed up yet';
 }
