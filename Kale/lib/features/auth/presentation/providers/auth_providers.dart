@@ -1,4 +1,3 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
@@ -26,13 +25,12 @@ part 'auth_providers.g.dart';
 
 /// Provides the [AuthRemoteDataSource].
 ///
-/// Set `USE_MOCK_AUTH=true` in `.env` to use mock data for testing.
+/// Uses the in-memory mock when the `USE_MOCK_AUTH` define is true.
 @riverpod
 AuthRemoteDataSource authRemoteDataSource(Ref ref) {
-  final useMock = dotenv.get('USE_MOCK_AUTH', fallback: 'false') == 'true';
-  if (useMock) return MockAuthRemoteDataSource();
-
   final env = ref.watch(envProvider);
+  if (env.useMockAuth) return MockAuthRemoteDataSource();
+
   return SupabaseAuthRemoteDataSource(
     supabaseClient: ref.watch(supabaseClientProvider),
     googleWebClientId: env.googleWebClientId,

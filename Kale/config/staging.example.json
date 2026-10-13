@@ -1,0 +1,15 @@
+{
+  "ENV_NAME": "staging",
+  "BASE_URL": "https://YOUR_STAGING_PROJECT_REF.supabase.co",
+  "SUPABASE_ANON_KEY": "YOUR_STAGING_ANON_KEY",
+  "ENABLE_LOGGING": true,
+  "SHOW_DEBUG_BANNER": true,
+  "SENTRY_DSN": "",
+  "GOOGLE_WEB_CLIENT_ID": "YOUR_WEB_CLIENT_ID.apps.googleusercontent.com",
+  "GOOGLE_ANDROID_CLIENT_ID": "YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com",
+  "GOOGLE_IOS_CLIENT_ID": "YOUR_IOS_CLIENT_ID.apps.googleusercontent.com",
+  "USE_MOCK_AUTH": false,
+  "USE_MOCK_TRANSACTIONS": false,
+  "USE_MOCK_BUDGETS": false,
+  "USE_MOCK_SAVINGS": false
+}

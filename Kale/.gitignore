@@ -44,11 +44,18 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Environment files (keep .env.example tracked)
+# Per-environment define files (see docs/development.md). Only the templates
+# and the fully mocked config are tracked. Legacy .env files stay ignored so a
+# leftover one is never committed.
+/config/*.json
+!/config/*.example.json
+!/config/mock.json
 .env
-.env.development
-.env.staging
-.env.production
+.env.*
+
+# Supabase CLI local state
+/supabase/.temp/
+/supabase/.branches/
 
 # Android signing
 key.properties

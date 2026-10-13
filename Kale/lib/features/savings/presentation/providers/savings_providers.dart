@@ -1,5 +1,5 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
@@ -14,11 +14,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'savings_providers.g.dart';
 
 /// Provides the [SavingsRemoteDataSource].
+///
+/// Uses the in-memory mock when the `USE_MOCK_SAVINGS` define is true.
 @riverpod
 SavingsRemoteDataSource savingsRemoteDataSource(Ref ref) {
-  final useMock =
-      dotenv.get('USE_MOCK_SAVINGS', fallback: 'true') == 'true';
-  if (useMock) return MockSavingsRemoteDataSource();
+  if (ref.watch(envProvider).useMockSavings) {
+    return MockSavingsRemoteDataSource();
+  }
   return SupabaseSavingsRemoteDataSource(ref.watch(supabaseClientProvider));
 }
 

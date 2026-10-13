@@ -1,5 +1,5 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
@@ -21,12 +21,12 @@ part 'transactions_providers.g.dart';
 
 /// Provides the [TransactionsRemoteDataSource].
 ///
-/// Set `USE_MOCK_TRANSACTIONS=true` in `.env` to use mock data for testing.
+/// Uses the in-memory mock when the `USE_MOCK_TRANSACTIONS` define is true.
 @riverpod
 TransactionsRemoteDataSource transactionsRemoteDataSource(Ref ref) {
-  final useMock =
-      dotenv.get('USE_MOCK_TRANSACTIONS', fallback: 'false') == 'true';
-  if (useMock) return MockTransactionsRemoteDataSource();
+  if (ref.watch(envProvider).useMockTransactions) {
+    return MockTransactionsRemoteDataSource();
+  }
   return SupabaseTransactionsRemoteDataSource(
     ref.watch(supabaseClientProvider),
   );
