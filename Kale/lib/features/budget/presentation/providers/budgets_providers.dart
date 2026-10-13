@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
-import 'package:kale/core/sync/sync_providers.dart';
-
 import 'package:kale/features/budget/data/datasources/budgets_local_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_sync_handler.dart';
@@ -26,8 +24,7 @@ part 'budgets_providers.g.dart';
 /// Uses mock implementation when `USE_MOCK_BUDGETS=true` in `.env`.
 @riverpod
 BudgetsRemoteDataSource budgetsRemoteDataSource(Ref ref) {
-  final useMock =
-      dotenv.get('USE_MOCK_BUDGETS', fallback: 'false') == 'true';
+  final useMock = dotenv.get('USE_MOCK_BUDGETS', fallback: 'false') == 'true';
   if (useMock) return MockBudgetsRemoteDataSource();
   return SupabaseBudgetsRemoteDataSource(ref.watch(supabaseClientProvider));
 }
@@ -45,15 +42,15 @@ BudgetsLocalDataSource budgetsLocalDataSource(Ref ref) {
 
 // ── Sync Handler ────────────────────────────────────────────────
 
-/// Registers the [BudgetsSyncHandler] with the [SyncEngine].
+/// Provides the [BudgetsSyncHandler].
+///
+/// Registered with the sync engine through `syncHandlersProvider`.
 @Riverpod(keepAlive: true)
 BudgetsSyncHandler budgetsSyncHandler(Ref ref) {
-  final handler = BudgetsSyncHandler(
+  return BudgetsSyncHandler(
     remoteDataSource: ref.watch(budgetsRemoteDataSourceProvider),
     localDataSource: ref.watch(budgetsLocalDataSourceProvider),
   );
-  ref.watch(syncEngineProvider).registerHandler(handler);
-  return handler;
 }
 
 // ── Repository ──────────────────────────────────────────────────
@@ -61,8 +58,6 @@ BudgetsSyncHandler budgetsSyncHandler(Ref ref) {
 /// Provides the [BudgetsRepository].
 @riverpod
 BudgetsRepository budgetsRepository(Ref ref) {
-  // Ensure the sync handler is registered.
-  ref.watch(budgetsSyncHandlerProvider);
   final db = ref.watch(appDatabaseProvider);
   return BudgetsRepositoryImpl(
     remoteDataSource: ref.watch(budgetsRemoteDataSourceProvider),

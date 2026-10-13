@@ -36,14 +36,30 @@ abstract class SyncHandler {
 
 /// Orchestrates background synchronization of offline mutations.
 class SyncEngine {
-  /// Creates a [SyncEngine].
+  /// Creates a [SyncEngine] that pushes queue entries through [handlers].
+  ///
+  /// Every handler is registered here, up front, so entries queued in an
+  /// earlier session sync even if no feature has been opened yet.
+  /// Throws [ArgumentError] if two handlers claim the same entity type.
   SyncEngine({
     required SyncQueueDao syncQueueDao,
     required NetworkInfo networkInfo,
+    required Iterable<SyncHandler> handlers,
     SyncConfig config = const SyncConfig(),
   })  : _syncQueueDao = syncQueueDao,
         _networkInfo = networkInfo,
-        _config = config;
+        _config = config {
+    for (final handler in handlers) {
+      if (_handlers.containsKey(handler.entityType)) {
+        throw ArgumentError.value(
+          handler,
+          'handlers',
+          'Duplicate SyncHandler for "${handler.entityType}"',
+        );
+      }
+      _handlers[handler.entityType] = handler;
+    }
+  }
 
   final SyncQueueDao _syncQueueDao;
   final NetworkInfo _networkInfo;
@@ -52,16 +68,14 @@ class SyncEngine {
   final Map<String, SyncHandler> _handlers = {};
   final _statusController = StreamController<SyncStatus>.broadcast();
 
-  bool _isSyncing = false;
+  Future<void>? _inFlight;
   StreamSubscription<bool>? _connectivitySubscription;
 
   /// Stream of sync status updates for UI consumption.
   Stream<SyncStatus> get statusStream => _statusController.stream;
 
-  /// Registers a [SyncHandler] for a specific entity type.
-  void registerHandler(SyncHandler handler) {
-    _handlers[handler.entityType] = handler;
-  }
+  /// The registered handlers, one per entity type.
+  Iterable<SyncHandler> get handlers => _handlers.values;
 
   /// Starts listening to connectivity changes.
   ///
@@ -84,14 +98,17 @@ class SyncEngine {
 
   /// Triggers a sync cycle. Called automatically when connectivity
   /// returns, or can be called manually (e.g., pull-to-refresh).
-  Future<void> processQueue() async {
-    if (_isSyncing) return;
+  ///
+  /// If a cycle is already running, returns that cycle's future instead
+  /// of starting another, so callers can always await completion.
+  Future<void> processQueue() =>
+      _inFlight ??= _runCycle().whenComplete(() => _inFlight = null);
+
+  Future<void> _runCycle() async {
     if (!await _networkInfo.isConnected) {
       await _emitOfflineStatus();
       return;
     }
-
-    _isSyncing = true;
 
     try {
       final pending = await _syncQueueDao.getPending();
@@ -141,8 +158,6 @@ class SyncEngine {
     } catch (e) {
       _statusController.add(SyncStatus.error(e.toString()));
       AppLogger.error('Sync cycle failed', tag: 'SyncEngine', error: e);
-    } finally {
-      _isSyncing = false;
     }
   }
 

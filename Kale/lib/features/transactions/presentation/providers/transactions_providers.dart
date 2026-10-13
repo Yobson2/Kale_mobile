@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
-import 'package:kale/core/sync/sync_providers.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_local_datasource.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_remote_datasource.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_sync_handler.dart';
@@ -48,37 +47,25 @@ TransactionsLocalDataSource transactionsLocalDataSource(Ref ref) {
 Stream<List<Category>> categoriesStream(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return db.categoriesDao.watchAll().map(
-        (rows) => rows.map((row) => CategoryModel.fromDrift(row).toEntity())
-            .toList(),
+        (rows) =>
+            rows.map((row) => CategoryModel.fromDrift(row).toEntity()).toList(),
       );
 }
 
-/// Registers the [TransactionsSyncHandler] with the [SyncEngine].
+/// Provides the [TransactionsSyncHandler].
 ///
-/// This provider ensures the handler is registered once. It should be
-/// read before using the repository to guarantee sync is wired up.
+/// Registered with the sync engine through `syncHandlersProvider`.
 @riverpod
 TransactionsSyncHandler transactionsSyncHandler(Ref ref) {
-  final handler = TransactionsSyncHandler(
+  return TransactionsSyncHandler(
     remoteDataSource: ref.watch(transactionsRemoteDataSourceProvider),
     localDataSource: ref.watch(transactionsLocalDataSourceProvider),
   );
-
-  // Register with the sync engine so offline mutations get pushed.
-  final engine = ref.watch(syncEngineProvider);
-  engine.registerHandler(handler);
-
-  return handler;
 }
 
 /// Provides the [TransactionsRepository].
-///
-/// Ensures the sync handler is registered before returning the repository.
 @riverpod
 TransactionsRepository transactionsRepository(Ref ref) {
-  // Ensure sync handler is registered.
-  ref.watch(transactionsSyncHandlerProvider);
-
   return TransactionsRepositoryImpl(
     remoteDataSource: ref.watch(transactionsRemoteDataSourceProvider),
     localDataSource: ref.watch(transactionsLocalDataSourceProvider),

@@ -75,10 +75,9 @@ typedef CategoriesStreamRef = AutoDisposeStreamProviderRef<List<Category>>;
 String _$transactionsSyncHandlerHash() =>
     r'1198aefa42233cdae558a41ba9182ee6bd322c24';
 
-/// Registers the [TransactionsSyncHandler] with the [SyncEngine].
+/// Provides the [TransactionsSyncHandler].
 ///
-/// This provider ensures the handler is registered once. It should be
-/// read before using the repository to guarantee sync is wired up.
+/// Registered with the sync engine through `syncHandlersProvider`.
 ///
 /// Copied from [transactionsSyncHandler].
 @ProviderFor(transactionsSyncHandler)
@@ -101,8 +100,6 @@ String _$transactionsRepositoryHash() =>
     r'5134af1fee52f9d5435407eb7a74dcd3fdb5437d';
 
 /// Provides the [TransactionsRepository].
-///
-/// Ensures the sync handler is registered before returning the repository.
 ///
 /// Copied from [transactionsRepository].
 @ProviderFor(transactionsRepository)
