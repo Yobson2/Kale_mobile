@@ -26,6 +26,17 @@ When set to `yes`, PRs run through the same labels and states as issues, using t
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either: resolve with `gh pr view 42` and fall back to `gh issue view 42`.
 
+## Completing a ticket: the owner approves everything
+
+The repo owner reviews and approves every change before it reaches `main`, and only that approval closes an issue.
+
+- Finish each ticket on its own branch (`feat/<issue>-<slug>`), then push the branch and open **one pull request per
+  ticket** against `main`, with `Closes #<issue>` in the body. Include what changed, how it was verified (test
+  results), and anything the reviewer should check.
+- Never push to `main`, merge a pull request, or close an issue yourself. When the owner merges the pull request,
+  GitHub closes the issue.
+- If a ticket is only partly done, open the pull request as a **draft** without `Closes`, and say what is missing.
+
 ## When a skill says "publish to the issue tracker"
 
 Create a GitHub issue.
