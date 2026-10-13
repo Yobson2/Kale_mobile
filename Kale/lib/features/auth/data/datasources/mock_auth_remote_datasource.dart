@@ -117,4 +117,18 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
       tokens: _mockTokens,
     );
   }
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> signInAnonymously() async {
+    await Future<void>.delayed(_delay);
+    return (
+      user: const UserModel(
+        id: 'mock-anonymous-user',
+        email: '',
+        name: '',
+        isAnonymous: true,
+      ),
+      tokens: _mockTokens,
+    );
+  }
 }

@@ -94,14 +94,11 @@ GoRouter appRouter(Ref ref) {
 
       final isPublicRoute = _publicPaths.contains(currentPath);
 
-      // Redirect authenticated users away from auth pages.
-      if (auth is AuthAuthenticated && isPublicRoute) {
-        return RouteNames.dashboard;
-      }
-
-      // Guest users can access core features (dashboard, transactions,
-      // budget) but redirect away from auth pages.
-      if (auth is AuthGuest && isPublicRoute) {
+      // Redirect permanent users away from auth pages. Anonymous users
+      // stay: they go through onboarding and create an account from there.
+      if (auth is AuthAuthenticated &&
+          !auth.user.isAnonymous &&
+          isPublicRoute) {
         return RouteNames.dashboard;
       }
 

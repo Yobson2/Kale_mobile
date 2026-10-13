@@ -17,6 +17,7 @@ abstract class UserModel with _$UserModel {
     required String email,
     required String name,
     @JsonKey(name: 'avatar_url') String? avatarUrl,
+    @JsonKey(name: 'is_anonymous') @Default(false) bool isAnonymous,
   }) = _UserModel;
 
   /// Creates a [UserModel] from JSON.
@@ -29,6 +30,7 @@ abstract class UserModel with _$UserModel {
         email: email,
         name: name,
         avatarUrl: avatarUrl,
+        isAnonymous: isAnonymous,
       );
 
   /// Creates a [UserModel] from a domain [User] entity.
@@ -37,5 +39,6 @@ abstract class UserModel with _$UserModel {
         email: user.email,
         name: user.name,
         avatarUrl: user.avatarUrl,
+        isAnonymous: user.isAnonymous,
       );
 }

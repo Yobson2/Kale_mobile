@@ -57,4 +57,8 @@ abstract class AuthRepository {
 
   /// Signs in with Apple OAuth via Supabase.
   Future<Either<Failure, User>> signInWithApple();
+
+  /// Starts an anonymous session. The returned [User] has
+  /// [User.isAnonymous] set.
+  Future<Either<Failure, User>> signInAnonymously();
 }

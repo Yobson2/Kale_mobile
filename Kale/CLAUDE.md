@@ -7,7 +7,7 @@ and expenses, budget per category, manage savings goals, and get spending insigh
 without connectivity. Localized in English and French.
 
 **Core capabilities:** transactions · budgets with overspend alerts · savings goals ·
-insights/charts · tontine groups · notifications · email/OTP + Google/Apple sign-in · guest mode · onboarding.
+insights/charts · tontine groups · notifications · email/OTP + Google/Apple sign-in · anonymous trial accounts · onboarding.
 
 ## Stack
 

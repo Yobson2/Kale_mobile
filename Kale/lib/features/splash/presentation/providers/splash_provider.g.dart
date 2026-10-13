@@ -8,10 +8,11 @@ part of 'splash_provider.dart';
 
 String _$splashInitHash() => r'f305a2ec51ad977da833be0a984a6e9b95dd91b6';
 
-/// Runs initialization checks: first launch, cached auth.
+/// Runs initialization checks: notifications, first launch.
 ///
-/// This provider is a pure reader — it never modifies other providers.
-/// Auth state hydration is handled by [SplashPage] after navigation.
+/// This provider is a pure reader: it never modifies other providers.
+/// The session (restored, or a new anonymous one) is started by
+/// `SplashPage` through the auth notifier.
 ///
 /// Copied from [splashInit].
 @ProviderFor(splashInit)

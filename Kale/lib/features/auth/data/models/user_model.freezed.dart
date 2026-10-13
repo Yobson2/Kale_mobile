@@ -20,6 +20,8 @@ mixin _$UserModel {
   String get name;
   @JsonKey(name: 'avatar_url')
   String? get avatarUrl;
+  @JsonKey(name: 'is_anonymous')
+  bool get isAnonymous;
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -40,16 +42,19 @@ mixin _$UserModel {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.avatarUrl, avatarUrl) ||
-                other.avatarUrl == avatarUrl));
+                other.avatarUrl == avatarUrl) &&
+            (identical(other.isAnonymous, isAnonymous) ||
+                other.isAnonymous == isAnonymous));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, email, name, avatarUrl);
+  int get hashCode =>
+      Object.hash(runtimeType, id, email, name, avatarUrl, isAnonymous);
 
   @override
   String toString() {
-    return 'UserModel(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl)';
+    return 'UserModel(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl, isAnonymous: $isAnonymous)';
   }
 }
 
@@ -62,7 +67,8 @@ abstract mixin class $UserModelCopyWith<$Res> {
       {String id,
       String email,
       String name,
-      @JsonKey(name: 'avatar_url') String? avatarUrl});
+      @JsonKey(name: 'avatar_url') String? avatarUrl,
+      @JsonKey(name: 'is_anonymous') bool isAnonymous});
 }
 
 /// @nodoc
@@ -81,6 +87,7 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? email = null,
     Object? name = null,
     Object? avatarUrl = freezed,
+    Object? isAnonymous = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -99,6 +106,10 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _self.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      isAnonymous: null == isAnonymous
+          ? _self.isAnonymous
+          : isAnonymous // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -110,7 +121,8 @@ class _UserModel extends UserModel {
       {required this.id,
       required this.email,
       required this.name,
-      @JsonKey(name: 'avatar_url') this.avatarUrl})
+      @JsonKey(name: 'avatar_url') this.avatarUrl,
+      @JsonKey(name: 'is_anonymous') this.isAnonymous = false})
       : super._();
   factory _UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
@@ -124,6 +136,9 @@ class _UserModel extends UserModel {
   @override
   @JsonKey(name: 'avatar_url')
   final String? avatarUrl;
+  @override
+  @JsonKey(name: 'is_anonymous')
+  final bool isAnonymous;
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -149,16 +164,19 @@ class _UserModel extends UserModel {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.avatarUrl, avatarUrl) ||
-                other.avatarUrl == avatarUrl));
+                other.avatarUrl == avatarUrl) &&
+            (identical(other.isAnonymous, isAnonymous) ||
+                other.isAnonymous == isAnonymous));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, email, name, avatarUrl);
+  int get hashCode =>
+      Object.hash(runtimeType, id, email, name, avatarUrl, isAnonymous);
 
   @override
   String toString() {
-    return 'UserModel(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl)';
+    return 'UserModel(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl, isAnonymous: $isAnonymous)';
   }
 }
 
@@ -174,7 +192,8 @@ abstract mixin class _$UserModelCopyWith<$Res>
       {String id,
       String email,
       String name,
-      @JsonKey(name: 'avatar_url') String? avatarUrl});
+      @JsonKey(name: 'avatar_url') String? avatarUrl,
+      @JsonKey(name: 'is_anonymous') bool isAnonymous});
 }
 
 /// @nodoc
@@ -193,6 +212,7 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
     Object? email = null,
     Object? name = null,
     Object? avatarUrl = freezed,
+    Object? isAnonymous = null,
   }) {
     return _then(_UserModel(
       id: null == id
@@ -211,6 +231,10 @@ class __$UserModelCopyWithImpl<$Res> implements _$UserModelCopyWith<$Res> {
           ? _self.avatarUrl
           : avatarUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      isAnonymous: null == isAnonymous
+          ? _self.isAnonymous
+          : isAnonymous // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }

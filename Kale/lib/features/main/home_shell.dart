@@ -26,13 +26,14 @@ class HomeShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = context.colorScheme;
-    final isGuest = ref.watch(authNotifierProvider) is AuthGuest;
+    final authState = ref.watch(authNotifierProvider);
+    final isAnonymous =
+        authState is AuthAuthenticated && authState.user.isAnonymous;
 
     return AppScaffold(
       body: Column(
         children: [
-          if (isGuest) _GuestBanner(colorScheme: colorScheme),
-          const SyncStatusBanner(),
+          if (isAnonymous) _CreateAccountBanner(colorScheme: colorScheme),
           Expanded(child: navigationShell),
         ],
       ),
@@ -199,9 +200,9 @@ class _GradientFAB extends StatelessWidget {
   }
 }
 
-/// Guest mode banner encouraging sign-up.
-class _GuestBanner extends StatelessWidget {
-  const _GuestBanner({required this.colorScheme});
+/// Banner inviting an anonymous user to create an account.
+class _CreateAccountBanner extends StatelessWidget {
+  const _CreateAccountBanner({required this.colorScheme});
 
   final ColorScheme colorScheme;
 
@@ -223,20 +224,20 @@ class _GuestBanner extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.cloud_off_outlined,
+            Icons.person_add_alt_outlined,
             color: colorScheme.onSurfaceVariant,
           ),
           AppSpacing.horizontalMd,
           Expanded(
             child: Text(
-              context.l10n.guestBannerMessage,
+              context.l10n.anonymousSaveDataCta,
               style: context.textTheme.bodySmall,
             ),
           ),
           AppSpacing.horizontalSm,
           TextButton(
-            onPressed: () => context.go(RouteNames.register),
-            child: Text(context.l10n.guestBannerAction),
+            onPressed: () => context.push(RouteNames.register),
+            child: Text(context.l10n.anonymousBannerAction),
           ),
         ],
       ),

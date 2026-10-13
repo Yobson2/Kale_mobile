@@ -90,33 +90,6 @@ class LocalStorage {
   Future<bool> setDailyReminderEnabled({required bool enabled}) =>
       _prefs.setBool(_dailyReminderEnabledKey, enabled);
 
-  // -- Guest Mode --
-
-  static const _guestModeKey = 'guest_mode';
-
-  /// Whether the user is currently in guest mode.
-  bool get isGuestMode => _prefs.getBool(_guestModeKey) ?? false;
-
-  /// Enables guest mode.
-  Future<bool> setGuestMode() => _prefs.setBool(_guestModeKey, true);
-
-  /// Clears guest mode (e.g. after registration).
-  Future<bool> clearGuestMode() => _prefs.remove(_guestModeKey);
-
-  // -- Backup --
-
-  static const _lastBackupAtKey = 'last_backup_at';
-
-  /// When the sync queue was last fully pushed, or null if never.
-  DateTime? getLastBackupAt() {
-    final millis = _prefs.getInt(_lastBackupAtKey);
-    return millis == null ? null : DateTime.fromMillisecondsSinceEpoch(millis);
-  }
-
-  /// Persists the last successful backup [time].
-  Future<bool> setLastBackupAt(DateTime time) =>
-      _prefs.setInt(_lastBackupAtKey, time.millisecondsSinceEpoch);
-
   // -- Generic --
 
   /// Reads a string value by [key].

@@ -55,6 +55,9 @@ abstract class AuthRemoteDataSource {
 
   /// Signs in with Apple via Supabase.
   Future<({UserModel user, TokensModel tokens})> signInWithApple();
+
+  /// Creates an anonymous user and signs in as them.
+  Future<({UserModel user, TokensModel tokens})> signInAnonymously();
 }
 
 /// Implementation of [AuthRemoteDataSource] using [SupabaseClient].
@@ -271,6 +274,23 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   // ---------------------------------------------------------------------------
+  // Anonymous
+  // ---------------------------------------------------------------------------
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> signInAnonymously() async {
+    try {
+      final response = await _supabase.auth.signInAnonymously();
+      return _mapAuthResponse(response);
+    } on AuthException catch (e) {
+      throw ServerException(
+        message: e.message,
+        statusCode: int.tryParse(e.statusCode ?? ''),
+      );
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
 
@@ -294,6 +314,7 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
           user.userMetadata?['full_name'] as String? ??
           '',
       avatarUrl: user.userMetadata?['avatar_url'] as String?,
+      isAnonymous: user.isAnonymous,
     );
 
     final tokensModel = TokensModel(
