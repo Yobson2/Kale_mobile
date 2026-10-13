@@ -69,6 +69,15 @@ Row Level Security on all 7 tables:
 - 10 income categories (Salary, Business Income, Freelance, Side Hustle, Mobile Money Received, etc.)
 - IDs match `lib/core/constants/default_categories.dart` for clean local/remote sync
 
+### 20260220000005_harden_functions.sql
+Added after the restore, from a security review:
+- Revokes `EXECUTE` from `PUBLIC`/`anon`/`authenticated` on every function. `seed_default_categories(user_id)` is
+  `SECURITY DEFINER` and was callable over `/rest/v1/rpc/`, letting any client write categories owned by
+  another user.
+- Pins `search_path = ''` on every function.
+- `update_savings_goal_amount` runs one primary-key `UPDATE` as the invoking user (RLS applies) instead of two
+  as `SECURITY DEFINER`.
+
 ## Database Schema
 
 ```
