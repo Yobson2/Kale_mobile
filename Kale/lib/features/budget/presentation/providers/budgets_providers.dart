@@ -24,8 +24,9 @@ part 'budgets_providers.g.dart';
 /// Uses the in-memory mock when the `USE_MOCK_BUDGETS` define is true.
 @riverpod
 BudgetsRemoteDataSource budgetsRemoteDataSource(Ref ref) {
-  final useMock = dotenv.get('USE_MOCK_BUDGETS', fallback: 'false') == 'true';
-  if (useMock) return MockBudgetsRemoteDataSource();
+  if (ref.watch(envProvider).useMockBudgets) {
+    return MockBudgetsRemoteDataSource();
+  }
   return SupabaseBudgetsRemoteDataSource(ref.watch(supabaseClientProvider));
 }
 
