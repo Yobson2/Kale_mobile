@@ -9,7 +9,7 @@ import 'package:kale/features/auth/data/models/user_model.dart';
 ///
 /// Credentials: `test@gmail.com` / `passworD@123`  ·  OTP: `123456`
 ///
-/// Set `USE_MOCK_AUTH=false` in `.env` to switch to the real Supabase API.
+/// Enabled by the `USE_MOCK_AUTH` define (see `docs/development.md`).
 class MockAuthRemoteDataSource implements AuthRemoteDataSource {
   static const _delay = Duration(milliseconds: 800);
 

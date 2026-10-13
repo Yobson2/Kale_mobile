@@ -1,0 +1,15 @@
+{
+  "ENV_NAME": "development",
+  "BASE_URL": "https://mock.invalid",
+  "SUPABASE_ANON_KEY": "mock-anon-key",
+  "ENABLE_LOGGING": true,
+  "SHOW_DEBUG_BANNER": true,
+  "SENTRY_DSN": "",
+  "GOOGLE_WEB_CLIENT_ID": "",
+  "GOOGLE_ANDROID_CLIENT_ID": "",
+  "GOOGLE_IOS_CLIENT_ID": "",
+  "USE_MOCK_AUTH": true,
+  "USE_MOCK_TRANSACTIONS": true,
+  "USE_MOCK_BUDGETS": true,
+  "USE_MOCK_SAVINGS": true
+}

@@ -3,11 +3,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/app.dart';
 import 'package:kale/core/config/env.dart';
 import 'package:kale/core/config/env_provider.dart';
+import 'package:kale/core/config/env_validation.dart';
 import 'package:kale/core/providers/crash_reporter_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/crash_reporter.dart';
@@ -22,8 +22,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> bootstrap(Env env, {CrashReporter? crashReporter}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables from .env file.
-  await loadEnv();
+  // Fail fast when the build was not given a valid define file, or when the
+  // define file does not match the native flavor.
+  ensureValidEnv(env, appFlavor: appFlavor);
+  AppLogger.info(
+    'Environment: ${env.name} (flavor: ${appFlavor ?? 'none'})',
+    tag: 'AppEngine',
+  );
 
   // Initialize Supabase before anything else that depends on it.
   await Supabase.initialize(
@@ -75,16 +80,4 @@ Future<void> bootstrap(Env env, {CrashReporter? crashReporter}) async {
       child: const App(),
     ),
   );
-}
-
-Future<void> loadEnv() async {
-  try {
-    if (!dotenv.isInitialized) {
-      await dotenv.load();
-      AppLogger.info('Environment variables loaded', tag: 'AppEngine');
-    }
-  } catch (e) {
-    AppLogger.error('Failed to load environment', tag: 'AppEngine', error: e);
-    rethrow;
-  }
 }

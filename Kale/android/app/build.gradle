@@ -35,6 +35,23 @@ android {
         versionName = flutter.versionName
     }
 
+    // One flavor per Supabase environment. Each flavor must be run with the
+    // matching define file, e.g.:
+    //   flutter run --flavor staging --dart-define-from-file=config/staging.json
+    // The app checks the pairing at startup (lib/core/config/env_validation.dart).
+    flavorDimensions = ["environment"]
+    productFlavors {
+        staging {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = "-staging"
+            // Launcher label overridden in src/staging/res/values/strings.xml.
+        }
+        production {
+            dimension = "environment"
+        }
+    }
+
     signingConfigs {
         if (keystorePropertiesFile.exists()) {
             release {

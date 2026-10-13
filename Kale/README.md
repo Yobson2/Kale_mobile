@@ -36,16 +36,13 @@ Personal finance management app built with Flutter. Track expenses and income, c
 # 1. Clone and enter the project
 cd Kale
 
-# 2. Copy environment file
-cp .env.example .env
-
-# 3. Install dependencies
+# 2. Install dependencies
 make get
 
-# 4. Run code generation
+# 3. Run code generation
 make gen
 
-# 5. Run the app
+# 4. Run the app with mocked datasources (see "Environment Configuration")
 make run
 ```
 
@@ -102,7 +99,7 @@ make analyze       # Run static analysis
 make format        # Format all Dart files
 make l10n          # Generate localization files
 make clean         # Clean build artifacts and reinstall
-make run           # Run app in debug mode
+make run           # Run app with mocked datasources (run-local/run-staging/run-prod for real backends)
 make icons         # Generate app icons
 make splash        # Generate native splash screen
 ```
@@ -124,23 +121,16 @@ Tests use `mocktail` for mocking. Test helpers and mock providers are in `test/h
 
 ## Environment Configuration
 
-The app uses `flutter_dotenv` to load environment variables from a `.env` file.
+Each environment (mock, local, staging, production) is a build flavor plus a define file in `config/`, passed
+with `--dart-define-from-file`. Nothing is bundled as an asset; only client-safe values are compiled in.
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `ENV_NAME` | Environment name | `development` |
-| `BASE_URL` | API base URL | `https://api-dev.example.com/v1` |
-| `ENABLE_LOGGING` | Enable HTTP/debug logging | `true` |
-| `SHOW_DEBUG_BANNER` | Show Flutter debug banner | `true` |
-| `USE_MOCK_AUTH` | Use mock auth datasource | `true` |
-| `USE_MOCK_NOTES` | Use mock notes datasource | `true` |
-
-To switch environments:
 ```bash
-cp .env.development .env   # Development
-cp .env.staging .env       # Staging
-cp .env.production .env    # Production
+make run           # all datasources mocked (config/mock.json)
+make run-staging   # staging Supabase project (config/staging.json)
+make run-prod      # production Supabase project (config/production.json)
 ```
+
+See `docs/development.md` for the define-file keys, flavors, and the Supabase migration workflow.
 
 ## Architecture
 

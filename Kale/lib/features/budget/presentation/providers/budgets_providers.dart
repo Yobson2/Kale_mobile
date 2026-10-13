@@ -1,5 +1,5 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
@@ -23,12 +23,12 @@ part 'budgets_providers.g.dart';
 
 /// Provides the [BudgetsRemoteDataSource].
 ///
-/// Uses mock implementation when `USE_MOCK_BUDGETS=true` in `.env`.
+/// Uses the in-memory mock when the `USE_MOCK_BUDGETS` define is true.
 @riverpod
 BudgetsRemoteDataSource budgetsRemoteDataSource(Ref ref) {
-  final useMock =
-      dotenv.get('USE_MOCK_BUDGETS', fallback: 'false') == 'true';
-  if (useMock) return MockBudgetsRemoteDataSource();
+  if (ref.watch(envProvider).useMockBudgets) {
+    return MockBudgetsRemoteDataSource();
+  }
   return SupabaseBudgetsRemoteDataSource(ref.watch(supabaseClientProvider));
 }
 
