@@ -191,6 +191,73 @@ class FakeProfileRemote extends FakeRemote<ProfileModel>
       );
 }
 
+/// Fake server table for savings goals. Like the real schema, it has no
+/// trigger: a goal's saved amount is only what the device pushes.
+class FakeSavingsGoalsRemote extends FakeRemote<SavingsGoalModel>
+    implements SavingsRemoteDataSource {
+  @override
+  Future<List<SavingsGoalModel>> getAllSavingsGoals() =>
+      handle(const RemoteCall.fetchAll(), visibleRows);
+
+  @override
+  Future<SavingsGoalModel> getSavingsGoalById(String id) =>
+      handle(RemoteCall.fetch(id), () => findOrThrow(id));
+
+  @override
+  Future<SavingsGoalModel> createSavingsGoal(SavingsGoalModel model) =>
+      handle(RemoteCall.create(model.id), () => put(model.id, model));
+
+  @override
+  Future<SavingsGoalModel> updateSavingsGoal(SavingsGoalModel model) =>
+      handle(RemoteCall.update(model.id), () => put(model.id, model));
+
+  @override
+  Future<void> deleteSavingsGoal(String id) =>
+      handle(RemoteCall.delete(id), () => rows.remove(id));
+}
+
+/// Fake server table for savings contributions. Like the real foreign
+/// key, it rejects a contribution whose goal is not on the server.
+class FakeSavingsContributionsRemote
+    extends FakeRemote<SavingsContributionModel>
+    implements SavingsContributionsRemoteDataSource {
+  FakeSavingsContributionsRemote(this._goals);
+
+  final FakeSavingsGoalsRemote _goals;
+
+  @override
+  Future<List<SavingsContributionModel>> getAllContributions() =>
+      handle(const RemoteCall.fetchAll(), visibleRows);
+
+  @override
+  Future<SavingsContributionModel> getContributionById(String id) =>
+      handle(RemoteCall.fetch(id), () => findOrThrow(id));
+
+  @override
+  Future<SavingsContributionModel> createContribution(
+    SavingsContributionModel model,
+  ) =>
+      handle(RemoteCall.create(model.id), () {
+        if (!_goals.rows.containsKey(model.goalId)) {
+          throw const ServerException(
+            message: 'Foreign key violation: goal not found',
+            statusCode: 400,
+          );
+        }
+        return put(model.id, model);
+      });
+
+  @override
+  Future<SavingsContributionModel> updateContribution(
+    SavingsContributionModel model,
+  ) =>
+      handle(RemoteCall.update(model.id), () => put(model.id, model));
+
+  @override
+  Future<void> deleteContribution(String id) =>
+      handle(RemoteCall.delete(id), () => rows.remove(id));
+}
+
 /// Fake Supabase Auth. Only anonymous and email sign-in are implemented;
 /// the other flows throw until a test needs them.
 class FakeAuthRemote implements AuthRemoteDataSource {
