@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/database/app_database.dart' show AppDatabase;
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/network/network_info.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/sync/backup_status.dart';
@@ -105,6 +106,14 @@ class SyncHarness {
 
   /// The budgets repository, as the feature's use cases get it.
   BudgetsRepository get budgets => _container.read(budgetsRepositoryProvider);
+
+  /// The profile repository (base currency), as the use cases get it.
+  ProfileRepository get profile => _container.read(profileRepositoryProvider);
+
+  /// The base-currency change rules, as the settings and onboarding
+  /// screens run them.
+  ChangeBaseCurrencyUseCase get changeBaseCurrency =>
+      _container.read(changeBaseCurrencyUseCaseProvider);
 
   /// The auth notifier, as the app's pages get it.
   AuthNotifier get auth => _container.read(authNotifierProvider.notifier);

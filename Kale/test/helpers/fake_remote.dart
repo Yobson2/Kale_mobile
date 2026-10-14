@@ -145,6 +145,23 @@ class FakeBudgetsRemote extends FakeRemote<BudgetModel>
       handle(RemoteCall.delete(id), () => rows.remove(id));
 }
 
+/// Fake server `profiles` row of the signed-in user, held in
+/// `rows[ProfileModel.localId]`.
+class FakeProfileRemote extends FakeRemote<ProfileModel>
+    implements ProfileRemoteDataSource {
+  @override
+  Future<ProfileModel?> getProfile() => handle(
+        const RemoteCall.fetch(ProfileModel.localId),
+        () => rows[ProfileModel.localId],
+      );
+
+  @override
+  Future<ProfileModel> updateProfile(ProfileModel model) => handle(
+        const RemoteCall.update(ProfileModel.localId),
+        () => rows[ProfileModel.localId] = model,
+      );
+}
+
 /// Fake Supabase Auth. Only anonymous sign-in is implemented; the other
 /// flows throw until a test needs them.
 class FakeAuthRemote implements AuthRemoteDataSource {
@@ -176,7 +193,7 @@ class FakeAuthRemote implements AuthRemoteDataSource {
 /// The fake backend: Auth, plus one [FakeRemote] per synced table.
 class FakeServer {
   FakeServer() {
-    for (final table in <FakeRemote<Object>>[transactions, budgets]) {
+    for (final table in <FakeRemote<Object>>[transactions, budgets, profile]) {
       table.session = auth;
     }
   }

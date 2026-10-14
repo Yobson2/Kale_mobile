@@ -25,7 +25,7 @@ void main() {
     final user = await launchApp();
     expect(user.isAnonymous, isTrue);
 
-    final created = await harness.addTransaction(amount: 1500);
+    final created = await harness.addTransaction(amountMinor: 1500);
     await harness.sync();
 
     expect(harness.server.transactions.calls, [RemoteCall.create(created.id)]);

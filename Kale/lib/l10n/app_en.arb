@@ -563,6 +563,18 @@
   "notificationsEmpty": "No notifications yet",
   "notificationsEmptySubtitle": "You're all caught up! Notifications about your budgets, savings, and reminders will appear here.",
 
+  "baseCurrencyStepTitle": "Choose your currency",
+  "baseCurrencyStepDescription": "Every amount in Kalé is recorded in this currency. You can change it later.",
+  "baseCurrencyLabel": "Base currency",
+  "baseCurrencyRelabelTitle": "Change base currency?",
+  "baseCurrencyRelabelMessage": "Your existing transactions keep the same numbers and will be shown in {currency}. Nothing is converted.",
+  "@baseCurrencyRelabelMessage": {
+    "placeholders": {
+      "currency": {"type": "String"}
+    }
+  },
+  "baseCurrencyRelabelConfirm": "Change anyway",
+  "baseCurrencyChangeFailed": "Could not change the currency. Please try again.",
   "backupStuck": "{count, plural, =1{1 change not backed up} other{{count} changes not backed up}}",
   "@backupStuck": {
     "description": "Sync banner and Settings: changes that failed every retry",

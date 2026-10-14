@@ -12,6 +12,9 @@ import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/theme/theme_provider.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/features/more/presentation/widgets/backup_status_tile.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
+import 'package:kale/features/profile/presentation/widgets/base_currency_picker.dart';
+import 'package:kale/l10n/app_localizations.dart';
 
 /// Settings page with card-per-item layout, colored icon circles,
 /// and section headers per the Digital Loom design.
