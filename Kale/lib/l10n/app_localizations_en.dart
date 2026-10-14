@@ -1407,6 +1407,31 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'re all caught up! Notifications about your budgets, savings, and reminders will appear here.';
 
   @override
+  String get baseCurrencyStepTitle => 'Choose your currency';
+
+  @override
+  String get baseCurrencyStepDescription =>
+      'Every amount in Kalé is recorded in this currency. You can change it later.';
+
+  @override
+  String get baseCurrencyLabel => 'Base currency';
+
+  @override
+  String get baseCurrencyRelabelTitle => 'Change base currency?';
+
+  @override
+  String baseCurrencyRelabelMessage(String currency) {
+    return 'Your existing transactions keep the same numbers and will be shown in $currency. Nothing is converted.';
+  }
+
+  @override
+  String get baseCurrencyRelabelConfirm => 'Change anyway';
+
+  @override
+  String get baseCurrencyChangeFailed =>
+      'Could not change the currency. Please try again.';
+
+  @override
   String backupStuck(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

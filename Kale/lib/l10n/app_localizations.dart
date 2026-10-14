@@ -2708,6 +2708,48 @@ abstract class AppLocalizations {
   /// **'You\'re all caught up! Notifications about your budgets, savings, and reminders will appear here.'**
   String get notificationsEmptySubtitle;
 
+  /// No description provided for @baseCurrencyStepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your currency'**
+  String get baseCurrencyStepTitle;
+
+  /// No description provided for @baseCurrencyStepDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Every amount in Kalé is recorded in this currency. You can change it later.'**
+  String get baseCurrencyStepDescription;
+
+  /// No description provided for @baseCurrencyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Base currency'**
+  String get baseCurrencyLabel;
+
+  /// No description provided for @baseCurrencyRelabelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change base currency?'**
+  String get baseCurrencyRelabelTitle;
+
+  /// No description provided for @baseCurrencyRelabelMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your existing transactions keep the same numbers and will be shown in {currency}. Nothing is converted.'**
+  String baseCurrencyRelabelMessage(String currency);
+
+  /// No description provided for @baseCurrencyRelabelConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Change anyway'**
+  String get baseCurrencyRelabelConfirm;
+
+  /// No description provided for @baseCurrencyChangeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not change the currency. Please try again.'**
+  String get baseCurrencyChangeFailed;
+
   /// Sync banner and Settings: changes that failed every retry
   ///
   /// In en, this message translates to:

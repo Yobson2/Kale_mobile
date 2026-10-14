@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/database/app_database.dart' show AppDatabase;
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/network/network_info.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/sync/backup_status.dart';
@@ -85,6 +86,7 @@ class SyncHarness {
   /// SharedPreferences and the keychain do.
   final InMemoryAuthLocalDataSource _authStorage =
       InMemoryAuthLocalDataSource();
+  final InMemoryLastBackupStore _lastBackupStore = InMemoryLastBackupStore();
   late ProviderContainer _container;
   StreamSubscription<BackupStatus>? _statusSubscription;
   int _syncRuns = 0;
@@ -104,6 +106,14 @@ class SyncHarness {
 
   /// The budgets repository, as the feature's use cases get it.
   BudgetsRepository get budgets => _container.read(budgetsRepositoryProvider);
+
+  /// The profile repository (base currency), as the use cases get it.
+  ProfileRepository get profile => _container.read(profileRepositoryProvider);
+
+  /// The base-currency change rules, as the settings and onboarding
+  /// screens run them.
+  ChangeBaseCurrencyUseCase get changeBaseCurrency =>
+      _container.read(changeBaseCurrencyUseCaseProvider);
 
   /// The auth notifier, as the app's pages get it.
   AuthNotifier get auth => _container.read(authNotifierProvider.notifier);
@@ -172,20 +182,35 @@ class SyncHarness {
     await db.close();
   }
 
-  ProviderContainer _newContainer() => ProviderContainer(
-        overrides: [
-          appDatabaseProvider.overrideWithValue(db),
-          networkInfoProvider.overrideWithValue(_network),
-          syncConfigProvider.overrideWithValue(
-            const SyncConfig(initialBackoffMs: 0),
-          ),
-          transactionsRemoteDataSourceProvider
-              .overrideWithValue(server.transactions),
-          budgetsRemoteDataSourceProvider.overrideWithValue(server.budgets),
-          authRemoteDataSourceProvider.overrideWithValue(server.auth),
-          authLocalDataSourceProvider.overrideWithValue(_authStorage),
-        ],
-      );
+  void _disposeContainer() {
+    unawaited(_statusSubscription?.cancel());
+    clock.cancelAll();
+    _container.dispose();
+  }
+
+  ProviderContainer _newContainer() {
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        networkInfoProvider.overrideWithValue(_network),
+        syncClockProvider.overrideWithValue(clock),
+        lastBackupStoreProvider.overrideWithValue(_lastBackupStore),
+        transactionsRemoteDataSourceProvider
+            .overrideWithValue(server.transactions),
+        budgetsRemoteDataSourceProvider.overrideWithValue(server.budgets),
+        profileRemoteDataSourceProvider.overrideWithValue(server.profile),
+        authRemoteDataSourceProvider.overrideWithValue(server.auth),
+        authLocalDataSourceProvider.overrideWithValue(_authStorage),
+      ],
+    );
+    var wasSyncing = false;
+    _statusSubscription =
+        container.read(syncEngineProvider).watchBackupStatus().listen((status) {
+      if (status.isSyncing && !wasSyncing) _syncRuns++;
+      wasSyncing = status.isSyncing;
+    });
+    return container;
+  }
 }
 
 /// Device-side session cache kept in memory.

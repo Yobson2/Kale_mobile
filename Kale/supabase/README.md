@@ -83,6 +83,15 @@ Added after the restore, from a security review:
 (`cat_food`, …), so the second user ever created failed in `handle_new_user()` and their sign-up was aborted.
 With anonymous sign-in (#11) every fresh install creates a user.
 
+### 20261013000100_reset_transactions_minor_units.sql
+Schema reset for issue #5 (decision Q11: dropped and recreated, data not kept):
+- `currencies` reference table (code, symbol, decimal places), readable by everyone, mirroring
+  `lib/core/money/currency.dart`
+- `profiles.base_currency` (FK to `currencies`, NULL until onboarding) replaces `preferred_currency`
+- `transactions` recreated: `amount_minor BIGINT` (minor units of the base currency), no `currency_code`, UUID id,
+  client-owned `updated_at` (no trigger), nullable `deleted_at`, index on `(user_id, updated_at)`, and one owner-only
+  RLS policy for the `authenticated` role (anonymous users included); `anon` has no access
+
 ## Anonymous users
 
 Every fresh install signs in anonymously, so anonymous sign-ins must be **enabled** on each project, and
@@ -94,8 +103,13 @@ anonymous sign-ins per hour per IP. RLS policies don't special-case anonymous us
 
 ## Server tests
 
-SQL tests (pgTAP) live in `supabase/tests/`. Run them against the local stack with `make db-test`
+SQL tests (pgTAP) live in `supabase/tests/database/`. Run them against the local stack with `make db-test`
 (`supabase test db`; needs Docker and `make db-start`).
+
+- `anonymous_users_rls.test.sql`: RLS treats anonymous users like permanent ones.
+- `transactions_rls.test.sql`: the reset transactions table's shape, and that one user (permanent or anonymous) can
+  neither read nor write another user's transactions. It creates two users, so it relies on
+  `20261013000001_categories_key_per_user.sql`.
 
 ## Database Schema
 
