@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:kale/core/sync/sync_providers.dart';
 import 'package:kale/core/usecase/usecase.dart';
+import 'package:kale/core/utils/logger.dart';
 import 'package:kale/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/register_usecase.dart';
@@ -8,10 +12,6 @@ import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/auth/presentation/providers/logout_outcome.dart';
-import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
-import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
-import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
-import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_notifier.g.dart';
@@ -44,7 +44,7 @@ class AuthNotifier extends _$AuthNotifier {
       state = result.fold(
         (failure) => AuthState.error(failure.message),
         (user) {
-          _syncFromServer();
+          _restoreIfNeeded();
           return AuthState.authenticated(user);
         },
       );
@@ -110,7 +110,7 @@ class AuthNotifier extends _$AuthNotifier {
         },
         (user) {
           if (user != null) {
-            _syncFromServer();
+            _restoreIfNeeded();
             state = AuthState.authenticated(user);
           } else {
             state = const AuthState.unauthenticated();
@@ -198,7 +198,7 @@ class AuthNotifier extends _$AuthNotifier {
       state = result.fold(
         (failure) => AuthState.error(failure.message),
         (user) {
-          _syncFromServer();
+          _restoreIfNeeded();
           return AuthState.authenticated(user);
         },
       );
@@ -216,7 +216,7 @@ class AuthNotifier extends _$AuthNotifier {
       state = result.fold(
         (failure) => AuthState.error(failure.message),
         (user) {
-          _syncFromServer();
+          _restoreIfNeeded();
           return AuthState.authenticated(user);
         },
       );
@@ -291,6 +291,7 @@ class AuthNotifier extends _$AuthNotifier {
       final cachedUser = cached.fold((_) => null, (user) => user);
       if (cachedUser != null) {
         state = AuthState.authenticated(cachedUser);
+        _restoreIfNeeded();
         return;
       }
 
@@ -332,21 +333,22 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  /// Syncs local data from the server after a successful login or signup.
+  /// Restores the account on this device if it needs it (an empty device,
+  /// or a restore that did not finish; see `SyncPuller.restoreIfNeeded`).
   ///
-  /// Runs in the background so it doesn't block the auth flow.
-  void _syncFromServer() {
-    Future(() async {
-      try {
-        await Future.wait([
-          ref.read(budgetsRepositoryProvider).refreshFromServer(),
-          ref.read(transactionsRepositoryProvider).refreshFromServer(),
-          ref.read(savingsRepositoryProvider).refreshFromServer(),
-          ref.read(profileRepositoryProvider).refreshFromServer(),
-        ]);
-      } catch (_) {
-        // Sync failures are non-critical — data will refresh on next pull.
-      }
-    });
+  /// Runs in the background so it doesn't block the auth flow; the restore
+  /// banner shows its progress.
+  /// Never fails the sign-in: a restore that can't run now is retried at
+  /// the next launch.
+  void _restoreIfNeeded() {
+    unawaited(
+      Future(() async {
+        try {
+          await ref.read(syncPullerProvider).restoreIfNeeded();
+        } catch (e) {
+          AppLogger.error('Restore failed', tag: 'AuthNotifier', error: e);
+        }
+      }),
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:kale/core/database/app_database.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/budget/data/tables/budget_categories_table.dart';
 
 part 'budget_categories_dao.g.dart';
@@ -69,32 +70,23 @@ class BudgetCategoriesDao extends DatabaseAccessor<AppDatabase>
   Future<BudgetCategory?> markDeleted(String id, DateTime at) async =>
       (await _markDeleted((t) => t.id.equals(id), at)).firstOrNull;
 
+  /// The merge state of the rows with these [ids], deleted ones included.
+  Future<Map<String, LocalRowState>> statesByIds(Iterable<String> ids) async {
+    final rows =
+        await (select(budgetCategories)..where((t) => t.id.isIn(ids))).get();
+    return {
+      for (final row in rows)
+        row.id: (updatedAt: row.updatedAt, isSynced: row.isSynced),
+    };
+  }
+
+  /// Inserts or replaces [entries] (rows pulled from the server).
+  Future<void> upsertAll(List<BudgetCategoriesCompanion> entries) =>
+      batch((b) => b.insertAllOnConflictUpdate(budgetCategories, entries));
+
   /// Marks an allocation as synced.
   Future<void> markSynced(String id) =>
       (update(budgetCategories)..where((t) => t.id.equals(id))).write(
         const BudgetCategoriesCompanion(isSynced: Value(true)),
       );
-
-  /// Replaces the synced allocations with the server's copy (server
-  /// refresh).
-  ///
-  /// Allocations not yet pushed are kept as they are.
-  Future<void> replaceAll(Iterable<BudgetCategoriesCompanion> entries) {
-    return transaction(() async {
-      final unsynced = (await (selectOnly(budgetCategories)
-                ..addColumns([budgetCategories.id])
-                ..where(budgetCategories.isSynced.equals(false)))
-              .map((row) => row.read(budgetCategories.id)!)
-              .get())
-          .toSet();
-      await (delete(budgetCategories)..where((t) => t.isSynced.equals(true)))
-          .go();
-      await batch(
-        (b) => b.insertAllOnConflictUpdate(
-          budgetCategories,
-          entries.where((e) => !unsynced.contains(e.id.value)),
-        ),
-      );
-    });
-  }
 }

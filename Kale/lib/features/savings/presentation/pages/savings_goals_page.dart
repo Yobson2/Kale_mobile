@@ -10,6 +10,7 @@ import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/animations/staggered_list_item.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
+import 'package:kale/core/widgets/feedback/refresh_from_backup.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
 import 'package:kale/core/widgets/states/app_error_state.dart';
 import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
@@ -67,9 +68,7 @@ class SavingsGoalsPage extends ConsumerWidget {
           );
 
           return RefreshIndicator(
-            onRefresh: () async {
-              ref.invalidate(savingsGoalsStreamProvider);
-            },
+            onRefresh: () => refreshFromBackup(context, ref),
             child: ListView(
               padding: AppSpacing.paddingLg,
               children: [

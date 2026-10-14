@@ -74,7 +74,7 @@ final profileSyncHandlerProvider = Provider<ProfileSyncHandler>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ProfileSyncHandlerRef = ProviderRef<ProfileSyncHandler>;
-String _$profileRepositoryHash() => r'cc950142a7fecb7ef7acac892d4012c399159316';
+String _$profileRepositoryHash() => r'9e98bc28ed18e857c465a682667ee38028f639a0';
 
 /// Provides the [ProfileRepository].
 ///

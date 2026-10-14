@@ -1,14 +1,17 @@
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
+import 'package:kale/core/sync/supabase_pull.dart';
 import 'package:kale/features/transactions/data/models/transaction_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Remote data source for transactions API calls.
 abstract class TransactionsRemoteDataSource {
-  /// GET: Fetches all transactions from the server.
-  Future<List<TransactionModel>> getAllTransactions();
-
-  /// GET: Fetches a single transaction by ID.
-  Future<TransactionModel> getTransactionById(String id);
+  /// GET: Fetches the user's transactions changed after [after], at most
+  /// [limit], in pull order (see `pullPageQuery`). Includes tombstones.
+  Future<RemotePage<TransactionModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  });
 
   /// POST: Creates a new transaction on the server.
   /// Returns the created model with server-assigned fields.
@@ -30,27 +33,17 @@ class SupabaseTransactionsRemoteDataSource
   SupabaseQueryBuilder get _table => _supabase.from('transactions');
 
   @override
-  Future<List<TransactionModel>> getAllTransactions() async {
+  Future<RemotePage<TransactionModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     try {
-      final data = await _table
-          .select()
-          .eq('user_id', _userId)
-          .order('date', ascending: false);
-      return data
-          .cast<Map<String, dynamic>>()
-          .map(TransactionModel.fromJson)
-          .toList();
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
-  @override
-  Future<TransactionModel> getTransactionById(String id) async {
-    try {
-      final data =
-          await _table.select().eq('id', id).eq('user_id', _userId).single();
-      return TransactionModel.fromJson(data);
+      final data = await pullPageQuery(
+        _table.select().eq('user_id', _userId),
+        after: after,
+        limit: limit,
+      );
+      return toRemotePage(data, TransactionModel.fromJson);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
@@ -98,18 +91,12 @@ class MockTransactionsRemoteDataSource implements TransactionsRemoteDataSource {
   static const _delay = Duration(milliseconds: 500);
 
   @override
-  Future<List<TransactionModel>> getAllTransactions() async {
+  Future<RemotePage<TransactionModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     await Future<void>.delayed(_delay);
-    return [];
-  }
-
-  @override
-  Future<TransactionModel> getTransactionById(String id) async {
-    await Future<void>.delayed(_delay);
-    throw const ServerException(
-      message: 'Transaction not found',
-      statusCode: 404,
-    );
+    return const RemotePage([]);
   }
 
   @override

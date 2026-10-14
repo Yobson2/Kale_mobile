@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:kale/core/constants/default_categories.dart';
+import 'package:kale/core/database/daos/pull_cursors_dao.dart';
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
+import 'package:kale/core/database/tables/pull_cursors_table.dart';
 import 'package:kale/core/database/tables/sync_queue_table.dart';
 import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/features/budget/data/daos/budget_categories_dao.dart';
@@ -31,6 +33,7 @@ part 'app_database.g.dart';
     SavingsGoals,
     SavingsContributions,
     Profiles,
+    PullCursors,
   ],
   daos: [
     SyncQueueDao,
@@ -41,6 +44,7 @@ part 'app_database.g.dart';
     SavingsGoalsDao,
     SavingsContributionsDao,
     ProfileDao,
+    PullCursorsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -48,7 +52,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   /// PRE-RELEASE ONLY: any [schemaVersion] change (up or down) drops every
   /// table and recreates the schema, wiping all local data, including
@@ -96,8 +100,31 @@ class AppDatabase extends _$AppDatabase {
       await delete(transactions).go();
       await delete(categories).go();
       await delete(profiles).go();
+      await delete(pullCursors).go();
     });
     await _seedDefaultCategories();
+  }
+
+  /// Whether the device holds any of the user's own data: a synced entry
+  /// (live or deleted) or a change waiting to be pushed. The profile and
+  /// the seeded categories don't count. Restore runs only when this is
+  /// false (decision Q8).
+  Future<bool> hasUserData() async {
+    for (final table in <TableInfo<Table, Object?>>[
+      syncQueueEntries,
+      transactions,
+      budgets,
+      budgetCategories,
+      savingsGoals,
+      savingsContributions,
+    ]) {
+      final row = await customSelect(
+        'SELECT 1 FROM ${table.actualTableName} LIMIT 1',
+        readsFrom: {table},
+      ).getSingleOrNull();
+      if (row != null) return true;
+    }
+    return false;
   }
 
   /// Seeds the database with default Africa-relevant categories.

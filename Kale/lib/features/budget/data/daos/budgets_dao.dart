@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:kale/core/database/app_database.dart';
 import 'package:kale/core/date/calendar_date.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/budget/data/tables/budgets_table.dart';
 
 part 'budgets_dao.g.dart';
@@ -74,6 +75,19 @@ class BudgetsDao extends DatabaseAccessor<AppDatabase> with _$BudgetsDaoMixin {
       return (select(budgets)..where((t) => t.id.equals(id))).getSingle();
     });
   }
+
+  /// The merge state of the rows with these [ids], deleted ones included.
+  Future<Map<String, LocalRowState>> statesByIds(Iterable<String> ids) async {
+    final rows = await (select(budgets)..where((t) => t.id.isIn(ids))).get();
+    return {
+      for (final row in rows)
+        row.id: (updatedAt: row.updatedAt, isSynced: row.isSynced),
+    };
+  }
+
+  /// Inserts or replaces [entries] (rows pulled from the server).
+  Future<void> upsertAll(List<BudgetsCompanion> entries) =>
+      batch((b) => b.insertAllOnConflictUpdate(budgets, entries));
 
   /// Marks a budget as synced.
   Future<void> markSynced(String id, {String? serverId}) {

@@ -7,7 +7,7 @@ part of 'transactions_notifier.dart';
 // **************************************************************************
 
 String _$transactionsNotifierHash() =>
-    r'414a2a3571f78785033d58e4e2ffb10bf8e2345a';
+    r'38620ef146c6827be05b3d0bc282d4f3abfd623b';
 
 /// Manages transaction mutation state and actions.
 ///

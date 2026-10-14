@@ -1525,4 +1525,24 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get logoutFailed =>
       'Impossible de vérifier votre sauvegarde. Veuillez réessayer.';
+
+  @override
+  String restoreInProgress(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Restauration de vos données… $count éléments',
+      one: 'Restauration de vos données… 1 élément',
+      zero: 'Restauration de vos données…',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get refreshOffline =>
+      'Vous êtes hors ligne. Tirez pour actualiser une fois connecté.';
+
+  @override
+  String get refreshFailed =>
+      'Impossible d\'actualiser depuis votre sauvegarde. Veuillez réessayer.';
 }

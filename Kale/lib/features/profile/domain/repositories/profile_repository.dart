@@ -19,7 +19,4 @@ abstract class ProfileRepository {
   /// Stores [currency] as the base currency on the device and queues it
   /// for the server. No amount is converted.
   Future<Either<Failure, Currency>> setBaseCurrency(Currency currency);
-
-  /// Pulls the profile from the server, keeping unsynced local changes.
-  Future<Either<Failure, void>> refreshFromServer();
 }

@@ -1,4 +1,6 @@
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
+import 'package:kale/core/sync/supabase_pull.dart';
 import 'package:kale/features/budget/data/models/budget_category_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,11 +9,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// Allocations have no `user_id`: they are owned through their budget, and
 /// the server's RLS only exposes allocations of budgets the user owns.
 abstract class BudgetCategoriesRemoteDataSource {
-  /// Fetches every allocation of the signed-in user's budgets.
-  Future<List<BudgetCategoryModel>> getAllBudgetCategories();
-
-  /// Fetches one allocation. Throws [ServerException] if it does not exist.
-  Future<BudgetCategoryModel> getBudgetCategoryById(String id);
+  /// Fetches the rows changed after [after], at most [limit], in pull
+  /// order (see `pullPageQuery`). Includes tombstones.
+  Future<RemotePage<BudgetCategoryModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  });
 
   /// Creates an allocation. Keyed by the client UUID, so a retry is
   /// harmless.
@@ -40,24 +43,17 @@ class SupabaseBudgetCategoriesRemoteDataSource
       BudgetCategoryModel.fromJson(Map.of(row)..remove('budgets'));
 
   @override
-  Future<List<BudgetCategoryModel>> getAllBudgetCategories() async {
+  Future<RemotePage<BudgetCategoryModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     try {
-      final data = await _table.select(_columns).eq('budgets.user_id', _userId);
-      return data.cast<Map<String, dynamic>>().map(_fromRow).toList();
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
-  @override
-  Future<BudgetCategoryModel> getBudgetCategoryById(String id) async {
-    try {
-      final data = await _table
-          .select(_columns)
-          .eq('id', id)
-          .eq('budgets.user_id', _userId)
-          .single();
-      return _fromRow(data);
+      final data = await pullPageQuery(
+        _table.select(_columns).eq('budgets.user_id', _userId),
+        after: after,
+        limit: limit,
+      );
+      return toRemotePage(data, _fromRow);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
@@ -103,18 +99,12 @@ class MockBudgetCategoriesRemoteDataSource
   static const _delay = Duration(milliseconds: 500);
 
   @override
-  Future<List<BudgetCategoryModel>> getAllBudgetCategories() async {
+  Future<RemotePage<BudgetCategoryModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     await Future<void>.delayed(_delay);
-    return [];
-  }
-
-  @override
-  Future<BudgetCategoryModel> getBudgetCategoryById(String id) async {
-    await Future<void>.delayed(_delay);
-    throw const ServerException(
-      message: 'Budget category not found',
-      statusCode: 404,
-    );
+    return const RemotePage([]);
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:kale/core/database/app_database.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/savings/data/tables/savings_contributions_table.dart';
 
 part 'savings_contributions_dao.g.dart';
@@ -63,6 +64,21 @@ class SavingsContributionsDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  /// The merge state of the rows with these [ids], deleted ones included.
+  Future<Map<String, LocalRowState>> statesByIds(Iterable<String> ids) async {
+    final rows = await (select(savingsContributions)
+          ..where((t) => t.id.isIn(ids)))
+        .get();
+    return {
+      for (final row in rows)
+        row.id: (updatedAt: row.updatedAt, isSynced: row.isSynced),
+    };
+  }
+
+  /// Inserts or replaces [entries] (rows pulled from the server).
+  Future<void> upsertAll(List<SavingsContributionsCompanion> entries) =>
+      batch((b) => b.insertAllOnConflictUpdate(savingsContributions, entries));
+
   /// Marks a contribution as synced.
   Future<void> markSynced(String id, {String? serverId}) =>
       (update(savingsContributions)..where((t) => t.id.equals(id))).write(
@@ -71,28 +87,4 @@ class SavingsContributionsDao extends DatabaseAccessor<AppDatabase>
           serverId: serverId != null ? Value(serverId) : const Value.absent(),
         ),
       );
-
-  /// Replaces the synced contributions with the server's copy (server
-  /// refresh).
-  ///
-  /// Contributions not yet pushed are kept as they are.
-  Future<void> replaceAll(List<SavingsContributionsCompanion> entries) {
-    return transaction(() async {
-      final unsynced = (await (selectOnly(savingsContributions)
-                ..addColumns([savingsContributions.id])
-                ..where(savingsContributions.isSynced.equals(false)))
-              .map((row) => row.read(savingsContributions.id)!)
-              .get())
-          .toSet();
-      await (delete(savingsContributions)
-            ..where((t) => t.isSynced.equals(true)))
-          .go();
-      await batch(
-        (b) => b.insertAllOnConflictUpdate(
-          savingsContributions,
-          entries.where((e) => !unsynced.contains(e.id.value)),
-        ),
-      );
-    });
-  }
 }

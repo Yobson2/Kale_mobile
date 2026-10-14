@@ -1,4 +1,6 @@
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
+import 'package:kale/core/sync/supabase_pull.dart';
 import 'package:kale/features/savings/data/models/savings_contribution_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,12 +9,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// Contributions have no `user_id`: they are owned through their goal, and
 /// the server's RLS only exposes contributions of goals the user owns.
 abstract class SavingsContributionsRemoteDataSource {
-  /// Fetches every contribution of the signed-in user's goals.
-  Future<List<SavingsContributionModel>> getAllContributions();
-
-  /// Fetches one contribution. Throws [ServerException] if it does not
-  /// exist.
-  Future<SavingsContributionModel> getContributionById(String id);
+  /// Fetches the rows changed after [after], at most [limit], in pull
+  /// order (see `pullPageQuery`). Includes tombstones.
+  Future<RemotePage<SavingsContributionModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  });
 
   /// Creates a contribution. Keyed by the client UUID, so a retry is
   /// harmless. The server does not touch the goal's saved amount.
@@ -46,27 +48,17 @@ class SupabaseSavingsContributionsRemoteDataSource
       );
 
   @override
-  Future<List<SavingsContributionModel>> getAllContributions() async {
+  Future<RemotePage<SavingsContributionModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     try {
-      final data = await _table
-          .select(_columns)
-          .eq('savings_goals.user_id', _userId)
-          .order('date', ascending: false);
-      return data.cast<Map<String, dynamic>>().map(_fromRow).toList();
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
-  @override
-  Future<SavingsContributionModel> getContributionById(String id) async {
-    try {
-      final data = await _table
-          .select(_columns)
-          .eq('id', id)
-          .eq('savings_goals.user_id', _userId)
-          .single();
-      return _fromRow(data);
+      final data = await pullPageQuery(
+        _table.select(_columns).eq('savings_goals.user_id', _userId),
+        after: after,
+        limit: limit,
+      );
+      return toRemotePage(data, _fromRow);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
@@ -109,18 +101,12 @@ class MockSavingsContributionsRemoteDataSource
   static const _delay = Duration(milliseconds: 500);
 
   @override
-  Future<List<SavingsContributionModel>> getAllContributions() async {
+  Future<RemotePage<SavingsContributionModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     await Future<void>.delayed(_delay);
-    return [];
-  }
-
-  @override
-  Future<SavingsContributionModel> getContributionById(String id) async {
-    await Future<void>.delayed(_delay);
-    throw const ServerException(
-      message: 'Contribution not found',
-      statusCode: 404,
-    );
+    return const RemotePage([]);
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
-import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_local_datasource.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_remote_datasource.dart';
@@ -67,9 +66,7 @@ TransactionsSyncHandler transactionsSyncHandler(Ref ref) {
 @riverpod
 TransactionsRepository transactionsRepository(Ref ref) {
   return TransactionsRepositoryImpl(
-    remoteDataSource: ref.watch(transactionsRemoteDataSourceProvider),
     localDataSource: ref.watch(transactionsLocalDataSourceProvider),
-    networkInfo: ref.watch(networkInfoProvider),
   );
 }
 

@@ -184,11 +184,10 @@ class SyncQueueEntry extends DataClass implements Insertable<SyncQueueEntry> {
   /// The local ID of the entity being synced.
   final String entityId;
 
-  /// The operation type: 'create', 'update', or 'delete'.
+  /// The operation type: 'create' or 'update'.
   final String operation;
 
   /// JSON-serialized payload of the entity data at time of mutation.
-  /// Null for delete operations.
   final String? payload;
 
   /// When this queue entry was created.
@@ -4620,6 +4619,293 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   }
 }
 
+class $PullCursorsTable extends PullCursors
+    with TableInfo<$PullCursorsTable, PullCursorRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PullCursorsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _entityTypeMeta =
+      const VerificationMeta('entityType');
+  @override
+  late final GeneratedColumn<String> entityType = GeneratedColumn<String>(
+      'entity_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _cursorAtMeta =
+      const VerificationMeta('cursorAt');
+  @override
+  late final GeneratedColumn<DateTime> cursorAt = GeneratedColumn<DateTime>(
+      'cursor_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _cursorIdMeta =
+      const VerificationMeta('cursorId');
+  @override
+  late final GeneratedColumn<String> cursorId = GeneratedColumn<String>(
+      'cursor_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _caughtUpMeta =
+      const VerificationMeta('caughtUp');
+  @override
+  late final GeneratedColumn<bool> caughtUp = GeneratedColumn<bool>(
+      'caught_up', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("caught_up" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [entityType, cursorAt, cursorId, caughtUp];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pull_cursors';
+  @override
+  VerificationContext validateIntegrity(Insertable<PullCursorRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('entity_type')) {
+      context.handle(
+          _entityTypeMeta,
+          entityType.isAcceptableOrUnknown(
+              data['entity_type']!, _entityTypeMeta));
+    } else if (isInserting) {
+      context.missing(_entityTypeMeta);
+    }
+    if (data.containsKey('cursor_at')) {
+      context.handle(_cursorAtMeta,
+          cursorAt.isAcceptableOrUnknown(data['cursor_at']!, _cursorAtMeta));
+    }
+    if (data.containsKey('cursor_id')) {
+      context.handle(_cursorIdMeta,
+          cursorId.isAcceptableOrUnknown(data['cursor_id']!, _cursorIdMeta));
+    }
+    if (data.containsKey('caught_up')) {
+      context.handle(_caughtUpMeta,
+          caughtUp.isAcceptableOrUnknown(data['caught_up']!, _caughtUpMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entityType};
+  @override
+  PullCursorRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PullCursorRow(
+      entityType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}entity_type'])!,
+      cursorAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}cursor_at']),
+      cursorId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}cursor_id']),
+      caughtUp: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}caught_up'])!,
+    );
+  }
+
+  @override
+  $PullCursorsTable createAlias(String alias) {
+    return $PullCursorsTable(attachedDatabase, alias);
+  }
+}
+
+class PullCursorRow extends DataClass implements Insertable<PullCursorRow> {
+  /// The sync entity type, e.g. `transaction`.
+  final String entityType;
+
+  /// `server_updated_at` of the last row pulled; null before the first.
+  final DateTime? cursorAt;
+
+  /// Id of the last row pulled; null before the first.
+  final String? cursorId;
+
+  /// Whether the last pull of this entity type reached the end.
+  final bool caughtUp;
+  const PullCursorRow(
+      {required this.entityType,
+      this.cursorAt,
+      this.cursorId,
+      required this.caughtUp});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['entity_type'] = Variable<String>(entityType);
+    if (!nullToAbsent || cursorAt != null) {
+      map['cursor_at'] = Variable<DateTime>(cursorAt);
+    }
+    if (!nullToAbsent || cursorId != null) {
+      map['cursor_id'] = Variable<String>(cursorId);
+    }
+    map['caught_up'] = Variable<bool>(caughtUp);
+    return map;
+  }
+
+  PullCursorsCompanion toCompanion(bool nullToAbsent) {
+    return PullCursorsCompanion(
+      entityType: Value(entityType),
+      cursorAt: cursorAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cursorAt),
+      cursorId: cursorId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cursorId),
+      caughtUp: Value(caughtUp),
+    );
+  }
+
+  factory PullCursorRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PullCursorRow(
+      entityType: serializer.fromJson<String>(json['entityType']),
+      cursorAt: serializer.fromJson<DateTime?>(json['cursorAt']),
+      cursorId: serializer.fromJson<String?>(json['cursorId']),
+      caughtUp: serializer.fromJson<bool>(json['caughtUp']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entityType': serializer.toJson<String>(entityType),
+      'cursorAt': serializer.toJson<DateTime?>(cursorAt),
+      'cursorId': serializer.toJson<String?>(cursorId),
+      'caughtUp': serializer.toJson<bool>(caughtUp),
+    };
+  }
+
+  PullCursorRow copyWith(
+          {String? entityType,
+          Value<DateTime?> cursorAt = const Value.absent(),
+          Value<String?> cursorId = const Value.absent(),
+          bool? caughtUp}) =>
+      PullCursorRow(
+        entityType: entityType ?? this.entityType,
+        cursorAt: cursorAt.present ? cursorAt.value : this.cursorAt,
+        cursorId: cursorId.present ? cursorId.value : this.cursorId,
+        caughtUp: caughtUp ?? this.caughtUp,
+      );
+  PullCursorRow copyWithCompanion(PullCursorsCompanion data) {
+    return PullCursorRow(
+      entityType:
+          data.entityType.present ? data.entityType.value : this.entityType,
+      cursorAt: data.cursorAt.present ? data.cursorAt.value : this.cursorAt,
+      cursorId: data.cursorId.present ? data.cursorId.value : this.cursorId,
+      caughtUp: data.caughtUp.present ? data.caughtUp.value : this.caughtUp,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PullCursorRow(')
+          ..write('entityType: $entityType, ')
+          ..write('cursorAt: $cursorAt, ')
+          ..write('cursorId: $cursorId, ')
+          ..write('caughtUp: $caughtUp')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(entityType, cursorAt, cursorId, caughtUp);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PullCursorRow &&
+          other.entityType == this.entityType &&
+          other.cursorAt == this.cursorAt &&
+          other.cursorId == this.cursorId &&
+          other.caughtUp == this.caughtUp);
+}
+
+class PullCursorsCompanion extends UpdateCompanion<PullCursorRow> {
+  final Value<String> entityType;
+  final Value<DateTime?> cursorAt;
+  final Value<String?> cursorId;
+  final Value<bool> caughtUp;
+  final Value<int> rowid;
+  const PullCursorsCompanion({
+    this.entityType = const Value.absent(),
+    this.cursorAt = const Value.absent(),
+    this.cursorId = const Value.absent(),
+    this.caughtUp = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PullCursorsCompanion.insert({
+    required String entityType,
+    this.cursorAt = const Value.absent(),
+    this.cursorId = const Value.absent(),
+    this.caughtUp = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : entityType = Value(entityType);
+  static Insertable<PullCursorRow> custom({
+    Expression<String>? entityType,
+    Expression<DateTime>? cursorAt,
+    Expression<String>? cursorId,
+    Expression<bool>? caughtUp,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (entityType != null) 'entity_type': entityType,
+      if (cursorAt != null) 'cursor_at': cursorAt,
+      if (cursorId != null) 'cursor_id': cursorId,
+      if (caughtUp != null) 'caught_up': caughtUp,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PullCursorsCompanion copyWith(
+      {Value<String>? entityType,
+      Value<DateTime?>? cursorAt,
+      Value<String?>? cursorId,
+      Value<bool>? caughtUp,
+      Value<int>? rowid}) {
+    return PullCursorsCompanion(
+      entityType: entityType ?? this.entityType,
+      cursorAt: cursorAt ?? this.cursorAt,
+      cursorId: cursorId ?? this.cursorId,
+      caughtUp: caughtUp ?? this.caughtUp,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (entityType.present) {
+      map['entity_type'] = Variable<String>(entityType.value);
+    }
+    if (cursorAt.present) {
+      map['cursor_at'] = Variable<DateTime>(cursorAt.value);
+    }
+    if (cursorId.present) {
+      map['cursor_id'] = Variable<String>(cursorId.value);
+    }
+    if (caughtUp.present) {
+      map['caught_up'] = Variable<bool>(caughtUp.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PullCursorsCompanion(')
+          ..write('entityType: $entityType, ')
+          ..write('cursorAt: $cursorAt, ')
+          ..write('cursorId: $cursorId, ')
+          ..write('caughtUp: $caughtUp, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4634,6 +4920,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SavingsContributionsTable savingsContributions =
       $SavingsContributionsTable(this);
   late final $ProfilesTable profiles = $ProfilesTable(this);
+  late final $PullCursorsTable pullCursors = $PullCursorsTable(this);
   late final Index idxTransactionsDate = Index('idx_transactions_date',
       'CREATE INDEX idx_transactions_date ON transactions (date)');
   late final Index idxTransactionsCategoryDate = Index(
@@ -4654,6 +4941,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final SavingsContributionsDao savingsContributionsDao =
       SavingsContributionsDao(this as AppDatabase);
   late final ProfileDao profileDao = ProfileDao(this as AppDatabase);
+  late final PullCursorsDao pullCursorsDao =
+      PullCursorsDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4667,6 +4956,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         savingsGoals,
         savingsContributions,
         profiles,
+        pullCursors,
         idxTransactionsDate,
         idxTransactionsCategoryDate,
         idxSavingsContributionsGoal
@@ -6781,6 +7071,164 @@ typedef $$ProfilesTableProcessedTableManager = ProcessedTableManager<
     (Profile, BaseReferences<_$AppDatabase, $ProfilesTable, Profile>),
     Profile,
     PrefetchHooks Function()>;
+typedef $$PullCursorsTableCreateCompanionBuilder = PullCursorsCompanion
+    Function({
+  required String entityType,
+  Value<DateTime?> cursorAt,
+  Value<String?> cursorId,
+  Value<bool> caughtUp,
+  Value<int> rowid,
+});
+typedef $$PullCursorsTableUpdateCompanionBuilder = PullCursorsCompanion
+    Function({
+  Value<String> entityType,
+  Value<DateTime?> cursorAt,
+  Value<String?> cursorId,
+  Value<bool> caughtUp,
+  Value<int> rowid,
+});
+
+class $$PullCursorsTableFilterComposer
+    extends Composer<_$AppDatabase, $PullCursorsTable> {
+  $$PullCursorsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get entityType => $composableBuilder(
+      column: $table.entityType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get cursorAt => $composableBuilder(
+      column: $table.cursorAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get cursorId => $composableBuilder(
+      column: $table.cursorId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get caughtUp => $composableBuilder(
+      column: $table.caughtUp, builder: (column) => ColumnFilters(column));
+}
+
+class $$PullCursorsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PullCursorsTable> {
+  $$PullCursorsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get entityType => $composableBuilder(
+      column: $table.entityType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get cursorAt => $composableBuilder(
+      column: $table.cursorAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get cursorId => $composableBuilder(
+      column: $table.cursorId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get caughtUp => $composableBuilder(
+      column: $table.caughtUp, builder: (column) => ColumnOrderings(column));
+}
+
+class $$PullCursorsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PullCursorsTable> {
+  $$PullCursorsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get entityType => $composableBuilder(
+      column: $table.entityType, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cursorAt =>
+      $composableBuilder(column: $table.cursorAt, builder: (column) => column);
+
+  GeneratedColumn<String> get cursorId =>
+      $composableBuilder(column: $table.cursorId, builder: (column) => column);
+
+  GeneratedColumn<bool> get caughtUp =>
+      $composableBuilder(column: $table.caughtUp, builder: (column) => column);
+}
+
+class $$PullCursorsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PullCursorsTable,
+    PullCursorRow,
+    $$PullCursorsTableFilterComposer,
+    $$PullCursorsTableOrderingComposer,
+    $$PullCursorsTableAnnotationComposer,
+    $$PullCursorsTableCreateCompanionBuilder,
+    $$PullCursorsTableUpdateCompanionBuilder,
+    (
+      PullCursorRow,
+      BaseReferences<_$AppDatabase, $PullCursorsTable, PullCursorRow>
+    ),
+    PullCursorRow,
+    PrefetchHooks Function()> {
+  $$PullCursorsTableTableManager(_$AppDatabase db, $PullCursorsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PullCursorsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PullCursorsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PullCursorsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> entityType = const Value.absent(),
+            Value<DateTime?> cursorAt = const Value.absent(),
+            Value<String?> cursorId = const Value.absent(),
+            Value<bool> caughtUp = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PullCursorsCompanion(
+            entityType: entityType,
+            cursorAt: cursorAt,
+            cursorId: cursorId,
+            caughtUp: caughtUp,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String entityType,
+            Value<DateTime?> cursorAt = const Value.absent(),
+            Value<String?> cursorId = const Value.absent(),
+            Value<bool> caughtUp = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PullCursorsCompanion.insert(
+            entityType: entityType,
+            cursorAt: cursorAt,
+            cursorId: cursorId,
+            caughtUp: caughtUp,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PullCursorsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $PullCursorsTable,
+    PullCursorRow,
+    $$PullCursorsTableFilterComposer,
+    $$PullCursorsTableOrderingComposer,
+    $$PullCursorsTableAnnotationComposer,
+    $$PullCursorsTableCreateCompanionBuilder,
+    $$PullCursorsTableUpdateCompanionBuilder,
+    (
+      PullCursorRow,
+      BaseReferences<_$AppDatabase, $PullCursorsTable, PullCursorRow>
+    ),
+    PullCursorRow,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6801,4 +7249,6 @@ class $AppDatabaseManager {
       $$SavingsContributionsTableTableManager(_db, _db.savingsContributions);
   $$ProfilesTableTableManager get profiles =>
       $$ProfilesTableTableManager(_db, _db.profiles);
+  $$PullCursorsTableTableManager get pullCursors =>
+      $$PullCursorsTableTableManager(_db, _db.pullCursors);
 }

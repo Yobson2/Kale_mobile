@@ -97,7 +97,7 @@ final transactionsSyncHandlerProvider =
 typedef TransactionsSyncHandlerRef
     = AutoDisposeProviderRef<TransactionsSyncHandler>;
 String _$transactionsRepositoryHash() =>
-    r'562f292da9133ab3720d82224ab2dd4dd1267192';
+    r'65adfa68f564ae838bc420565f2a6ea1004a4943';
 
 /// Provides the [TransactionsRepository].
 ///

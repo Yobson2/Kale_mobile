@@ -149,7 +149,7 @@ void main() {
       addTearDown(elsewhere.dispose);
       elsewhere.server.budgets.rows[created.id] = backedUp;
 
-      await elsewhere.budgets.refreshFromServer();
+      await elsewhere.restoreIfNeeded();
       // The device clock jumps to another day and the app restarts.
       elsewhere
         ..clock.moveTo(DateTime(2026, 11, 1, 13))

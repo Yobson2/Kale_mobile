@@ -6,14 +6,16 @@ import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/network/network_info.dart';
 import 'package:kale/core/sync/backup_status.dart';
 import 'package:kale/core/sync/last_backup_store.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/core/sync/sync_clock.dart';
 import 'package:kale/core/sync/sync_config.dart';
 import 'package:kale/core/utils/logger.dart';
 
 /// Contract that each syncable feature must implement.
 ///
-/// Registered with the [SyncEngine] so it knows how to
-/// push each entity type's operations to the server.
+/// Registered with the [SyncEngine] so it knows how to push each entity
+/// type's operations to the server, and with the `SyncPuller` so it knows
+/// how to pull them back.
 abstract class SyncHandler {
   /// The entity type string this handler manages (e.g., 'note').
   String get entityType;
@@ -28,12 +30,15 @@ abstract class SyncHandler {
   /// carries `deleted_at`. Nothing is ever hard-deleted on the server.
   Future<void> pushUpdate(String entityId, String payload);
 
-  /// Fetches the latest version from the server for conflict resolution.
-  /// Returns null if the entity doesn't exist on the server.
-  Future<String?> fetchRemote(String entityId);
-
-  /// Applies the server version locally (for server-wins conflict resolution).
-  Future<void> applyServerVersion(String entityId, String serverPayload);
+  /// Pulls the next page of at most [limit] server rows changed after
+  /// [after] (from the start when null), in `(server_updated_at, id)`
+  /// order, and merges them into the local table: a row with a local
+  /// change not yet pushed is kept, otherwise the newer `updatedAt` wins
+  /// (see `rowsToApply`).
+  Future<PulledPage> pullPage({
+    required PullCursor? after,
+    required int limit,
+  });
 }
 
 /// Orchestrates background synchronization of offline mutations.
@@ -288,37 +293,11 @@ class SyncEngine {
           throw StateError('Unknown sync operation "${entry.operation}"');
       }
     } on ServerException catch (e) {
-      if (e.statusCode == 409) {
-        await _resolveConflict(entry, handler);
-      } else {
-        await _recordFailedAttempt(entry, e.message);
-      }
+      await _recordFailedAttempt(entry, e.message);
     } on NetworkException {
       await _syncQueueDao.markFailed(entry.id, 'Network lost during sync');
     } catch (e) {
       await _recordFailedAttempt(entry, e.toString());
-    }
-  }
-
-  /// Server-wins conflict resolution.
-  Future<void> _resolveConflict(
-    SyncQueueEntry entry,
-    SyncHandler handler,
-  ) async {
-    AppLogger.info(
-      'Conflict detected for ${entry.entityType}/${entry.entityId}, '
-      'applying server-wins',
-      tag: 'SyncEngine',
-    );
-
-    try {
-      final serverPayload = await handler.fetchRemote(entry.entityId);
-      if (serverPayload != null) {
-        await handler.applyServerVersion(entry.entityId, serverPayload);
-      }
-      await _syncQueueDao.markCompleted(entry.id);
-    } catch (e) {
-      await _recordFailedAttempt(entry, 'Conflict resolution failed: $e');
     }
   }
 

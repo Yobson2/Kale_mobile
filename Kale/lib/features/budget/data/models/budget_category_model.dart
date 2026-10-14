@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kale/core/database/app_database.dart' as db;
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 
 part 'budget_category_model.freezed.dart';
@@ -12,7 +13,9 @@ part 'budget_category_model.g.dart';
 /// `allocated_minor` is an integer count of minor units of the account's
 /// base currency.
 @freezed
-abstract class BudgetCategoryModel with _$BudgetCategoryModel {
+abstract class BudgetCategoryModel
+    with _$BudgetCategoryModel
+    implements PulledRow {
   const factory BudgetCategoryModel({
     required String id,
     @JsonKey(name: 'budget_id') required String budgetId,

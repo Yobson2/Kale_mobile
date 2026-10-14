@@ -170,27 +170,6 @@ class BudgetsNotifier extends _$BudgetsNotifier {
     }
   }
 
-  /// Triggers a full refresh from the server.
-  Future<void> refreshFromServer() async {
-    state = const BudgetsState.loading();
-    try {
-      final repository = ref.read(budgetsRepositoryProvider);
-      final result = await repository.refreshFromServer();
-
-      result.fold(
-        (failure) => state = BudgetsState.error(failure.message),
-        (_) {
-          state = const BudgetsState.success(
-            message: 'Budgets refreshed successfully',
-          );
-          ref.invalidate(activeBudgetProvider);
-        },
-      );
-    } catch (e) {
-      state = BudgetsState.error(e.toString());
-    }
-  }
-
   /// Unlocks the first budget achievement.
   void _unlockFirstBudget() {
     Future(() async {

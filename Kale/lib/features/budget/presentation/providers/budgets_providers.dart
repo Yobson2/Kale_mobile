@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/date/calendar_date.dart';
-import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
 import 'package:kale/features/budget/data/datasources/budget_categories_local_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budget_categories_remote_datasource.dart';
@@ -97,13 +96,9 @@ BudgetCategoriesSyncHandler budgetCategoriesSyncHandler(Ref ref) {
 BudgetsRepository budgetsRepository(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return BudgetsRepositoryImpl(
-    remoteDataSource: ref.watch(budgetsRemoteDataSourceProvider),
     localDataSource: ref.watch(budgetsLocalDataSourceProvider),
-    categoriesRemoteDataSource:
-        ref.watch(budgetCategoriesRemoteDataSourceProvider),
     categoriesLocalDataSource:
         ref.watch(budgetCategoriesLocalDataSourceProvider),
-    networkInfo: ref.watch(networkInfoProvider),
     transactionsDao: db.transactionsDao,
   );
 }

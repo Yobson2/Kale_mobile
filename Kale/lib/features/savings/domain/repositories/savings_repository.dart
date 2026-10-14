@@ -63,8 +63,4 @@ abstract class SavingsRepository {
 
   /// Watches contributions for a goal as a reactive stream.
   Stream<List<SavingsContribution>> watchContributions(String goalId);
-
-  /// Refreshes goals and contributions from the server. Local changes not
-  /// yet pushed are kept.
-  Future<Either<Failure, void>> refreshFromServer();
 }

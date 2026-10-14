@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/features/savings/data/datasources/savings_local_datasource.dart';
 import 'package:kale/features/savings/data/datasources/savings_remote_datasource.dart';
@@ -37,22 +38,13 @@ class SavingsGoalsSyncHandler implements SyncHandler {
   }
 
   @override
-  Future<String?> fetchRemote(String entityId) async {
-    try {
-      final model = await _remote.getSavingsGoalById(entityId);
-      return jsonEncode(model.toJson());
-    } catch (_) {
-      return null;
-    }
-  }
-
-  @override
-  Future<void> applyServerVersion(
-    String entityId,
-    String serverPayload,
-  ) async {
-    final model = _decode(serverPayload);
-    await _local.saveSavingsGoal(model.copyWith(isSynced: true));
+  Future<PulledPage> pullPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
+    final page = await _remote.fetchPage(after: after, limit: limit);
+    await _local.mergeFromServer(page.rows);
+    return PulledPage(rowCount: page.rows.length, last: page.last);
   }
 
   static SavingsGoalModel _decode(String payload) =>

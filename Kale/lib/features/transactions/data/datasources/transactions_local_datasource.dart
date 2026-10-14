@@ -1,5 +1,6 @@
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/transactions/data/daos/transactions_dao.dart';
 import 'package:kale/features/transactions/data/models/transaction_model.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
@@ -44,8 +45,9 @@ abstract class TransactionsLocalDataSource {
     String? payload,
   });
 
-  /// Replaces all local transactions with server data (full refresh).
-  Future<void> replaceAllFromServer(List<TransactionModel> models);
+  /// Merges transactions pulled from the server (see `rowsToApply`):
+  /// local changes not yet pushed are kept.
+  Future<void> mergeFromServer(List<TransactionModel> pulled);
 
   /// Marks a transaction as synced, optionally setting the server ID.
   Future<void> markSynced(String id, {String? serverId});
@@ -186,13 +188,18 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
   }
 
   @override
-  Future<void> replaceAllFromServer(List<TransactionModel> models) async {
+  Future<void> mergeFromServer(List<TransactionModel> pulled) async {
     try {
-      final companions =
-          models.map((m) => m.toDriftCompanion(isSynced: true)).toList();
-      await _transactionsDao.replaceAll(companions);
+      final apply = rowsToApply(
+        pulled,
+        local: await _transactionsDao.statesByIds(pulled.map((m) => m.id)),
+        pendingIds: await _syncQueueDao.queuedEntityIds(_entityType),
+      );
+      await _transactionsDao.upsertAll([
+        for (final m in apply) m.toDriftCompanion(isSynced: true),
+      ]);
     } catch (e) {
-      throw CacheException(message: 'Failed to replace transactions: $e');
+      throw CacheException(message: 'Failed to merge transactions: $e');
     }
   }
 

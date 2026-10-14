@@ -1,5 +1,6 @@
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/savings/data/daos/savings_contributions_dao.dart';
 import 'package:kale/features/savings/data/models/savings_contribution_model.dart';
 import 'package:kale/features/savings/domain/entities/savings_contribution.dart';
@@ -30,9 +31,9 @@ abstract class SavingsContributionsLocalDataSource {
   });
   Future<void> markSynced(String id, {String? serverId});
 
-  /// Replaces synced contributions with the server's copy; unsynced ones
-  /// are kept.
-  Future<void> replaceAllFromServer(List<SavingsContributionModel> models);
+  /// Merges contributions pulled from the server (see `rowsToApply`):
+  /// local changes not yet pushed are kept.
+  Future<void> mergeFromServer(List<SavingsContributionModel> pulled);
 }
 
 /// Implementation of [SavingsContributionsLocalDataSource].
@@ -130,15 +131,18 @@ class SavingsContributionsLocalDataSourceImpl
   }
 
   @override
-  Future<void> replaceAllFromServer(
-    List<SavingsContributionModel> models,
-  ) async {
+  Future<void> mergeFromServer(List<SavingsContributionModel> pulled) async {
     try {
-      await _dao.replaceAll(
-        models.map((m) => m.toDriftCompanion(isSynced: true)).toList(),
+      final apply = rowsToApply(
+        pulled,
+        local: await _dao.statesByIds(pulled.map((m) => m.id)),
+        pendingIds: await _syncQueueDao.queuedEntityIds(_entityType),
       );
+      await _dao.upsertAll([
+        for (final m in apply) m.toDriftCompanion(isSynced: true),
+      ]);
     } catch (e) {
-      throw CacheException(message: 'Failed to replace contributions: $e');
+      throw CacheException(message: 'Failed to merge contributions: $e');
     }
   }
 }

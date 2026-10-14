@@ -22,9 +22,9 @@ These rules go beyond the doc:
 - **Migration**: bump `schemaVersion` in `AppDatabase` by exactly one, and add an `if (from < N)` block in `onUpgrade`.
   For a new table use `m.createTable(...)`; for a new column on an existing table use `m.addColumn(table, table.column)`.
   Earlier `if (from < …)` blocks stay untouched, because they still run for users upgrading from old versions.
-- **Refresh keeps unsynced rows**: in the DAO's `replaceAll`, delete only rows where `isSynced` is true, then upsert
-  the server rows. The existing DAOs wipe the whole table, which is a known bug (see the doc's "Known issues").
-  Don't copy that part.
+- **Pulls merge, never replace**: the DAO gets `statesByIds` and `upsertAll`, the local datasource
+  `mergeFromServer` filtered by `rowsToApply`, and the handler `pullPage`. The server table needs `server_updated_at`
+  and its stamp trigger (see the doc's "Pulling" section).
 - **Remote datasource** is scoped by `user_id` and comes with a `Mock…RemoteDataSource` twin behind a
   `USE_MOCK_<ENTITY>` flag that defaults to `false`. Document the flag in `docs/development.md`.
 - Operations on the new entity (create, update, delete, queries) follow the `add-feature-operation` skill.
@@ -56,9 +56,8 @@ the other type's payload.
 
 ## 5. Test
 
-- Repository: a create/update/delete writes locally **and** enqueues with the right `entityType`/operation/payload;
-  `refreshFromServer` returns `NetworkFailure` when offline.
-- SyncHandler: `pushCreate` calls the remote and then `markSynced` with the server ID; `applyServerVersion` saves and marks synced.
+- Repository: a create/update/delete writes locally **and** enqueues with the right `entityType`/operation/payload; a pull merges without overwriting unsynced rows (harness test).
+- SyncHandler: `pushCreate` calls the remote and then `markSynced` with the server ID; `pullPage` merges the fetched page.
 - Mocks go in `test/helpers/mock_providers.dart`.
 
 ## Done when

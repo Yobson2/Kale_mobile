@@ -2827,6 +2827,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t check your backup. Please try again.'**
   String get logoutFailed;
+
+  /// No description provided for @restoreInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Restoring your data…} =1{Restoring your data… 1 item} other{Restoring your data… {count} items}}'**
+  String restoreInProgress(int count);
+
+  /// No description provided for @refreshOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline. Pull to refresh again once you\'re connected.'**
+  String get refreshOffline;
+
+  /// No description provided for @refreshFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t refresh from your backup. Please try again.'**
+  String get refreshFailed;
 }
 
 class _AppLocalizationsDelegate

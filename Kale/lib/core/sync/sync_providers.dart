@@ -8,6 +8,7 @@ import 'package:kale/core/sync/last_backup_store.dart';
 import 'package:kale/core/sync/sync_clock.dart';
 import 'package:kale/core/sync/sync_config.dart';
 import 'package:kale/core/sync/sync_engine.dart';
+import 'package:kale/core/sync/sync_puller.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
@@ -33,15 +34,16 @@ LastBackupStore lastBackupStore(Ref ref) =>
 /// Every [SyncHandler] in the app, one per syncable entity type.
 ///
 /// Add a feature's handler here when it starts enqueueing a new entity
-/// type; `test/core/sync/sync_wiring_test.dart` fails until you do.
+/// type; `test/core/sync/sync_wiring_test.dart` fails until you do. The
+/// order is the pull order: parents before their children.
 @Riverpod(keepAlive: true)
 List<SyncHandler> syncHandlers(Ref ref) => [
-      ref.watch(transactionsSyncHandlerProvider),
+      ref.watch(profileSyncHandlerProvider),
       ref.watch(budgetsSyncHandlerProvider),
       ref.watch(budgetCategoriesSyncHandlerProvider),
-      ref.watch(profileSyncHandlerProvider),
       ref.watch(savingsGoalsSyncHandlerProvider),
       ref.watch(savingsContributionsSyncHandlerProvider),
+      ref.watch(transactionsSyncHandlerProvider),
     ];
 
 /// Provides the [SyncEngine] singleton, with every handler from
@@ -73,3 +75,22 @@ SyncEngine syncEngine(Ref ref) {
 @riverpod
 Stream<BackupStatus> backupStatus(Ref ref) =>
     ref.watch(syncEngineProvider).watchBackupStatus();
+
+/// Provides the [SyncPuller]: restore after sign-in and pull-to-refresh.
+@Riverpod(keepAlive: true)
+SyncPuller syncPuller(Ref ref) {
+  final db = ref.watch(appDatabaseProvider);
+  final puller = SyncPuller(
+    handlers: ref.watch(syncHandlersProvider),
+    cursors: db.pullCursorsDao,
+    networkInfo: ref.watch(networkInfoProvider),
+    hasLocalData: db.hasUserData,
+  );
+  ref.onDispose(puller.dispose);
+  return puller;
+}
+
+/// Streams the [PullStatus] for the restore banner.
+@riverpod
+Stream<PullStatus> pullStatus(Ref ref) =>
+    ref.watch(syncPullerProvider).watchStatus();

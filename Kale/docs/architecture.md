@@ -36,9 +36,10 @@ SyncEngine (background) ── SyncHandler ── RemoteDataSource (Supabase)
 ```
 
 - **Writes** save to Drift, enqueue a sync entry, and return immediately, online or offline.
-- **Reads** always come from Drift. When online, repositories fire a background `refreshFromServer`
-  that replaces local data with the server copy.
-- After login, the auth notifier refreshes budgets, transactions, and savings from the server.
+- **Reads** always come from Drift and never pull from the server.
+- **Pulls** run only on restore (after sign-in on an empty device, or to finish an interrupted restore) and on
+  pull-to-refresh, through `SyncPuller`. Pulled rows are merged without overwriting local changes not yet pushed
+  (see `docs/offline_sync.md`).
 
 ## Dependency injection
 

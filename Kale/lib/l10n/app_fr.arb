@@ -512,5 +512,8 @@
   "logoutUnsavedMessage": "{count, plural, =1{1 modification n'est pas encore sauvegardée. Si vous vous déconnectez maintenant, elle sera définitivement perdue.} other{{count} modifications ne sont pas encore sauvegardées. Si vous vous déconnectez maintenant, elles seront définitivement perdues.}}",
   "logoutUnsavedConfirm": "Se déconnecter quand même",
   "logoutUnsavedCancel": "Rester connecté",
-  "logoutFailed": "Impossible de vérifier votre sauvegarde. Veuillez réessayer."
+  "logoutFailed": "Impossible de vérifier votre sauvegarde. Veuillez réessayer.",
+  "restoreInProgress": "{count, plural, =0{Restauration de vos données…} =1{Restauration de vos données… 1 élément} other{Restauration de vos données… {count} éléments}}",
+  "refreshOffline": "Vous êtes hors ligne. Tirez pour actualiser une fois connecté.",
+  "refreshFailed": "Impossible d'actualiser depuis votre sauvegarde. Veuillez réessayer."
 }

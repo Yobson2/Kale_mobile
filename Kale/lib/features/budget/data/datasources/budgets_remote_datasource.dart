@@ -1,14 +1,17 @@
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
+import 'package:kale/core/sync/supabase_pull.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Remote data source for budgets API calls.
 abstract class BudgetsRemoteDataSource {
-  /// GET all budgets from the server.
-  Future<List<BudgetModel>> getAllBudgets();
-
-  /// GET a single budget by ID.
-  Future<BudgetModel> getBudgetById(String id);
+  /// Fetches the rows changed after [after], at most [limit], in pull
+  /// order (see `pullPageQuery`). Includes tombstones.
+  Future<RemotePage<BudgetModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  });
 
   /// POST a new budget.
   Future<BudgetModel> createBudget(BudgetModel model);
@@ -28,27 +31,17 @@ class SupabaseBudgetsRemoteDataSource implements BudgetsRemoteDataSource {
   SupabaseQueryBuilder get _table => _supabase.from('budgets');
 
   @override
-  Future<List<BudgetModel>> getAllBudgets() async {
+  Future<RemotePage<BudgetModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     try {
-      final data = await _table
-          .select()
-          .eq('user_id', _userId)
-          .order('start_date', ascending: false);
-      return data
-          .cast<Map<String, dynamic>>()
-          .map(BudgetModel.fromJson)
-          .toList();
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
-  @override
-  Future<BudgetModel> getBudgetById(String id) async {
-    try {
-      final data =
-          await _table.select().eq('id', id).eq('user_id', _userId).single();
-      return BudgetModel.fromJson(data);
+      final data = await pullPageQuery(
+        _table.select().eq('user_id', _userId),
+        after: after,
+        limit: limit,
+      );
+      return toRemotePage(data, BudgetModel.fromJson);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
@@ -96,15 +89,12 @@ class MockBudgetsRemoteDataSource implements BudgetsRemoteDataSource {
   static const _delay = Duration(milliseconds: 500);
 
   @override
-  Future<List<BudgetModel>> getAllBudgets() async {
+  Future<RemotePage<BudgetModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     await Future<void>.delayed(_delay);
-    return [];
-  }
-
-  @override
-  Future<BudgetModel> getBudgetById(String id) async {
-    await Future<void>.delayed(_delay);
-    throw const ServerException(message: 'Mock: budget not found');
+    return const RemotePage([]);
   }
 
   @override

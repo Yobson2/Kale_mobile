@@ -123,9 +123,7 @@ void main() {
       await harness.sync();
       await harness.db.clearAllData();
 
-      final result = await harness.savings.refreshFromServer();
-
-      expect(result.isRight(), isTrue);
+      expect(await harness.restoreIfNeeded(), PullOutcome.done);
       final restored = await harness.readSavingsGoal(goal.id);
       expect(restored.currentAmountMinor, 2000);
       final contributions = await harness.listContributions(goal.id);
@@ -139,7 +137,7 @@ void main() {
   test('a refresh keeps a goal that has not been backed up yet', () async {
     final goal = await harness.addSavingsGoal(name: 'Not yet pushed');
 
-    await harness.savings.refreshFromServer();
+    await harness.pull();
 
     expect((await harness.readSavingsGoal(goal.id)).name, 'Not yet pushed');
   });

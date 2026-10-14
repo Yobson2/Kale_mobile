@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kale/core/database/app_database.dart' as db;
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
 import 'package:kale/features/savings/domain/entities/savings_goal.dart';
 
@@ -13,7 +14,7 @@ part 'savings_goal_model.g.dart';
 /// is no per-goal currency. `current_amount_minor` is computed on the
 /// device from the goal's contributions and pushed as-is.
 @freezed
-abstract class SavingsGoalModel with _$SavingsGoalModel {
+abstract class SavingsGoalModel with _$SavingsGoalModel implements PulledRow {
   const factory SavingsGoalModel({
     required String id,
     required String name,

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:kale/core/database/app_database.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/savings/data/tables/savings_goals_table.dart';
 
 part 'savings_goals_dao.g.dart';
@@ -61,6 +62,20 @@ class SavingsGoalsDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+  /// The merge state of the rows with these [ids], deleted ones included.
+  Future<Map<String, LocalRowState>> statesByIds(Iterable<String> ids) async {
+    final rows =
+        await (select(savingsGoals)..where((t) => t.id.isIn(ids))).get();
+    return {
+      for (final row in rows)
+        row.id: (updatedAt: row.updatedAt, isSynced: row.isSynced),
+    };
+  }
+
+  /// Inserts or replaces [entries] (rows pulled from the server).
+  Future<void> upsertAll(List<SavingsGoalsCompanion> entries) =>
+      batch((b) => b.insertAllOnConflictUpdate(savingsGoals, entries));
+
   /// Marks a goal as synced.
   Future<void> markSynced(String id, {String? serverId}) =>
       (update(savingsGoals)..where((t) => t.id.equals(id))).write(
@@ -69,25 +84,4 @@ class SavingsGoalsDao extends DatabaseAccessor<AppDatabase>
           serverId: serverId != null ? Value(serverId) : const Value.absent(),
         ),
       );
-
-  /// Replaces the synced goals with the server's copy (server refresh).
-  ///
-  /// Goals with local changes not yet pushed are kept as they are.
-  Future<void> replaceAll(List<SavingsGoalsCompanion> entries) {
-    return transaction(() async {
-      final unsynced = (await (selectOnly(savingsGoals)
-                ..addColumns([savingsGoals.id])
-                ..where(savingsGoals.isSynced.equals(false)))
-              .map((row) => row.read(savingsGoals.id)!)
-              .get())
-          .toSet();
-      await (delete(savingsGoals)..where((t) => t.isSynced.equals(true))).go();
-      await batch(
-        (b) => b.insertAllOnConflictUpdate(
-          savingsGoals,
-          entries.where((e) => !unsynced.contains(e.id.value)),
-        ),
-      );
-    });
-  }
 }

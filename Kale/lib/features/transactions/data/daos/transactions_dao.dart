@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:kale/core/database/app_database.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/transactions/data/tables/transactions_table.dart';
 
 part 'transactions_dao.g.dart';
@@ -110,13 +111,19 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     );
   }
 
-  /// Replaces all transactions from server (full refresh).
-  Future<void> replaceAll(List<TransactionsCompanion> serverTransactions) {
-    return transaction(() async {
-      await delete(transactions).go();
-      await batch((b) => b.insertAll(transactions, serverTransactions));
-    });
+  /// The merge state of the rows with these [ids], deleted ones included.
+  Future<Map<String, LocalRowState>> statesByIds(Iterable<String> ids) async {
+    final rows =
+        await (select(transactions)..where((t) => t.id.isIn(ids))).get();
+    return {
+      for (final row in rows)
+        row.id: (updatedAt: row.updatedAt, isSynced: row.isSynced),
+    };
   }
+
+  /// Inserts or replaces [entries] (rows pulled from the server).
+  Future<void> upsertAll(List<TransactionsCompanion> entries) =>
+      batch((b) => b.insertAllOnConflictUpdate(transactions, entries));
 
   /// Gets the total, in minor units, per category for a period and type.
   Future<List<CategoryTotal>> getCategoryTotals({

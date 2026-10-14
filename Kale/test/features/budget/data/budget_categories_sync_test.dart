@@ -172,9 +172,7 @@ void main() {
     await harness.sync();
     await harness.db.clearAllData();
 
-    final result = await harness.budgets.refreshFromServer();
-
-    expect(result.isRight(), isTrue);
+    expect(await harness.restoreIfNeeded(), PullOutcome.done);
     final restored = await readBudget(budget.id);
     expect(allocatedByCategory(restored), {'cat_food': 1200, 'cat_rent': 800});
     expect(
@@ -192,7 +190,7 @@ void main() {
     await editAllocations(budget, [allocation('cat_food', 999)]);
     harness.online = true;
 
-    await harness.budgets.refreshFromServer();
+    await harness.pull();
 
     expect(allocatedByCategory(await readBudget(budget.id)), {'cat_food': 999});
   });

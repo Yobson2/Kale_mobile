@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/features/profile/data/datasources/profile_local_datasource.dart';
 import 'package:kale/features/profile/data/datasources/profile_remote_datasource.dart';
@@ -34,17 +35,16 @@ class ProfileSyncHandler implements SyncHandler {
     await _local.markSynced();
   }
 
+  /// The profile is a single row: every pull fetches it whole, with no
+  /// cursor, and keeps the local row if it has changes not yet pushed.
   @override
-  Future<String?> fetchRemote(String entityId) async {
+  Future<PulledPage> pullPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     final model = await _remote.getProfile();
-    return model == null ? null : jsonEncode(model.toJson());
+    if (model == null) return const PulledPage(rowCount: 0);
+    await _local.applyServerProfile(model);
+    return const PulledPage(rowCount: 1);
   }
-
-  @override
-  Future<void> applyServerVersion(String entityId, String serverPayload) =>
-      _local.applyServerProfile(
-        ProfileModel.fromJson(
-          jsonDecode(serverPayload) as Map<String, dynamic>,
-        ),
-      );
 }
