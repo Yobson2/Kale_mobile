@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:kale/core/constants/default_categories.dart';
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/database/tables/sync_queue_table.dart';
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/features/budget/data/daos/budget_categories_dao.dart';
 import 'package:kale/features/budget/data/daos/budgets_dao.dart';
 import 'package:kale/features/budget/data/tables/budget_categories_table.dart';
@@ -47,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   /// PRE-RELEASE ONLY: any [schemaVersion] change (up or down) drops every
   /// table and recreates the schema, wiping all local data, including

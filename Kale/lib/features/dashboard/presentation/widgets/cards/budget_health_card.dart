@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 
 class BudgetHealthCard extends ConsumerWidget {
   const BudgetHealthCard({super.key});
@@ -22,14 +22,13 @@ class BudgetHealthCard extends ConsumerWidget {
           return const SizedBox.shrink();
         }
 
-        final totalAllocated = budget.categories
-            .fold<double>(0, (sum, c) => sum + c.allocatedAmount);
-        final totalSpent =
-            budget.categories.fold<double>(0, (sum, c) => sum + c.spentAmount);
+        final currency = ref.watch(baseCurrencyProvider);
+        final totalAllocated = budget.totalAllocatedIn(currency);
+        final totalSpent = budget.totalSpentIn(currency);
 
-        if (totalAllocated == 0) return const SizedBox.shrink();
+        if (totalAllocated.isZero) return const SizedBox.shrink();
 
-        final utilization = totalSpent / totalAllocated;
+        final utilization = totalSpent.minorUnits / totalAllocated.minorUnits;
         final percent = (utilization * 100).round().clamp(0, 999);
         final color = percent < 70
             ? Colors.green
@@ -114,9 +113,9 @@ class BudgetHealthCard extends ConsumerWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${CurrencyFormatter.format(totalSpent, compact: true)}'
+                          '${context.formatMoney(totalSpent)}'
                           ' of '
-                          '${CurrencyFormatter.format(totalAllocated, compact: true)}'
+                          '${context.formatMoney(totalAllocated)}'
                           '${context.l10n.dashboardSpent}',
                           style: context.textTheme.bodySmall?.copyWith(
                             color: context.colorScheme.onSurfaceVariant,

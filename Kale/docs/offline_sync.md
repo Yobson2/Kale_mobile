@@ -68,8 +68,16 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
   input and format output. Never sum or store money as `double`.
 - Transactions have a nullable `deletedAt`; every DAO read excludes rows where it is set. (Deletes are still hard
   deletes until the tombstone work lands; rows only arrive with `deletedAt` set through a pull.)
-- Budgets and savings still hold `double` amounts until their own schema reset. The budgets repository converts
-  transaction totals from minor units to major units of the base currency at that boundary.
+- Budgets store `totalIncomeMinor` and their allocations `allocatedMinor` (`total_income_minor`, `allocated_minor`),
+  integer minor units of the base currency like transactions. Spent and remaining amounts are integer sums of
+  transaction minor units. Both tables have a nullable `deletedAt` that every DAO read excludes.
+- A budget period is two calendar dates, `startDate` and `endDate`, both included (`CalendarDate` in
+  `lib/core/date/`). Drift stores them as `YYYY-MM-DD` text, the server as `DATE`, so a time-zone or clock change
+  can't shift the days a budget covers. A budget's spending is every transaction from the first instant of
+  `startDate` to the last second of `endDate`, in the device's current time zone. The period is computed in the
+  domain by `BudgetPeriodRange.containing(day, period:, startDay:)` from the stored `periodStartDay`
+  (`period_start_day`, default 1: calendar months, weeks starting Monday).
+- Savings still hold `double` amounts until their own schema reset.
 
 ## Reads and refresh
 

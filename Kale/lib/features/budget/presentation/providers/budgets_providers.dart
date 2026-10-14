@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
 import 'package:kale/features/budget/data/datasources/budgets_local_datasource.dart';
@@ -13,7 +14,6 @@ import 'package:kale/features/budget/domain/usecases/create_budget_usecase.dart'
 import 'package:kale/features/budget/domain/usecases/delete_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/get_active_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/update_budget_usecase.dart';
-import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'budgets_providers.g.dart';
@@ -66,7 +66,6 @@ BudgetsRepository budgetsRepository(Ref ref) {
     localDataSource: ref.watch(budgetsLocalDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
     transactionsDao: db.transactionsDao,
-    profileRepository: ref.watch(profileRepositoryProvider),
   );
 }
 
@@ -83,7 +82,7 @@ Stream<List<Budget>> budgetsStream(Ref ref) {
 @riverpod
 Future<Budget?> activeBudget(Ref ref) async {
   final repository = ref.watch(budgetsRepositoryProvider);
-  final result = await repository.getActiveBudget();
+  final result = await repository.getActiveBudget(today: CalendarDate.today());
   return result.fold(
     (failure) => throw Exception(failure.message),
     (budget) => budget,

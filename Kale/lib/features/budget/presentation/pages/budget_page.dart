@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
@@ -15,6 +15,7 @@ import 'package:kale/features/budget/presentation/providers/budgets_notifier.dar
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/budget/presentation/widgets/budget_gauge.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 
 /// Budget overview page showing the active budget with category
 /// progress bars, or an empty state prompting the user to create one.
@@ -201,16 +202,12 @@ class _BudgetContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final categoryNames =
         ref.watch(categoryNamesProvider).valueOrNull ?? const {};
-    final totalAllocated = budget.categories.fold<double>(
-      0,
-      (sum, cat) => sum + cat.allocatedAmount,
-    );
-    final totalSpent = budget.categories.fold<double>(
-      0,
-      (sum, cat) => sum + cat.spentAmount,
-    );
-    final spentPercent =
-        totalAllocated > 0 ? (totalSpent / totalAllocated).clamp(0.0, 1.5) : 0.0;
+    final currency = ref.watch(baseCurrencyProvider);
+    final totalAllocated = budget.totalAllocatedIn(currency);
+    final totalSpent = budget.totalSpentIn(currency);
+    final spentPercent = totalAllocated.isPositive
+        ? (totalSpent.minorUnits / totalAllocated.minorUnits).clamp(0.0, 1.5)
+        : 0.0;
 
     // Group categories by groupName.
     final groups = <String, List<BudgetCategoryAllocation>>{};
@@ -279,6 +276,7 @@ class _BudgetContent extends ConsumerWidget {
                 groupName: entry.key,
                 categories: entry.value,
                 categoryNames: categoryNames,
+                currency: currency,
               );
             }),
 
@@ -422,8 +420,8 @@ class _TotalProgressCard extends StatelessWidget {
     required this.spentPercent,
   });
 
-  final double totalSpent;
-  final double totalAllocated;
+  final Money totalSpent;
+  final Money totalAllocated;
   final double spentPercent;
 
   @override
@@ -472,7 +470,7 @@ class _TotalProgressCard extends StatelessWidget {
                 ),
                 AppSpacing.verticalSm,
                 Text(
-                  CurrencyFormatter.format(totalSpent),
+                  context.formatMoney(totalSpent),
                   style: context.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
@@ -480,7 +478,7 @@ class _TotalProgressCard extends StatelessWidget {
                 ),
                 AppSpacing.verticalXs,
                 Text(
-                  'of ${CurrencyFormatter.format(totalAllocated)} budget',
+                  'of ${context.formatMoney(totalAllocated)} budget',
                   style: context.textTheme.bodySmall?.copyWith(
                     color: Colors.white.withValues(alpha: 0.7),
                   ),
@@ -511,21 +509,23 @@ class _CategoryGroupSection extends StatelessWidget {
     required this.groupName,
     required this.categories,
     required this.categoryNames,
+    required this.currency,
   });
 
   final String groupName;
   final List<BudgetCategoryAllocation> categories;
   final Map<String, String> categoryNames;
+  final Currency currency;
 
   @override
   Widget build(BuildContext context) {
-    final groupTotal = categories.fold<double>(
-      0,
-      (sum, cat) => sum + cat.allocatedAmount,
+    final groupTotal = Money.sum(
+      categories.map((cat) => cat.allocatedIn(currency)),
+      currency,
     );
-    final groupSpent = categories.fold<double>(
-      0,
-      (sum, cat) => sum + cat.spentAmount,
+    final groupSpent = Money.sum(
+      categories.map((cat) => cat.spentIn(currency)),
+      currency,
     );
 
     return Padding(
@@ -567,9 +567,9 @@ class _CategoryGroupSection extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    '${CurrencyFormatter.format(groupSpent, compact: true)}'
+                    '${context.formatMoney(groupSpent)}'
                     ' / '
-                    '${CurrencyFormatter.format(groupTotal, compact: true)}',
+                    '${context.formatMoney(groupTotal)}',
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w500,
@@ -586,6 +586,7 @@ class _CategoryGroupSection extends StatelessWidget {
               (cat) => _CategoryProgressItem(
                 category: cat,
                 categoryNames: categoryNames,
+                currency: currency,
               ),
             ),
             AppSpacing.verticalSm,
@@ -608,17 +609,19 @@ class _CategoryProgressItem extends StatelessWidget {
   const _CategoryProgressItem({
     required this.category,
     required this.categoryNames,
+    required this.currency,
   });
 
   final BudgetCategoryAllocation category;
   final Map<String, String> categoryNames;
+  final Currency currency;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final allocated = category.allocatedAmount;
-    final spent = category.spentAmount;
-    final progress = allocated > 0 ? (spent / allocated).clamp(0.0, 1.0) : 0.0;
+    final allocated = category.allocatedIn(currency);
+    final spent = category.spentIn(currency);
+    final progress = category.utilization.clamp(0.0, 1.0);
     final isOverBudget = spent > allocated;
     final progressColor = isOverBudget
         ? (isDark ? AppColors.expenseDark : AppColors.expenseLight)
@@ -637,8 +640,7 @@ class _CategoryProgressItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  categoryNames[category.categoryId] ??
-                      category.categoryId,
+                  categoryNames[category.categoryId] ?? category.categoryId,
                   style: context.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -647,9 +649,9 @@ class _CategoryProgressItem extends StatelessWidget {
                 ),
               ),
               Text(
-                '${CurrencyFormatter.format(spent, compact: true)}'
+                '${context.formatMoney(spent)}'
                 ' / '
-                '${CurrencyFormatter.format(allocated, compact: true)}',
+                '${context.formatMoney(allocated)}',
                 style: context.textTheme.bodySmall?.copyWith(
                   color: isOverBudget
                       ? (isDark

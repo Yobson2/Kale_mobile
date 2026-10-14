@@ -12,12 +12,19 @@ _BudgetModel _$BudgetModelFromJson(Map<String, dynamic> json) => _BudgetModel(
       name: json['name'] as String,
       strategy: json['strategy'] as String,
       period: json['period'] as String,
-      startDate: DateTime.parse(json['start_date'] as String),
-      endDate: DateTime.parse(json['end_date'] as String),
-      totalIncome: (json['total_income'] as num?)?.toDouble(),
+      startDate: const CalendarDateJsonConverter()
+          .fromJson(json['start_date'] as String),
+      endDate: const CalendarDateJsonConverter()
+          .fromJson(json['end_date'] as String),
+      periodStartDay: (json['period_start_day'] as num?)?.toInt() ??
+          BudgetPeriodRange.defaultStartDay,
+      totalIncomeMinor: (json['total_income_minor'] as num?)?.toInt(),
       isPercentageBased: json['is_percentage_based'] as bool? ?? true,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
+      deletedAt: json['deleted_at'] == null
+          ? null
+          : DateTime.parse(json['deleted_at'] as String),
     );
 
 Map<String, dynamic> _$BudgetModelToJson(_BudgetModel instance) =>
@@ -27,10 +34,13 @@ Map<String, dynamic> _$BudgetModelToJson(_BudgetModel instance) =>
       'name': instance.name,
       'strategy': instance.strategy,
       'period': instance.period,
-      'start_date': instance.startDate.toIso8601String(),
-      'end_date': instance.endDate.toIso8601String(),
-      'total_income': instance.totalIncome,
+      'start_date':
+          const CalendarDateJsonConverter().toJson(instance.startDate),
+      'end_date': const CalendarDateJsonConverter().toJson(instance.endDate),
+      'period_start_day': instance.periodStartDay,
+      'total_income_minor': instance.totalIncomeMinor,
       'is_percentage_based': instance.isPercentageBased,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
+      'deleted_at': instance.deletedAt?.toIso8601String(),
     };

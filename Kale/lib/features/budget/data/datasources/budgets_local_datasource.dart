@@ -1,4 +1,5 @@
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/features/budget/data/daos/budget_categories_dao.dart';
 import 'package:kale/features/budget/data/daos/budgets_dao.dart';
@@ -13,8 +14,8 @@ abstract class BudgetsLocalDataSource {
   /// Gets all budgets.
   Future<List<BudgetModel>> getBudgets();
 
-  /// Gets the currently active budget.
-  Future<BudgetModel?> getActiveBudget();
+  /// Gets the budget whose period covers [today].
+  Future<BudgetModel?> getActiveBudget(CalendarDate today);
 
   /// Gets a single budget by ID.
   Future<BudgetModel?> getBudgetById(String id);
@@ -79,9 +80,9 @@ class BudgetsLocalDataSourceImpl implements BudgetsLocalDataSource {
   }
 
   @override
-  Future<BudgetModel?> getActiveBudget() async {
+  Future<BudgetModel?> getActiveBudget(CalendarDate today) async {
     try {
-      final row = await _budgetsDao.getActive();
+      final row = await _budgetsDao.getActiveOn(today);
       return row != null ? BudgetModel.fromDrift(row) : null;
     } catch (e) {
       throw CacheException(message: 'Failed to get active budget: $e');
@@ -123,8 +124,7 @@ class BudgetsLocalDataSourceImpl implements BudgetsLocalDataSource {
     List<BudgetCategoryModel> categories,
   ) async {
     try {
-      final companions =
-          categories.map((c) => c.toDriftCompanion()).toList();
+      final companions = categories.map((c) => c.toDriftCompanion()).toList();
       await _budgetCategoriesDao.replaceForBudget(budgetId, companions);
     } catch (e) {
       throw CacheException(

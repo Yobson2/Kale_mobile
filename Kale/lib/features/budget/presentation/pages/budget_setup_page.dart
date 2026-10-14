@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/core/widgets/layout/app_step_indicator.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
@@ -44,14 +44,21 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
   // Step 2: Period & Money to budget.
   BudgetPeriod _selectedPeriod = BudgetPeriod.monthly;
   final _budgetAmountController = TextEditingController();
-  double _budgetAmount = 0;
+
+  /// Money to budget, in minor units of the base currency.
+  int _budgetMinor = 0;
 
   // Step 3: Category allocations.
   late List<_CategoryAllocationData> _allocations;
 
   bool _isCreating = false;
+  bool _amountFilled = false;
 
   bool get _isEditMode => widget.existingBudget != null;
+
+  Currency get _currency => ref.read(baseCurrencyProvider);
+
+  String get _locale => Localizations.localeOf(context).toString();
 
   @override
   void initState() {
@@ -60,10 +67,7 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     if (existing != null) {
       _selectedStrategy = existing.strategy;
       _selectedPeriod = existing.period;
-      _budgetAmount = existing.totalIncome ?? 0;
-      if (_budgetAmount > 0) {
-        _budgetAmountController.text = _budgetAmount.toStringAsFixed(0);
-      }
+      _budgetMinor = existing.totalIncomeMinor ?? 0;
       _allocations = existing.categories
           .map(
             (c) => _CategoryAllocationData(
@@ -71,12 +75,26 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
               name: _categoryName(c.categoryId),
               groupName: c.groupName,
               percentage: c.allocatedPercentage ?? 0,
-              amount: c.allocatedAmount,
+              amountMinor: c.allocatedMinor,
             ),
           )
           .toList();
     } else {
       _allocations = _buildDefaultAllocations(_selectedStrategy);
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // The amount is shown in the device locale, known only from here on.
+    if (_amountFilled) return;
+    _amountFilled = true;
+    if (_budgetMinor > 0) {
+      _budgetAmountController.text = Money.fromMinorUnits(
+        _budgetMinor,
+        _currency,
+      ).format(locale: _locale, withSymbol: false);
     }
   }
 
@@ -105,8 +123,13 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
         });
       }
       if (_currentStep == 1) {
-        _budgetAmount = double.tryParse(_budgetAmountController.text) ?? 0;
-        if (_budgetAmount <= 0) {
+        final amount = Money.tryParse(
+          _budgetAmountController.text,
+          _currency,
+          locale: _locale,
+        );
+        _budgetMinor = amount?.minorUnits ?? 0;
+        if (_budgetMinor <= 0) {
           context.showSnackBar(
             'Please enter the amount you want to budget',
             isError: true,
@@ -147,10 +170,13 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
   }
 
   void _applyIncomeToAllocations() {
-    if (_budgetAmount <= 0) return;
+    if (_budgetMinor <= 0) return;
     for (final alloc in _allocations) {
       if (alloc.percentage > 0) {
-        alloc.amount = _budgetAmount * (alloc.percentage / 100);
+        // Integer share in hundredths of a percent, rounded down, so the
+        // allocations never add up to more than the budget.
+        final basisPoints = (alloc.percentage * 100).round();
+        alloc.amountMinor = _budgetMinor * basisPoints ~/ 10000;
       }
     }
   }
@@ -159,11 +185,11 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     if (_isCreating) return;
 
     // Validate allocations don't exceed budget.
-    final totalAllocated = _allocations.fold<double>(
+    final totalAllocated = _allocations.fold<int>(
       0,
-      (sum, a) => sum + a.amount,
+      (sum, a) => sum + a.amountMinor,
     );
-    if (totalAllocated > _budgetAmount) {
+    if (totalAllocated > _budgetMinor) {
       context.showSnackBar(
         'Allocations exceed your budget. Go back and adjust amounts.',
         isError: true,
@@ -174,27 +200,6 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     setState(() => _isCreating = true);
 
     final now = DateTime.now();
-    late DateTime startDate;
-    late DateTime endDate;
-
-    if (_isEditMode) {
-      // Keep existing dates when editing.
-      startDate = widget.existingBudget!.startDate;
-      endDate = widget.existingBudget!.endDate;
-    } else {
-      switch (_selectedPeriod) {
-        case BudgetPeriod.weekly:
-          final weekday = now.weekday;
-          startDate = DateTime(now.year, now.month, now.day - (weekday - 1));
-          endDate = startDate.add(const Duration(days: 7));
-        case BudgetPeriod.biWeekly:
-          startDate = DateTime(now.year, now.month, now.day);
-          endDate = startDate.add(const Duration(days: 14));
-        case BudgetPeriod.monthly:
-          startDate = DateTime(now.year, now.month);
-          endDate = DateTime(now.year, now.month + 1);
-      }
-    }
 
     final months = [
       '',
@@ -216,16 +221,16 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
         : '${months[now.month]} ${now.year} Budget';
 
     final categories = _allocations
-        .where((a) => a.amount > 0)
+        .where((a) => a.amountMinor > 0)
         .map(
           (a) => BudgetCategoryAllocation(
             id: '',
             budgetId: _isEditMode ? widget.existingBudget!.id : '',
             categoryId: a.categoryId,
             groupName: a.groupName,
-            allocatedAmount: a.amount,
+            allocatedMinor: a.amountMinor,
             allocatedPercentage: a.percentage > 0 ? a.percentage : null,
-            spentAmount: 0,
+            spentMinor: 0,
             createdAt: now,
           ),
         )
@@ -234,27 +239,30 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     final notifier = ref.read(budgetsNotifierProvider.notifier);
     final bool success;
 
-    if (_isEditMode) {
+    final existing = widget.existingBudget;
+    if (existing != null) {
+      // Editing keeps the budget's period.
       success = await notifier.updateBudget(
-        id: widget.existingBudget!.id,
+        id: existing.id,
         name: budgetName,
         strategy: _selectedStrategy,
         period: _selectedPeriod,
-        startDate: startDate,
-        endDate: endDate,
+        startDate: existing.startDate,
+        endDate: existing.endDate,
+        periodStartDay: existing.periodStartDay,
         categories: categories,
-        totalIncome: _budgetAmount,
+        totalIncomeMinor: _budgetMinor,
         isPercentageBased: false,
       );
     } else {
+      // The period containing today, from the default start day (the
+      // custom start-day choice comes in a later phase).
       success = await notifier.createBudget(
         name: budgetName,
         strategy: _selectedStrategy,
         period: _selectedPeriod,
-        startDate: startDate,
-        endDate: endDate,
         categories: categories,
-        totalIncome: _budgetAmount,
+        totalIncomeMinor: _budgetMinor,
         isPercentageBased: false,
       );
     }
@@ -279,6 +287,8 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currency = ref.watch(baseCurrencyProvider);
+    final budgetAmount = Money.fromMinorUnits(_budgetMinor, currency);
     return Scaffold(
       appBar: AppAppBar(
         title: _isEditMode ? 'Edit Budget' : 'Create Budget',
@@ -321,20 +331,20 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
                   _PeriodIncomeStep(
                     selectedPeriod: _selectedPeriod,
                     budgetAmountController: _budgetAmountController,
-                    currencyCode: ref.watch(baseCurrencyProvider).code,
+                    currency: currency,
                     onPeriodChanged: (period) {
                       setState(() => _selectedPeriod = period);
                     },
                   ),
                   _AllocationsStep(
                     allocations: _allocations,
-                    budgetAmount: _budgetAmount,
+                    budgetAmount: budgetAmount,
                     onChanged: () => setState(() {}),
                   ),
                   _ConfirmStep(
                     strategy: _selectedStrategy,
                     period: _selectedPeriod,
-                    budgetAmount: _budgetAmount,
+                    budgetAmount: budgetAmount,
                     allocations: _allocations,
                   ),
                 ],
@@ -512,13 +522,13 @@ class _PeriodIncomeStep extends StatelessWidget {
   const _PeriodIncomeStep({
     required this.selectedPeriod,
     required this.budgetAmountController,
-    required this.currencyCode,
+    required this.currency,
     required this.onPeriodChanged,
   });
 
   final BudgetPeriod selectedPeriod;
   final TextEditingController budgetAmountController;
-  final String currencyCode;
+  final Currency currency;
   final ValueChanged<BudgetPeriod> onPeriodChanged;
 
   @override
@@ -621,10 +631,12 @@ class _PeriodIncomeStep extends StatelessWidget {
           AppSpacing.verticalMd,
           TextField(
             controller: budgetAmountController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            keyboardType: TextInputType.numberWithOptions(
+              decimal: currency.decimalPlaces > 0,
+            ),
             decoration: InputDecoration(
               hintText: '0',
-              prefixText: '$currencyCode ',
+              prefixText: '${currency.symbol} ',
               border: OutlineInputBorder(
                 borderRadius: AppRadius.borderRadiusMd,
               ),
@@ -662,23 +674,22 @@ class _AllocationsStep extends StatelessWidget {
   });
 
   final List<_CategoryAllocationData> allocations;
-  final double budgetAmount;
+  final Money budgetAmount;
   final VoidCallback onChanged;
 
   @override
   Widget build(BuildContext context) {
+    final currency = budgetAmount.currency;
+
     // Group allocations by groupName.
     final groups = <String, List<_CategoryAllocationData>>{};
     for (final alloc in allocations) {
       groups.putIfAbsent(alloc.groupName, () => []).add(alloc);
     }
 
-    final totalAllocated = allocations.fold<double>(
-      0,
-      (sum, a) => sum + a.amount,
-    );
+    final totalAllocated = _totalOf(allocations, currency);
     final remaining = budgetAmount - totalAllocated;
-    final isOverBudget = remaining < 0;
+    final isOverBudget = remaining.isNegative;
 
     return SingleChildScrollView(
       padding: AppSpacing.paddingLg,
@@ -730,7 +741,9 @@ class _AllocationsStep extends StatelessWidget {
                     ),
                     AppSpacing.verticalXs,
                     Text(
-                      CurrencyFormatter.format(remaining.abs()),
+                      context.formatMoney(
+                        isOverBudget ? -remaining : remaining,
+                      ),
                       style: context.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: isOverBudget
@@ -753,9 +766,9 @@ class _AllocationsStep extends StatelessWidget {
                     ),
                     AppSpacing.verticalXs,
                     Text(
-                      '${CurrencyFormatter.format(totalAllocated, compact: true)}'
+                      '${context.formatMoney(totalAllocated)}'
                       ' / '
-                      '${CurrencyFormatter.format(budgetAmount, compact: true)}',
+                      '${context.formatMoney(budgetAmount)}',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w500,
@@ -772,6 +785,7 @@ class _AllocationsStep extends StatelessWidget {
             return _AllocationGroup(
               groupName: entry.key,
               allocations: entry.value,
+              currency: currency,
               onChanged: onChanged,
             );
           }),
@@ -785,19 +799,18 @@ class _AllocationGroup extends StatelessWidget {
   const _AllocationGroup({
     required this.groupName,
     required this.allocations,
+    required this.currency,
     required this.onChanged,
   });
 
   final String groupName;
   final List<_CategoryAllocationData> allocations;
+  final Currency currency;
   final VoidCallback onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final groupTotal = allocations.fold<double>(
-      0,
-      (sum, a) => sum + a.amount,
-    );
+    final groupTotal = _totalOf(allocations, currency);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.lg),
@@ -827,7 +840,7 @@ class _AllocationGroup extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CurrencyFormatter.format(groupTotal, compact: true),
+                    context.formatMoney(groupTotal),
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -839,6 +852,7 @@ class _AllocationGroup extends StatelessWidget {
             ...allocations.map((alloc) {
               return _AllocationRow(
                 allocation: alloc,
+                currency: currency,
                 onChanged: onChanged,
               );
             }),
@@ -852,10 +866,12 @@ class _AllocationGroup extends StatelessWidget {
 class _AllocationRow extends StatefulWidget {
   const _AllocationRow({
     required this.allocation,
+    required this.currency,
     required this.onChanged,
   });
 
   final _CategoryAllocationData allocation;
+  final Currency currency;
   final VoidCallback onChanged;
 
   @override
@@ -863,17 +879,22 @@ class _AllocationRow extends StatefulWidget {
 }
 
 class _AllocationRowState extends State<_AllocationRow> {
-  late final TextEditingController _controller;
+  final _controller = TextEditingController();
+  bool _filled = false;
 
   @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(
-      text: widget.allocation.amount > 0
-          ? widget.allocation.amount.toStringAsFixed(0)
-          : '',
-    );
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Filled once the locale is known; later typing must not be replaced.
+    if (_filled) return;
+    _filled = true;
+    final amount = widget.allocation.amountIn(widget.currency);
+    if (amount.isPositive) {
+      _controller.text = amount.format(locale: _locale, withSymbol: false);
+    }
   }
+
+  String get _locale => Localizations.localeOf(context).toString();
 
   @override
   void dispose() {
@@ -915,8 +936,9 @@ class _AllocationRowState extends State<_AllocationRow> {
           SizedBox(
             width: 120,
             child: TextField(
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: widget.currency.decimalPlaces > 0,
+              ),
               decoration: InputDecoration(
                 isDense: true,
                 hintText: '0',
@@ -930,7 +952,10 @@ class _AllocationRowState extends State<_AllocationRow> {
               ),
               controller: _controller,
               onChanged: (value) {
-                widget.allocation.amount = double.tryParse(value) ?? 0;
+                final amount =
+                    Money.tryParse(value, widget.currency, locale: _locale);
+                widget.allocation.amountMinor =
+                    amount == null || amount.isNegative ? 0 : amount.minorUnits;
                 widget.onChanged();
               },
             ),
@@ -953,20 +978,18 @@ class _ConfirmStep extends StatelessWidget {
 
   final BudgetStrategy strategy;
   final BudgetPeriod period;
-  final double budgetAmount;
+  final Money budgetAmount;
   final List<_CategoryAllocationData> allocations;
 
   @override
   Widget build(BuildContext context) {
-    final totalAllocated = allocations.fold<double>(
-      0,
-      (sum, a) => sum + a.amount,
-    );
+    final currency = budgetAmount.currency;
+    final totalAllocated = _totalOf(allocations, currency);
 
     // Group allocations.
     final groups = <String, List<_CategoryAllocationData>>{};
     for (final alloc in allocations) {
-      if (alloc.amount > 0) {
+      if (alloc.amountMinor > 0) {
         groups.putIfAbsent(alloc.groupName, () => []).add(alloc);
       }
     }
@@ -1016,13 +1039,13 @@ class _ConfirmStep extends StatelessWidget {
                 AppSpacing.verticalSm,
                 _ConfirmRow(
                   label: 'Money to Budget',
-                  value: CurrencyFormatter.format(budgetAmount),
+                  value: context.formatMoney(budgetAmount),
                   context: context,
                 ),
                 AppSpacing.verticalSm,
                 _ConfirmRow(
                   label: 'Total Allocated',
-                  value: CurrencyFormatter.format(totalAllocated),
+                  value: context.formatMoney(totalAllocated),
                   context: context,
                   isBold: true,
                 ),
@@ -1031,8 +1054,11 @@ class _ConfirmStep extends StatelessWidget {
                   label: totalAllocated > budgetAmount
                       ? 'Over Budget'
                       : 'Remaining',
-                  value: CurrencyFormatter.format(
-                    (budgetAmount - totalAllocated).abs(),
+                  value: context.formatMoney(
+                    Money.fromMinorUnits(
+                      (budgetAmount - totalAllocated).minorUnits.abs(),
+                      currency,
+                    ),
                   ),
                   context: context,
                   isWarning: totalAllocated > budgetAmount,
@@ -1060,7 +1086,7 @@ class _ConfirmStep extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Your allocations exceed your available budget by '
-                      '${CurrencyFormatter.format(totalAllocated - budgetAmount)}. '
+                      '${context.formatMoney(totalAllocated - budgetAmount)}. '
                       'Go back and adjust your amounts.',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: context.colorScheme.onErrorContainer,
@@ -1084,10 +1110,7 @@ class _ConfirmStep extends StatelessWidget {
           AppSpacing.verticalMd,
 
           ...groups.entries.map((entry) {
-            final groupTotal = entry.value.fold<double>(
-              0,
-              (sum, a) => sum + a.amount,
-            );
+            final groupTotal = _totalOf(entry.value, currency);
             return Container(
               margin: const EdgeInsets.only(bottom: AppSpacing.md),
               padding: AppSpacing.paddingMd,
@@ -1108,7 +1131,7 @@ class _ConfirmStep extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        CurrencyFormatter.format(groupTotal, compact: true),
+                        context.formatMoney(groupTotal),
                         style: context.textTheme.bodySmall?.copyWith(
                           color: context.colorScheme.primary,
                           fontWeight: FontWeight.w600,
@@ -1130,10 +1153,7 @@ class _ConfirmStep extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            CurrencyFormatter.format(
-                              alloc.amount,
-                              compact: true,
-                            ),
+                            context.formatMoney(alloc.amountIn(currency)),
                             style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
@@ -1306,15 +1326,27 @@ class _CategoryAllocationData {
     required this.name,
     required this.groupName,
     required this.percentage,
-    this.amount = 0,
+    this.amountMinor = 0,
   });
 
   final String categoryId;
   final String name;
   final String groupName;
   final double percentage;
-  double amount;
+
+  /// Allocated amount, in minor units of the base currency.
+  int amountMinor;
+
+  Money amountIn(Currency currency) =>
+      Money.fromMinorUnits(amountMinor, currency);
 }
+
+/// Sum of [allocations], exactly, in [currency].
+Money _totalOf(
+  Iterable<_CategoryAllocationData> allocations,
+  Currency currency,
+) =>
+    Money.sum(allocations.map((a) => a.amountIn(currency)), currency);
 
 class _StrategyData {
   const _StrategyData({

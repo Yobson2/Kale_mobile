@@ -92,6 +92,14 @@ Schema reset for issue #5 (decision Q11: dropped and recreated, data not kept):
   client-owned `updated_at` (no trigger), nullable `deleted_at`, index on `(user_id, updated_at)`, and one owner-only
   RLS policy for the `authenticated` role (anonymous users included); `anon` has no access
 
+### 20261014000100_reset_budgets_minor_units.sql
+Schema reset for issue #6 (decision Q11: dropped and recreated, data not kept):
+- `budgets` recreated: `start_date`/`end_date` are `DATE`s (both included, no time zone), `period_start_day
+  SMALLINT` (default 1: calendar months), `total_income_minor BIGINT`, UUID id, client-owned `updated_at` (no
+  trigger), nullable `deleted_at`, index on `(user_id, updated_at)`, one owner-only RLS policy
+- `budget_category_allocations` recreated: `allocated_minor BIGINT`, UUID ids, `updated_at`, `deleted_at`, and one
+  RLS policy granting access through the parent budget's owner; `anon` has no access to either table
+
 ## Anonymous users
 
 Every fresh install signs in anonymously, so anonymous sign-ins must be **enabled** on each project, and
@@ -110,6 +118,8 @@ SQL tests (pgTAP) live in `supabase/tests/database/`. Run them against the local
 - `transactions_rls.test.sql`: the reset transactions table's shape, and that one user (permanent or anonymous) can
   neither read nor write another user's transactions. It creates two users, so it relies on
   `20261013000001_categories_key_per_user.sql`.
+- `budgets_rls.test.sql`: the reset budget tables' shape (dates, start day, minor units, no triggers), and that
+  budgets and their allocations are isolated per owner, allocations through their parent budget.
 
 ## Database Schema
 

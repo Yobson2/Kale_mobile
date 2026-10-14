@@ -1,8 +1,9 @@
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/achievement_service.dart';
-import 'package:kale/core/usecase/usecase.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
+import 'package:kale/features/budget/domain/entities/budget_period_range.dart';
 import 'package:kale/features/budget/domain/usecases/create_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/update_budget_usecase.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
@@ -21,15 +22,16 @@ class BudgetsNotifier extends _$BudgetsNotifier {
     return const BudgetsState.initial();
   }
 
-  /// Creates a new budget with the given parameters.
+  /// Creates a new budget for the current period (the one containing
+  /// today), with the given parameters. Amounts are minor units of the
+  /// base currency.
   Future<bool> createBudget({
     required String name,
     required BudgetStrategy strategy,
     required BudgetPeriod period,
-    required DateTime startDate,
-    required DateTime endDate,
     required List<BudgetCategoryAllocation> categories,
-    double? totalIncome,
+    int periodStartDay = BudgetPeriodRange.defaultStartDay,
+    int? totalIncomeMinor,
     bool isPercentageBased = true,
   }) async {
     state = const BudgetsState.loading();
@@ -39,10 +41,10 @@ class BudgetsNotifier extends _$BudgetsNotifier {
               name: name,
               strategy: strategy,
               period: period,
-              startDate: startDate,
-              endDate: endDate,
+              today: CalendarDate.today(),
+              periodStartDay: periodStartDay,
               categories: categories,
-              totalIncome: totalIncome,
+              totalIncomeMinor: totalIncomeMinor,
               isPercentageBased: isPercentageBased,
             ),
           );
@@ -75,10 +77,11 @@ class BudgetsNotifier extends _$BudgetsNotifier {
     required String name,
     required BudgetStrategy strategy,
     required BudgetPeriod period,
-    required DateTime startDate,
-    required DateTime endDate,
+    required CalendarDate startDate,
+    required CalendarDate endDate,
     required List<BudgetCategoryAllocation> categories,
-    double? totalIncome,
+    int periodStartDay = BudgetPeriodRange.defaultStartDay,
+    int? totalIncomeMinor,
     bool isPercentageBased = true,
   }) async {
     state = const BudgetsState.loading();
@@ -91,8 +94,9 @@ class BudgetsNotifier extends _$BudgetsNotifier {
               period: period,
               startDate: startDate,
               endDate: endDate,
+              periodStartDay: periodStartDay,
               categories: categories,
-              totalIncome: totalIncome,
+              totalIncomeMinor: totalIncomeMinor,
               isPercentageBased: isPercentageBased,
             ),
           );
@@ -145,8 +149,9 @@ class BudgetsNotifier extends _$BudgetsNotifier {
   Future<void> loadActiveBudget() async {
     state = const BudgetsState.loading();
     try {
-      final result =
-          await ref.read(getActiveBudgetUseCaseProvider).call(const NoParams());
+      final result = await ref
+          .read(getActiveBudgetUseCaseProvider)
+          .call(CalendarDate.today());
 
       result.fold(
         (failure) => state = BudgetsState.error(failure.message),
@@ -188,8 +193,7 @@ class BudgetsNotifier extends _$BudgetsNotifier {
   void _unlockFirstBudget() {
     Future(() async {
       try {
-        final achievements =
-            AchievementService(ref.read(localStorageProvider));
+        final achievements = AchievementService(ref.read(localStorageProvider));
         await achievements.unlock(Achievement.firstBudget);
       } catch (_) {
         // Best-effort.

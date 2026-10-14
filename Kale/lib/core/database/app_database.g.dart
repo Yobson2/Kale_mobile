@@ -1850,24 +1850,30 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   late final GeneratedColumn<String> period = GeneratedColumn<String>(
       'period', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _startDateMeta =
-      const VerificationMeta('startDate');
   @override
-  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
-      'start_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _endDateMeta =
-      const VerificationMeta('endDate');
+  late final GeneratedColumnWithTypeConverter<CalendarDate, String> startDate =
+      GeneratedColumn<String>('start_date', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<CalendarDate>($BudgetsTable.$converterstartDate);
   @override
-  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
-      'end_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _totalIncomeMeta =
-      const VerificationMeta('totalIncome');
+  late final GeneratedColumnWithTypeConverter<CalendarDate, String> endDate =
+      GeneratedColumn<String>('end_date', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<CalendarDate>($BudgetsTable.$converterendDate);
+  static const VerificationMeta _periodStartDayMeta =
+      const VerificationMeta('periodStartDay');
   @override
-  late final GeneratedColumn<double> totalIncome = GeneratedColumn<double>(
-      'total_income', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
+  late final GeneratedColumn<int> periodStartDay = GeneratedColumn<int>(
+      'period_start_day', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(1));
+  static const VerificationMeta _totalIncomeMinorMeta =
+      const VerificationMeta('totalIncomeMinor');
+  @override
+  late final GeneratedColumn<int> totalIncomeMinor = GeneratedColumn<int>(
+      'total_income_minor', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _isPercentageBasedMeta =
       const VerificationMeta('isPercentageBased');
   @override
@@ -1890,6 +1896,12 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _deletedAtMeta =
+      const VerificationMeta('deletedAt');
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+      'deleted_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _isSyncedMeta =
       const VerificationMeta('isSynced');
   @override
@@ -1909,10 +1921,12 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
         period,
         startDate,
         endDate,
-        totalIncome,
+        periodStartDay,
+        totalIncomeMinor,
         isPercentageBased,
         createdAt,
         updatedAt,
+        deletedAt,
         isSynced
       ];
   @override
@@ -1952,23 +1966,17 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
     } else if (isInserting) {
       context.missing(_periodMeta);
     }
-    if (data.containsKey('start_date')) {
-      context.handle(_startDateMeta,
-          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
-    } else if (isInserting) {
-      context.missing(_startDateMeta);
-    }
-    if (data.containsKey('end_date')) {
-      context.handle(_endDateMeta,
-          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
-    } else if (isInserting) {
-      context.missing(_endDateMeta);
-    }
-    if (data.containsKey('total_income')) {
+    if (data.containsKey('period_start_day')) {
       context.handle(
-          _totalIncomeMeta,
-          totalIncome.isAcceptableOrUnknown(
-              data['total_income']!, _totalIncomeMeta));
+          _periodStartDayMeta,
+          periodStartDay.isAcceptableOrUnknown(
+              data['period_start_day']!, _periodStartDayMeta));
+    }
+    if (data.containsKey('total_income_minor')) {
+      context.handle(
+          _totalIncomeMinorMeta,
+          totalIncomeMinor.isAcceptableOrUnknown(
+              data['total_income_minor']!, _totalIncomeMinorMeta));
     }
     if (data.containsKey('is_percentage_based')) {
       context.handle(
@@ -1987,6 +1995,10 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(_deletedAtMeta,
+          deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
     }
     if (data.containsKey('is_synced')) {
       context.handle(_isSyncedMeta,
@@ -2011,18 +2023,24 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
           .read(DriftSqlType.string, data['${effectivePrefix}strategy'])!,
       period: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}period'])!,
-      startDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date'])!,
-      endDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date'])!,
-      totalIncome: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}total_income']),
+      startDate: $BudgetsTable.$converterstartDate.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}start_date'])!),
+      endDate: $BudgetsTable.$converterendDate.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}end_date'])!),
+      periodStartDay: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}period_start_day'])!,
+      totalIncomeMinor: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}total_income_minor']),
       isPercentageBased: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}is_percentage_based'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      deletedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}deleted_at']),
       isSynced: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
     );
@@ -2032,6 +2050,11 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   $BudgetsTable createAlias(String alias) {
     return $BudgetsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<CalendarDate, String> $converterstartDate =
+      const CalendarDateConverter();
+  static TypeConverter<CalendarDate, String> $converterendDate =
+      const CalendarDateConverter();
 }
 
 class Budget extends DataClass implements Insertable<Budget> {
@@ -2050,14 +2073,18 @@ class Budget extends DataClass implements Insertable<Budget> {
   /// Period: 'weekly', 'biWeekly', 'monthly'.
   final String period;
 
-  /// Start date of the budget period.
-  final DateTime startDate;
+  /// First day of the period (included).
+  final CalendarDate startDate;
 
-  /// End date of the budget period.
-  final DateTime endDate;
+  /// Last day of the period (included).
+  final CalendarDate endDate;
 
-  /// Total expected income for this period (optional).
-  final double? totalIncome;
+  /// The day periods start on: day of the month for monthly budgets,
+  /// ISO weekday for weekly ones. See `BudgetPeriodRange.containing`.
+  final int periodStartDay;
+
+  /// Total expected income for this period, in minor units (optional).
+  final int? totalIncomeMinor;
 
   /// Whether allocations are percentage-based (for irregular income).
   final bool isPercentageBased;
@@ -2067,6 +2094,9 @@ class Budget extends DataClass implements Insertable<Budget> {
 
   /// When the budget was last updated.
   final DateTime updatedAt;
+
+  /// Soft-delete marker. Every read excludes rows where it is set.
+  final DateTime? deletedAt;
 
   /// Whether synced to server.
   final bool isSynced;
@@ -2078,10 +2108,12 @@ class Budget extends DataClass implements Insertable<Budget> {
       required this.period,
       required this.startDate,
       required this.endDate,
-      this.totalIncome,
+      required this.periodStartDay,
+      this.totalIncomeMinor,
       required this.isPercentageBased,
       required this.createdAt,
       required this.updatedAt,
+      this.deletedAt,
       required this.isSynced});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2093,14 +2125,24 @@ class Budget extends DataClass implements Insertable<Budget> {
     map['name'] = Variable<String>(name);
     map['strategy'] = Variable<String>(strategy);
     map['period'] = Variable<String>(period);
-    map['start_date'] = Variable<DateTime>(startDate);
-    map['end_date'] = Variable<DateTime>(endDate);
-    if (!nullToAbsent || totalIncome != null) {
-      map['total_income'] = Variable<double>(totalIncome);
+    {
+      map['start_date'] =
+          Variable<String>($BudgetsTable.$converterstartDate.toSql(startDate));
+    }
+    {
+      map['end_date'] =
+          Variable<String>($BudgetsTable.$converterendDate.toSql(endDate));
+    }
+    map['period_start_day'] = Variable<int>(periodStartDay);
+    if (!nullToAbsent || totalIncomeMinor != null) {
+      map['total_income_minor'] = Variable<int>(totalIncomeMinor);
     }
     map['is_percentage_based'] = Variable<bool>(isPercentageBased);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     map['is_synced'] = Variable<bool>(isSynced);
     return map;
   }
@@ -2116,12 +2158,16 @@ class Budget extends DataClass implements Insertable<Budget> {
       period: Value(period),
       startDate: Value(startDate),
       endDate: Value(endDate),
-      totalIncome: totalIncome == null && nullToAbsent
+      periodStartDay: Value(periodStartDay),
+      totalIncomeMinor: totalIncomeMinor == null && nullToAbsent
           ? const Value.absent()
-          : Value(totalIncome),
+          : Value(totalIncomeMinor),
       isPercentageBased: Value(isPercentageBased),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
       isSynced: Value(isSynced),
     );
   }
@@ -2135,12 +2181,14 @@ class Budget extends DataClass implements Insertable<Budget> {
       name: serializer.fromJson<String>(json['name']),
       strategy: serializer.fromJson<String>(json['strategy']),
       period: serializer.fromJson<String>(json['period']),
-      startDate: serializer.fromJson<DateTime>(json['startDate']),
-      endDate: serializer.fromJson<DateTime>(json['endDate']),
-      totalIncome: serializer.fromJson<double?>(json['totalIncome']),
+      startDate: serializer.fromJson<CalendarDate>(json['startDate']),
+      endDate: serializer.fromJson<CalendarDate>(json['endDate']),
+      periodStartDay: serializer.fromJson<int>(json['periodStartDay']),
+      totalIncomeMinor: serializer.fromJson<int?>(json['totalIncomeMinor']),
       isPercentageBased: serializer.fromJson<bool>(json['isPercentageBased']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
     );
   }
@@ -2153,12 +2201,14 @@ class Budget extends DataClass implements Insertable<Budget> {
       'name': serializer.toJson<String>(name),
       'strategy': serializer.toJson<String>(strategy),
       'period': serializer.toJson<String>(period),
-      'startDate': serializer.toJson<DateTime>(startDate),
-      'endDate': serializer.toJson<DateTime>(endDate),
-      'totalIncome': serializer.toJson<double?>(totalIncome),
+      'startDate': serializer.toJson<CalendarDate>(startDate),
+      'endDate': serializer.toJson<CalendarDate>(endDate),
+      'periodStartDay': serializer.toJson<int>(periodStartDay),
+      'totalIncomeMinor': serializer.toJson<int?>(totalIncomeMinor),
       'isPercentageBased': serializer.toJson<bool>(isPercentageBased),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'isSynced': serializer.toJson<bool>(isSynced),
     };
   }
@@ -2169,12 +2219,14 @@ class Budget extends DataClass implements Insertable<Budget> {
           String? name,
           String? strategy,
           String? period,
-          DateTime? startDate,
-          DateTime? endDate,
-          Value<double?> totalIncome = const Value.absent(),
+          CalendarDate? startDate,
+          CalendarDate? endDate,
+          int? periodStartDay,
+          Value<int?> totalIncomeMinor = const Value.absent(),
           bool? isPercentageBased,
           DateTime? createdAt,
           DateTime? updatedAt,
+          Value<DateTime?> deletedAt = const Value.absent(),
           bool? isSynced}) =>
       Budget(
         id: id ?? this.id,
@@ -2184,10 +2236,14 @@ class Budget extends DataClass implements Insertable<Budget> {
         period: period ?? this.period,
         startDate: startDate ?? this.startDate,
         endDate: endDate ?? this.endDate,
-        totalIncome: totalIncome.present ? totalIncome.value : this.totalIncome,
+        periodStartDay: periodStartDay ?? this.periodStartDay,
+        totalIncomeMinor: totalIncomeMinor.present
+            ? totalIncomeMinor.value
+            : this.totalIncomeMinor,
         isPercentageBased: isPercentageBased ?? this.isPercentageBased,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
         isSynced: isSynced ?? this.isSynced,
       );
   Budget copyWithCompanion(BudgetsCompanion data) {
@@ -2199,13 +2255,18 @@ class Budget extends DataClass implements Insertable<Budget> {
       period: data.period.present ? data.period.value : this.period,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
-      totalIncome:
-          data.totalIncome.present ? data.totalIncome.value : this.totalIncome,
+      periodStartDay: data.periodStartDay.present
+          ? data.periodStartDay.value
+          : this.periodStartDay,
+      totalIncomeMinor: data.totalIncomeMinor.present
+          ? data.totalIncomeMinor.value
+          : this.totalIncomeMinor,
       isPercentageBased: data.isPercentageBased.present
           ? data.isPercentageBased.value
           : this.isPercentageBased,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
     );
   }
@@ -2220,10 +2281,12 @@ class Budget extends DataClass implements Insertable<Budget> {
           ..write('period: $period, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
-          ..write('totalIncome: $totalIncome, ')
+          ..write('periodStartDay: $periodStartDay, ')
+          ..write('totalIncomeMinor: $totalIncomeMinor, ')
           ..write('isPercentageBased: $isPercentageBased, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced')
           ..write(')'))
         .toString();
@@ -2238,10 +2301,12 @@ class Budget extends DataClass implements Insertable<Budget> {
       period,
       startDate,
       endDate,
-      totalIncome,
+      periodStartDay,
+      totalIncomeMinor,
       isPercentageBased,
       createdAt,
       updatedAt,
+      deletedAt,
       isSynced);
   @override
   bool operator ==(Object other) =>
@@ -2254,10 +2319,12 @@ class Budget extends DataClass implements Insertable<Budget> {
           other.period == this.period &&
           other.startDate == this.startDate &&
           other.endDate == this.endDate &&
-          other.totalIncome == this.totalIncome &&
+          other.periodStartDay == this.periodStartDay &&
+          other.totalIncomeMinor == this.totalIncomeMinor &&
           other.isPercentageBased == this.isPercentageBased &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
           other.isSynced == this.isSynced);
 }
 
@@ -2267,12 +2334,14 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   final Value<String> name;
   final Value<String> strategy;
   final Value<String> period;
-  final Value<DateTime> startDate;
-  final Value<DateTime> endDate;
-  final Value<double?> totalIncome;
+  final Value<CalendarDate> startDate;
+  final Value<CalendarDate> endDate;
+  final Value<int> periodStartDay;
+  final Value<int?> totalIncomeMinor;
   final Value<bool> isPercentageBased;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
   final Value<bool> isSynced;
   final Value<int> rowid;
   const BudgetsCompanion({
@@ -2283,10 +2352,12 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     this.period = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
-    this.totalIncome = const Value.absent(),
+    this.periodStartDay = const Value.absent(),
+    this.totalIncomeMinor = const Value.absent(),
     this.isPercentageBased = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -2296,12 +2367,14 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     required String name,
     required String strategy,
     required String period,
-    required DateTime startDate,
-    required DateTime endDate,
-    this.totalIncome = const Value.absent(),
+    required CalendarDate startDate,
+    required CalendarDate endDate,
+    this.periodStartDay = const Value.absent(),
+    this.totalIncomeMinor = const Value.absent(),
     this.isPercentageBased = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
@@ -2318,12 +2391,14 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     Expression<String>? name,
     Expression<String>? strategy,
     Expression<String>? period,
-    Expression<DateTime>? startDate,
-    Expression<DateTime>? endDate,
-    Expression<double>? totalIncome,
+    Expression<String>? startDate,
+    Expression<String>? endDate,
+    Expression<int>? periodStartDay,
+    Expression<int>? totalIncomeMinor,
     Expression<bool>? isPercentageBased,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
     Expression<bool>? isSynced,
     Expression<int>? rowid,
   }) {
@@ -2335,10 +2410,12 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       if (period != null) 'period': period,
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
-      if (totalIncome != null) 'total_income': totalIncome,
+      if (periodStartDay != null) 'period_start_day': periodStartDay,
+      if (totalIncomeMinor != null) 'total_income_minor': totalIncomeMinor,
       if (isPercentageBased != null) 'is_percentage_based': isPercentageBased,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (isSynced != null) 'is_synced': isSynced,
       if (rowid != null) 'rowid': rowid,
     });
@@ -2350,12 +2427,14 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       Value<String>? name,
       Value<String>? strategy,
       Value<String>? period,
-      Value<DateTime>? startDate,
-      Value<DateTime>? endDate,
-      Value<double?>? totalIncome,
+      Value<CalendarDate>? startDate,
+      Value<CalendarDate>? endDate,
+      Value<int>? periodStartDay,
+      Value<int?>? totalIncomeMinor,
       Value<bool>? isPercentageBased,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
+      Value<DateTime?>? deletedAt,
       Value<bool>? isSynced,
       Value<int>? rowid}) {
     return BudgetsCompanion(
@@ -2366,10 +2445,12 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       period: period ?? this.period,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
-      totalIncome: totalIncome ?? this.totalIncome,
+      periodStartDay: periodStartDay ?? this.periodStartDay,
+      totalIncomeMinor: totalIncomeMinor ?? this.totalIncomeMinor,
       isPercentageBased: isPercentageBased ?? this.isPercentageBased,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       isSynced: isSynced ?? this.isSynced,
       rowid: rowid ?? this.rowid,
     );
@@ -2394,13 +2475,18 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       map['period'] = Variable<String>(period.value);
     }
     if (startDate.present) {
-      map['start_date'] = Variable<DateTime>(startDate.value);
+      map['start_date'] = Variable<String>(
+          $BudgetsTable.$converterstartDate.toSql(startDate.value));
     }
     if (endDate.present) {
-      map['end_date'] = Variable<DateTime>(endDate.value);
+      map['end_date'] = Variable<String>(
+          $BudgetsTable.$converterendDate.toSql(endDate.value));
     }
-    if (totalIncome.present) {
-      map['total_income'] = Variable<double>(totalIncome.value);
+    if (periodStartDay.present) {
+      map['period_start_day'] = Variable<int>(periodStartDay.value);
+    }
+    if (totalIncomeMinor.present) {
+      map['total_income_minor'] = Variable<int>(totalIncomeMinor.value);
     }
     if (isPercentageBased.present) {
       map['is_percentage_based'] = Variable<bool>(isPercentageBased.value);
@@ -2410,6 +2496,9 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
     }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
@@ -2430,10 +2519,12 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
           ..write('period: $period, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
-          ..write('totalIncome: $totalIncome, ')
+          ..write('periodStartDay: $periodStartDay, ')
+          ..write('totalIncomeMinor: $totalIncomeMinor, ')
           ..write('isPercentageBased: $isPercentageBased, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -2470,12 +2561,12 @@ class $BudgetCategoriesTable extends BudgetCategories
   late final GeneratedColumn<String> groupName = GeneratedColumn<String>(
       'group_name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _allocatedAmountMeta =
-      const VerificationMeta('allocatedAmount');
+  static const VerificationMeta _allocatedMinorMeta =
+      const VerificationMeta('allocatedMinor');
   @override
-  late final GeneratedColumn<double> allocatedAmount = GeneratedColumn<double>(
-      'allocated_amount', aliasedName, false,
-      type: DriftSqlType.double, requiredDuringInsert: true);
+  late final GeneratedColumn<int> allocatedMinor = GeneratedColumn<int>(
+      'allocated_minor', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _allocatedPercentageMeta =
       const VerificationMeta('allocatedPercentage');
   @override
@@ -2488,6 +2579,18 @@ class $BudgetCategoriesTable extends BudgetCategories
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _deletedAtMeta =
+      const VerificationMeta('deletedAt');
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+      'deleted_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _isSyncedMeta =
       const VerificationMeta('isSynced');
   @override
@@ -2504,9 +2607,11 @@ class $BudgetCategoriesTable extends BudgetCategories
         budgetId,
         categoryId,
         groupName,
-        allocatedAmount,
+        allocatedMinor,
         allocatedPercentage,
         createdAt,
+        updatedAt,
+        deletedAt,
         isSynced
       ];
   @override
@@ -2544,13 +2649,13 @@ class $BudgetCategoriesTable extends BudgetCategories
     } else if (isInserting) {
       context.missing(_groupNameMeta);
     }
-    if (data.containsKey('allocated_amount')) {
+    if (data.containsKey('allocated_minor')) {
       context.handle(
-          _allocatedAmountMeta,
-          allocatedAmount.isAcceptableOrUnknown(
-              data['allocated_amount']!, _allocatedAmountMeta));
+          _allocatedMinorMeta,
+          allocatedMinor.isAcceptableOrUnknown(
+              data['allocated_minor']!, _allocatedMinorMeta));
     } else if (isInserting) {
-      context.missing(_allocatedAmountMeta);
+      context.missing(_allocatedMinorMeta);
     }
     if (data.containsKey('allocated_percentage')) {
       context.handle(
@@ -2563,6 +2668,16 @@ class $BudgetCategoriesTable extends BudgetCategories
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
     } else if (isInserting) {
       context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(_deletedAtMeta,
+          deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
     }
     if (data.containsKey('is_synced')) {
       context.handle(_isSyncedMeta,
@@ -2585,12 +2700,16 @@ class $BudgetCategoriesTable extends BudgetCategories
           .read(DriftSqlType.string, data['${effectivePrefix}category_id'])!,
       groupName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}group_name'])!,
-      allocatedAmount: attachedDatabase.typeMapping.read(
-          DriftSqlType.double, data['${effectivePrefix}allocated_amount'])!,
+      allocatedMinor: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}allocated_minor'])!,
       allocatedPercentage: attachedDatabase.typeMapping.read(
           DriftSqlType.double, data['${effectivePrefix}allocated_percentage']),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      deletedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}deleted_at']),
       isSynced: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
     );
@@ -2603,7 +2722,7 @@ class $BudgetCategoriesTable extends BudgetCategories
 }
 
 class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
-  /// Unique identifier.
+  /// Client-generated UUID.
   final String id;
 
   /// FK to budget.
@@ -2615,14 +2734,21 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
   /// Group name (e.g., "Needs", "Wants", "Savings").
   final String groupName;
 
-  /// Allocated fixed amount.
-  final double allocatedAmount;
+  /// Allocated amount, in minor units.
+  final int allocatedMinor;
 
   /// Allocated percentage of income (nullable, used when percentage-based).
+  /// A share, not money.
   final double? allocatedPercentage;
 
   /// When this allocation was created.
   final DateTime createdAt;
+
+  /// When this allocation was last updated.
+  final DateTime updatedAt;
+
+  /// Soft-delete marker. Every read excludes rows where it is set.
+  final DateTime? deletedAt;
 
   /// Whether synced to server.
   final bool isSynced;
@@ -2631,9 +2757,11 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
       required this.budgetId,
       required this.categoryId,
       required this.groupName,
-      required this.allocatedAmount,
+      required this.allocatedMinor,
       this.allocatedPercentage,
       required this.createdAt,
+      required this.updatedAt,
+      this.deletedAt,
       required this.isSynced});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2642,11 +2770,15 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
     map['budget_id'] = Variable<String>(budgetId);
     map['category_id'] = Variable<String>(categoryId);
     map['group_name'] = Variable<String>(groupName);
-    map['allocated_amount'] = Variable<double>(allocatedAmount);
+    map['allocated_minor'] = Variable<int>(allocatedMinor);
     if (!nullToAbsent || allocatedPercentage != null) {
       map['allocated_percentage'] = Variable<double>(allocatedPercentage);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     map['is_synced'] = Variable<bool>(isSynced);
     return map;
   }
@@ -2657,11 +2789,15 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
       budgetId: Value(budgetId),
       categoryId: Value(categoryId),
       groupName: Value(groupName),
-      allocatedAmount: Value(allocatedAmount),
+      allocatedMinor: Value(allocatedMinor),
       allocatedPercentage: allocatedPercentage == null && nullToAbsent
           ? const Value.absent()
           : Value(allocatedPercentage),
       createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
       isSynced: Value(isSynced),
     );
   }
@@ -2674,10 +2810,12 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
       budgetId: serializer.fromJson<String>(json['budgetId']),
       categoryId: serializer.fromJson<String>(json['categoryId']),
       groupName: serializer.fromJson<String>(json['groupName']),
-      allocatedAmount: serializer.fromJson<double>(json['allocatedAmount']),
+      allocatedMinor: serializer.fromJson<int>(json['allocatedMinor']),
       allocatedPercentage:
           serializer.fromJson<double?>(json['allocatedPercentage']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
     );
   }
@@ -2689,9 +2827,11 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
       'budgetId': serializer.toJson<String>(budgetId),
       'categoryId': serializer.toJson<String>(categoryId),
       'groupName': serializer.toJson<String>(groupName),
-      'allocatedAmount': serializer.toJson<double>(allocatedAmount),
+      'allocatedMinor': serializer.toJson<int>(allocatedMinor),
       'allocatedPercentage': serializer.toJson<double?>(allocatedPercentage),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'isSynced': serializer.toJson<bool>(isSynced),
     };
   }
@@ -2701,20 +2841,24 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
           String? budgetId,
           String? categoryId,
           String? groupName,
-          double? allocatedAmount,
+          int? allocatedMinor,
           Value<double?> allocatedPercentage = const Value.absent(),
           DateTime? createdAt,
+          DateTime? updatedAt,
+          Value<DateTime?> deletedAt = const Value.absent(),
           bool? isSynced}) =>
       BudgetCategory(
         id: id ?? this.id,
         budgetId: budgetId ?? this.budgetId,
         categoryId: categoryId ?? this.categoryId,
         groupName: groupName ?? this.groupName,
-        allocatedAmount: allocatedAmount ?? this.allocatedAmount,
+        allocatedMinor: allocatedMinor ?? this.allocatedMinor,
         allocatedPercentage: allocatedPercentage.present
             ? allocatedPercentage.value
             : this.allocatedPercentage,
         createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
         isSynced: isSynced ?? this.isSynced,
       );
   BudgetCategory copyWithCompanion(BudgetCategoriesCompanion data) {
@@ -2724,13 +2868,15 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
       categoryId:
           data.categoryId.present ? data.categoryId.value : this.categoryId,
       groupName: data.groupName.present ? data.groupName.value : this.groupName,
-      allocatedAmount: data.allocatedAmount.present
-          ? data.allocatedAmount.value
-          : this.allocatedAmount,
+      allocatedMinor: data.allocatedMinor.present
+          ? data.allocatedMinor.value
+          : this.allocatedMinor,
       allocatedPercentage: data.allocatedPercentage.present
           ? data.allocatedPercentage.value
           : this.allocatedPercentage,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
     );
   }
@@ -2742,17 +2888,28 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
           ..write('budgetId: $budgetId, ')
           ..write('categoryId: $categoryId, ')
           ..write('groupName: $groupName, ')
-          ..write('allocatedAmount: $allocatedAmount, ')
+          ..write('allocatedMinor: $allocatedMinor, ')
           ..write('allocatedPercentage: $allocatedPercentage, ')
           ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, budgetId, categoryId, groupName,
-      allocatedAmount, allocatedPercentage, createdAt, isSynced);
+  int get hashCode => Object.hash(
+      id,
+      budgetId,
+      categoryId,
+      groupName,
+      allocatedMinor,
+      allocatedPercentage,
+      createdAt,
+      updatedAt,
+      deletedAt,
+      isSynced);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2761,9 +2918,11 @@ class BudgetCategory extends DataClass implements Insertable<BudgetCategory> {
           other.budgetId == this.budgetId &&
           other.categoryId == this.categoryId &&
           other.groupName == this.groupName &&
-          other.allocatedAmount == this.allocatedAmount &&
+          other.allocatedMinor == this.allocatedMinor &&
           other.allocatedPercentage == this.allocatedPercentage &&
           other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
           other.isSynced == this.isSynced);
 }
 
@@ -2772,9 +2931,11 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategory> {
   final Value<String> budgetId;
   final Value<String> categoryId;
   final Value<String> groupName;
-  final Value<double> allocatedAmount;
+  final Value<int> allocatedMinor;
   final Value<double?> allocatedPercentage;
   final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
   final Value<bool> isSynced;
   final Value<int> rowid;
   const BudgetCategoriesCompanion({
@@ -2782,9 +2943,11 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategory> {
     this.budgetId = const Value.absent(),
     this.categoryId = const Value.absent(),
     this.groupName = const Value.absent(),
-    this.allocatedAmount = const Value.absent(),
+    this.allocatedMinor = const Value.absent(),
     this.allocatedPercentage = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -2793,25 +2956,30 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategory> {
     required String budgetId,
     required String categoryId,
     required String groupName,
-    required double allocatedAmount,
+    required int allocatedMinor,
     this.allocatedPercentage = const Value.absent(),
     required DateTime createdAt,
+    required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         budgetId = Value(budgetId),
         categoryId = Value(categoryId),
         groupName = Value(groupName),
-        allocatedAmount = Value(allocatedAmount),
-        createdAt = Value(createdAt);
+        allocatedMinor = Value(allocatedMinor),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
   static Insertable<BudgetCategory> custom({
     Expression<String>? id,
     Expression<String>? budgetId,
     Expression<String>? categoryId,
     Expression<String>? groupName,
-    Expression<double>? allocatedAmount,
+    Expression<int>? allocatedMinor,
     Expression<double>? allocatedPercentage,
     Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
     Expression<bool>? isSynced,
     Expression<int>? rowid,
   }) {
@@ -2820,10 +2988,12 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategory> {
       if (budgetId != null) 'budget_id': budgetId,
       if (categoryId != null) 'category_id': categoryId,
       if (groupName != null) 'group_name': groupName,
-      if (allocatedAmount != null) 'allocated_amount': allocatedAmount,
+      if (allocatedMinor != null) 'allocated_minor': allocatedMinor,
       if (allocatedPercentage != null)
         'allocated_percentage': allocatedPercentage,
       if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (isSynced != null) 'is_synced': isSynced,
       if (rowid != null) 'rowid': rowid,
     });
@@ -2834,9 +3004,11 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategory> {
       Value<String>? budgetId,
       Value<String>? categoryId,
       Value<String>? groupName,
-      Value<double>? allocatedAmount,
+      Value<int>? allocatedMinor,
       Value<double?>? allocatedPercentage,
       Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<DateTime?>? deletedAt,
       Value<bool>? isSynced,
       Value<int>? rowid}) {
     return BudgetCategoriesCompanion(
@@ -2844,9 +3016,11 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategory> {
       budgetId: budgetId ?? this.budgetId,
       categoryId: categoryId ?? this.categoryId,
       groupName: groupName ?? this.groupName,
-      allocatedAmount: allocatedAmount ?? this.allocatedAmount,
+      allocatedMinor: allocatedMinor ?? this.allocatedMinor,
       allocatedPercentage: allocatedPercentage ?? this.allocatedPercentage,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       isSynced: isSynced ?? this.isSynced,
       rowid: rowid ?? this.rowid,
     );
@@ -2867,14 +3041,20 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategory> {
     if (groupName.present) {
       map['group_name'] = Variable<String>(groupName.value);
     }
-    if (allocatedAmount.present) {
-      map['allocated_amount'] = Variable<double>(allocatedAmount.value);
+    if (allocatedMinor.present) {
+      map['allocated_minor'] = Variable<int>(allocatedMinor.value);
     }
     if (allocatedPercentage.present) {
       map['allocated_percentage'] = Variable<double>(allocatedPercentage.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
     }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
@@ -2892,9 +3072,11 @@ class BudgetCategoriesCompanion extends UpdateCompanion<BudgetCategory> {
           ..write('budgetId: $budgetId, ')
           ..write('categoryId: $categoryId, ')
           ..write('groupName: $groupName, ')
-          ..write('allocatedAmount: $allocatedAmount, ')
+          ..write('allocatedMinor: $allocatedMinor, ')
           ..write('allocatedPercentage: $allocatedPercentage, ')
           ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -5161,12 +5343,14 @@ typedef $$BudgetsTableCreateCompanionBuilder = BudgetsCompanion Function({
   required String name,
   required String strategy,
   required String period,
-  required DateTime startDate,
-  required DateTime endDate,
-  Value<double?> totalIncome,
+  required CalendarDate startDate,
+  required CalendarDate endDate,
+  Value<int> periodStartDay,
+  Value<int?> totalIncomeMinor,
   Value<bool> isPercentageBased,
   required DateTime createdAt,
   required DateTime updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -5176,12 +5360,14 @@ typedef $$BudgetsTableUpdateCompanionBuilder = BudgetsCompanion Function({
   Value<String> name,
   Value<String> strategy,
   Value<String> period,
-  Value<DateTime> startDate,
-  Value<DateTime> endDate,
-  Value<double?> totalIncome,
+  Value<CalendarDate> startDate,
+  Value<CalendarDate> endDate,
+  Value<int> periodStartDay,
+  Value<int?> totalIncomeMinor,
   Value<bool> isPercentageBased,
   Value<DateTime> createdAt,
   Value<DateTime> updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -5210,14 +5396,23 @@ class $$BudgetsTableFilterComposer
   ColumnFilters<String> get period => $composableBuilder(
       column: $table.period, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<DateTime> get startDate => $composableBuilder(
-      column: $table.startDate, builder: (column) => ColumnFilters(column));
+  ColumnWithTypeConverterFilters<CalendarDate, CalendarDate, String>
+      get startDate => $composableBuilder(
+          column: $table.startDate,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnFilters<DateTime> get endDate => $composableBuilder(
-      column: $table.endDate, builder: (column) => ColumnFilters(column));
+  ColumnWithTypeConverterFilters<CalendarDate, CalendarDate, String>
+      get endDate => $composableBuilder(
+          column: $table.endDate,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnFilters<double> get totalIncome => $composableBuilder(
-      column: $table.totalIncome, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get periodStartDay => $composableBuilder(
+      column: $table.periodStartDay,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get totalIncomeMinor => $composableBuilder(
+      column: $table.totalIncomeMinor,
+      builder: (column) => ColumnFilters(column));
 
   ColumnFilters<bool> get isPercentageBased => $composableBuilder(
       column: $table.isPercentageBased,
@@ -5228,6 +5423,9 @@ class $$BudgetsTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnFilters(column));
@@ -5257,14 +5455,19 @@ class $$BudgetsTableOrderingComposer
   ColumnOrderings<String> get period => $composableBuilder(
       column: $table.period, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+  ColumnOrderings<String> get startDate => $composableBuilder(
       column: $table.startDate, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+  ColumnOrderings<String> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get totalIncome => $composableBuilder(
-      column: $table.totalIncome, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get periodStartDay => $composableBuilder(
+      column: $table.periodStartDay,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get totalIncomeMinor => $composableBuilder(
+      column: $table.totalIncomeMinor,
+      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<bool> get isPercentageBased => $composableBuilder(
       column: $table.isPercentageBased,
@@ -5275,6 +5478,9 @@ class $$BudgetsTableOrderingComposer
 
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnOrderings(column));
@@ -5304,14 +5510,17 @@ class $$BudgetsTableAnnotationComposer
   GeneratedColumn<String> get period =>
       $composableBuilder(column: $table.period, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get startDate =>
+  GeneratedColumnWithTypeConverter<CalendarDate, String> get startDate =>
       $composableBuilder(column: $table.startDate, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get endDate =>
+  GeneratedColumnWithTypeConverter<CalendarDate, String> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
 
-  GeneratedColumn<double> get totalIncome => $composableBuilder(
-      column: $table.totalIncome, builder: (column) => column);
+  GeneratedColumn<int> get periodStartDay => $composableBuilder(
+      column: $table.periodStartDay, builder: (column) => column);
+
+  GeneratedColumn<int> get totalIncomeMinor => $composableBuilder(
+      column: $table.totalIncomeMinor, builder: (column) => column);
 
   GeneratedColumn<bool> get isPercentageBased => $composableBuilder(
       column: $table.isPercentageBased, builder: (column) => column);
@@ -5321,6 +5530,9 @@ class $$BudgetsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
@@ -5354,12 +5566,14 @@ class $$BudgetsTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<String> strategy = const Value.absent(),
             Value<String> period = const Value.absent(),
-            Value<DateTime> startDate = const Value.absent(),
-            Value<DateTime> endDate = const Value.absent(),
-            Value<double?> totalIncome = const Value.absent(),
+            Value<CalendarDate> startDate = const Value.absent(),
+            Value<CalendarDate> endDate = const Value.absent(),
+            Value<int> periodStartDay = const Value.absent(),
+            Value<int?> totalIncomeMinor = const Value.absent(),
             Value<bool> isPercentageBased = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -5371,10 +5585,12 @@ class $$BudgetsTableTableManager extends RootTableManager<
             period: period,
             startDate: startDate,
             endDate: endDate,
-            totalIncome: totalIncome,
+            periodStartDay: periodStartDay,
+            totalIncomeMinor: totalIncomeMinor,
             isPercentageBased: isPercentageBased,
             createdAt: createdAt,
             updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),
@@ -5384,12 +5600,14 @@ class $$BudgetsTableTableManager extends RootTableManager<
             required String name,
             required String strategy,
             required String period,
-            required DateTime startDate,
-            required DateTime endDate,
-            Value<double?> totalIncome = const Value.absent(),
+            required CalendarDate startDate,
+            required CalendarDate endDate,
+            Value<int> periodStartDay = const Value.absent(),
+            Value<int?> totalIncomeMinor = const Value.absent(),
             Value<bool> isPercentageBased = const Value.absent(),
             required DateTime createdAt,
             required DateTime updatedAt,
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -5401,10 +5619,12 @@ class $$BudgetsTableTableManager extends RootTableManager<
             period: period,
             startDate: startDate,
             endDate: endDate,
-            totalIncome: totalIncome,
+            periodStartDay: periodStartDay,
+            totalIncomeMinor: totalIncomeMinor,
             isPercentageBased: isPercentageBased,
             createdAt: createdAt,
             updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),
@@ -5433,9 +5653,11 @@ typedef $$BudgetCategoriesTableCreateCompanionBuilder
   required String budgetId,
   required String categoryId,
   required String groupName,
-  required double allocatedAmount,
+  required int allocatedMinor,
   Value<double?> allocatedPercentage,
   required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -5445,9 +5667,11 @@ typedef $$BudgetCategoriesTableUpdateCompanionBuilder
   Value<String> budgetId,
   Value<String> categoryId,
   Value<String> groupName,
-  Value<double> allocatedAmount,
+  Value<int> allocatedMinor,
   Value<double?> allocatedPercentage,
   Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -5473,8 +5697,8 @@ class $$BudgetCategoriesTableFilterComposer
   ColumnFilters<String> get groupName => $composableBuilder(
       column: $table.groupName, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get allocatedAmount => $composableBuilder(
-      column: $table.allocatedAmount,
+  ColumnFilters<int> get allocatedMinor => $composableBuilder(
+      column: $table.allocatedMinor,
       builder: (column) => ColumnFilters(column));
 
   ColumnFilters<double> get allocatedPercentage => $composableBuilder(
@@ -5483,6 +5707,12 @@ class $$BudgetCategoriesTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnFilters(column));
@@ -5509,8 +5739,8 @@ class $$BudgetCategoriesTableOrderingComposer
   ColumnOrderings<String> get groupName => $composableBuilder(
       column: $table.groupName, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get allocatedAmount => $composableBuilder(
-      column: $table.allocatedAmount,
+  ColumnOrderings<int> get allocatedMinor => $composableBuilder(
+      column: $table.allocatedMinor,
       builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<double> get allocatedPercentage => $composableBuilder(
@@ -5519,6 +5749,12 @@ class $$BudgetCategoriesTableOrderingComposer
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnOrderings(column));
@@ -5545,14 +5781,20 @@ class $$BudgetCategoriesTableAnnotationComposer
   GeneratedColumn<String> get groupName =>
       $composableBuilder(column: $table.groupName, builder: (column) => column);
 
-  GeneratedColumn<double> get allocatedAmount => $composableBuilder(
-      column: $table.allocatedAmount, builder: (column) => column);
+  GeneratedColumn<int> get allocatedMinor => $composableBuilder(
+      column: $table.allocatedMinor, builder: (column) => column);
 
   GeneratedColumn<double> get allocatedPercentage => $composableBuilder(
       column: $table.allocatedPercentage, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
@@ -5589,9 +5831,11 @@ class $$BudgetCategoriesTableTableManager extends RootTableManager<
             Value<String> budgetId = const Value.absent(),
             Value<String> categoryId = const Value.absent(),
             Value<String> groupName = const Value.absent(),
-            Value<double> allocatedAmount = const Value.absent(),
+            Value<int> allocatedMinor = const Value.absent(),
             Value<double?> allocatedPercentage = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -5600,9 +5844,11 @@ class $$BudgetCategoriesTableTableManager extends RootTableManager<
             budgetId: budgetId,
             categoryId: categoryId,
             groupName: groupName,
-            allocatedAmount: allocatedAmount,
+            allocatedMinor: allocatedMinor,
             allocatedPercentage: allocatedPercentage,
             createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),
@@ -5611,9 +5857,11 @@ class $$BudgetCategoriesTableTableManager extends RootTableManager<
             required String budgetId,
             required String categoryId,
             required String groupName,
-            required double allocatedAmount,
+            required int allocatedMinor,
             Value<double?> allocatedPercentage = const Value.absent(),
             required DateTime createdAt,
+            required DateTime updatedAt,
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -5622,9 +5870,11 @@ class $$BudgetCategoriesTableTableManager extends RootTableManager<
             budgetId: budgetId,
             categoryId: categoryId,
             groupName: groupName,
-            allocatedAmount: allocatedAmount,
+            allocatedMinor: allocatedMinor,
             allocatedPercentage: allocatedPercentage,
             createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),

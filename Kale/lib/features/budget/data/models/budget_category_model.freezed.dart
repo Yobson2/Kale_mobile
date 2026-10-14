@@ -22,12 +22,16 @@ mixin _$BudgetCategoryModel {
   String get categoryId;
   @JsonKey(name: 'group_name')
   String get groupName;
-  @JsonKey(name: 'allocated_amount')
-  double get allocatedAmount;
+  @JsonKey(name: 'allocated_minor')
+  int get allocatedMinor;
   @JsonKey(name: 'allocated_percentage')
   double? get allocatedPercentage;
   @JsonKey(name: 'created_at')
   DateTime get createdAt;
+  @JsonKey(name: 'updated_at')
+  DateTime get updatedAt;
+  @JsonKey(name: 'deleted_at')
+  DateTime? get deletedAt;
   @JsonKey(includeFromJson: false, includeToJson: false)
   bool get isSynced;
 
@@ -54,24 +58,38 @@ mixin _$BudgetCategoryModel {
                 other.categoryId == categoryId) &&
             (identical(other.groupName, groupName) ||
                 other.groupName == groupName) &&
-            (identical(other.allocatedAmount, allocatedAmount) ||
-                other.allocatedAmount == allocatedAmount) &&
+            (identical(other.allocatedMinor, allocatedMinor) ||
+                other.allocatedMinor == allocatedMinor) &&
             (identical(other.allocatedPercentage, allocatedPercentage) ||
                 other.allocatedPercentage == allocatedPercentage) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.deletedAt, deletedAt) ||
+                other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
                 other.isSynced == isSynced));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, budgetId, categoryId,
-      groupName, allocatedAmount, allocatedPercentage, createdAt, isSynced);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      budgetId,
+      categoryId,
+      groupName,
+      allocatedMinor,
+      allocatedPercentage,
+      createdAt,
+      updatedAt,
+      deletedAt,
+      isSynced);
 
   @override
   String toString() {
-    return 'BudgetCategoryModel(id: $id, budgetId: $budgetId, categoryId: $categoryId, groupName: $groupName, allocatedAmount: $allocatedAmount, allocatedPercentage: $allocatedPercentage, createdAt: $createdAt, isSynced: $isSynced)';
+    return 'BudgetCategoryModel(id: $id, budgetId: $budgetId, categoryId: $categoryId, groupName: $groupName, allocatedMinor: $allocatedMinor, allocatedPercentage: $allocatedPercentage, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -86,9 +104,11 @@ abstract mixin class $BudgetCategoryModelCopyWith<$Res> {
       @JsonKey(name: 'budget_id') String budgetId,
       @JsonKey(name: 'category_id') String categoryId,
       @JsonKey(name: 'group_name') String groupName,
-      @JsonKey(name: 'allocated_amount') double allocatedAmount,
+      @JsonKey(name: 'allocated_minor') int allocatedMinor,
       @JsonKey(name: 'allocated_percentage') double? allocatedPercentage,
       @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
@@ -109,9 +129,11 @@ class _$BudgetCategoryModelCopyWithImpl<$Res>
     Object? budgetId = null,
     Object? categoryId = null,
     Object? groupName = null,
-    Object? allocatedAmount = null,
+    Object? allocatedMinor = null,
     Object? allocatedPercentage = freezed,
     Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
     return _then(_self.copyWith(
@@ -131,10 +153,10 @@ class _$BudgetCategoryModelCopyWithImpl<$Res>
           ? _self.groupName
           : groupName // ignore: cast_nullable_to_non_nullable
               as String,
-      allocatedAmount: null == allocatedAmount
-          ? _self.allocatedAmount
-          : allocatedAmount // ignore: cast_nullable_to_non_nullable
-              as double,
+      allocatedMinor: null == allocatedMinor
+          ? _self.allocatedMinor
+          : allocatedMinor // ignore: cast_nullable_to_non_nullable
+              as int,
       allocatedPercentage: freezed == allocatedPercentage
           ? _self.allocatedPercentage
           : allocatedPercentage // ignore: cast_nullable_to_non_nullable
@@ -143,6 +165,14 @@ class _$BudgetCategoryModelCopyWithImpl<$Res>
           ? _self.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      updatedAt: null == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      deletedAt: freezed == deletedAt
+          ? _self.deletedAt
+          : deletedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       isSynced: null == isSynced
           ? _self.isSynced
           : isSynced // ignore: cast_nullable_to_non_nullable
@@ -159,9 +189,11 @@ class _BudgetCategoryModel extends BudgetCategoryModel {
       @JsonKey(name: 'budget_id') required this.budgetId,
       @JsonKey(name: 'category_id') required this.categoryId,
       @JsonKey(name: 'group_name') required this.groupName,
-      @JsonKey(name: 'allocated_amount') required this.allocatedAmount,
+      @JsonKey(name: 'allocated_minor') required this.allocatedMinor,
       @JsonKey(name: 'allocated_percentage') this.allocatedPercentage,
       @JsonKey(name: 'created_at') required this.createdAt,
+      @JsonKey(name: 'updated_at') required this.updatedAt,
+      @JsonKey(name: 'deleted_at') this.deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       this.isSynced = false})
       : super._();
@@ -180,14 +212,20 @@ class _BudgetCategoryModel extends BudgetCategoryModel {
   @JsonKey(name: 'group_name')
   final String groupName;
   @override
-  @JsonKey(name: 'allocated_amount')
-  final double allocatedAmount;
+  @JsonKey(name: 'allocated_minor')
+  final int allocatedMinor;
   @override
   @JsonKey(name: 'allocated_percentage')
   final double? allocatedPercentage;
   @override
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  final DateTime updatedAt;
+  @override
+  @JsonKey(name: 'deleted_at')
+  final DateTime? deletedAt;
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   final bool isSynced;
@@ -220,24 +258,38 @@ class _BudgetCategoryModel extends BudgetCategoryModel {
                 other.categoryId == categoryId) &&
             (identical(other.groupName, groupName) ||
                 other.groupName == groupName) &&
-            (identical(other.allocatedAmount, allocatedAmount) ||
-                other.allocatedAmount == allocatedAmount) &&
+            (identical(other.allocatedMinor, allocatedMinor) ||
+                other.allocatedMinor == allocatedMinor) &&
             (identical(other.allocatedPercentage, allocatedPercentage) ||
                 other.allocatedPercentage == allocatedPercentage) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.deletedAt, deletedAt) ||
+                other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
                 other.isSynced == isSynced));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, budgetId, categoryId,
-      groupName, allocatedAmount, allocatedPercentage, createdAt, isSynced);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      budgetId,
+      categoryId,
+      groupName,
+      allocatedMinor,
+      allocatedPercentage,
+      createdAt,
+      updatedAt,
+      deletedAt,
+      isSynced);
 
   @override
   String toString() {
-    return 'BudgetCategoryModel(id: $id, budgetId: $budgetId, categoryId: $categoryId, groupName: $groupName, allocatedAmount: $allocatedAmount, allocatedPercentage: $allocatedPercentage, createdAt: $createdAt, isSynced: $isSynced)';
+    return 'BudgetCategoryModel(id: $id, budgetId: $budgetId, categoryId: $categoryId, groupName: $groupName, allocatedMinor: $allocatedMinor, allocatedPercentage: $allocatedPercentage, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -254,9 +306,11 @@ abstract mixin class _$BudgetCategoryModelCopyWith<$Res>
       @JsonKey(name: 'budget_id') String budgetId,
       @JsonKey(name: 'category_id') String categoryId,
       @JsonKey(name: 'group_name') String groupName,
-      @JsonKey(name: 'allocated_amount') double allocatedAmount,
+      @JsonKey(name: 'allocated_minor') int allocatedMinor,
       @JsonKey(name: 'allocated_percentage') double? allocatedPercentage,
       @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
@@ -277,9 +331,11 @@ class __$BudgetCategoryModelCopyWithImpl<$Res>
     Object? budgetId = null,
     Object? categoryId = null,
     Object? groupName = null,
-    Object? allocatedAmount = null,
+    Object? allocatedMinor = null,
     Object? allocatedPercentage = freezed,
     Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
     return _then(_BudgetCategoryModel(
@@ -299,10 +355,10 @@ class __$BudgetCategoryModelCopyWithImpl<$Res>
           ? _self.groupName
           : groupName // ignore: cast_nullable_to_non_nullable
               as String,
-      allocatedAmount: null == allocatedAmount
-          ? _self.allocatedAmount
-          : allocatedAmount // ignore: cast_nullable_to_non_nullable
-              as double,
+      allocatedMinor: null == allocatedMinor
+          ? _self.allocatedMinor
+          : allocatedMinor // ignore: cast_nullable_to_non_nullable
+              as int,
       allocatedPercentage: freezed == allocatedPercentage
           ? _self.allocatedPercentage
           : allocatedPercentage // ignore: cast_nullable_to_non_nullable
@@ -311,6 +367,14 @@ class __$BudgetCategoryModelCopyWithImpl<$Res>
           ? _self.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      updatedAt: null == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      deletedAt: freezed == deletedAt
+          ? _self.deletedAt
+          : deletedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       isSynced: null == isSynced
           ? _self.isSynced
           : isSynced // ignore: cast_nullable_to_non_nullable
