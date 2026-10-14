@@ -29,21 +29,30 @@ abstract class NotificationService {
   /// Initialize the notification service.
   Future<void> init();
 
-  /// Show a budget alert notification.
+  /// Shows a budget alert. [id] distinguishes alerts (one per category);
+  /// [title] and [body] are already in the app's language.
   Future<void> showBudgetAlert({
-    required String categoryName,
-    required int percentUsed,
-    required String budgetAmount,
+    required int id,
+    required String title,
+    required String body,
   });
 
-  /// Show a savings milestone notification.
+  /// Shows a savings milestone. [id] distinguishes goals; [title] and
+  /// [body] are already in the app's language.
   Future<void> showSavingsMilestone({
-    required String goalName,
-    required int milestonePercent,
+    required int id,
+    required String title,
+    required String body,
   });
 
-  /// Schedule a daily reminder notification at the given [hour] and [minute].
-  Future<void> scheduleDailyReminder({int hour = 20, int minute = 0});
+  /// Schedules the daily reminder at [hour]:[minute], replacing any
+  /// earlier one; [title] and [body] are already in the app's language.
+  Future<void> scheduleDailyReminder({
+    required int hour,
+    required int minute,
+    required String title,
+    required String body,
+  });
 
   /// Cancel the daily reminder.
   Future<void> cancelDailyReminder();
@@ -61,29 +70,29 @@ class DevNotificationService implements NotificationService {
 
   @override
   Future<void> showBudgetAlert({
-    required String categoryName,
-    required int percentUsed,
-    required String budgetAmount,
+    required int id,
+    required String title,
+    required String body,
   }) async {
-    AppLogger.info(
-      'Budget alert: $categoryName at $percentUsed% of $budgetAmount',
-      tag: 'Notif',
-    );
+    AppLogger.info('Budget alert: $title — $body', tag: 'Notif');
   }
 
   @override
   Future<void> showSavingsMilestone({
-    required String goalName,
-    required int milestonePercent,
+    required int id,
+    required String title,
+    required String body,
   }) async {
-    AppLogger.info(
-      'Savings milestone: $goalName reached $milestonePercent%',
-      tag: 'Notif',
-    );
+    AppLogger.info('Savings milestone: $title — $body', tag: 'Notif');
   }
 
   @override
-  Future<void> scheduleDailyReminder({int hour = 20, int minute = 0}) async {
+  Future<void> scheduleDailyReminder({
+    required int hour,
+    required int minute,
+    required String title,
+    required String body,
+  }) async {
     AppLogger.info(
       'Daily reminder scheduled for $hour:${minute.toString().padLeft(2, '0')}',
       tag: 'Notif',

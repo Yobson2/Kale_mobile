@@ -1,5 +1,9 @@
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/providers/storage_providers.dart';
+import 'package:kale/l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_locale.g.dart';
@@ -39,4 +43,16 @@ class AppLanguage extends _$AppLanguage {
     state = language;
     await ref.read(localStorageProvider).setLocale(language ?? _followDevice);
   }
+}
+
+/// The app's strings in its current language, for text built outside a
+/// widget (notifications): the language picked in Settings, else the
+/// device's (French fallback), as [resolveAppLocale] decides for the UI.
+@Riverpod(keepAlive: true)
+AppLocalizations appStrings(Ref ref) {
+  final chosen = ref.watch(appLanguageProvider);
+  final locale = chosen != null
+      ? Locale(chosen)
+      : resolveAppLocale(PlatformDispatcher.instance.locale);
+  return lookupAppLocalizations(locale);
 }

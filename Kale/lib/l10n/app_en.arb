@@ -459,15 +459,6 @@
   "settingsDisabled": "Disabled",
   "settingsDailyReminder": "Daily Reminder",
   "settingsDailyReminderSubtitle": "Remind me to log transactions",
-  "settingsBudgetAlertThreshold": "Budget Alert Threshold",
-  "settingsBudgetAlertThresholdSubtitle": "Alert when spending reaches {percentage}% of budget",
-  "@settingsBudgetAlertThresholdSubtitle": {
-    "placeholders": {
-      "percentage": {
-        "type": "int"
-      }
-    }
-  },
   "settingsData": "Data",
   "settingsClearLocalData": "Clear Local Data",
   "settingsClearLocalDataSubtitle": "Remove all cached data from this device",
@@ -669,5 +660,14 @@
   },
   "budgetRenewAction": "Renew for this period",
   "budgetRenewed": "Budget renewed",
-  "budgetRenewFailed": "Couldn't renew the budget. Please try again."
+  "budgetRenewFailed": "Couldn't renew the budget. Please try again.",
+  "notifBudgetAlertTitle": "Budget alert: {category}",
+  "notifBudgetAlert80Body": "You've used 80% of your {amount} budget for {category}.",
+  "notifBudgetAlert100Body": "You've used all of your {amount} budget for {category}.",
+  "notifSavingsMilestoneTitle": "Savings milestone: {goal}",
+  "notifSavingsMilestoneBody": "\"{goal}\" is now {percent}% funded. Keep going!",
+  "notifSavingsGoalReachedTitle": "Goal reached: {goal}",
+  "notifSavingsGoalReachedBody": "Congratulations! You've saved everything for \"{goal}\".",
+  "notifDailyReminderTitle": "Track your spending",
+  "notifDailyReminderBody": "Don't forget to log today's transactions."
 }

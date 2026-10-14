@@ -41,10 +41,9 @@ Future<SplashResult> _resolve(Ref ref) async {
     final notifService = ref.read(notificationServiceProvider);
     await notifService.init();
 
-    // Schedule daily reminder if enabled.
-    if (localStorage.isDailyReminderEnabled) {
-      await notifService.scheduleDailyReminder();
-    }
+    // The opt-in daily reminder: rescheduled in the current language and
+    // time zone if it is on, cancelled otherwise.
+    await ref.read(dailyReminderProvider).restore();
 
     return localStorage.isFirstLaunch
         ? SplashResult.onboarding

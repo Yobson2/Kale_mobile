@@ -157,18 +157,15 @@ class TransactionsNotifier extends _$TransactionsNotifier {
     });
   }
 
-  /// Checks if the transaction's category has exceeded the budget alert
-  /// threshold and fires a notification if so.
+  /// Alerts once if the transaction's category reached 80% or 100% of its
+  /// allocation in this budget period (see [BudgetAlertChecker]).
   void _checkBudgetAlert(String categoryId) {
     Future(() async {
       try {
         final budget = await ref.read(activeBudgetProvider.future);
         if (budget == null) return;
 
-        final checker = BudgetAlertChecker(
-          notificationService: ref.read(notificationServiceProvider),
-          localStorage: ref.read(localStorageProvider),
-        );
+        final checker = ref.read(budgetAlertCheckerProvider);
 
         // Resolve category name for the notification.
         final categories = await ref.read(categoriesStreamProvider.future);

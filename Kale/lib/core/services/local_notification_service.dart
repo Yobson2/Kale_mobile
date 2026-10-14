@@ -7,6 +7,9 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 /// Real notification service using [FlutterLocalNotificationsPlugin].
+///
+/// Local notifications only (decision Q22): nothing is pushed from a
+/// server. Callers pass text already in the app's language.
 class LocalNotificationService implements NotificationService {
   LocalNotificationService();
 
@@ -40,9 +43,9 @@ class LocalNotificationService implements NotificationService {
 
   @override
   Future<void> showBudgetAlert({
-    required String categoryName,
-    required int percentUsed,
-    required String budgetAmount,
+    required int id,
+    required String title,
+    required String body,
   }) async {
     const details = NotificationDetails(
       android: AndroidNotificationDetails(
@@ -54,19 +57,14 @@ class LocalNotificationService implements NotificationService {
       ),
       iOS: DarwinNotificationDetails(),
     );
-
-    await _plugin.show(
-      NotificationIds.budgetAlert + categoryName.hashCode % 999,
-      'Budget Alert: $categoryName',
-      "You've used $percentUsed% of your $budgetAmount budget for $categoryName.",
-      details,
-    );
+    await _plugin.show(NotificationIds.budgetAlert + id, title, body, details);
   }
 
   @override
   Future<void> showSavingsMilestone({
-    required String goalName,
-    required int milestonePercent,
+    required int id,
+    required String title,
+    required String body,
   }) async {
     const details = NotificationDetails(
       android: AndroidNotificationDetails(
@@ -77,16 +75,8 @@ class LocalNotificationService implements NotificationService {
       ),
       iOS: DarwinNotificationDetails(),
     );
-
-    final title = milestonePercent >= 100
-        ? 'Goal Complete! $goalName'
-        : 'Savings Milestone: $goalName';
-    final body = milestonePercent >= 100
-        ? 'Congratulations! You\'ve reached your savings goal for "$goalName"!'
-        : 'Great progress! "$goalName" is now $milestonePercent% funded.';
-
     await _plugin.show(
-      NotificationIds.savingsMilestone + goalName.hashCode % 999,
+      NotificationIds.savingsMilestone + id,
       title,
       body,
       details,
@@ -94,7 +84,12 @@ class LocalNotificationService implements NotificationService {
   }
 
   @override
-  Future<void> scheduleDailyReminder({int hour = 20, int minute = 0}) async {
+  Future<void> scheduleDailyReminder({
+    required int hour,
+    required int minute,
+    required String title,
+    required String body,
+  }) async {
     // Cancel existing before rescheduling.
     await cancelDailyReminder();
 
@@ -124,13 +119,14 @@ class LocalNotificationService implements NotificationService {
 
     await _plugin.zonedSchedule(
       NotificationIds.dailyReminder,
-      'Track Your Spending',
-      "Don't forget to log today's transactions!",
+      title,
+      body,
       scheduledDate,
       details,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
+      // Repeats every day at the same time.
       matchDateTimeComponents: DateTimeComponents.time,
     );
 
