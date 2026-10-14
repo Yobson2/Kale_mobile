@@ -75,8 +75,6 @@ class _AppPrimaryButtonState extends State<AppPrimaryButton> {
             decoration: BoxDecoration(
               gradient: _isEnabled
                   ? LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
                       colors: [
                         colorScheme.primary,
                         colorScheme.primaryContainer,
@@ -99,9 +97,8 @@ class _AppPrimaryButtonState extends State<AppPrimaryButton> {
                     ),
                   )
                 : Row(
-                    mainAxisSize: widget.isExpanded
-                        ? MainAxisSize.max
-                        : MainAxisSize.min,
+                    mainAxisSize:
+                        widget.isExpanded ? MainAxisSize.max : MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (widget.icon != null) ...[

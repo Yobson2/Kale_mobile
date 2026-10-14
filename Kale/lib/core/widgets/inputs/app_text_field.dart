@@ -4,7 +4,7 @@ import 'package:kale/core/theme/app_spacing.dart';
 
 /// Styled text field with label, hint, error, prefix/suffix support.
 ///
-/// Wraps [TextFormField] with consistent theming from [AppTheme].
+/// Wraps [TextFormField] with consistent theming from `AppTheme`.
 class AppTextField extends StatelessWidget {
   /// Creates an [AppTextField].
   const AppTextField({

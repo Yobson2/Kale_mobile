@@ -44,7 +44,6 @@ class CashFlowSummaryCard extends ConsumerWidget {
           children: [
             // K watermark at 5% opacity
             const GeometricKWatermark(
-              opacity: 0.05,
               fontSize: 160,
               alignment: Alignment.topRight,
               offset: Offset(30, -20),

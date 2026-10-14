@@ -51,11 +51,8 @@ class SupabaseTransactionsRemoteDataSource
   @override
   Future<TransactionModel> getTransactionById(String id) async {
     try {
-      final data = await _table
-          .select()
-          .eq('id', id)
-          .eq('user_id', _userId)
-          .single();
+      final data =
+          await _table.select().eq('id', id).eq('user_id', _userId).single();
       return TransactionModel.fromJson(data);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message, statusCode: _parseCode(e));
@@ -109,8 +106,7 @@ class SupabaseTransactionsRemoteDataSource
 /// Mock implementation of [TransactionsRemoteDataSource] for development.
 ///
 /// Returns mock data without making real network calls.
-class MockTransactionsRemoteDataSource
-    implements TransactionsRemoteDataSource {
+class MockTransactionsRemoteDataSource implements TransactionsRemoteDataSource {
   static const _delay = Duration(milliseconds: 500);
 
   @override

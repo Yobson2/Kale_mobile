@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:kale/core/error/failures.dart';
 import 'package:kale/core/usecase/usecase.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 class _TestUseCase extends UseCase<String, _TestParams> {
   const _TestUseCase({required this.result});
@@ -39,7 +39,7 @@ void main() {
 
   group('NoParams', () {
     test('should support equality', () {
-      expect(NoParams(), equals(NoParams()));
+      expect(const NoParams(), equals(const NoParams()));
     });
   });
 }

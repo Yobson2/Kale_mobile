@@ -38,8 +38,8 @@ class SavingsProgressRing extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final bgColor =
-        backgroundColor ?? theme.colorScheme.outlineVariant.withValues(alpha: 0.15);
+    final bgColor = backgroundColor ??
+        theme.colorScheme.outlineVariant.withValues(alpha: 0.15);
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),

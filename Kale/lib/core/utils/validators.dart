@@ -50,7 +50,7 @@ class Validators {
     return null;
   }
 
-  /// Validates that [value] matches [other] (e.g. confirm password).
+  /// Validates that `value` matches `other` (e.g. confirm password).
   static String? Function(String?) match(String? other, {String? fieldName}) {
     return (String? value) {
       if (value != other) {

@@ -18,9 +18,9 @@ import 'package:kale/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/register_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
-import 'package:kale/features/auth/domain/usecases/update_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/sign_in_with_apple_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/sign_in_with_google_usecase.dart';
+import 'package:kale/features/auth/domain/usecases/update_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

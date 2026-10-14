@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kale/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
 import 'package:kale/features/auth/presentation/pages/login_page.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:kale/l10n/app_localizations.dart';
 
 void main() {
   Widget createTestWidget({AuthState? initialState}) {

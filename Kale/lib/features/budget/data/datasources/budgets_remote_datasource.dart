@@ -49,11 +49,8 @@ class SupabaseBudgetsRemoteDataSource implements BudgetsRemoteDataSource {
   @override
   Future<BudgetModel> getBudgetById(String id) async {
     try {
-      final data = await _table
-          .select()
-          .eq('id', id)
-          .eq('user_id', _userId)
-          .single();
+      final data =
+          await _table.select().eq('id', id).eq('user_id', _userId).single();
       return BudgetModel.fromJson(data);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message, statusCode: _parseCode(e));

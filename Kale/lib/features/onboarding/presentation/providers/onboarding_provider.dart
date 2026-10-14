@@ -20,6 +20,7 @@ class OnboardingNotifier extends _$OnboardingNotifier {
   }
 
   /// Sets the current page index.
+  // ignore: use_setters_to_change_properties, Riverpod notifier API.
   void setPage(int page) => state = page;
 
   /// Marks onboarding as complete in local storage.

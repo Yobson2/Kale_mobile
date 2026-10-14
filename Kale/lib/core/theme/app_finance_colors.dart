@@ -5,18 +5,22 @@ import 'package:kale/core/theme/app_colors.dart';
 /// that automatically resolve for light/dark themes.
 extension AppFinanceColors on ColorScheme {
   /// Income color (green).
-  Color get income =>
-      brightness == Brightness.dark ? AppColors.incomeDark : AppColors.incomeLight;
+  Color get income => brightness == Brightness.dark
+      ? AppColors.incomeDark
+      : AppColors.incomeLight;
 
   /// Expense color (red).
-  Color get expense =>
-      brightness == Brightness.dark ? AppColors.expenseDark : AppColors.expenseLight;
+  Color get expense => brightness == Brightness.dark
+      ? AppColors.expenseDark
+      : AppColors.expenseLight;
 
   /// Budget color (amber).
-  Color get budget =>
-      brightness == Brightness.dark ? AppColors.budgetDark : AppColors.budgetLight;
+  Color get budget => brightness == Brightness.dark
+      ? AppColors.budgetDark
+      : AppColors.budgetLight;
 
   /// Savings color (blue).
-  Color get savings =>
-      brightness == Brightness.dark ? AppColors.savingsDark : AppColors.savingsLight;
+  Color get savings => brightness == Brightness.dark
+      ? AppColors.savingsDark
+      : AppColors.savingsLight;
 }

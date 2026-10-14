@@ -85,8 +85,7 @@ class AppEmptyState extends StatelessWidget {
                   child: Text(actionText!),
                 ),
               ],
-              if (secondaryActionText != null &&
-                  onSecondaryAction != null) ...[
+              if (secondaryActionText != null && onSecondaryAction != null) ...[
                 AppSpacing.verticalSm,
                 OutlinedButton(
                   onPressed: onSecondaryAction,

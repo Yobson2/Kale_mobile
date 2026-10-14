@@ -4,7 +4,7 @@ import 'package:kale/core/theme/app_spacing.dart';
 
 /// Secondary tonal button with scale press feedback.
 ///
-/// Uses [surfaceContainerHigh] background with no border.
+/// Uses `surfaceContainerHigh` background with no border.
 class AppSecondaryButton extends StatefulWidget {
   /// Creates an [AppSecondaryButton].
   const AppSecondaryButton({
@@ -54,8 +54,7 @@ class _AppSecondaryButtonState extends State<AppSecondaryButton> {
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
       child: GestureDetector(
-        onTapDown:
-            _isEnabled ? (_) => setState(() => _isPressed = true) : null,
+        onTapDown: _isEnabled ? (_) => setState(() => _isPressed = true) : null,
         onTapUp: _isEnabled
             ? (_) {
                 setState(() => _isPressed = false);

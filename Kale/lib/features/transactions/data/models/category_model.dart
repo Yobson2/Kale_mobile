@@ -10,21 +10,20 @@ part 'category_model.g.dart';
 /// Data model for [Category] with JSON serialization and Drift mapping.
 @freezed
 abstract class CategoryModel with _$CategoryModel {
-  const CategoryModel._();
-
   const factory CategoryModel({
     required String id,
     required String name,
     required String icon,
     required String color,
     required String type,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
     @Default(true) @JsonKey(name: 'is_default') bool isDefault,
     @Default(0) @JsonKey(name: 'sort_order') int sortOrder,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
     @Default(true)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
   }) = _CategoryModel;
+  const CategoryModel._();
 
   /// Creates a [CategoryModel] from JSON.
   factory CategoryModel.fromJson(Map<String, dynamic> json) =>

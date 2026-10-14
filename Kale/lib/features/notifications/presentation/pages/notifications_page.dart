@@ -34,8 +34,8 @@ class NotificationsPage extends StatelessWidget {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: context.colorScheme.primary
-                            .withValues(alpha: 0.12),
+                        color:
+                            context.colorScheme.primary.withValues(alpha: 0.12),
                         borderRadius: AppRadius.borderRadiusXl,
                       ),
                       child: Icon(

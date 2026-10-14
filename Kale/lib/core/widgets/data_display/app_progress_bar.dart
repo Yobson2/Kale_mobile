@@ -38,8 +38,8 @@ class AppProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final trackColor = backgroundColor ??
-        colorScheme.outlineVariant.withValues(alpha: 0.15);
+    final trackColor =
+        backgroundColor ?? colorScheme.outlineVariant.withValues(alpha: 0.15);
     final fillGradient = gradient ??
         LinearGradient(
           colors: [

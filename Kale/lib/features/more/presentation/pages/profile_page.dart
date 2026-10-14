@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kale/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/providers/storage_providers.dart';
@@ -12,6 +11,7 @@ import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/auth/presentation/widgets/account_action_button.dart';
+import 'package:kale/l10n/app_localizations.dart';
 
 /// Profile page displaying user info, achievements bento grid, and logout.
 class ProfilePage extends ConsumerWidget {
@@ -72,7 +72,7 @@ class ProfilePage extends ConsumerWidget {
                   style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: context.colorScheme.onPrimary,
-                    letterSpacing: 1.0,
+                    letterSpacing: 1,
                   ),
                 ),
               ),

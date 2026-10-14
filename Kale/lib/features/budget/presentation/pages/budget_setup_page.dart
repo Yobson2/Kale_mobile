@@ -1303,7 +1303,8 @@ class _NavigationButtons extends StatelessWidget {
                                 ),
                               )
                             : Text(
-                                isEditMode ? 'Update Budget' : 'Create Budget'),
+                                isEditMode ? 'Update Budget' : 'Create Budget',
+                              ),
                       )
                     : FilledButton(
                         onPressed: onNext,

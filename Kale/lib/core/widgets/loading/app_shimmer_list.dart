@@ -37,15 +37,18 @@ class _ShimmerListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       children: [
-        const AppShimmer(
-            width: 48, height: 48, borderRadius: BorderRadius.zero),
+        AppShimmer(
+          width: 48,
+          height: 48,
+          borderRadius: BorderRadius.zero,
+        ),
         AppSpacing.horizontalMd,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               AppShimmer(height: 14, width: 160),
               SizedBox(height: 8),
               AppShimmer(height: 12, width: 100),

@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 ///
 /// Provides typed access to encrypted key-value storage.
 class SecureStorage {
-  /// Creates a [SecureStorage] with the given [storage] instance.
+  /// Creates a [SecureStorage] with the given `storage` instance.
   const SecureStorage(this._storage);
 
   final FlutterSecureStorage _storage;

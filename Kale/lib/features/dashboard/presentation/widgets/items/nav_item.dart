@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 /// Bottom navigation item with active dot indicator.
 ///
-/// Uses theme colors via [ColorScheme] instead of hardcoded [AppColors].
+/// Uses theme colors via [ColorScheme] instead of hardcoded `AppColors`.
 class NavItem extends StatelessWidget {
   const NavItem({
     required this.icon,

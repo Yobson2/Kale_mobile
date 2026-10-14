@@ -37,6 +37,7 @@ class DashboardPeriodNotifier extends _$DashboardPeriodNotifier {
   DashboardPeriod build() => DashboardPeriod.monthly;
 
   /// Changes the selected dashboard period.
+  // ignore: use_setters_to_change_properties, Riverpod notifier API.
   void setPeriod(DashboardPeriod period) => state = period;
 }
 

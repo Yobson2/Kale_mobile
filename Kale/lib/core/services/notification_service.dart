@@ -9,8 +9,7 @@ abstract final class NotificationChannels {
 
   static const String dailyReminder = 'daily_reminder';
   static const String dailyReminderName = 'Daily Reminders';
-  static const String dailyReminderDesc =
-      'Reminders to log daily transactions';
+  static const String dailyReminderDesc = 'Reminders to log daily transactions';
 
   static const String savingsMilestone = 'savings_milestone';
   static const String savingsMilestoneName = 'Savings Milestones';

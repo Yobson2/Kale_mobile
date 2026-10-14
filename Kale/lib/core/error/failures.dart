@@ -16,6 +16,7 @@ sealed class Failure {
   final int? statusCode;
 
   @override
+  // ignore: no_runtimetype_tostring, debug output only.
   String toString() => '$runtimeType(message: $message)';
 
   @override
@@ -33,8 +34,10 @@ sealed class Failure {
 /// Failure originating from a remote server error (5xx, unexpected response).
 class ServerFailure extends Failure {
   /// Creates a [ServerFailure].
-  const ServerFailure(
-      {super.message = 'Server error occurred', super.statusCode});
+  const ServerFailure({
+    super.message = 'Server error occurred',
+    super.statusCode,
+  });
 }
 
 /// Failure originating from local cache operations.

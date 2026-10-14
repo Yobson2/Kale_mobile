@@ -95,7 +95,6 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
 
       final model = TransactionModel(
         id: id,
-        serverId: null,
         amountMinor: amountMinor,
         type: type.name,
         categoryId: categoryId,

@@ -1,7 +1,7 @@
-/// Exception classes thrown in the data layer.
-///
-/// These are caught in repository implementations and
-/// mapped to corresponding [Failure] types.
+// Exception classes thrown in the data layer.
+//
+// These are caught in repository implementations and
+// mapped to corresponding `Failure` types.
 
 /// Exception thrown when a server request fails.
 class ServerException implements Exception {

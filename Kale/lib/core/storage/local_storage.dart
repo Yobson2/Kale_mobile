@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Used for settings, cache flags, and feature toggles.
 class LocalStorage {
-  /// Creates a [LocalStorage] with the given [prefs] instance.
+  /// Creates a [LocalStorage] with the given `prefs` instance.
   const LocalStorage(this._prefs);
 
   final SharedPreferences _prefs;

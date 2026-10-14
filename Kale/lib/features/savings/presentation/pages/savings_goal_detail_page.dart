@@ -291,7 +291,7 @@ class _GoalDetailContent extends ConsumerWidget {
                     'VIEW ALL',
                     style: theme.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 1.0,
+                      letterSpacing: 1,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
@@ -537,7 +537,7 @@ class _StatCard extends StatelessWidget {
             label,
             style: context.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w600,
-              letterSpacing: 1.0,
+              letterSpacing: 1,
               color: color,
             ),
           ),

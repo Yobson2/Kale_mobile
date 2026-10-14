@@ -98,8 +98,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
           borderRadius: AppRadius.borderRadiusFull,
           borderSide: BorderSide(color: colorScheme.primary),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: AppSpacing.lgx),
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lgx),
       ),
     );
   }

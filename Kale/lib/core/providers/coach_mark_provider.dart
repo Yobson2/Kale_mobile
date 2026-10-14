@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coach_mark_provider.g.dart';
 
-/// Provides a [CoachMarkService] instance backed by [LocalStorage].
+/// Provides a [CoachMarkService] instance backed by `LocalStorage`.
 @Riverpod(keepAlive: true)
 CoachMarkService coachMarkService(Ref ref) {
   return CoachMarkService(ref.watch(localStorageProvider));

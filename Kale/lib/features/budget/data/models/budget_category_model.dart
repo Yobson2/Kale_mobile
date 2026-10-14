@@ -13,22 +13,21 @@ part 'budget_category_model.g.dart';
 /// base currency.
 @freezed
 abstract class BudgetCategoryModel with _$BudgetCategoryModel {
-  const BudgetCategoryModel._();
-
   const factory BudgetCategoryModel({
     required String id,
     @JsonKey(name: 'budget_id') required String budgetId,
     @JsonKey(name: 'category_id') required String categoryId,
     @JsonKey(name: 'group_name') required String groupName,
     @JsonKey(name: 'allocated_minor') required int allocatedMinor,
-    @JsonKey(name: 'allocated_percentage') double? allocatedPercentage,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'allocated_percentage') double? allocatedPercentage,
     @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(false)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
   }) = _BudgetCategoryModel;
+  const BudgetCategoryModel._();
 
   /// Creates a [BudgetCategoryModel] from JSON.
   factory BudgetCategoryModel.fromJson(Map<String, dynamic> json) =>

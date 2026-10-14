@@ -52,7 +52,9 @@ class AppCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: gradient == null
-              ? (color ?? theme.cardTheme.color ?? theme.colorScheme.surfaceContainerLow)
+              ? (color ??
+                  theme.cardTheme.color ??
+                  theme.colorScheme.surfaceContainerLow)
               : null,
           gradient: gradient,
           borderRadius: borderRadius ?? AppRadius.borderRadiusMd,

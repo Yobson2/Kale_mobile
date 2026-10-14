@@ -50,7 +50,11 @@ class AppAmountDisplay extends StatelessWidget {
         ?.copyWith(color: color);
 
     final prefix = showSign
-        ? (type == AmountType.income ? '+' : type == AmountType.expense ? '-' : '')
+        ? (type == AmountType.income
+            ? '+'
+            : type == AmountType.expense
+                ? '-'
+                : '')
         : '';
 
     if (animate) {

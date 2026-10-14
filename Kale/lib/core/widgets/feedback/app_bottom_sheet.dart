@@ -4,7 +4,7 @@ import 'package:kale/core/theme/app_spacing.dart';
 
 /// Shows a themed modal bottom sheet with ghost shadow.
 ///
-/// Uses [surfaceContainerLowest] background and top-only 24px radius.
+/// Uses `surfaceContainerLowest` background and top-only 24px radius.
 Future<T?> showAppBottomSheet<T>(
   BuildContext context, {
   required Widget Function(BuildContext) builder,

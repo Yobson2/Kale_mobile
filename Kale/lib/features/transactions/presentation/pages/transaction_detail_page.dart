@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -151,10 +153,12 @@ class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
       isDestructive: true,
     );
 
-    if (confirmed == true && mounted) {
-      ref
-          .read(transactionsNotifierProvider.notifier)
-          .deleteTransaction(widget.transactionId!);
+    if ((confirmed ?? false) && mounted) {
+      unawaited(
+        ref
+            .read(transactionsNotifierProvider.notifier)
+            .deleteTransaction(widget.transactionId!),
+      );
     }
   }
 }

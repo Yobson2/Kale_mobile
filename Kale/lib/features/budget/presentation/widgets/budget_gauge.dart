@@ -49,8 +49,8 @@ class BudgetGauge extends StatelessWidget {
                 painter: _GaugePainter(
                   progress: value,
                   isDark: isDark,
-                  trackColor: theme.colorScheme.outlineVariant
-                      .withValues(alpha: 0.15),
+                  trackColor:
+                      theme.colorScheme.outlineVariant.withValues(alpha: 0.15),
                 ),
               );
             },

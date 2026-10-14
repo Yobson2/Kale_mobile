@@ -64,8 +64,7 @@ class TermsOfServicePage extends StatelessWidget {
                     number: '02',
                     title: l10n.legalTosAccountHeading,
                     body: l10n.legalTosAccountBody,
-                    quoteText:
-                        '"Users are responsible for safeguarding their '
+                    quoteText: '"Users are responsible for safeguarding their '
                         'passwords and for any activities or actions under '
                         'their account."',
                   ),
@@ -269,8 +268,8 @@ class _NumberedSection extends StatelessWidget {
                 color: context.colorScheme.surfaceContainerLow,
                 borderRadius: AppRadius.borderRadiusMd,
                 border: Border.all(
-                  color:
-                      context.colorScheme.outlineVariant.withValues(alpha: 0.15),
+                  color: context.colorScheme.outlineVariant
+                      .withValues(alpha: 0.15),
                 ),
               ),
               child: Column(

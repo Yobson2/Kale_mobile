@@ -1,5 +1,5 @@
-import 'package:kale/features/auth/domain/entities/user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kale/features/auth/domain/entities/user.dart';
 
 part 'auth_state.freezed.dart';
 

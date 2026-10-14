@@ -32,8 +32,7 @@ class AppStepIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final active = activeColor ?? theme.colorScheme.primary;
-    final inactive =
-        inactiveColor ?? theme.colorScheme.surfaceContainerHighest;
+    final inactive = inactiveColor ?? theme.colorScheme.surfaceContainerHighest;
 
     return Row(
       children: List.generate(totalSteps, (index) {
