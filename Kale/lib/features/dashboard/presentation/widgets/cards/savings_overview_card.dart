@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
 
 class SavingsOverviewCard extends ConsumerWidget {
@@ -22,10 +23,11 @@ class SavingsOverviewCard extends ConsumerWidget {
         final activeGoals = goals.where((g) => g.status.isActive).toList();
         if (activeGoals.isEmpty) return const SizedBox.shrink();
 
+        final currency = ref.watch(baseCurrencyProvider);
         final totalSaved =
-            activeGoals.fold<double>(0, (s, g) => s + g.currentAmount);
+            Money.sum(activeGoals.map((g) => g.savedIn(currency)), currency);
         final totalTarget =
-            activeGoals.fold<double>(0, (s, g) => s + g.targetAmount);
+            Money.sum(activeGoals.map((g) => g.targetIn(currency)), currency);
         final topGoals = activeGoals.take(3).toList();
 
         return Container(
@@ -65,9 +67,9 @@ class SavingsOverviewCard extends ConsumerWidget {
               ),
               AppSpacing.verticalSm,
               Text(
-                '${CurrencyFormatter.format(totalSaved, compact: true)}'
+                '${context.formatMoney(totalSaved)}'
                 ' saved of '
-                '${CurrencyFormatter.format(totalTarget, compact: true)}',
+                '${context.formatMoney(totalTarget)}',
                 style: context.textTheme.bodySmall?.copyWith(
                   color: context.colorScheme.onSurfaceVariant,
                 ),

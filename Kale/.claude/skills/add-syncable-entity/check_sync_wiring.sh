@@ -21,13 +21,18 @@ for t in $enqueued; do
 done
 
 echo "2. Every SyncHandler is registered with the engine"
+# Handlers are registered eagerly: each handler's provider must be listed in
+# syncHandlersProvider, which the engine reads at construction.
+sync_providers=lib/core/sync/sync_providers.dart
 for f in $(grep -rlE "implements SyncHandler" "$lib" --include='*_sync_handler.dart'); do
   cls=$(grep -oE "class [A-Za-z]+ implements SyncHandler" "$f" | awk '{print $2}')
+  # FooSyncHandler is constructed in a *_providers.dart as fooSyncHandlerProvider.
+  prov="$(tr '[:upper:]' '[:lower:]' <<<"${cls:0:1}")${cls:1}Provider"
   if grep -rqE "$cls\(" "$lib" --include='*_providers.dart' && \
-     grep -rq "registerHandler" "$(grep -rlE "$cls\(" "$lib" --include='*_providers.dart' | head -1)"; then
+     grep -q "ref.watch($prov)" "$sync_providers"; then
     ok "$cls"
   else
-    bad "$cls is never constructed + registerHandler'd in a *_providers.dart"
+    bad "$cls is not provided as $prov in a *_providers.dart and listed in syncHandlersProvider ($sync_providers)"
   fi
 done
 

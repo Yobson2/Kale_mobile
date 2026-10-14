@@ -162,6 +162,28 @@ class SyncEngine {
     await processQueue();
   }
 
+  /// Pushes everything it can right now, like [retry], and returns the
+  /// resulting status: what is still pending or stuck afterwards could not
+  /// be backed up (offline, or the server refused it).
+  Future<BackupStatus> backUpNow() async {
+    await retry();
+    return _status;
+  }
+
+  /// Forgets the previous user's backup state after the local database
+  /// and sync queue were wiped (logout): drops scheduled pushes, clears
+  /// the last backup time, and re-reads the (now empty) queue counts.
+  Future<void> onLocalDataCleared() async {
+    _writeDebounce?.cancel();
+    for (final timer in _backoffs.values) {
+      timer.cancel();
+    }
+    _backoffs.clear();
+    await _lastBackupStore.clear();
+    _update(BackupStatus(isOffline: _status.isOffline));
+    await _refreshCounts();
+  }
+
   /// Stops listening and cleans up resources.
   Future<void> dispose() async {
     _disposed = true;

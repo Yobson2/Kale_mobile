@@ -1480,4 +1480,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsBackupNever => 'Not backed up yet';
+
+  @override
+  String get logoutUnsavedTitle => 'Log out and lose changes?';
+
+  @override
+  String logoutUnsavedMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count changes aren\'t backed up yet. If you log out now, they will be lost for good.',
+      one:
+          '1 change isn\'t backed up yet. If you log out now, it will be lost for good.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get logoutUnsavedConfirm => 'Log out anyway';
+
+  @override
+  String get logoutUnsavedCancel => 'Stay logged in';
+
+  @override
+  String get logoutFailed => 'Couldn\'t check your backup. Please try again.';
 }

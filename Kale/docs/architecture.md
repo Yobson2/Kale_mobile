@@ -15,8 +15,8 @@ Each feature in `lib/features/<feature>/` follows Clean Architecture:
 Models convert to entities with `toEntity()`; syncable models also convert to and from Drift rows.
 
 **Notifiers call use cases, never repositories.** Each use case has its own provider in the feature's
-`*_providers.dart`. Legacy exceptions to fix when touched: `SavingsNotifier` (repository only, so its 2 use cases are
-unused), a few direct repository calls in the transactions, budget, and auth notifiers, and use cases with no caller
+`*_providers.dart`. Legacy exceptions to fix when touched: a few direct repository calls in the transactions,
+budget, and auth notifiers, and use cases with no caller
 (`GetBudgetsUseCase`, `GetCategoryTotalsUseCase`, `GetPeriodSummaryUseCase`). Notifiers emit state with
 no user-facing text; pages pick the localized message.
 
@@ -87,8 +87,14 @@ Notifiers turn failures into user-facing error state, so presentation code only 
   sign-in fails (offline on first launch), the user is `unauthenticated` and lands on login.
 - Anonymous users are never offered "Log out" (they could never sign back in): `AccountActionButton` shows
   "Create an account to save your data" instead, and the home shell shows the same invitation as a banner.
-- Logout clears secure storage **and** the whole Drift database (`AppDatabase.clearAllData`, which also re-seeds
-  default categories), so the next user never sees stale data.
+- Logout is guarded (Q18). `AuthNotifier.logout()` first backs up through `BackUpPendingChangesUseCase`
+  (`SyncEngine.backUpNow`, a manual push). If changes are still pending or stuck (offline, or the server refused
+  them), it returns `LogoutOutcome.blocked(unsavedChanges: n)` and changes nothing; `AccountActionButton` then asks
+  for an explicit destructive confirmation, and only `discardChangesAndLogout()` goes ahead.
+- Logout clears secure storage, the cached user, the user's progress (streak, achievements) **and** the whole Drift
+  database including the sync queue (`AppDatabase.clearAllData`, which also re-seeds default categories). It then
+  calls `SyncEngine.onLocalDataCleared` so the backup status (counts, last backup time) does not show the previous
+  user's state. The server sign-out is best effort: the phone is wiped even if it fails.
 
 ## Routing
 

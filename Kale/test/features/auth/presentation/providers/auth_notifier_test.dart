@@ -10,6 +10,7 @@ import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
+import 'package:kale/features/auth/presentation/providers/logout_outcome.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -21,6 +22,7 @@ void main() {
   late MockForgotPasswordUseCase mockForgotPasswordUseCase;
   late MockVerifyOtpUseCase mockVerifyOtpUseCase;
   late MockLogoutUseCase mockLogoutUseCase;
+  late MockBackUpPendingChangesUseCase mockBackUpPendingChangesUseCase;
   late MockGetCachedUserUseCase mockGetCachedUserUseCase;
   late MockSignInAnonymouslyUseCase mockSignInAnonymouslyUseCase;
 
@@ -30,6 +32,7 @@ void main() {
     mockForgotPasswordUseCase = MockForgotPasswordUseCase();
     mockVerifyOtpUseCase = MockVerifyOtpUseCase();
     mockLogoutUseCase = MockLogoutUseCase();
+    mockBackUpPendingChangesUseCase = MockBackUpPendingChangesUseCase();
     mockGetCachedUserUseCase = MockGetCachedUserUseCase();
     mockSignInAnonymouslyUseCase = MockSignInAnonymouslyUseCase();
   });
@@ -65,6 +68,8 @@ void main() {
             .overrideWithValue(mockForgotPasswordUseCase),
         verifyOtpUseCaseProvider.overrideWithValue(mockVerifyOtpUseCase),
         logoutUseCaseProvider.overrideWithValue(mockLogoutUseCase),
+        backUpPendingChangesUseCaseProvider
+            .overrideWithValue(mockBackUpPendingChangesUseCase),
         getCachedUserUseCaseProvider
             .overrideWithValue(mockGetCachedUserUseCase),
         signInAnonymouslyUseCaseProvider
@@ -127,21 +132,114 @@ void main() {
       final state = container.read(authNotifierProvider);
       expect(state, isA<AuthError>());
     });
+  });
 
-    test('logout should update state to AuthUnauthenticated', () async {
-      // Arrange
-      when(() => mockLogoutUseCase(any()))
-          .thenAnswer((_) async => const Right(null));
+  group('AuthNotifier.logout (guard)', () {
+    // Stands in for the phone: what is on it, and what reaches the server.
+    late List<String> unsyncedChanges;
+    late List<String> onServer;
+    late bool online;
+    late bool wiped;
 
+    setUp(() {
+      unsyncedChanges = [];
+      onServer = [];
+      online = true;
+      wiped = false;
+      when(() => mockBackUpPendingChangesUseCase(any())).thenAnswer((_) async {
+        if (online) {
+          onServer.addAll(unsyncedChanges);
+          unsyncedChanges.clear();
+        }
+        return Right(unsyncedChanges.length);
+      });
+      when(() => mockLogoutUseCase(any())).thenAnswer((_) async {
+        unsyncedChanges.clear();
+        wiped = true;
+        return const Right(null);
+      });
+    });
+
+    Future<ProviderContainer> signedIn() async {
+      when(() => mockLoginUseCase(any()))
+          .thenAnswer((_) async => const Right(tUser));
       final container = createContainer();
+      await container
+          .read(authNotifierProvider.notifier)
+          .login(email: tUser.email, password: 'password123');
+      return container;
+    }
+
+    test(
+        'online with pending changes: pushes them, then logs out without '
+        'asking', () async {
+      unsyncedChanges = ['tx-1', 'tx-2'];
+      final container = await signedIn();
+
+      final outcome =
+          await container.read(authNotifierProvider.notifier).logout();
+
+      expect(outcome, const LogoutOutcome.loggedOut());
+      expect(onServer, ['tx-1', 'tx-2']);
+      expect(wiped, isTrue);
+      expect(container.read(authNotifierProvider), isA<AuthUnauthenticated>());
+    });
+
+    test('changes that cannot be pushed: asks to confirm, with their count',
+        () async {
+      unsyncedChanges = ['tx-1', 'tx-2', 'budget-1'];
+      online = false;
+      final container = await signedIn();
+
+      final outcome =
+          await container.read(authNotifierProvider.notifier).logout();
+
+      expect(outcome, const LogoutOutcome.blocked(unsavedChanges: 3));
+    });
+
+    test('cancelling the confirmation changes nothing', () async {
+      unsyncedChanges = ['tx-1'];
+      online = false;
+      final container = await signedIn();
+
+      await container.read(authNotifierProvider.notifier).logout();
+      // The user cancels: nothing else is called.
+
+      expect(wiped, isFalse);
+      expect(unsyncedChanges, ['tx-1']);
+      expect(
+        container.read(authNotifierProvider),
+        const AuthState.authenticated(tUser),
+      );
+    });
+
+    test('confirming logs out and wipes the unsynced changes', () async {
+      unsyncedChanges = ['tx-1'];
+      online = false;
+      final container = await signedIn();
       final notifier = container.read(authNotifierProvider.notifier);
 
-      // Act
       await notifier.logout();
+      await notifier.discardChangesAndLogout();
 
-      // Assert
-      final state = container.read(authNotifierProvider);
-      expect(state, isA<AuthUnauthenticated>());
+      expect(wiped, isTrue);
+      expect(unsyncedChanges, isEmpty);
+      expect(onServer, isEmpty);
+      expect(container.read(authNotifierProvider), isA<AuthUnauthenticated>());
+    });
+
+    test('a failed backup check keeps the user logged in', () async {
+      when(() => mockBackUpPendingChangesUseCase(any())).thenAnswer(
+        (_) async => const Left(SyncFailure(message: 'db closed')),
+      );
+      final container = await signedIn();
+
+      final outcome =
+          await container.read(authNotifierProvider.notifier).logout();
+
+      expect(outcome, const LogoutOutcome.failed('db closed'));
+      expect(wiped, isFalse);
+      expect(container.read(authNotifierProvider), isA<AuthAuthenticated>());
     });
   });
 

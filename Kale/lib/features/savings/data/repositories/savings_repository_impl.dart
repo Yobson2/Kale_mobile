@@ -4,6 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
 import 'package:kale/core/network/network_info.dart';
+import 'package:kale/features/savings/data/datasources/savings_contributions_local_datasource.dart';
+import 'package:kale/features/savings/data/datasources/savings_contributions_remote_datasource.dart';
 import 'package:kale/features/savings/data/datasources/savings_local_datasource.dart';
 import 'package:kale/features/savings/data/datasources/savings_remote_datasource.dart';
 import 'package:kale/features/savings/data/models/savings_contribution_model.dart';
@@ -15,40 +17,50 @@ import 'package:kale/features/savings/domain/repositories/savings_repository.dar
 import 'package:uuid/uuid.dart';
 
 /// Offline-first implementation of [SavingsRepository].
+///
+/// Goals and contributions are two sync entity types. A goal's saved
+/// amount is derived on the device (the sum of its contributions) and
+/// pushed as a goal update; the server never computes it.
 class SavingsRepositoryImpl implements SavingsRepository {
   /// Creates a [SavingsRepositoryImpl].
   const SavingsRepositoryImpl({
     required SavingsRemoteDataSource remoteDataSource,
     required SavingsLocalDataSource localDataSource,
+    required SavingsContributionsRemoteDataSource contributionsRemoteDataSource,
+    required SavingsContributionsLocalDataSource contributionsLocalDataSource,
     required NetworkInfo networkInfo,
   })  : _remote = remoteDataSource,
         _local = localDataSource,
+        _contributionsRemote = contributionsRemoteDataSource,
+        _contributionsLocal = contributionsLocalDataSource,
         _networkInfo = networkInfo;
 
   final SavingsRemoteDataSource _remote;
   final SavingsLocalDataSource _local;
+  final SavingsContributionsRemoteDataSource _contributionsRemote;
+  final SavingsContributionsLocalDataSource _contributionsLocal;
   final NetworkInfo _networkInfo;
 
   @override
   Future<Either<Failure, SavingsGoal>> createSavingsGoal({
     required String name,
-    required double targetAmount,
-    required String currencyCode,
+    required int targetAmountMinor,
     String? description,
     DateTime? deadline,
     String? iconName,
     String? colorHex,
   }) async {
+    if (targetAmountMinor <= 0) {
+      return const Left(
+        ValidationFailure(message: 'The target must be more than zero'),
+      );
+    }
     try {
       final now = DateTime.now();
-      final id = const Uuid().v4();
-
       final model = SavingsGoalModel(
-        id: id,
+        id: const Uuid().v4(),
         name: name,
-        targetAmount: targetAmount,
-        currentAmount: 0,
-        currencyCode: currencyCode,
+        targetAmountMinor: targetAmountMinor,
         description: description,
         deadline: deadline,
         iconName: iconName,
@@ -59,13 +71,7 @@ class SavingsRepositoryImpl implements SavingsRepository {
         isSynced: false,
       );
 
-      await _local.saveSavingsGoal(model);
-      await _local.enqueueSync(
-        entityId: id,
-        operation: 'create',
-        payload: jsonEncode(model.toJson()),
-      );
-
+      await _saveGoal(model, operation: 'create');
       return Right(model.toEntity());
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
@@ -76,40 +82,32 @@ class SavingsRepositoryImpl implements SavingsRepository {
   Future<Either<Failure, SavingsGoal>> updateSavingsGoal({
     required String id,
     required String name,
-    required double targetAmount,
-    required String currencyCode,
+    required int targetAmountMinor,
     required SavingsGoalStatus status,
     String? description,
     DateTime? deadline,
     String? iconName,
     String? colorHex,
   }) async {
+    if (targetAmountMinor <= 0) {
+      return const Left(
+        ValidationFailure(message: 'The target must be more than zero'),
+      );
+    }
     try {
       final existing = await _local.getSavingsGoalById(id);
-
-      final model = SavingsGoalModel(
-        id: id,
+      final model = _modelOf(existing).copyWith(
         name: name,
-        targetAmount: targetAmount,
-        currentAmount: existing.currentAmount,
-        currencyCode: currencyCode,
+        targetAmountMinor: targetAmountMinor,
         description: description,
         deadline: deadline,
         iconName: iconName,
         colorHex: colorHex,
         status: status.name,
-        createdAt: existing.createdAt,
         updatedAt: DateTime.now(),
-        isSynced: false,
       );
 
-      await _local.saveSavingsGoal(model);
-      await _local.enqueueSync(
-        entityId: id,
-        operation: 'update',
-        payload: jsonEncode(model.toJson()),
-      );
-
+      await _saveGoal(model, operation: 'update');
       return Right(model.toEntity());
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
@@ -120,10 +118,7 @@ class SavingsRepositoryImpl implements SavingsRepository {
   Future<Either<Failure, void>> deleteSavingsGoal(String id) async {
     try {
       await _local.deleteSavingsGoal(id);
-      await _local.enqueueSync(
-        entityId: id,
-        operation: 'delete',
-      );
+      await _local.enqueueSync(entityId: id, operation: 'delete');
       return const Right(null);
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
@@ -133,59 +128,54 @@ class SavingsRepositoryImpl implements SavingsRepository {
   @override
   Future<Either<Failure, SavingsContribution>> contributeToGoal({
     required String goalId,
-    required double amount,
+    required int amountMinor,
     required ContributionSource source,
     String? note,
   }) async {
+    if (amountMinor <= 0) {
+      return const Left(
+        ValidationFailure(message: 'A contribution must be more than zero'),
+      );
+    }
     try {
+      final goal = await _local.getSavingsGoalById(goalId);
       final now = DateTime.now();
-      final id = const Uuid().v4();
 
-      final model = SavingsContributionModel(
-        id: id,
+      final contribution = SavingsContributionModel(
+        id: const Uuid().v4(),
         goalId: goalId,
-        amount: amount,
+        amountMinor: amountMinor,
         source: source.name,
         note: note,
         date: now,
         createdAt: now,
+        updatedAt: now,
         isSynced: false,
       );
-
-      await _local.saveContribution(model);
-
-      // Update goal's current amount.
-      final goal = await _local.getSavingsGoalById(goalId);
-      final newAmount = goal.currentAmount + amount;
-      await _local.updateGoalAmount(goalId, newAmount);
-
-      // Auto-complete if target reached.
-      if (newAmount >= goal.targetAmount) {
-        final completedModel = SavingsGoalModel(
-          id: goalId,
-          name: goal.name,
-          targetAmount: goal.targetAmount,
-          currentAmount: newAmount,
-          currencyCode: goal.currencyCode,
-          description: goal.description,
-          deadline: goal.deadline,
-          iconName: goal.iconName,
-          colorHex: goal.colorHex,
-          status: SavingsGoalStatus.completed.name,
-          createdAt: goal.createdAt,
-          updatedAt: DateTime.now(),
-          isSynced: false,
-        );
-        await _local.saveSavingsGoal(completedModel);
-      }
-
-      await _local.enqueueSync(
-        entityId: id,
+      await _contributionsLocal.saveContribution(contribution);
+      await _contributionsLocal.enqueueSync(
+        entityId: contribution.id,
         operation: 'create',
-        payload: jsonEncode(model.toJson()),
+        payload: jsonEncode(contribution.toJson()),
       );
 
-      return Right(model.toEntity());
+      // The device owns the saved amount: recompute it from the goal's
+      // contributions, so it is never counted twice.
+      final saved = await _contributionsLocal.getTotalForGoal(goalId);
+      final reachedTarget = goal.status == SavingsGoalStatus.active &&
+          saved >= goal.targetAmountMinor;
+      await _saveGoal(
+        _modelOf(goal).copyWith(
+          currentAmountMinor: saved,
+          status: reachedTarget
+              ? SavingsGoalStatus.completed.name
+              : goal.status.name,
+          updatedAt: now,
+        ),
+        operation: 'update',
+      );
+
+      return Right(contribution.toEntity());
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }
@@ -211,34 +201,29 @@ class SavingsRepositoryImpl implements SavingsRepository {
   @override
   Future<Either<Failure, SavingsGoal>> getSavingsGoalById(String id) async {
     try {
-      final goal = await _local.getSavingsGoalById(id);
-      return Right(goal);
+      return Right(await _local.getSavingsGoalById(id));
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }
   }
 
   @override
-  Stream<List<SavingsGoal>> watchSavingsGoals() {
-    return _local.watchSavingsGoals();
-  }
+  Stream<List<SavingsGoal>> watchSavingsGoals() => _local.watchSavingsGoals();
 
   @override
   Future<Either<Failure, List<SavingsContribution>>> getContributions(
     String goalId,
   ) async {
     try {
-      final contributions = await _local.getContributions(goalId);
-      return Right(contributions);
+      return Right(await _contributionsLocal.getContributions(goalId));
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }
   }
 
   @override
-  Stream<List<SavingsContribution>> watchContributions(String goalId) {
-    return _local.watchContributions(goalId);
-  }
+  Stream<List<SavingsContribution>> watchContributions(String goalId) =>
+      _contributionsLocal.watchContributions(goalId);
 
   @override
   Future<Either<Failure, void>> refreshFromServer() async {
@@ -246,10 +231,7 @@ class SavingsRepositoryImpl implements SavingsRepository {
       if (!await _networkInfo.isConnected) {
         return const Left(NetworkFailure());
       }
-
-      final remoteModels = await _remote.getAllSavingsGoals();
-      await _local.replaceAllFromServer(remoteModels);
-
+      await _pullFromServer();
       return const Right(null);
     } on ServerException catch (e) {
       return Left(
@@ -262,11 +244,47 @@ class SavingsRepositoryImpl implements SavingsRepository {
     }
   }
 
+  /// Saves [model] as an unsynced local change and queues it for sync.
+  Future<void> _saveGoal(
+    SavingsGoalModel model, {
+    required String operation,
+  }) async {
+    final unsynced = model.copyWith(isSynced: false);
+    await _local.saveSavingsGoal(unsynced);
+    await _local.enqueueSync(
+      entityId: unsynced.id,
+      operation: operation,
+      payload: jsonEncode(unsynced.toJson()),
+    );
+  }
+
+  /// Rebuilds the stored model of a goal read back from the device.
+  static SavingsGoalModel _modelOf(SavingsGoal goal) => SavingsGoalModel(
+        id: goal.id,
+        name: goal.name,
+        targetAmountMinor: goal.targetAmountMinor,
+        currentAmountMinor: goal.currentAmountMinor,
+        description: goal.description,
+        deadline: goal.deadline,
+        iconName: goal.iconName,
+        colorHex: goal.colorHex,
+        status: goal.status.name,
+        createdAt: goal.createdAt,
+        updatedAt: goal.updatedAt,
+        isSynced: goal.isSynced,
+      );
+
+  Future<void> _pullFromServer() async {
+    final goals = await _remote.getAllSavingsGoals();
+    final contributions = await _contributionsRemote.getAllContributions();
+    await _local.replaceAllFromServer(goals);
+    await _contributionsLocal.replaceAllFromServer(contributions);
+  }
+
   void _backgroundRefresh() {
     Future(() async {
       try {
-        final remoteModels = await _remote.getAllSavingsGoals();
-        await _local.replaceAllFromServer(remoteModels);
+        await _pullFromServer();
       } catch (_) {
         // Silently ignore background refresh errors.
       }

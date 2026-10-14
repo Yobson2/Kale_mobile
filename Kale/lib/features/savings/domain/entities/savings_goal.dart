@@ -1,16 +1,20 @@
 import 'package:flutter/foundation.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
 
 /// Domain entity representing a user's savings goal.
+///
+/// Amounts are integer minor units of the account's base currency. The
+/// goal carries no currency of its own; wrap amounts in [Money] with the
+/// base currency (see the `*In` getters) to format them.
 @immutable
 class SavingsGoal {
   /// Creates a [SavingsGoal].
   const SavingsGoal({
     required this.id,
     required this.name,
-    required this.targetAmount,
-    required this.currentAmount,
-    required this.currencyCode,
+    required this.targetAmountMinor,
+    required this.currentAmountMinor,
     required this.status,
     required this.createdAt,
     required this.updatedAt,
@@ -27,14 +31,12 @@ class SavingsGoal {
   /// Human-readable name (e.g. "Emergency Fund", "New Laptop").
   final String name;
 
-  /// Target amount to save.
-  final double targetAmount;
+  /// Target amount, in minor units of the base currency.
+  final int targetAmountMinor;
 
-  /// Amount saved so far.
-  final double currentAmount;
-
-  /// ISO 4217 currency code.
-  final String currencyCode;
+  /// Amount saved so far, in minor units: the sum of the goal's
+  /// contributions.
+  final int currentAmountMinor;
 
   /// Optional description.
   final String? description;
@@ -60,15 +62,30 @@ class SavingsGoal {
   /// Whether this goal has been synced to the server.
   final bool isSynced;
 
-  /// Progress as a fraction (0.0 to 1.0).
-  double get progress =>
-      targetAmount > 0 ? (currentAmount / targetAmount).clamp(0.0, 1.0) : 0.0;
+  /// The target as [Money] in the account's base [currency].
+  Money targetIn(Currency currency) =>
+      Money.fromMinorUnits(targetAmountMinor, currency);
 
-  /// Remaining amount to reach the goal.
-  double get remaining => (targetAmount - currentAmount).clamp(0.0, targetAmount);
+  /// The amount saved so far as [Money] in the base [currency].
+  Money savedIn(Currency currency) =>
+      Money.fromMinorUnits(currentAmountMinor, currency);
+
+  /// What is left to save as [Money] in the base [currency].
+  Money remainingIn(Currency currency) =>
+      Money.fromMinorUnits(remainingMinor, currency);
+
+  /// What is left to save, in minor units (never negative).
+  int get remainingMinor => targetAmountMinor > currentAmountMinor
+      ? targetAmountMinor - currentAmountMinor
+      : 0;
+
+  /// Progress as a fraction (0.0 to 1.0), for display only.
+  double get progress => targetAmountMinor > 0
+      ? (currentAmountMinor / targetAmountMinor).clamp(0.0, 1.0)
+      : 0.0;
 
   /// Whether the goal has been fully funded.
-  bool get isFullyFunded => currentAmount >= targetAmount;
+  bool get isFullyFunded => currentAmountMinor >= targetAmountMinor;
 
   @override
   bool operator ==(Object other) =>
@@ -82,5 +99,5 @@ class SavingsGoal {
 
   @override
   String toString() => 'SavingsGoal(id: $id, name: $name, '
-      '${currentAmount.toStringAsFixed(0)}/${targetAmount.toStringAsFixed(0)})';
+      '$currentAmountMinor/$targetAmountMinor)';
 }

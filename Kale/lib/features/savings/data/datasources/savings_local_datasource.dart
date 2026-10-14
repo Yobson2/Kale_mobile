@@ -2,28 +2,35 @@ import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/features/savings/data/daos/savings_contributions_dao.dart';
 import 'package:kale/features/savings/data/daos/savings_goals_dao.dart';
-import 'package:kale/features/savings/data/models/savings_contribution_model.dart';
 import 'package:kale/features/savings/data/models/savings_goal_model.dart';
-import 'package:kale/features/savings/domain/entities/savings_contribution.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
 import 'package:kale/features/savings/domain/entities/savings_goal.dart';
 
-/// Abstract local datasource for savings goals.
+/// Local datasource for savings goals (sync entity type `savings_goal`).
+///
+/// Contributions have their own datasource and entity type: see
+/// `SavingsContributionsLocalDataSource`.
 abstract class SavingsLocalDataSource {
   Stream<List<SavingsGoal>> watchSavingsGoals();
   Future<List<SavingsGoal>> getSavingsGoals({SavingsGoalStatus? status});
+
+  /// Throws [CacheException] if no live goal has this [id].
   Future<SavingsGoal> getSavingsGoalById(String id);
+
+  /// Saves [model] locally, with its `isSynced` flag as given.
   Future<void> saveSavingsGoal(SavingsGoalModel model);
+
+  /// Deletes a goal and its contributions locally.
   Future<void> deleteSavingsGoal(String id);
-  Future<void> updateGoalAmount(String goalId, double newAmount);
-  Stream<List<SavingsContribution>> watchContributions(String goalId);
-  Future<List<SavingsContribution>> getContributions(String goalId);
-  Future<void> saveContribution(SavingsContributionModel model);
+
   Future<void> enqueueSync({
     required String entityId,
     required String operation,
     String? payload,
   });
+  Future<void> markSynced(String id, {String? serverId});
+
+  /// Replaces synced goals with the server's copy; unsynced goals are kept.
   Future<void> replaceAllFromServer(List<SavingsGoalModel> models);
 }
 
@@ -46,10 +53,11 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
 
   @override
   Stream<List<SavingsGoal>> watchSavingsGoals() {
-    return _goalsDao
-        .watchAll()
-        .map((rows) =>
-            rows.map((r) => SavingsGoalModel.fromDrift(r).toEntity()).toList());
+    return _goalsDao.watchAll().map(
+          (rows) => rows
+              .map((r) => SavingsGoalModel.fromDrift(r).toEntity())
+              .toList(),
+        );
   }
 
   @override
@@ -58,9 +66,7 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
   }) async {
     try {
       final rows = await _goalsDao.getAll(status: status?.name);
-      return rows
-          .map((r) => SavingsGoalModel.fromDrift(r).toEntity())
-          .toList();
+      return rows.map((r) => SavingsGoalModel.fromDrift(r).toEntity()).toList();
     } catch (e) {
       throw CacheException(message: 'Failed to get savings goals: $e');
     }
@@ -83,7 +89,7 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
   @override
   Future<void> saveSavingsGoal(SavingsGoalModel model) async {
     try {
-      await _goalsDao.upsert(model.toDriftCompanion());
+      await _goalsDao.upsert(model.toDriftCompanion(isSynced: model.isSynced));
     } catch (e) {
       throw CacheException(message: 'Failed to save savings goal: $e');
     }
@@ -96,44 +102,6 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
       await _goalsDao.deleteById(id);
     } catch (e) {
       throw CacheException(message: 'Failed to delete savings goal: $e');
-    }
-  }
-
-  @override
-  Future<void> updateGoalAmount(String goalId, double newAmount) async {
-    try {
-      await _goalsDao.updateCurrentAmount(goalId, newAmount);
-    } catch (e) {
-      throw CacheException(message: 'Failed to update goal amount: $e');
-    }
-  }
-
-  @override
-  Stream<List<SavingsContribution>> watchContributions(String goalId) {
-    return _contributionsDao.watchByGoalId(goalId).map((rows) =>
-        rows
-            .map((r) => SavingsContributionModel.fromDrift(r).toEntity())
-            .toList());
-  }
-
-  @override
-  Future<List<SavingsContribution>> getContributions(String goalId) async {
-    try {
-      final rows = await _contributionsDao.getByGoalId(goalId);
-      return rows
-          .map((r) => SavingsContributionModel.fromDrift(r).toEntity())
-          .toList();
-    } catch (e) {
-      throw CacheException(message: 'Failed to get contributions: $e');
-    }
-  }
-
-  @override
-  Future<void> saveContribution(SavingsContributionModel model) async {
-    try {
-      await _contributionsDao.insert(model.toDriftCompanion());
-    } catch (e) {
-      throw CacheException(message: 'Failed to save contribution: $e');
     }
   }
 
@@ -156,10 +124,20 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
   }
 
   @override
+  Future<void> markSynced(String id, {String? serverId}) async {
+    try {
+      await _goalsDao.markSynced(id, serverId: serverId);
+    } catch (e) {
+      throw CacheException(message: 'Failed to mark savings goal synced: $e');
+    }
+  }
+
+  @override
   Future<void> replaceAllFromServer(List<SavingsGoalModel> models) async {
     try {
-      final companions = models.map((m) => m.toDriftCompanion()).toList();
-      await _goalsDao.replaceAll(companions);
+      await _goalsDao.replaceAll(
+        models.map((m) => m.toDriftCompanion(isSynced: true)).toList(),
+      );
     } catch (e) {
       throw CacheException(message: 'Failed to replace savings goals: $e');
     }

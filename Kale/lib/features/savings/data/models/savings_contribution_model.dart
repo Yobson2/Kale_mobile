@@ -8,18 +8,24 @@ part 'savings_contribution_model.freezed.dart';
 part 'savings_contribution_model.g.dart';
 
 /// Data model for savings contributions.
+///
+/// `amount_minor` is an integer count of minor units of the account's base
+/// currency. A contribution is owned through its goal (`goal_id`).
 @freezed
 abstract class SavingsContributionModel with _$SavingsContributionModel {
   const SavingsContributionModel._();
 
   const factory SavingsContributionModel({
     required String id,
+    @JsonKey(name: 'server_id') String? serverId,
     @JsonKey(name: 'goal_id') required String goalId,
-    required double amount,
+    @JsonKey(name: 'amount_minor') required int amountMinor,
     required String source,
     String? note,
     required DateTime date,
     @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(true)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
@@ -32,12 +38,15 @@ abstract class SavingsContributionModel with _$SavingsContributionModel {
   factory SavingsContributionModel.fromDrift(db.SavingsContribution row) =>
       SavingsContributionModel(
         id: row.id,
+        serverId: row.serverId,
         goalId: row.goalId,
-        amount: row.amount,
+        amountMinor: row.amountMinor,
         source: row.source,
         note: row.note,
         date: row.date,
         createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        deletedAt: row.deletedAt,
         isSynced: row.isSynced,
       );
 
@@ -45,7 +54,7 @@ abstract class SavingsContributionModel with _$SavingsContributionModel {
   SavingsContribution toEntity() => SavingsContribution(
         id: id,
         goalId: goalId,
-        amount: amount,
+        amountMinor: amountMinor,
         source: ContributionSource.values.firstWhere(
           (e) => e.name == source,
           orElse: () => ContributionSource.manual,
@@ -53,18 +62,26 @@ abstract class SavingsContributionModel with _$SavingsContributionModel {
         date: date,
         note: note,
         createdAt: createdAt,
+        isSynced: isSynced,
       );
 
   /// Converts to a Drift companion for upsert.
-  db.SavingsContributionsCompanion toDriftCompanion() =>
+  db.SavingsContributionsCompanion toDriftCompanion({
+    required bool isSynced,
+  }) =>
       db.SavingsContributionsCompanion(
         id: drift.Value(id),
+        serverId: serverId != null
+            ? drift.Value(serverId)
+            : const drift.Value.absent(),
         goalId: drift.Value(goalId),
-        amount: drift.Value(amount),
+        amountMinor: drift.Value(amountMinor),
         source: drift.Value(source),
         note: drift.Value(note),
         date: drift.Value(date),
         createdAt: drift.Value(createdAt),
+        updatedAt: drift.Value(updatedAt),
+        deletedAt: drift.Value(deletedAt),
         isSynced: drift.Value(isSynced),
       );
 }
