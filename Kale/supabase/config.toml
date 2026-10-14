@@ -52,6 +52,10 @@ enable_signup = true
 # Every fresh install signs in anonymously (#11). Anonymous users are
 # 'authenticated' and RLS treats them exactly like permanent users.
 enable_anonymous_sign_ins = true
+# A guest saves their data by linking an email, Google or Apple identity to the
+# same user (#12). Hosted projects: Authentication > Sign In / Providers >
+# "Allow manual linking".
+enable_manual_linking = true
 
 # Anonymous sign-ups are an open door: rate-limit them per IP. The hosted
 # projects need the same settings in the dashboard (Authentication > Rate
@@ -64,4 +68,15 @@ anonymous_users = 30
 enable_signup = true
 double_confirm_changes = true
 enable_confirmations = false
+
+# Guest upgrade (#12) types codes, not links: both templates must contain
+# {{ .Token }}. Hosted projects: copy them into Authentication > Email Templates
+# ("Change Email Address" and "Magic Link").
+[auth.email.template.email_change]
+subject = "Confirm your email for Kalé"
+content_path = "./supabase/templates/email_change.html"
+
+[auth.email.template.magic_link]
+subject = "Your Kalé sign-in code"
+content_path = "./supabase/templates/magic_link.html"
 
