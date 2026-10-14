@@ -3,7 +3,9 @@ import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:kale/features/auth/data/models/tokens_model.dart';
 import 'package:kale/features/auth/data/models/user_model.dart';
+import 'package:kale/features/budget/data/datasources/budget_categories_remote_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
+import 'package:kale/features/budget/data/models/budget_category_model.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
 import 'package:kale/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:kale/features/profile/data/models/profile_model.dart';
@@ -150,9 +152,13 @@ class FakeTransactionsRemote extends FakeRemote<TransactionModel>
       handle(RemoteCall.delete(id), () => rows.remove(id));
 }
 
-/// Fake server table for budgets.
+/// Fake server table for budgets. Deleting a budget runs [onDelete], so
+/// the server can cascade to its allocations like the real foreign key.
 class FakeBudgetsRemote extends FakeRemote<BudgetModel>
     implements BudgetsRemoteDataSource {
+  /// Called with the id of each deleted budget.
+  void Function(String id)? onDelete;
+
   @override
   Future<List<BudgetModel>> getAllBudgets() =>
       handle(const RemoteCall.fetchAll(), visibleRows);
@@ -170,7 +176,50 @@ class FakeBudgetsRemote extends FakeRemote<BudgetModel>
       handle(RemoteCall.update(model.id), () => put(model.id, model));
 
   @override
-  Future<void> deleteBudget(String id) =>
+  Future<void> deleteBudget(String id) => handle(RemoteCall.delete(id), () {
+        rows.remove(id);
+        onDelete?.call(id);
+      });
+}
+
+/// Fake server table for budget category allocations. Like the real
+/// foreign key, it rejects an allocation whose budget is not on the server.
+class FakeBudgetCategoriesRemote extends FakeRemote<BudgetCategoryModel>
+    implements BudgetCategoriesRemoteDataSource {
+  FakeBudgetCategoriesRemote(this._budgets);
+
+  final FakeBudgetsRemote _budgets;
+
+  @override
+  Future<List<BudgetCategoryModel>> getAllBudgetCategories() =>
+      handle(const RemoteCall.fetchAll(), visibleRows);
+
+  @override
+  Future<BudgetCategoryModel> getBudgetCategoryById(String id) =>
+      handle(RemoteCall.fetch(id), () => findOrThrow(id));
+
+  @override
+  Future<BudgetCategoryModel> createBudgetCategory(
+    BudgetCategoryModel model,
+  ) =>
+      handle(RemoteCall.create(model.id), () {
+        if (!_budgets.rows.containsKey(model.budgetId)) {
+          throw const ServerException(
+            message: 'Foreign key violation: budget not found',
+            statusCode: 400,
+          );
+        }
+        return put(model.id, model);
+      });
+
+  @override
+  Future<BudgetCategoryModel> updateBudgetCategory(
+    BudgetCategoryModel model,
+  ) =>
+      handle(RemoteCall.update(model.id), () => put(model.id, model));
+
+  @override
+  Future<void> deleteBudgetCategory(String id) =>
       handle(RemoteCall.delete(id), () => rows.remove(id));
 }
 
@@ -313,17 +362,21 @@ class FakeServer {
     for (final table in <FakeRemote<Object>>[
       transactions,
       budgets,
+      budgetCategories,
       profile,
       savingsGoals,
       savingsContributions,
     ]) {
       table.session = auth;
     }
+    budgets.onDelete = (id) => budgetCategories.rows
+        .removeWhere((_, allocation) => allocation.budgetId == id);
   }
 
   final auth = FakeAuthRemote();
   final transactions = FakeTransactionsRemote();
   final budgets = FakeBudgetsRemote();
+  late final budgetCategories = FakeBudgetCategoriesRemote(budgets);
   final profile = FakeProfileRemote();
   final savingsGoals = FakeSavingsGoalsRemote();
   late final savingsContributions =

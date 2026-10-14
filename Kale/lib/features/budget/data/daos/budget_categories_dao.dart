@@ -37,14 +37,36 @@ class BudgetCategoriesDao extends DatabaseAccessor<AppDatabase>
         .go();
   }
 
-  /// Replaces all allocations for a budget.
-  Future<void> replaceForBudget(
-    String budgetId,
-    List<BudgetCategoriesCompanion> entries,
-  ) {
+  /// Deletes one allocation.
+  Future<void> deleteById(String id) =>
+      (delete(budgetCategories)..where((t) => t.id.equals(id))).go();
+
+  /// Marks an allocation as synced.
+  Future<void> markSynced(String id) =>
+      (update(budgetCategories)..where((t) => t.id.equals(id))).write(
+        const BudgetCategoriesCompanion(isSynced: Value(true)),
+      );
+
+  /// Replaces the synced allocations with the server's copy (server
+  /// refresh).
+  ///
+  /// Allocations not yet pushed are kept as they are.
+  Future<void> replaceAll(Iterable<BudgetCategoriesCompanion> entries) {
     return transaction(() async {
-      await deleteByBudgetId(budgetId);
-      await batch((b) => b.insertAll(budgetCategories, entries));
+      final unsynced = (await (selectOnly(budgetCategories)
+                ..addColumns([budgetCategories.id])
+                ..where(budgetCategories.isSynced.equals(false)))
+              .map((row) => row.read(budgetCategories.id)!)
+              .get())
+          .toSet();
+      await (delete(budgetCategories)..where((t) => t.isSynced.equals(true)))
+          .go();
+      await batch(
+        (b) => b.insertAllOnConflictUpdate(
+          budgetCategories,
+          entries.where((e) => !unsynced.contains(e.id.value)),
+        ),
+      );
     });
   }
 }

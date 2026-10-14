@@ -38,6 +38,7 @@ LastBackupStore lastBackupStore(Ref ref) =>
 List<SyncHandler> syncHandlers(Ref ref) => [
       ref.watch(transactionsSyncHandlerProvider),
       ref.watch(budgetsSyncHandlerProvider),
+      ref.watch(budgetCategoriesSyncHandlerProvider),
       ref.watch(profileSyncHandlerProvider),
       ref.watch(savingsGoalsSyncHandlerProvider),
       ref.watch(savingsContributionsSyncHandlerProvider),

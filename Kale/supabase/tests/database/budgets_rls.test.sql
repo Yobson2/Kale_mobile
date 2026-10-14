@@ -4,7 +4,7 @@
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap WITH SCHEMA extensions;
 
-SELECT plan(27);
+SELECT plan(29);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- Two users: Alice (permanent) and Bob (anonymous).
@@ -65,6 +65,13 @@ SELECT lives_ok($$
             'cat_food', 'Needs', 50000)
 $$, 'a user can allocate within her own budget');
 
+SELECT lives_ok($$
+    INSERT INTO public.budget_category_allocations (id, budget_id, category_id, group_name, allocated_minor)
+    VALUES ('aaaaaaaa-1111-0000-0000-000000000001', 'aaaaaaaa-0000-0000-0000-000000000001',
+            'cat_food', 'Needs', 50000)
+    ON CONFLICT (id) DO UPDATE SET allocated_minor = EXCLUDED.allocated_minor
+$$, 're-sending an allocation (a sync retry) is a harmless upsert');
+
 SELECT throws_ok($$
     INSERT INTO public.budgets (id, user_id, name, strategy, period, start_date, end_date)
     VALUES ('aaaaaaaa-0000-0000-0000-000000000002', '22222222-2222-2222-2222-222222222222',
@@ -115,6 +122,13 @@ SELECT lives_ok($$
     VALUES ('bbbbbbbb-1111-0000-0000-000000000002', 'bbbbbbbb-0000-0000-0000-000000000001',
             'cat_rent', 'Needs', 700)
 $$, 'an anonymous user can allocate within his own budget');
+
+SELECT throws_ok($$
+    INSERT INTO public.budget_category_allocations (id, budget_id, category_id, group_name, allocated_minor)
+    VALUES ('aaaaaaaa-1111-0000-0000-000000000001', 'bbbbbbbb-0000-0000-0000-000000000001',
+            'cat_food', 'Needs', 1)
+    ON CONFLICT (id) DO UPDATE SET allocated_minor = EXCLUDED.allocated_minor
+$$, '42501', NULL, 'a user cannot take over someone else''s allocation by upserting its id');
 
 SELECT throws_ok($$
     UPDATE public.budget_category_allocations
