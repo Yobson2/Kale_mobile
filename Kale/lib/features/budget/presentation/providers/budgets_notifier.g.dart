@@ -6,7 +6,7 @@ part of 'budgets_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$budgetsNotifierHash() => r'325c17621f0b6ee7c51b9f95008bdb22f1df8655';
+String _$budgetsNotifierHash() => r'c47da95999e9fbc80f491b5f7bc0777df5931dad';
 
 /// Manages budget operations and state.
 ///

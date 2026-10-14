@@ -3,10 +3,12 @@ import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/achievement_service.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart'
     show AuthNotifier;
+import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/domain/entities/budget_period_range.dart';
 import 'package:kale/features/budget/domain/usecases/create_budget_usecase.dart';
+import 'package:kale/features/budget/domain/usecases/renew_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/update_budget_usecase.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_state.dart';
@@ -120,6 +122,28 @@ class BudgetsNotifier extends _$BudgetsNotifier {
       state = BudgetsState.error(e.toString());
       return false;
     }
+  }
+
+  /// Starts the ended [budget] again for the current period. Returns
+  /// whether it was renewed.
+  Future<bool> renewBudget(Budget budget) async {
+    state = const BudgetsState.loading();
+    final result = await ref.read(renewBudgetUseCaseProvider).call(
+          RenewBudgetParams(budget: budget, today: CalendarDate.today()),
+        );
+    return result.fold(
+      (failure) {
+        state = BudgetsState.error(failure.message);
+        return false;
+      },
+      (_) {
+        state = const BudgetsState.success();
+        ref
+          ..invalidate(activeBudgetProvider)
+          ..invalidate(budgetToRenewProvider);
+        return true;
+      },
+    );
   }
 
   /// Deletes a budget by its ID.

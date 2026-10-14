@@ -1584,4 +1584,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get guestDataChoiceCancel => 'Cancel';
+
+  @override
+  String get budgetSetupStartDay => 'Period start day';
+
+  @override
+  String budgetSetupStartDayMonthly(int day) {
+    return 'Each period starts on day $day of the month, e.g. your pay day.';
+  }
+
+  @override
+  String get budgetSetupStartDayWeekly => 'Each week starts on this day.';
+
+  @override
+  String get budgetRenewTitle => 'Your budget has ended';
+
+  @override
+  String budgetRenewMessage(String name, String start, String end) {
+    return '\"$name\" covered $start – $end. Start it again for the current period, with the same amounts?';
+  }
+
+  @override
+  String get budgetRenewAction => 'Renew for this period';
+
+  @override
+  String get budgetRenewed => 'Budget renewed';
+
+  @override
+  String get budgetRenewFailed =>
+      'Couldn\'t renew the budget. Please try again.';
 }

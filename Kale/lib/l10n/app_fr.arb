@@ -631,5 +631,13 @@
     }
   },
   "guestDataChoiceDiscard": "Les supprimer et se connecter",
-  "guestDataChoiceCancel": "Annuler"
+  "guestDataChoiceCancel": "Annuler",
+  "budgetSetupStartDay": "Jour de début de période",
+  "budgetSetupStartDayMonthly": "Chaque période commence le {day} du mois, par exemple votre jour de paie.",
+  "budgetSetupStartDayWeekly": "Chaque semaine commence ce jour-là.",
+  "budgetRenewTitle": "Votre budget est terminé",
+  "budgetRenewMessage": "« {name} » couvrait du {start} au {end}. Le relancer pour la période en cours, avec les mêmes montants ?",
+  "budgetRenewAction": "Renouveler pour cette période",
+  "budgetRenewed": "Budget renouvelé",
+  "budgetRenewFailed": "Impossible de renouveler le budget. Veuillez réessayer."
 }

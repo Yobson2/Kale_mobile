@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_radius.dart';
@@ -10,6 +11,7 @@ import 'package:kale/core/widgets/layout/app_step_indicator.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
+import 'package:kale/features/budget/domain/entities/budget_period_range.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_notifier.dart';
 import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 
@@ -43,6 +45,10 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
 
   // Step 2: Period & Money to budget.
   BudgetPeriod _selectedPeriod = BudgetPeriod.monthly;
+
+  /// The day periods start on: a day of the month (monthly) or an ISO
+  /// weekday (weekly). See `BudgetPeriodRange.containing`.
+  int _startDay = BudgetPeriodRange.defaultStartDay;
   final _budgetAmountController = TextEditingController();
 
   /// Money to budget, in minor units of the base currency.
@@ -67,6 +73,7 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
     if (existing != null) {
       _selectedStrategy = existing.strategy;
       _selectedPeriod = existing.period;
+      _startDay = existing.periodStartDay;
       _budgetMinor = existing.totalIncomeMinor ?? 0;
       _allocations = existing.categories
           .map(
@@ -255,12 +262,12 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
         isPercentageBased: false,
       );
     } else {
-      // The period containing today, from the default start day (the
-      // custom start-day choice comes in a later phase).
+      // The period containing today, from the chosen start day.
       success = await notifier.createBudget(
         name: budgetName,
         strategy: _selectedStrategy,
         period: _selectedPeriod,
+        periodStartDay: _startDay,
         categories: categories,
         totalIncomeMinor: _budgetMinor,
         isPercentageBased: false,
@@ -330,10 +337,19 @@ class _BudgetSetupPageState extends ConsumerState<BudgetSetupPage> {
                   ),
                   _PeriodIncomeStep(
                     selectedPeriod: _selectedPeriod,
+                    startDay: _startDay,
+                    // Editing keeps the budget's period, start day included.
+                    canChooseStartDay: !_isEditMode,
                     budgetAmountController: _budgetAmountController,
                     currency: currency,
                     onPeriodChanged: (period) {
-                      setState(() => _selectedPeriod = period);
+                      setState(() {
+                        _selectedPeriod = period;
+                        _startDay = BudgetPeriodRange.defaultStartDay;
+                      });
+                    },
+                    onStartDayChanged: (day) {
+                      setState(() => _startDay = day);
                     },
                   ),
                   _AllocationsStep(
@@ -521,12 +537,18 @@ class _StrategyCard extends StatelessWidget {
 class _PeriodIncomeStep extends StatelessWidget {
   const _PeriodIncomeStep({
     required this.selectedPeriod,
+    required this.startDay,
+    required this.canChooseStartDay,
     required this.budgetAmountController,
     required this.currency,
     required this.onPeriodChanged,
+    required this.onStartDayChanged,
   });
 
   final BudgetPeriod selectedPeriod;
+  final int startDay;
+  final bool canChooseStartDay;
+  final ValueChanged<int> onStartDayChanged;
   final TextEditingController budgetAmountController;
   final Currency currency;
   final ValueChanged<BudgetPeriod> onPeriodChanged;
@@ -611,6 +633,15 @@ class _PeriodIncomeStep extends StatelessWidget {
               ),
             );
           }),
+
+          if (canChooseStartDay && selectedPeriod != BudgetPeriod.biWeekly) ...[
+            AppSpacing.verticalLg,
+            _StartDayPicker(
+              period: selectedPeriod,
+              startDay: startDay,
+              onChanged: onStartDayChanged,
+            ),
+          ],
 
           AppSpacing.verticalXl,
 
@@ -1631,5 +1662,69 @@ List<_CategoryAllocationData> _buildDefaultAllocations(
           percentage: 0,
         ),
       ];
+  }
+}
+
+// ── Start day ───────────────────────────────────────────────────
+
+/// Picks the day periods start on: a day of the month for monthly budgets
+/// (a pay day such as the 25th), a weekday for weekly ones.
+class _StartDayPicker extends StatelessWidget {
+  const _StartDayPicker({
+    required this.period,
+    required this.startDay,
+    required this.onChanged,
+  });
+
+  final BudgetPeriod period;
+  final int startDay;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final monthly = period == BudgetPeriod.monthly;
+    // ISO weekdays 1 (Monday) to 7, named in the app's language.
+    final weekdays = DateFormat.EEEE(
+      Localizations.localeOf(context).toString(),
+    );
+    String label(int day) =>
+        monthly ? '$day' : weekdays.format(DateTime(2024, 1, day));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.budgetSetupStartDay,
+          style: context.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        AppSpacing.verticalSm,
+        DropdownButtonFormField<int>(
+          key: ValueKey(period),
+          initialValue: startDay,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(borderRadius: AppRadius.borderRadiusMd),
+          ),
+          items: [
+            for (var day = 1; day <= (monthly ? 31 : 7); day++)
+              DropdownMenuItem(value: day, child: Text(label(day))),
+          ],
+          onChanged: (day) {
+            if (day != null) onChanged(day);
+          },
+        ),
+        AppSpacing.verticalSm,
+        Text(
+          monthly
+              ? l10n.budgetSetupStartDayMonthly(startDay)
+              : l10n.budgetSetupStartDayWeekly,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -200,6 +200,26 @@ final activeBudgetProvider = AutoDisposeFutureProvider<Budget?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ActiveBudgetRef = AutoDisposeFutureProviderRef<Budget?>;
+String _$budgetToRenewHash() => r'6ab232715bde1cf2bc524a641ae46ddc7b1d5f6d';
+
+/// The ended budget to offer renewing, when no budget covers today (see
+/// `GetBudgetToRenewUseCase`).
+///
+/// Copied from [budgetToRenew].
+@ProviderFor(budgetToRenew)
+final budgetToRenewProvider = AutoDisposeFutureProvider<Budget?>.internal(
+  budgetToRenew,
+  name: r'budgetToRenewProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$budgetToRenewHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef BudgetToRenewRef = AutoDisposeFutureProviderRef<Budget?>;
 String _$createBudgetUseCaseHash() =>
     r'f3526a8ef64c7f98f779bb4c42091e5be5b1efe9';
 
@@ -285,5 +305,48 @@ final getActiveBudgetUseCaseProvider =
 // ignore: unused_element
 typedef GetActiveBudgetUseCaseRef
     = AutoDisposeProviderRef<GetActiveBudgetUseCase>;
+String _$renewBudgetUseCaseHash() =>
+    r'844be4a0c8ccc454c6a86edcb06ea0fd348337ed';
+
+/// Provides the [RenewBudgetUseCase].
+///
+/// Copied from [renewBudgetUseCase].
+@ProviderFor(renewBudgetUseCase)
+final renewBudgetUseCaseProvider =
+    AutoDisposeProvider<RenewBudgetUseCase>.internal(
+  renewBudgetUseCase,
+  name: r'renewBudgetUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$renewBudgetUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RenewBudgetUseCaseRef = AutoDisposeProviderRef<RenewBudgetUseCase>;
+String _$getBudgetToRenewUseCaseHash() =>
+    r'42c0d8483ed3ef305d84d0277bfecf33577f0e47';
+
+/// Provides the [GetBudgetToRenewUseCase].
+///
+/// Copied from [getBudgetToRenewUseCase].
+@ProviderFor(getBudgetToRenewUseCase)
+final getBudgetToRenewUseCaseProvider =
+    AutoDisposeProvider<GetBudgetToRenewUseCase>.internal(
+  getBudgetToRenewUseCase,
+  name: r'getBudgetToRenewUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$getBudgetToRenewUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetBudgetToRenewUseCaseRef
+    = AutoDisposeProviderRef<GetBudgetToRenewUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

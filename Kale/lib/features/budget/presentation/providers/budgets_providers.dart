@@ -15,6 +15,8 @@ import 'package:kale/features/budget/domain/repositories/budgets_repository.dart
 import 'package:kale/features/budget/domain/usecases/create_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/delete_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/get_active_budget_usecase.dart';
+import 'package:kale/features/budget/domain/usecases/get_budget_to_renew_usecase.dart';
+import 'package:kale/features/budget/domain/usecases/renew_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/update_budget_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -123,6 +125,20 @@ Future<Budget?> activeBudget(Ref ref) async {
   );
 }
 
+/// The ended budget to offer renewing, when no budget covers today (see
+/// `GetBudgetToRenewUseCase`).
+@riverpod
+Future<Budget?> budgetToRenew(Ref ref) async {
+  ref.watch(activeBudgetProvider);
+  final result = await ref
+      .watch(getBudgetToRenewUseCaseProvider)
+      .call(CalendarDate.today());
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (budget) => budget,
+  );
+}
+
 // ── Use Cases ───────────────────────────────────────────────────
 
 /// Provides the [CreateBudgetUseCase].
@@ -147,4 +163,16 @@ UpdateBudgetUseCase updateBudgetUseCase(Ref ref) {
 @riverpod
 GetActiveBudgetUseCase getActiveBudgetUseCase(Ref ref) {
   return GetActiveBudgetUseCase(ref.watch(budgetsRepositoryProvider));
+}
+
+/// Provides the [RenewBudgetUseCase].
+@riverpod
+RenewBudgetUseCase renewBudgetUseCase(Ref ref) {
+  return RenewBudgetUseCase(ref.watch(budgetsRepositoryProvider));
+}
+
+/// Provides the [GetBudgetToRenewUseCase].
+@riverpod
+GetBudgetToRenewUseCase getBudgetToRenewUseCase(Ref ref) {
+  return GetBudgetToRenewUseCase(ref.watch(budgetsRepositoryProvider));
 }
