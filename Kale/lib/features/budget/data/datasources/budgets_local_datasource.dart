@@ -3,7 +3,6 @@ import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/features/budget/data/daos/budget_categories_dao.dart';
 import 'package:kale/features/budget/data/daos/budgets_dao.dart';
-import 'package:kale/features/budget/data/models/budget_category_model.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
 
 /// Local data source for budgets using Drift (SQLite).
@@ -23,17 +22,9 @@ abstract class BudgetsLocalDataSource {
   /// Inserts or updates a budget.
   Future<void> saveBudget(BudgetModel model);
 
-  /// Deletes a budget and its category allocations.
+  /// Deletes a budget and its category allocations. The server deletes the
+  /// allocations with their budget, so they are not queued.
   Future<void> deleteBudget(String id);
-
-  /// Saves category allocations for a budget, replacing existing ones.
-  Future<void> saveBudgetCategories(
-    String budgetId,
-    List<BudgetCategoryModel> categories,
-  );
-
-  /// Gets all category allocations for a budget.
-  Future<List<BudgetCategoryModel>> getBudgetCategories(String budgetId);
 
   /// Enqueues a sync operation for the given budget.
   Future<void> enqueueSync({
@@ -115,35 +106,6 @@ class BudgetsLocalDataSourceImpl implements BudgetsLocalDataSource {
       await _budgetsDao.deleteById(id);
     } catch (e) {
       throw CacheException(message: 'Failed to delete budget: $e');
-    }
-  }
-
-  @override
-  Future<void> saveBudgetCategories(
-    String budgetId,
-    List<BudgetCategoryModel> categories,
-  ) async {
-    try {
-      final companions = categories.map((c) => c.toDriftCompanion()).toList();
-      await _budgetCategoriesDao.replaceForBudget(budgetId, companions);
-    } catch (e) {
-      throw CacheException(
-        message: 'Failed to save budget categories: $e',
-      );
-    }
-  }
-
-  @override
-  Future<List<BudgetCategoryModel>> getBudgetCategories(
-    String budgetId,
-  ) async {
-    try {
-      final rows = await _budgetCategoriesDao.getByBudgetId(budgetId);
-      return rows.map(BudgetCategoryModel.fromDrift).toList();
-    } catch (e) {
-      throw CacheException(
-        message: 'Failed to get budget categories: $e',
-      );
     }
   }
 

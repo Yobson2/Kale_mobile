@@ -62,7 +62,7 @@ final lastBackupStoreProvider = Provider<LastBackupStore>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef LastBackupStoreRef = ProviderRef<LastBackupStore>;
-String _$syncHandlersHash() => r'37878bed3a8390209cac0187cbef57453c895f31';
+String _$syncHandlersHash() => r'b1a43730e5d1a761f4492f56aa427fc0c8422bda';
 
 /// Every [SyncHandler] in the app, one per syncable entity type.
 ///

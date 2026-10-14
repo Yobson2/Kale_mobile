@@ -214,6 +214,8 @@ class SyncHarness {
         transactionsRemoteDataSourceProvider
             .overrideWithValue(server.transactions),
         budgetsRemoteDataSourceProvider.overrideWithValue(server.budgets),
+        budgetCategoriesRemoteDataSourceProvider
+            .overrideWithValue(server.budgetCategories),
         profileRemoteDataSourceProvider.overrideWithValue(server.profile),
         savingsRemoteDataSourceProvider.overrideWithValue(server.savingsGoals),
         savingsContributionsRemoteDataSourceProvider
