@@ -70,6 +70,43 @@ void main() {
         expect(placeholders(en, key), placeholders(fr, key), reason: key);
       }
     });
+
+    test(
+      'the template declares every placeholder with its type, and English '
+      'agrees',
+      () {
+        final fr = read('app_fr.arb');
+        final en = read('app_en.arb');
+        Map<String, dynamic> declared(Map<String, dynamic> arb, String key) =>
+            ((arb['@$key'] as Map<String, dynamic>?)?['placeholders']
+                as Map<String, dynamic>?) ??
+            const {};
+        String? typeOf(Map<String, dynamic> arb, String key, String name) =>
+            (declared(arb, key)[name] as Map<String, dynamic>?)?['type']
+                as String?;
+
+        for (final key in fr.keys.where((k) => !k.startsWith('@'))) {
+          // Plural selectors ({count, plural, ...}) and simple {name}s.
+          final used = RegExp(r'\{(\w+)[,}]')
+              .allMatches(fr[key] as String)
+              .map((m) => m[1]!)
+              .toSet();
+          for (final name in used) {
+            final templateType = typeOf(fr, key, name);
+            expect(
+              templateType,
+              isNotNull,
+              reason: '@$key in app_fr.arb (the template) must declare '
+                  '"$name" with a type',
+            );
+            final englishType = typeOf(en, key, name);
+            if (englishType != null) {
+              expect(englishType, templateType, reason: '$key.$name');
+            }
+          }
+        }
+      },
+    );
   });
 
   group('on a device in a language Kalé does not speak', () {
