@@ -227,27 +227,49 @@ final getTransactionsUseCaseProvider =
 // ignore: unused_element
 typedef GetTransactionsUseCaseRef
     = AutoDisposeProviderRef<GetTransactionsUseCase>;
-String _$exportTransactionsCsvUseCaseHash() =>
-    r'f24fd4e1d6f0cb614b814b30baedb2363ce3b041';
+String _$getTransactionsPageUseCaseHash() =>
+    r'1e0beb3c61b6074915c27c3d88607cc65df6c08b';
 
-/// Provides the [ExportTransactionsCsvUseCase].
+/// Provides the [GetTransactionsPageUseCase].
 ///
-/// Copied from [exportTransactionsCsvUseCase].
-@ProviderFor(exportTransactionsCsvUseCase)
-final exportTransactionsCsvUseCaseProvider =
-    AutoDisposeProvider<ExportTransactionsCsvUseCase>.internal(
-  exportTransactionsCsvUseCase,
-  name: r'exportTransactionsCsvUseCaseProvider',
+/// Copied from [getTransactionsPageUseCase].
+@ProviderFor(getTransactionsPageUseCase)
+final getTransactionsPageUseCaseProvider =
+    AutoDisposeProvider<GetTransactionsPageUseCase>.internal(
+  getTransactionsPageUseCase,
+  name: r'getTransactionsPageUseCaseProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$exportTransactionsCsvUseCaseHash,
+      : _$getTransactionsPageUseCaseHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef ExportTransactionsCsvUseCaseRef
-    = AutoDisposeProviderRef<ExportTransactionsCsvUseCase>;
+typedef GetTransactionsPageUseCaseRef
+    = AutoDisposeProviderRef<GetTransactionsPageUseCase>;
+String _$watchTransactionChangesUseCaseHash() =>
+    r'f7015a3689eba1118fe0e8ae4befe5122d5e939b';
+
+/// Provides the [WatchTransactionChangesUseCase].
+///
+/// Copied from [watchTransactionChangesUseCase].
+@ProviderFor(watchTransactionChangesUseCase)
+final watchTransactionChangesUseCaseProvider =
+    AutoDisposeProvider<WatchTransactionChangesUseCase>.internal(
+  watchTransactionChangesUseCase,
+  name: r'watchTransactionChangesUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$watchTransactionChangesUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef WatchTransactionChangesUseCaseRef
+    = AutoDisposeProviderRef<WatchTransactionChangesUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -433,15 +433,6 @@
   "settingsDisabled": "Désactivé",
   "settingsDailyReminder": "Rappel quotidien",
   "settingsDailyReminderSubtitle": "Me rappeler de saisir mes transactions",
-  "settingsBudgetAlertThreshold": "Seuil d'alerte budget",
-  "settingsBudgetAlertThresholdSubtitle": "Alerte lorsque les dépenses atteignent {percentage} % du budget",
-  "@settingsBudgetAlertThresholdSubtitle": {
-    "placeholders": {
-      "percentage": {
-        "type": "int"
-      }
-    }
-  },
   "settingsData": "Données",
   "settingsClearLocalData": "Effacer les données locales",
   "settingsClearLocalDataSubtitle": "Supprimer toutes les données en cache de cet appareil",
@@ -660,18 +651,71 @@
   "budgetRenewAction": "Renouveler pour cette période",
   "budgetRenewed": "Budget renouvelé",
   "budgetRenewFailed": "Impossible de renouveler le budget. Veuillez réessayer.",
-  "exportCsvTitle": "Exporter les transactions (CSV)",
-  "exportCsvSubtitle": "À ouvrir dans un tableur ou à garder",
-  "exportCsvAll": "Toutes les transactions",
-  "exportCsvDateRange": "Choisir des dates…",
-  "exportCsvEmpty": "Aucune transaction à exporter",
-  "exportCsvFailed": "Impossible d'exporter. Veuillez réessayer.",
-  "csvDate": "Date",
-  "csvType": "Type",
-  "csvCategory": "Catégorie",
-  "csvDescription": "Description",
-  "csvAmount": "Montant",
-  "csvCurrency": "Devise",
-  "csvPaymentMethod": "Mode de paiement",
-  "csvMobileMoneyProvider": "Opérateur Mobile Money"
+  "notifBudgetAlertTitle": "Alerte budget : {category}",
+  "@notifBudgetAlertTitle": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "notifBudgetAlert80Body": "Vous avez utilisé 80 % de votre budget de {amount} pour {category}.",
+  "@notifBudgetAlert80Body": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "notifBudgetAlert100Body": "Vous avez utilisé tout votre budget de {amount} pour {category}.",
+  "@notifBudgetAlert100Body": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "notifSavingsMilestoneTitle": "Étape d'épargne : {goal}",
+  "@notifSavingsMilestoneTitle": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "notifSavingsMilestoneBody": "« {goal} » est financé à {percent} %. Continuez !",
+  "@notifSavingsMilestoneBody": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "notifSavingsGoalReachedTitle": "Objectif atteint : {goal}",
+  "@notifSavingsGoalReachedTitle": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "notifSavingsGoalReachedBody": "Félicitations ! Vous avez tout épargné pour « {goal} ».",
+  "@notifSavingsGoalReachedBody": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "notifDailyReminderTitle": "Suivez vos dépenses",
+  "notifDailyReminderBody": "N'oubliez pas de noter les transactions du jour."
 }

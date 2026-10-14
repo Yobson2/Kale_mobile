@@ -1143,14 +1143,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDailyReminderSubtitle => 'Remind me to log transactions';
 
   @override
-  String get settingsBudgetAlertThreshold => 'Budget Alert Threshold';
-
-  @override
-  String settingsBudgetAlertThresholdSubtitle(int percentage) {
-    return 'Alert when spending reaches $percentage% of budget';
-  }
-
-  @override
   String get settingsData => 'Data';
 
   @override
@@ -1615,44 +1607,44 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t renew the budget. Please try again.';
 
   @override
-  String get exportCsvTitle => 'Export transactions (CSV)';
+  String notifBudgetAlertTitle(String category) {
+    return 'Budget alert: $category';
+  }
 
   @override
-  String get exportCsvSubtitle => 'Open them in a spreadsheet, or keep a copy';
+  String notifBudgetAlert80Body(String amount, String category) {
+    return 'You\'ve used 80% of your $amount budget for $category.';
+  }
 
   @override
-  String get exportCsvAll => 'All transactions';
+  String notifBudgetAlert100Body(String amount, String category) {
+    return 'You\'ve used all of your $amount budget for $category.';
+  }
 
   @override
-  String get exportCsvDateRange => 'Choose dates…';
+  String notifSavingsMilestoneTitle(String goal) {
+    return 'Savings milestone: $goal';
+  }
 
   @override
-  String get exportCsvEmpty => 'No transactions to export';
+  String notifSavingsMilestoneBody(String goal, int percent) {
+    return '\"$goal\" is now $percent% funded. Keep going!';
+  }
 
   @override
-  String get exportCsvFailed => 'Couldn\'t export. Please try again.';
+  String notifSavingsGoalReachedTitle(String goal) {
+    return 'Goal reached: $goal';
+  }
 
   @override
-  String get csvDate => 'Date';
+  String notifSavingsGoalReachedBody(String goal) {
+    return 'Congratulations! You\'ve saved everything for \"$goal\".';
+  }
 
   @override
-  String get csvType => 'Type';
+  String get notifDailyReminderTitle => 'Track your spending';
 
   @override
-  String get csvCategory => 'Category';
-
-  @override
-  String get csvDescription => 'Description';
-
-  @override
-  String get csvAmount => 'Amount';
-
-  @override
-  String get csvCurrency => 'Currency';
-
-  @override
-  String get csvPaymentMethod => 'Payment method';
-
-  @override
-  String get csvMobileMoneyProvider => 'Mobile money provider';
+  String get notifDailyReminderBody =>
+      'Don\'t forget to log today\'s transactions.';
 }

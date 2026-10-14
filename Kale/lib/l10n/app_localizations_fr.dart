@@ -1154,14 +1154,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Me rappeler de saisir mes transactions';
 
   @override
-  String get settingsBudgetAlertThreshold => 'Seuil d\'alerte budget';
-
-  @override
-  String settingsBudgetAlertThresholdSubtitle(int percentage) {
-    return 'Alerte lorsque les dépenses atteignent $percentage % du budget';
-  }
-
-  @override
   String get settingsData => 'Données';
 
   @override
@@ -1635,44 +1627,44 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de renouveler le budget. Veuillez réessayer.';
 
   @override
-  String get exportCsvTitle => 'Exporter les transactions (CSV)';
+  String notifBudgetAlertTitle(String category) {
+    return 'Alerte budget : $category';
+  }
 
   @override
-  String get exportCsvSubtitle => 'À ouvrir dans un tableur ou à garder';
+  String notifBudgetAlert80Body(String amount, String category) {
+    return 'Vous avez utilisé 80 % de votre budget de $amount pour $category.';
+  }
 
   @override
-  String get exportCsvAll => 'Toutes les transactions';
+  String notifBudgetAlert100Body(String amount, String category) {
+    return 'Vous avez utilisé tout votre budget de $amount pour $category.';
+  }
 
   @override
-  String get exportCsvDateRange => 'Choisir des dates…';
+  String notifSavingsMilestoneTitle(String goal) {
+    return 'Étape d\'épargne : $goal';
+  }
 
   @override
-  String get exportCsvEmpty => 'Aucune transaction à exporter';
+  String notifSavingsMilestoneBody(String goal, int percent) {
+    return '« $goal » est financé à $percent %. Continuez !';
+  }
 
   @override
-  String get exportCsvFailed => 'Impossible d\'exporter. Veuillez réessayer.';
+  String notifSavingsGoalReachedTitle(String goal) {
+    return 'Objectif atteint : $goal';
+  }
 
   @override
-  String get csvDate => 'Date';
+  String notifSavingsGoalReachedBody(String goal) {
+    return 'Félicitations ! Vous avez tout épargné pour « $goal ».';
+  }
 
   @override
-  String get csvType => 'Type';
+  String get notifDailyReminderTitle => 'Suivez vos dépenses';
 
   @override
-  String get csvCategory => 'Catégorie';
-
-  @override
-  String get csvDescription => 'Description';
-
-  @override
-  String get csvAmount => 'Montant';
-
-  @override
-  String get csvCurrency => 'Devise';
-
-  @override
-  String get csvPaymentMethod => 'Mode de paiement';
-
-  @override
-  String get csvMobileMoneyProvider => 'Opérateur Mobile Money';
+  String get notifDailyReminderBody =>
+      'N\'oubliez pas de noter les transactions du jour.';
 }

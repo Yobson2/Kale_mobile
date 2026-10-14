@@ -2240,18 +2240,6 @@ abstract class AppLocalizations {
   /// **'Me rappeler de saisir mes transactions'**
   String get settingsDailyReminderSubtitle;
 
-  /// No description provided for @settingsBudgetAlertThreshold.
-  ///
-  /// In fr, this message translates to:
-  /// **'Seuil d\'alerte budget'**
-  String get settingsBudgetAlertThreshold;
-
-  /// No description provided for @settingsBudgetAlertThresholdSubtitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Alerte lorsque les dépenses atteignent {percentage} % du budget'**
-  String settingsBudgetAlertThresholdSubtitle(int percentage);
-
   /// No description provided for @settingsData.
   ///
   /// In fr, this message translates to:
@@ -2966,89 +2954,59 @@ abstract class AppLocalizations {
   /// **'Impossible de renouveler le budget. Veuillez réessayer.'**
   String get budgetRenewFailed;
 
-  /// No description provided for @exportCsvTitle.
+  /// No description provided for @notifBudgetAlertTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Exporter les transactions (CSV)'**
-  String get exportCsvTitle;
+  /// **'Alerte budget : {category}'**
+  String notifBudgetAlertTitle(String category);
 
-  /// No description provided for @exportCsvSubtitle.
+  /// No description provided for @notifBudgetAlert80Body.
   ///
   /// In fr, this message translates to:
-  /// **'À ouvrir dans un tableur ou à garder'**
-  String get exportCsvSubtitle;
+  /// **'Vous avez utilisé 80 % de votre budget de {amount} pour {category}.'**
+  String notifBudgetAlert80Body(String amount, String category);
 
-  /// No description provided for @exportCsvAll.
+  /// No description provided for @notifBudgetAlert100Body.
   ///
   /// In fr, this message translates to:
-  /// **'Toutes les transactions'**
-  String get exportCsvAll;
+  /// **'Vous avez utilisé tout votre budget de {amount} pour {category}.'**
+  String notifBudgetAlert100Body(String amount, String category);
 
-  /// No description provided for @exportCsvDateRange.
+  /// No description provided for @notifSavingsMilestoneTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Choisir des dates…'**
-  String get exportCsvDateRange;
+  /// **'Étape d\'épargne : {goal}'**
+  String notifSavingsMilestoneTitle(String goal);
 
-  /// No description provided for @exportCsvEmpty.
+  /// No description provided for @notifSavingsMilestoneBody.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune transaction à exporter'**
-  String get exportCsvEmpty;
+  /// **'« {goal} » est financé à {percent} %. Continuez !'**
+  String notifSavingsMilestoneBody(String goal, int percent);
 
-  /// No description provided for @exportCsvFailed.
+  /// No description provided for @notifSavingsGoalReachedTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Impossible d\'exporter. Veuillez réessayer.'**
-  String get exportCsvFailed;
+  /// **'Objectif atteint : {goal}'**
+  String notifSavingsGoalReachedTitle(String goal);
 
-  /// No description provided for @csvDate.
+  /// No description provided for @notifSavingsGoalReachedBody.
   ///
   /// In fr, this message translates to:
-  /// **'Date'**
-  String get csvDate;
+  /// **'Félicitations ! Vous avez tout épargné pour « {goal} ».'**
+  String notifSavingsGoalReachedBody(String goal);
 
-  /// No description provided for @csvType.
+  /// No description provided for @notifDailyReminderTitle.
   ///
   /// In fr, this message translates to:
-  /// **'Type'**
-  String get csvType;
+  /// **'Suivez vos dépenses'**
+  String get notifDailyReminderTitle;
 
-  /// No description provided for @csvCategory.
+  /// No description provided for @notifDailyReminderBody.
   ///
   /// In fr, this message translates to:
-  /// **'Catégorie'**
-  String get csvCategory;
-
-  /// No description provided for @csvDescription.
-  ///
-  /// In fr, this message translates to:
-  /// **'Description'**
-  String get csvDescription;
-
-  /// No description provided for @csvAmount.
-  ///
-  /// In fr, this message translates to:
-  /// **'Montant'**
-  String get csvAmount;
-
-  /// No description provided for @csvCurrency.
-  ///
-  /// In fr, this message translates to:
-  /// **'Devise'**
-  String get csvCurrency;
-
-  /// No description provided for @csvPaymentMethod.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mode de paiement'**
-  String get csvPaymentMethod;
-
-  /// No description provided for @csvMobileMoneyProvider.
-  ///
-  /// In fr, this message translates to:
-  /// **'Opérateur Mobile Money'**
-  String get csvMobileMoneyProvider;
+  /// **'N\'oubliez pas de noter les transactions du jour.'**
+  String get notifDailyReminderBody;
 }
 
 class _AppLocalizationsDelegate

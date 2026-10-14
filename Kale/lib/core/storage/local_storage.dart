@@ -69,9 +69,14 @@ class LocalStorage {
   // -- User progress --
 
   /// Key prefixes of the signed-in user's own progress: the streak
-  /// (`StreakService`) and unlocked achievements (`AchievementService`).
-  /// Device settings (theme, locale, onboarding) are not included.
-  static const _userProgressKeyPrefixes = ['streak_', 'achievement_'];
+  /// (`StreakService`), unlocked achievements (`AchievementService`) and the
+  /// one-time notifications already shown ([wasNotified]). Device settings
+  /// (theme, locale, onboarding, reminder time) are not included.
+  static const _userProgressKeyPrefixes = [
+    'streak_',
+    'achievement_',
+    _notifiedKeyPrefix,
+  ];
 
   /// Removes the user's own progress, so the next person to sign in on
   /// this phone does not inherit it.
@@ -87,8 +92,9 @@ class LocalStorage {
   // -- Notifications --
 
   static const _notificationsEnabledKey = 'notifications_enabled';
-  static const _budgetAlertThresholdKey = 'budget_alert_threshold';
   static const _dailyReminderEnabledKey = 'daily_reminder_enabled';
+  static const _dailyReminderMinuteOfDayKey = 'daily_reminder_minute_of_day';
+  static const _notifiedKeyPrefix = 'notified_';
 
   /// Whether notifications are enabled.
   bool get isNotificationsEnabled =>
@@ -98,21 +104,32 @@ class LocalStorage {
   Future<bool> setNotificationsEnabled({required bool enabled}) =>
       _prefs.setBool(_notificationsEnabledKey, enabled);
 
-  /// Gets the budget alert threshold (0.0 to 1.0, default 0.8).
-  double get budgetAlertThreshold =>
-      _prefs.getDouble(_budgetAlertThresholdKey) ?? 0.8;
-
-  /// Sets the budget alert threshold.
-  Future<bool> setBudgetAlertThreshold(double threshold) =>
-      _prefs.setDouble(_budgetAlertThresholdKey, threshold);
-
-  /// Whether daily transaction reminders are enabled.
+  /// Whether the daily reminder is on. Opt-in: off until the user turns it
+  /// on (decision Q22).
   bool get isDailyReminderEnabled =>
-      _prefs.getBool(_dailyReminderEnabledKey) ?? true;
+      _prefs.getBool(_dailyReminderEnabledKey) ?? false;
 
   /// Toggles daily reminders.
   Future<bool> setDailyReminderEnabled({required bool enabled}) =>
       _prefs.setBool(_dailyReminderEnabledKey, enabled);
+
+  /// When the daily reminder fires, in minutes after midnight (default
+  /// 20:00).
+  int get dailyReminderMinuteOfDay =>
+      _prefs.getInt(_dailyReminderMinuteOfDayKey) ?? 20 * 60;
+
+  /// Sets when the daily reminder fires.
+  Future<bool> setDailyReminderMinuteOfDay(int minuteOfDay) =>
+      _prefs.setInt(_dailyReminderMinuteOfDayKey, minuteOfDay);
+
+  /// Whether the one-time notification [key] was already shown (a budget
+  /// threshold or a savings milestone). Cleared on logout.
+  bool wasNotified(String key) =>
+      _prefs.getBool('$_notifiedKeyPrefix$key') ?? false;
+
+  /// Records that the one-time notification [key] was shown.
+  Future<bool> markNotified(String key) =>
+      _prefs.setBool('$_notifiedKeyPrefix$key', true);
 
   // -- Generic --
 

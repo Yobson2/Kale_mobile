@@ -139,23 +139,20 @@ class SettingsPage extends ConsumerWidget {
                     icon: Icons.access_time,
                     iconColor: context.colorScheme.primary,
                     title: l10n.settingsDailyReminder,
-                    subtitle:
-                        localStorage.isDailyReminderEnabled ? '08:00 AM' : null,
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: context.colorScheme.onSurfaceVariant,
+                    // Opt-in: off until turned on; tapping changes the time.
+                    subtitle: localStorage.isDailyReminderEnabled
+                        ? _reminderTime(localStorage.dailyReminderMinuteOfDay)
+                            .format(context)
+                        : l10n.settingsDisabled,
+                    trailing: Switch.adaptive(
+                      value: localStorage.isDailyReminderEnabled,
+                      onChanged: (on) => on
+                          ? _pickReminderTime(context, ref)
+                          : _disableReminder(ref),
                     ),
-                    onTap: () {
-                      final newValue = !localStorage.isDailyReminderEnabled;
-                      localStorage.setDailyReminderEnabled(enabled: newValue);
-                      final notifs = ref.read(notificationServiceProvider);
-                      if (newValue) {
-                        notifs.scheduleDailyReminder();
-                      } else {
-                        notifs.cancelDailyReminder();
-                      }
-                      ref.invalidate(localStorageProvider);
-                    },
+                    onTap: localStorage.isDailyReminderEnabled
+                        ? () => _pickReminderTime(context, ref)
+                        : null,
                   ),
 
                   AppSpacing.verticalXl,
@@ -301,79 +298,24 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  /// Asks for the range (everything, or chosen dates), then exports the
-  /// transactions as CSV to the share sheet.
-  Future<void> _exportCsv(BuildContext context, WidgetRef ref) async {
-    final l10n = context.l10n;
-    final allTime = await showModalBottomSheet<bool>(
+  static TimeOfDay _reminderTime(int minuteOfDay) =>
+      TimeOfDay(hour: minuteOfDay ~/ 60, minute: minuteOfDay % 60);
+
+  /// Asks for the reminder time, then turns the daily reminder on at it.
+  Future<void> _pickReminderTime(BuildContext context, WidgetRef ref) async {
+    final reminder = ref.read(dailyReminderProvider);
+    final picked = await showTimePicker(
       context: context,
-      builder: (sheetContext) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.all_inclusive),
-              title: Text(l10n.exportCsvAll),
-              onTap: () => Navigator.pop(sheetContext, true),
-            ),
-            ListTile(
-              leading: const Icon(Icons.date_range),
-              title: Text(l10n.exportCsvDateRange),
-              onTap: () => Navigator.pop(sheetContext, false),
-            ),
-          ],
-        ),
-      ),
+      initialTime: _reminderTime(reminder.minuteOfDay),
     );
-    if (allTime == null || !context.mounted) return;
+    if (picked == null) return;
+    await reminder.enable(picked.hour * 60 + picked.minute);
+    ref.invalidate(localStorageProvider);
+  }
 
-    DateTimeRange? range;
-    if (!allTime) {
-      range = await showDateRangePicker(
-        context: context,
-        firstDate: DateTime(2000),
-        lastDate: DateTime.now(),
-      );
-      if (range == null || !context.mounted) return;
-    }
-
-    final today = DateTime.now();
-    String two(int n) => n.toString().padLeft(2, '0');
-    final count = await ref
-        .read(transactionsNotifierProvider.notifier)
-        .exportCsv(
-          labels: CsvLabels(
-            date: l10n.csvDate,
-            type: l10n.csvType,
-            category: l10n.csvCategory,
-            description: l10n.csvDescription,
-            amount: l10n.csvAmount,
-            currency: l10n.csvCurrency,
-            paymentMethod: l10n.csvPaymentMethod,
-            mobileMoneyProvider: l10n.csvMobileMoneyProvider,
-            types: {
-              TransactionType.income: l10n.transactionsIncome,
-              TransactionType.expense: l10n.transactionsExpense,
-            },
-            paymentMethods: {
-              PaymentMethod.cash: l10n.transactionsPaymentCash,
-              PaymentMethod.mobileMoney: l10n.transactionsPaymentMobileMoney,
-              PaymentMethod.bank: l10n.transactionsPaymentBank,
-              PaymentMethod.card: l10n.transactionsPaymentCard,
-            },
-          ),
-          fileName: 'kale-transactions-${today.year}-'
-              '${two(today.month)}-${two(today.day)}.csv',
-          startDate: range?.start,
-          // The whole last day.
-          endDate: range?.end.add(const Duration(days: 1, microseconds: -1)),
-        );
-    if (!context.mounted) return;
-    if (count == null) {
-      context.showSnackBar(l10n.exportCsvFailed, isError: true);
-    } else if (count == 0) {
-      context.showSnackBar(l10n.exportCsvEmpty);
-    }
+  Future<void> _disableReminder(WidgetRef ref) async {
+    await ref.read(dailyReminderProvider).disable();
+    ref.invalidate(localStorageProvider);
   }
 
   void _showLanguagePicker(BuildContext context, WidgetRef ref) {

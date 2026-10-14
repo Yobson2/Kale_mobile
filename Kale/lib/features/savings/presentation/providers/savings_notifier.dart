@@ -130,9 +130,6 @@ class SavingsNotifier extends _$SavingsNotifier {
   void _checkSavingsMilestone(String goalId) {
     Future(() async {
       try {
-        final localStorage = ref.read(localStorageProvider);
-        if (!localStorage.isNotificationsEnabled) return;
-
         final goals = await ref.read(savingsGoalsStreamProvider.future);
         final goal = goals.where((g) => g.id == goalId).firstOrNull;
         if (goal == null) return;
@@ -144,19 +141,8 @@ class SavingsNotifier extends _$SavingsNotifier {
           await achievements.unlock(Achievement.firstGoalCompleted);
         }
 
-        final percent = (goal.progress * 100).round();
-        // Only notify at meaningful milestones.
-        const milestones = [25, 50, 75, 100];
-        final milestone = milestones.where((m) => percent >= m).lastOrNull;
-        if (milestone == null) return;
-
-        // Only notify if we just crossed this milestone (within 5%).
-        if (percent > milestone + 5) return;
-
-        await ref.read(notificationServiceProvider).showSavingsMilestone(
-              goalName: goal.name,
-              milestonePercent: milestone,
-            );
+        // Each milestone (25/50/75/100%) once per goal.
+        await ref.read(savingsMilestoneCheckerProvider).check(goal);
       } catch (_) {
         // Best-effort — silently ignore.
       }
