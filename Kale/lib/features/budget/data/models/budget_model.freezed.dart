@@ -16,8 +16,6 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BudgetModel {
   String get id;
-  @JsonKey(name: 'server_id')
-  String? get serverId;
   String get name;
   String get strategy;
   String get period;
@@ -27,16 +25,18 @@ mixin _$BudgetModel {
   @CalendarDateJsonConverter()
   @JsonKey(name: 'end_date')
   CalendarDate get endDate;
+  @JsonKey(name: 'created_at')
+  DateTime get createdAt;
+  @JsonKey(name: 'updated_at')
+  DateTime get updatedAt;
+  @JsonKey(name: 'server_id')
+  String? get serverId;
   @JsonKey(name: 'period_start_day')
   int get periodStartDay;
   @JsonKey(name: 'total_income_minor')
   int? get totalIncomeMinor;
   @JsonKey(name: 'is_percentage_based')
   bool get isPercentageBased;
-  @JsonKey(name: 'created_at')
-  DateTime get createdAt;
-  @JsonKey(name: 'updated_at')
-  DateTime get updatedAt;
   @JsonKey(name: 'deleted_at')
   DateTime? get deletedAt;
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -58,8 +58,6 @@ mixin _$BudgetModel {
         (other.runtimeType == runtimeType &&
             other is BudgetModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.serverId, serverId) ||
-                other.serverId == serverId) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.strategy, strategy) ||
                 other.strategy == strategy) &&
@@ -67,16 +65,18 @@ mixin _$BudgetModel {
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.serverId, serverId) ||
+                other.serverId == serverId) &&
             (identical(other.periodStartDay, periodStartDay) ||
                 other.periodStartDay == periodStartDay) &&
             (identical(other.totalIncomeMinor, totalIncomeMinor) ||
                 other.totalIncomeMinor == totalIncomeMinor) &&
             (identical(other.isPercentageBased, isPercentageBased) ||
                 other.isPercentageBased == isPercentageBased) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
             (identical(other.deletedAt, deletedAt) ||
                 other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
@@ -88,23 +88,23 @@ mixin _$BudgetModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      serverId,
       name,
       strategy,
       period,
       startDate,
       endDate,
+      createdAt,
+      updatedAt,
+      serverId,
       periodStartDay,
       totalIncomeMinor,
       isPercentageBased,
-      createdAt,
-      updatedAt,
       deletedAt,
       isSynced);
 
   @override
   String toString() {
-    return 'BudgetModel(id: $id, serverId: $serverId, name: $name, strategy: $strategy, period: $period, startDate: $startDate, endDate: $endDate, periodStartDay: $periodStartDay, totalIncomeMinor: $totalIncomeMinor, isPercentageBased: $isPercentageBased, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
+    return 'BudgetModel(id: $id, name: $name, strategy: $strategy, period: $period, startDate: $startDate, endDate: $endDate, createdAt: $createdAt, updatedAt: $updatedAt, serverId: $serverId, periodStartDay: $periodStartDay, totalIncomeMinor: $totalIncomeMinor, isPercentageBased: $isPercentageBased, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -116,7 +116,6 @@ abstract mixin class $BudgetModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'server_id') String? serverId,
       String name,
       String strategy,
       String period,
@@ -126,11 +125,12 @@ abstract mixin class $BudgetModelCopyWith<$Res> {
       @CalendarDateJsonConverter()
       @JsonKey(name: 'end_date')
       CalendarDate endDate,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'server_id') String? serverId,
       @JsonKey(name: 'period_start_day') int periodStartDay,
       @JsonKey(name: 'total_income_minor') int? totalIncomeMinor,
       @JsonKey(name: 'is_percentage_based') bool isPercentageBased,
-      @JsonKey(name: 'created_at') DateTime createdAt,
-      @JsonKey(name: 'updated_at') DateTime updatedAt,
       @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
@@ -148,17 +148,17 @@ class _$BudgetModelCopyWithImpl<$Res> implements $BudgetModelCopyWith<$Res> {
   @override
   $Res call({
     Object? id = null,
-    Object? serverId = freezed,
     Object? name = null,
     Object? strategy = null,
     Object? period = null,
     Object? startDate = null,
     Object? endDate = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? serverId = freezed,
     Object? periodStartDay = null,
     Object? totalIncomeMinor = freezed,
     Object? isPercentageBased = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
     Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
@@ -167,10 +167,6 @@ class _$BudgetModelCopyWithImpl<$Res> implements $BudgetModelCopyWith<$Res> {
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      serverId: freezed == serverId
-          ? _self.serverId
-          : serverId // ignore: cast_nullable_to_non_nullable
-              as String?,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -191,6 +187,18 @@ class _$BudgetModelCopyWithImpl<$Res> implements $BudgetModelCopyWith<$Res> {
           ? _self.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as CalendarDate,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      serverId: freezed == serverId
+          ? _self.serverId
+          : serverId // ignore: cast_nullable_to_non_nullable
+              as String?,
       periodStartDay: null == periodStartDay
           ? _self.periodStartDay
           : periodStartDay // ignore: cast_nullable_to_non_nullable
@@ -203,14 +211,6 @@ class _$BudgetModelCopyWithImpl<$Res> implements $BudgetModelCopyWith<$Res> {
           ? _self.isPercentageBased
           : isPercentageBased // ignore: cast_nullable_to_non_nullable
               as bool,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _self.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       deletedAt: freezed == deletedAt
           ? _self.deletedAt
           : deletedAt // ignore: cast_nullable_to_non_nullable
@@ -228,7 +228,6 @@ class _$BudgetModelCopyWithImpl<$Res> implements $BudgetModelCopyWith<$Res> {
 class _BudgetModel extends BudgetModel {
   const _BudgetModel(
       {required this.id,
-      @JsonKey(name: 'server_id') this.serverId,
       required this.name,
       required this.strategy,
       required this.period,
@@ -238,12 +237,13 @@ class _BudgetModel extends BudgetModel {
       @CalendarDateJsonConverter()
       @JsonKey(name: 'end_date')
       required this.endDate,
+      @JsonKey(name: 'created_at') required this.createdAt,
+      @JsonKey(name: 'updated_at') required this.updatedAt,
+      @JsonKey(name: 'server_id') this.serverId,
       @JsonKey(name: 'period_start_day')
       this.periodStartDay = BudgetPeriodRange.defaultStartDay,
       @JsonKey(name: 'total_income_minor') this.totalIncomeMinor,
       @JsonKey(name: 'is_percentage_based') this.isPercentageBased = true,
-      @JsonKey(name: 'created_at') required this.createdAt,
-      @JsonKey(name: 'updated_at') required this.updatedAt,
       @JsonKey(name: 'deleted_at') this.deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       this.isSynced = false})
@@ -253,9 +253,6 @@ class _BudgetModel extends BudgetModel {
 
   @override
   final String id;
-  @override
-  @JsonKey(name: 'server_id')
-  final String? serverId;
   @override
   final String name;
   @override
@@ -271,6 +268,15 @@ class _BudgetModel extends BudgetModel {
   @JsonKey(name: 'end_date')
   final CalendarDate endDate;
   @override
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  final DateTime updatedAt;
+  @override
+  @JsonKey(name: 'server_id')
+  final String? serverId;
+  @override
   @JsonKey(name: 'period_start_day')
   final int periodStartDay;
   @override
@@ -279,12 +285,6 @@ class _BudgetModel extends BudgetModel {
   @override
   @JsonKey(name: 'is_percentage_based')
   final bool isPercentageBased;
-  @override
-  @JsonKey(name: 'created_at')
-  final DateTime createdAt;
-  @override
-  @JsonKey(name: 'updated_at')
-  final DateTime updatedAt;
   @override
   @JsonKey(name: 'deleted_at')
   final DateTime? deletedAt;
@@ -313,8 +313,6 @@ class _BudgetModel extends BudgetModel {
         (other.runtimeType == runtimeType &&
             other is _BudgetModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.serverId, serverId) ||
-                other.serverId == serverId) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.strategy, strategy) ||
                 other.strategy == strategy) &&
@@ -322,16 +320,18 @@ class _BudgetModel extends BudgetModel {
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.serverId, serverId) ||
+                other.serverId == serverId) &&
             (identical(other.periodStartDay, periodStartDay) ||
                 other.periodStartDay == periodStartDay) &&
             (identical(other.totalIncomeMinor, totalIncomeMinor) ||
                 other.totalIncomeMinor == totalIncomeMinor) &&
             (identical(other.isPercentageBased, isPercentageBased) ||
                 other.isPercentageBased == isPercentageBased) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
             (identical(other.deletedAt, deletedAt) ||
                 other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
@@ -343,23 +343,23 @@ class _BudgetModel extends BudgetModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      serverId,
       name,
       strategy,
       period,
       startDate,
       endDate,
+      createdAt,
+      updatedAt,
+      serverId,
       periodStartDay,
       totalIncomeMinor,
       isPercentageBased,
-      createdAt,
-      updatedAt,
       deletedAt,
       isSynced);
 
   @override
   String toString() {
-    return 'BudgetModel(id: $id, serverId: $serverId, name: $name, strategy: $strategy, period: $period, startDate: $startDate, endDate: $endDate, periodStartDay: $periodStartDay, totalIncomeMinor: $totalIncomeMinor, isPercentageBased: $isPercentageBased, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
+    return 'BudgetModel(id: $id, name: $name, strategy: $strategy, period: $period, startDate: $startDate, endDate: $endDate, createdAt: $createdAt, updatedAt: $updatedAt, serverId: $serverId, periodStartDay: $periodStartDay, totalIncomeMinor: $totalIncomeMinor, isPercentageBased: $isPercentageBased, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -373,7 +373,6 @@ abstract mixin class _$BudgetModelCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'server_id') String? serverId,
       String name,
       String strategy,
       String period,
@@ -383,11 +382,12 @@ abstract mixin class _$BudgetModelCopyWith<$Res>
       @CalendarDateJsonConverter()
       @JsonKey(name: 'end_date')
       CalendarDate endDate,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'server_id') String? serverId,
       @JsonKey(name: 'period_start_day') int periodStartDay,
       @JsonKey(name: 'total_income_minor') int? totalIncomeMinor,
       @JsonKey(name: 'is_percentage_based') bool isPercentageBased,
-      @JsonKey(name: 'created_at') DateTime createdAt,
-      @JsonKey(name: 'updated_at') DateTime updatedAt,
       @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
@@ -405,17 +405,17 @@ class __$BudgetModelCopyWithImpl<$Res> implements _$BudgetModelCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? id = null,
-    Object? serverId = freezed,
     Object? name = null,
     Object? strategy = null,
     Object? period = null,
     Object? startDate = null,
     Object? endDate = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? serverId = freezed,
     Object? periodStartDay = null,
     Object? totalIncomeMinor = freezed,
     Object? isPercentageBased = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
     Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
@@ -424,10 +424,6 @@ class __$BudgetModelCopyWithImpl<$Res> implements _$BudgetModelCopyWith<$Res> {
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      serverId: freezed == serverId
-          ? _self.serverId
-          : serverId // ignore: cast_nullable_to_non_nullable
-              as String?,
       name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -448,6 +444,18 @@ class __$BudgetModelCopyWithImpl<$Res> implements _$BudgetModelCopyWith<$Res> {
           ? _self.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as CalendarDate,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      serverId: freezed == serverId
+          ? _self.serverId
+          : serverId // ignore: cast_nullable_to_non_nullable
+              as String?,
       periodStartDay: null == periodStartDay
           ? _self.periodStartDay
           : periodStartDay // ignore: cast_nullable_to_non_nullable
@@ -460,14 +468,6 @@ class __$BudgetModelCopyWithImpl<$Res> implements _$BudgetModelCopyWith<$Res> {
           ? _self.isPercentageBased
           : isPercentageBased // ignore: cast_nullable_to_non_nullable
               as bool,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _self.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       deletedAt: freezed == deletedAt
           ? _self.deletedAt
           : deletedAt // ignore: cast_nullable_to_non_nullable

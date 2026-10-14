@@ -8,7 +8,7 @@ part of 'coach_mark_provider.dart';
 
 String _$coachMarkServiceHash() => r'c759c1a4ccd24bae0815d38d06d11a6fcd993c34';
 
-/// Provides a [CoachMarkService] instance backed by [LocalStorage].
+/// Provides a [CoachMarkService] instance backed by `LocalStorage`.
 ///
 /// Copied from [coachMarkService].
 @ProviderFor(coachMarkService)

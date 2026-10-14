@@ -13,9 +13,9 @@ _CategoryModel _$CategoryModelFromJson(Map<String, dynamic> json) =>
       icon: json['icon'] as String,
       color: json['color'] as String,
       type: json['type'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
       isDefault: json['is_default'] as bool? ?? true,
       sortOrder: (json['sort_order'] as num?)?.toInt() ?? 0,
-      createdAt: DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$CategoryModelToJson(_CategoryModel instance) =>
@@ -25,7 +25,7 @@ Map<String, dynamic> _$CategoryModelToJson(_CategoryModel instance) =>
       'icon': instance.icon,
       'color': instance.color,
       'type': instance.type,
+      'created_at': instance.createdAt.toIso8601String(),
       'is_default': instance.isDefault,
       'sort_order': instance.sortOrder,
-      'created_at': instance.createdAt.toIso8601String(),
     };
