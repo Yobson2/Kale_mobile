@@ -6,13 +6,13 @@ import 'package:kale/features/transactions/domain/repositories/transactions_repo
 
 /// Gets total amounts grouped by category for a period.
 class GetCategoryTotalsUseCase
-    extends UseCase<Map<String, double>, GetCategoryTotalsParams> {
+    extends UseCase<Map<String, int>, GetCategoryTotalsParams> {
   const GetCategoryTotalsUseCase(this._repository);
 
   final TransactionsRepository _repository;
 
   @override
-  Future<Either<Failure, Map<String, double>>> call(
+  Future<Either<Failure, Map<String, int>>> call(
     GetCategoryTotalsParams params,
   ) {
     return _repository.getCategoryTotals(

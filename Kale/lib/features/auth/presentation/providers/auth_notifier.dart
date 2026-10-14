@@ -8,6 +8,7 @@ import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -309,6 +310,7 @@ class AuthNotifier extends _$AuthNotifier {
           ref.read(budgetsRepositoryProvider).refreshFromServer(),
           ref.read(transactionsRepositoryProvider).refreshFromServer(),
           ref.read(savingsRepositoryProvider).refreshFromServer(),
+          ref.read(profileRepositoryProvider).refreshFromServer(),
         ]);
       } catch (_) {
         // Sync failures are non-critical — data will refresh on next pull.

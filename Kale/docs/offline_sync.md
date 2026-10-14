@@ -57,6 +57,20 @@ resets every retry count.
 Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounce and backoff timers only on
 `elapse()`, and it exposes `resumeApp()`, `retry()`, `restartApp()`, `syncRuns` and `backupStatus`.
 
+## Money and the base currency
+
+- Each account has one **base currency**, stored on the profile: the `profiles` Drift table (one row, id `me`) and
+  the server's `profiles.base_currency`. The `profile` feature owns it, syncs it as entity type `profile`, and exposes
+  it as `baseCurrencyProvider` (XOF until chosen). It is picked at onboarding and changed in settings through
+  `ChangeBaseCurrencyUseCase`: free with no transactions, otherwise a relabel only after a confirmed warning.
+- Transactions store `amountMinor` (`amount_minor`): an integer count of minor units of the base currency. They carry
+  no currency. DAO sums are integers; the UI wraps them in `Money` (`lib/core/money/`) with the base currency to parse
+  input and format output. Never sum or store money as `double`.
+- Transactions have a nullable `deletedAt`; every DAO read excludes rows where it is set. (Deletes are still hard
+  deletes until the tombstone work lands; rows only arrive with `deletedAt` set through a pull.)
+- Budgets and savings still hold `double` amounts until their own schema reset. The budgets repository converts
+  transaction totals from minor units to major units of the base currency at that boundary.
+
 ## Reads and refresh
 
 - Repositories expose `watch*` streams and `get*` queries over Drift.

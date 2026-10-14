@@ -33,12 +33,11 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
 
   @override
   Future<Either<Failure, Transaction>> createTransaction({
-    required double amount,
+    required int amountMinor,
     required TransactionType type,
     required String categoryId,
     required DateTime date,
     required PaymentMethod paymentMethod,
-    required String currencyCode,
     String? description,
     String? mobileMoneyProvider,
     String? mobileMoneyRef,
@@ -49,13 +48,12 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
 
       final model = TransactionModel(
         id: id,
-        amount: amount,
+        amountMinor: amountMinor,
         type: type.name,
         categoryId: categoryId,
         description: description,
         date: date,
         paymentMethod: paymentMethod.name,
-        currencyCode: currencyCode,
         mobileMoneyProvider: mobileMoneyProvider,
         mobileMoneyRef: mobileMoneyRef,
         createdAt: now,
@@ -82,12 +80,11 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
   @override
   Future<Either<Failure, Transaction>> updateTransaction({
     required String id,
-    required double amount,
+    required int amountMinor,
     required TransactionType type,
     required String categoryId,
     required DateTime date,
     required PaymentMethod paymentMethod,
-    required String currencyCode,
     String? description,
     String? mobileMoneyProvider,
     String? mobileMoneyRef,
@@ -99,13 +96,12 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
       final model = TransactionModel(
         id: id,
         serverId: null,
-        amount: amount,
+        amountMinor: amountMinor,
         type: type.name,
         categoryId: categoryId,
         description: description,
         date: date,
         paymentMethod: paymentMethod.name,
-        currencyCode: currencyCode,
         isRecurring: existing.isRecurring,
         recurringRuleId: existing.recurringRuleId,
         mobileMoneyProvider: mobileMoneyProvider,
@@ -127,6 +123,15 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
       );
 
       return Right(model.toEntity());
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> countTransactions() async {
+    try {
+      return Right(await _local.countTransactions());
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }
@@ -200,7 +205,7 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
   }
 
   @override
-  Future<Either<Failure, Map<String, double>>> getCategoryTotals({
+  Future<Either<Failure, Map<String, int>>> getCategoryTotals({
     required DateTime startDate,
     required DateTime endDate,
     TransactionType? type,
@@ -218,7 +223,7 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
   }
 
   @override
-  Future<Either<Failure, double>> getTotalForPeriod({
+  Future<Either<Failure, int>> getTotalForPeriod({
     required DateTime startDate,
     required DateTime endDate,
     required TransactionType type,

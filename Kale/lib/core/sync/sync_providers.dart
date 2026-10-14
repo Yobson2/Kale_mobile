@@ -9,6 +9,7 @@ import 'package:kale/core/sync/sync_clock.dart';
 import 'package:kale/core/sync/sync_config.dart';
 import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,6 +37,7 @@ LastBackupStore lastBackupStore(Ref ref) =>
 List<SyncHandler> syncHandlers(Ref ref) => [
       ref.watch(transactionsSyncHandlerProvider),
       ref.watch(budgetsSyncHandlerProvider),
+      ref.watch(profileSyncHandlerProvider),
     ];
 
 /// Provides the [SyncEngine] singleton, with every handler from

@@ -1,6 +1,14 @@
 import 'package:drift/drift.dart';
 
 /// Drift table definition for financial transactions.
+///
+/// Amounts are integer minor units in the account's base currency (see
+/// `features/profile`). A transaction carries no currency of its own.
+@TableIndex(name: 'idx_transactions_date', columns: {#date})
+@TableIndex(
+  name: 'idx_transactions_category_date',
+  columns: {#categoryId, #date},
+)
 class Transactions extends Table {
   /// Client-generated UUID.
   TextColumn get id => text()();
@@ -8,8 +16,9 @@ class Transactions extends Table {
   /// Server-assigned ID. Null until first sync.
   TextColumn get serverId => text().nullable()();
 
-  /// Transaction amount (always positive).
-  RealColumn get amount => real()();
+  /// Amount in minor units of the base currency (always positive; the
+  /// type determines the direction).
+  IntColumn get amountMinor => integer()();
 
   /// Transaction type: 'income', 'expense', 'transfer'.
   TextColumn get type => text()();
@@ -26,12 +35,8 @@ class Transactions extends Table {
   /// Payment method: 'cash', 'mobileMoney', 'bank', 'card'.
   TextColumn get paymentMethod => text()();
 
-  /// ISO 4217 currency code.
-  TextColumn get currencyCode => text().withDefault(const Constant('XOF'))();
-
   /// Whether this is a recurring transaction.
-  BoolColumn get isRecurring =>
-      boolean().withDefault(const Constant(false))();
+  BoolColumn get isRecurring => boolean().withDefault(const Constant(false))();
 
   /// FK to recurring rule ID.
   TextColumn get recurringRuleId => text().nullable()();
@@ -51,9 +56,11 @@ class Transactions extends Table {
   /// When the record was last updated.
   DateTimeColumn get updatedAt => dateTime()();
 
+  /// Soft-delete marker. Every read excludes rows where it is set.
+  DateTimeColumn get deletedAt => dateTime().nullable()();
+
   /// Whether this record has been synced to the server.
-  BoolColumn get isSynced =>
-      boolean().withDefault(const Constant(false))();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};

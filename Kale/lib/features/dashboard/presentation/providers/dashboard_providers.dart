@@ -3,6 +3,7 @@ import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:kale/features/dashboard/domain/entities/dashboard_summary.dart';
 import 'package:kale/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dashboard_providers.g.dart';
@@ -78,6 +79,7 @@ Future<DashboardSummary> dashboardSummary(Ref ref) async {
   final result = await repository.getDashboardSummary(
     startDate: startDate,
     endDate: endDate,
+    currency: ref.watch(baseCurrencyProvider),
   );
 
   return result.fold(

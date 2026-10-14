@@ -13,6 +13,7 @@ import 'package:kale/features/budget/domain/usecases/create_budget_usecase.dart'
 import 'package:kale/features/budget/domain/usecases/delete_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/get_active_budget_usecase.dart';
 import 'package:kale/features/budget/domain/usecases/update_budget_usecase.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'budgets_providers.g.dart';
@@ -65,6 +66,7 @@ BudgetsRepository budgetsRepository(Ref ref) {
     localDataSource: ref.watch(budgetsLocalDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
     transactionsDao: db.transactionsDao,
+    profileRepository: ref.watch(profileRepositoryProvider),
   );
 }
 

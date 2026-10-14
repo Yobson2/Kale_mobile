@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
@@ -11,6 +10,7 @@ import 'package:kale/core/widgets/feedback/app_snackbar.dart';
 import 'package:kale/core/widgets/inputs/app_text_field.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/core/widgets/layout/app_scaffold.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/savings/presentation/providers/savings_notifier.dart';
 import 'package:kale/features/savings/presentation/providers/savings_state.dart';
 
@@ -20,8 +20,7 @@ class AddSavingsGoalPage extends ConsumerStatefulWidget {
   const AddSavingsGoalPage({super.key});
 
   @override
-  ConsumerState<AddSavingsGoalPage> createState() =>
-      _AddSavingsGoalPageState();
+  ConsumerState<AddSavingsGoalPage> createState() => _AddSavingsGoalPageState();
 }
 
 class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
@@ -41,7 +40,7 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currencyCode = ref.watch(userCurrencyCodeProvider);
+    final currencyCode = ref.watch(baseCurrencyProvider).code;
 
     ref.listen(savingsNotifierProvider, (_, state) {
       if (state is SavingsSuccess) {
@@ -146,7 +145,7 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
 
-    final currencyCode = ref.read(userCurrencyCodeProvider);
+    final currencyCode = ref.read(baseCurrencyProvider).code;
 
     ref.read(savingsNotifierProvider.notifier).createGoal(
           name: _nameController.text.trim(),
@@ -178,8 +177,7 @@ class _DeadlinePicker extends StatelessWidget {
       onTap: () async {
         final picked = await showDatePicker(
           context: context,
-          initialDate:
-              deadline ?? DateTime.now().add(const Duration(days: 90)),
+          initialDate: deadline ?? DateTime.now().add(const Duration(days: 90)),
           firstDate: DateTime.now(),
           lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
         );

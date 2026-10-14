@@ -26,8 +26,9 @@ class FinancialHealthCard extends ConsumerWidget {
         ),
         error: (_, __) => const SizedBox.shrink(),
         data: (summary) {
-          final income = summary.totalIncome;
-          final expenses = summary.totalExpenses;
+          // Ratios only: exact amounts are not needed for the score.
+          final income = summary.totalIncome.minorUnits.toDouble();
+          final expenses = summary.totalExpenses.minorUnits.toDouble();
           final score = _calculateScore(income, expenses);
           final progress = score / 100;
           final label = _getLabel(context, score);

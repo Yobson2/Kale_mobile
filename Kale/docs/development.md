@@ -75,6 +75,9 @@ Each remote datasource has an in-memory mock, toggled per feature:
 | `USE_MOCK_BUDGETS` | `false` |
 | `USE_MOCK_SAVINGS` | **`true`**: savings stays mocked unless you explicitly set it to `false` |
 
+The profile (base currency) has no flag of its own: it is mocked whenever `USE_MOCK_AUTH` is true, since there is
+then no Supabase user whose `profiles` row could be written.
+
 ## Code generation
 
 `build_runner` generates code for Freezed, json_serializable, Riverpod (`@riverpod`), and Drift

@@ -6,6 +6,8 @@ import 'package:kale/features/budget/data/daos/budget_categories_dao.dart';
 import 'package:kale/features/budget/data/daos/budgets_dao.dart';
 import 'package:kale/features/budget/data/tables/budget_categories_table.dart';
 import 'package:kale/features/budget/data/tables/budgets_table.dart';
+import 'package:kale/features/profile/data/daos/profile_dao.dart';
+import 'package:kale/features/profile/data/tables/profiles_table.dart';
 import 'package:kale/features/savings/data/daos/savings_contributions_dao.dart';
 import 'package:kale/features/savings/data/daos/savings_goals_dao.dart';
 import 'package:kale/features/savings/data/tables/savings_contributions_table.dart';
@@ -27,6 +29,7 @@ part 'app_database.g.dart';
     BudgetCategories,
     SavingsGoals,
     SavingsContributions,
+    Profiles,
   ],
   daos: [
     SyncQueueDao,
@@ -36,6 +39,7 @@ part 'app_database.g.dart';
     BudgetCategoriesDao,
     SavingsGoalsDao,
     SavingsContributionsDao,
+    ProfileDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -43,7 +47,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   /// PRE-RELEASE ONLY: any [schemaVersion] change (up or down) drops every
   /// table and recreates the schema, wiping all local data, including
@@ -90,6 +94,7 @@ class AppDatabase extends _$AppDatabase {
       await delete(budgets).go();
       await delete(transactions).go();
       await delete(categories).go();
+      await delete(profiles).go();
     });
     await _seedDefaultCategories();
   }

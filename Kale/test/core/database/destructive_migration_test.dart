@@ -57,7 +57,7 @@ void main() {
       await db.transactionsDao.upsert(
         TransactionsCompanion.insert(
           id: 't1',
-          amount: 100,
+          amountMinor: 100,
           type: 'expense',
           categoryId: 'cat_food',
           date: DateTime(2026, 10),

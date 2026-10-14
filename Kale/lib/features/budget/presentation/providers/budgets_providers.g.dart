@@ -74,7 +74,7 @@ final budgetsSyncHandlerProvider = Provider<BudgetsSyncHandler>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BudgetsSyncHandlerRef = ProviderRef<BudgetsSyncHandler>;
-String _$budgetsRepositoryHash() => r'1db7aaca1faeea65dca6b5c72b5fc891453a4eaf';
+String _$budgetsRepositoryHash() => r'01858b18676da629c39584494893261e70e08b98';
 
 /// Provides the [BudgetsRepository].
 ///

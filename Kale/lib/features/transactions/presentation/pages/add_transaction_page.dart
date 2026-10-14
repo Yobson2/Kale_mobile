@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kale/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/providers/storage_providers.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
@@ -17,12 +16,14 @@ import 'package:kale/core/widgets/inputs/app_text_field.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/core/widgets/layout/app_scaffold.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/transactions/domain/entities/category.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 import 'package:kale/features/transactions/presentation/pages/transactions_page.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_state.dart';
+import 'package:kale/l10n/app_localizations.dart';
 
 /// Page for creating or editing a transaction.
 ///
@@ -50,6 +51,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   DateTime _selectedDate = DateTime.now();
   bool _isEditing = false;
   bool _isInitialized = false;
+
+  /// The device locale, which amount parsing and formatting follow.
+  String get _locale => Localizations.localeOf(context).toString();
 
   @override
   void dispose() {
@@ -124,7 +128,8 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
             _AmountInput(
               controller: _amountController,
               theme: theme,
-              currencyCode: ref.watch(userCurrencyCodeProvider),
+              currency: ref.watch(baseCurrencyProvider),
+              locale: _locale,
               l10n: l10n,
             ),
             AppSpacing.verticalXl,
@@ -237,7 +242,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
         if (next is TransactionsLoaded) {
           final t = next.transaction;
           setState(() {
-            _amountController.text = t.amount.toString();
+            _amountController.text = t
+                .amountIn(ref.read(baseCurrencyProvider))
+                .format(locale: _locale, withSymbol: false);
             _descriptionController.text = t.description ?? '';
             _selectedType = t.type;
             _selectedPaymentMethod = t.paymentMethod;
@@ -259,8 +266,12 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   void _onSave() {
     if (!_formKey.currentState!.validate()) return;
 
-    final amount = double.tryParse(_amountController.text.trim());
-    if (amount == null || amount <= 0) {
+    final amount = Money.tryParse(
+      _amountController.text,
+      ref.read(baseCurrencyProvider),
+      locale: _locale,
+    );
+    if (amount == null || !amount.isPositive) {
       showAppSnackBar(
         context,
         message: context.l10n.transactionsValidAmountRequired,
@@ -279,17 +290,15 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
     }
 
     final notifier = ref.read(transactionsNotifierProvider.notifier);
-    final currencyCode = ref.read(userCurrencyCodeProvider);
 
     if (_isEditing) {
       notifier.updateTransaction(
         id: widget.transactionId!,
-        amount: amount,
+        amountMinor: amount.minorUnits,
         type: _selectedType,
         categoryId: _selectedCategoryId!,
         date: _selectedDate,
         paymentMethod: _selectedPaymentMethod,
-        currencyCode: currencyCode,
         description: _descriptionController.text.trim().isNotEmpty
             ? _descriptionController.text.trim()
             : null,
@@ -297,12 +306,11 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
       );
     } else {
       notifier.createTransaction(
-        amount: amount,
+        amountMinor: amount.minorUnits,
         type: _selectedType,
         categoryId: _selectedCategoryId!,
         date: _selectedDate,
         paymentMethod: _selectedPaymentMethod,
-        currencyCode: currencyCode,
         description: _descriptionController.text.trim().isNotEmpty
             ? _descriptionController.text.trim()
             : null,
@@ -420,13 +428,17 @@ class _AmountInput extends StatelessWidget {
   const _AmountInput({
     required this.controller,
     required this.theme,
-    required this.currencyCode,
+    required this.currency,
+    required this.locale,
     required this.l10n,
   });
 
   final TextEditingController controller;
   final ThemeData theme;
-  final String currencyCode;
+
+  /// The account's base currency: the only currency amounts are entered in.
+  final Currency currency;
+  final String locale;
   final AppLocalizations l10n;
 
   @override
@@ -440,20 +452,24 @@ class _AmountInput extends StatelessWidget {
         AppSpacing.verticalSm,
         TextFormField(
           controller: controller,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          keyboardType: TextInputType.numberWithOptions(
+            decimal: currency.decimalPlaces > 0,
+          ),
           textAlign: TextAlign.center,
           style: theme.textTheme.displaySmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),
           inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+            // Digits, separators and spaces; Money.tryParse does the rest
+            // (it rejects more decimals than the currency has).
+            FilteringTextInputFormatter.allow(RegExp(r'[\d.,\s  ]')),
           ],
           decoration: InputDecoration(
             hintText: l10n.transactionsAmountHint,
             hintStyle: theme.textTheme.displaySmall?.copyWith(
               color: theme.colorScheme.outline,
             ),
-            prefixText: '$currencyCode ',
+            prefixText: '${currency.symbol} ',
             prefixStyle: theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.outline,
             ),
@@ -463,8 +479,8 @@ class _AmountInput extends StatelessWidget {
             if (value == null || value.trim().isEmpty) {
               return l10n.transactionsAmountRequired;
             }
-            final amount = double.tryParse(value.trim());
-            if (amount == null || amount <= 0) {
+            final amount = Money.tryParse(value, currency, locale: locale);
+            if (amount == null || !amount.isPositive) {
               return l10n.transactionsAmountInvalid;
             }
             return null;
@@ -493,7 +509,8 @@ class _CategoryPicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(context.l10n.transactionsCategory, style: theme.textTheme.labelLarge),
+        Text(context.l10n.transactionsCategory,
+            style: theme.textTheme.labelLarge),
         AppSpacing.verticalSm,
         if (categories.isEmpty)
           Text(context.l10n.transactionsNoCategoriesAvailable)

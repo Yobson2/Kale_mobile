@@ -50,7 +50,7 @@ final categoryNamesProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CategoryNamesRef = AutoDisposeFutureProviderRef<Map<String, String>>;
-String _$dashboardSummaryHash() => r'e3413ff017a0ad6daa8b4a5a841d81fb54386959';
+String _$dashboardSummaryHash() => r'fac0ae2e35d87daf2baa5107f1b05c3a50795516';
 
 /// Provides the [DashboardSummary] for the currently selected period.
 ///

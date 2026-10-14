@@ -49,17 +49,6 @@ class LocalStorage {
   /// Marks the first launch as done.
   Future<bool> setFirstLaunchDone() => _prefs.setBool(_firstLaunchKey, false);
 
-  // -- Currency --
-
-  static const _currencyCodeKey = 'currency_code';
-
-  /// Gets the user's preferred currency code (e.g. 'XOF', 'NGN').
-  String? getCurrencyCode() => _prefs.getString(_currencyCodeKey);
-
-  /// Persists the user's preferred currency [code].
-  Future<bool> setCurrencyCode(String code) =>
-      _prefs.setString(_currencyCodeKey, code);
-
   // -- Notifications --
 
   static const _notificationsEnabledKey = 'notifications_enabled';

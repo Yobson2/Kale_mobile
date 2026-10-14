@@ -25,12 +25,11 @@ abstract class TransactionsRepository {
 
   /// Creates a new transaction. Saves locally and queues for sync.
   Future<Either<Failure, Transaction>> createTransaction({
-    required double amount,
+    required int amountMinor,
     required TransactionType type,
     required String categoryId,
     required DateTime date,
     required PaymentMethod paymentMethod,
-    required String currencyCode,
     String? description,
     String? mobileMoneyProvider,
     String? mobileMoneyRef,
@@ -39,16 +38,18 @@ abstract class TransactionsRepository {
   /// Updates an existing transaction.
   Future<Either<Failure, Transaction>> updateTransaction({
     required String id,
-    required double amount,
+    required int amountMinor,
     required TransactionType type,
     required String categoryId,
     required DateTime date,
     required PaymentMethod paymentMethod,
-    required String currencyCode,
     String? description,
     String? mobileMoneyProvider,
     String? mobileMoneyRef,
   });
+
+  /// Counts the account's transactions (deleted ones excluded).
+  Future<Either<Failure, int>> countTransactions();
 
   /// Deletes a transaction.
   Future<Either<Failure, void>> deleteTransaction(String id);
@@ -57,14 +58,14 @@ abstract class TransactionsRepository {
   Future<Either<Failure, void>> refreshFromServer();
 
   /// Gets total amounts grouped by category for a period.
-  Future<Either<Failure, Map<String, double>>> getCategoryTotals({
+  Future<Either<Failure, Map<String, int>>> getCategoryTotals({
     required DateTime startDate,
     required DateTime endDate,
     TransactionType? type,
   });
 
   /// Gets the total amount for a period and type.
-  Future<Either<Failure, double>> getTotalForPeriod({
+  Future<Either<Failure, int>> getTotalForPeriod({
     required DateTime startDate,
     required DateTime endDate,
     required TransactionType type,
