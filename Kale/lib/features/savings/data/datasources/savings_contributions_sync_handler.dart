@@ -39,10 +39,6 @@ class SavingsContributionsSyncHandler implements SyncHandler {
   }
 
   @override
-  Future<void> pushDelete(String entityId) =>
-      _remote.deleteContribution(entityId);
-
-  @override
   Future<String?> fetchRemote(String entityId) async {
     try {
       final model = await _remote.getContributionById(entityId);

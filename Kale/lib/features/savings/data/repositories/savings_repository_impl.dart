@@ -117,8 +117,24 @@ class SavingsRepositoryImpl implements SavingsRepository {
   @override
   Future<Either<Failure, void>> deleteSavingsGoal(String id) async {
     try {
-      await _local.deleteSavingsGoal(id);
-      await _local.enqueueSync(entityId: id, operation: 'delete');
+      // A delete is a soft delete, synced as an update carrying
+      // `deleted_at`. The goal's contributions are deleted with it.
+      final now = DateTime.now();
+      final goal = await _local.deleteSavingsGoal(id, now);
+      await _local.enqueueSync(
+        entityId: id,
+        operation: 'update',
+        payload: jsonEncode(goal.toJson()),
+      );
+      final contributions =
+          await _contributionsLocal.deleteContributionsOfGoal(id, now);
+      for (final contribution in contributions) {
+        await _contributionsLocal.enqueueSync(
+          entityId: contribution.id,
+          operation: 'update',
+          payload: jsonEncode(contribution.toJson()),
+        );
+      }
       return const Right(null);
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));

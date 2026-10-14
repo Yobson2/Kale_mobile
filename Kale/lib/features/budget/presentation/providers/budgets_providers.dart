@@ -40,7 +40,6 @@ BudgetsLocalDataSource budgetsLocalDataSource(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return BudgetsLocalDataSourceImpl(
     budgetsDao: db.budgetsDao,
-    budgetCategoriesDao: db.budgetCategoriesDao,
     syncQueueDao: db.syncQueueDao,
   );
 }

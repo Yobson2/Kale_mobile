@@ -46,11 +46,6 @@ class TransactionsSyncHandler implements SyncHandler {
   }
 
   @override
-  Future<void> pushDelete(String entityId) async {
-    await _remote.deleteTransaction(entityId);
-  }
-
-  @override
   Future<String?> fetchRemote(String entityId) async {
     try {
       final model = await _remote.getTransactionById(entityId);

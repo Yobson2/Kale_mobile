@@ -12,8 +12,18 @@ abstract class BudgetCategoriesLocalDataSource {
   /// Saves [model] locally, with its `isSynced` flag as given.
   Future<void> saveBudgetCategory(BudgetCategoryModel model);
 
-  /// Removes an allocation from the device.
-  Future<void> deleteBudgetCategory(String id);
+  /// Soft-deletes a live allocation at [at] and returns it, to be queued
+  /// as an update.
+  ///
+  /// Throws [CacheException] if no live allocation has this [id].
+  Future<BudgetCategoryModel> deleteBudgetCategory(String id, DateTime at);
+
+  /// Soft-deletes every live allocation of budget [budgetId] at [at] and
+  /// returns them, to be queued as updates.
+  Future<List<BudgetCategoryModel>> deleteAllocationsOfBudget(
+    String budgetId,
+    DateTime at,
+  );
 
   Future<void> enqueueSync({
     required String entityId,
@@ -64,11 +74,32 @@ class BudgetCategoriesLocalDataSourceImpl
   }
 
   @override
-  Future<void> deleteBudgetCategory(String id) async {
+  Future<BudgetCategoryModel> deleteBudgetCategory(
+    String id,
+    DateTime at,
+  ) async {
     try {
-      await _dao.deleteById(id);
+      final row = await _dao.markDeleted(id, at);
+      if (row == null) {
+        throw CacheException(message: 'Budget category not found: $id');
+      }
+      return BudgetCategoryModel.fromDrift(row);
     } catch (e) {
+      if (e is CacheException) rethrow;
       throw CacheException(message: 'Failed to delete budget category: $e');
+    }
+  }
+
+  @override
+  Future<List<BudgetCategoryModel>> deleteAllocationsOfBudget(
+    String budgetId,
+    DateTime at,
+  ) async {
+    try {
+      final rows = await _dao.markDeletedByBudgetId(budgetId, at);
+      return rows.map(BudgetCategoryModel.fromDrift).toList();
+    } catch (e) {
+      throw CacheException(message: 'Failed to delete budget categories: $e');
     }
   }
 

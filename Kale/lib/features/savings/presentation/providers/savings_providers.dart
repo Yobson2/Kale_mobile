@@ -55,7 +55,6 @@ SavingsLocalDataSource savingsLocalDataSource(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   return SavingsLocalDataSourceImpl(
     savingsGoalsDao: db.savingsGoalsDao,
-    savingsContributionsDao: db.savingsContributionsDao,
     syncQueueDao: db.syncQueueDao,
   );
 }

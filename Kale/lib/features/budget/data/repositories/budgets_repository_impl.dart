@@ -175,11 +175,24 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
   @override
   Future<Either<Failure, void>> deleteBudget(String id) async {
     try {
-      await _local.deleteBudget(id);
+      // A delete is a soft delete, synced as an update carrying
+      // `deleted_at`. The budget's allocations are deleted with it.
+      final now = DateTime.now();
+      final budget = await _local.deleteBudget(id, now);
       await _local.enqueueSync(
         entityId: id,
-        operation: 'delete',
+        operation: 'update',
+        payload: jsonEncode(budget.toJson()),
       );
+      final allocations =
+          await _categoriesLocal.deleteAllocationsOfBudget(id, now);
+      for (final allocation in allocations) {
+        await _categoriesLocal.enqueueSync(
+          entityId: allocation.id,
+          operation: 'update',
+          payload: jsonEncode(allocation.toJson()),
+        );
+      }
       return const Right(null);
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
@@ -213,7 +226,7 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
 
   /// Makes [categories] the allocations of budget [budgetId], saving each
   /// as an unsynced change and queueing it: new ones as creates, existing
-  /// ones as updates, and dropped ones as deletes.
+  /// ones as updates, and dropped ones soft-deleted and queued as updates.
   ///
   /// An allocation without an id (the setup screen sends none) keeps the
   /// id of the existing allocation for the same category, so editing a
@@ -249,10 +262,14 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
     }
 
     for (final dropped in unmatched.values) {
-      await _categoriesLocal.deleteBudgetCategory(dropped.id);
+      final deleted = await _categoriesLocal.deleteBudgetCategory(
+        dropped.id,
+        now,
+      );
       await _categoriesLocal.enqueueSync(
         entityId: dropped.id,
-        operation: 'delete',
+        operation: 'update',
+        payload: jsonEncode(deleted.toJson()),
       );
     }
   }

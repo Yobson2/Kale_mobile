@@ -19,9 +19,6 @@ abstract class BudgetCategoriesRemoteDataSource {
 
   /// Updates an allocation.
   Future<BudgetCategoryModel> updateBudgetCategory(BudgetCategoryModel model);
-
-  /// Deletes an allocation.
-  Future<void> deleteBudgetCategory(String id);
 }
 
 /// Implementation of [BudgetCategoriesRemoteDataSource] using Supabase.
@@ -94,15 +91,6 @@ class SupabaseBudgetCategoriesRemoteDataSource
     }
   }
 
-  @override
-  Future<void> deleteBudgetCategory(String id) async {
-    try {
-      await _table.delete().eq('id', id);
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
   static int? _parseCode(PostgrestException e) =>
       e.code != null ? int.tryParse(e.code!) : null;
 }
@@ -143,11 +131,6 @@ class MockBudgetCategoriesRemoteDataSource
   ) async {
     await Future<void>.delayed(_delay);
     return model;
-  }
-
-  @override
-  Future<void> deleteBudgetCategory(String id) async {
-    await Future<void>.delayed(_delay);
   }
 }
 

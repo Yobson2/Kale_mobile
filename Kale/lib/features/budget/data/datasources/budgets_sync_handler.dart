@@ -40,11 +40,6 @@ class BudgetsSyncHandler implements SyncHandler {
   }
 
   @override
-  Future<void> pushDelete(String entityId) async {
-    await _remote.deleteBudget(entityId);
-  }
-
-  @override
   Future<String?> fetchRemote(String entityId) async {
     try {
       final model = await _remote.getBudgetById(entityId);

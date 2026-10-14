@@ -1,6 +1,5 @@
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/error/exceptions.dart';
-import 'package:kale/features/savings/data/daos/savings_contributions_dao.dart';
 import 'package:kale/features/savings/data/daos/savings_goals_dao.dart';
 import 'package:kale/features/savings/data/models/savings_goal_model.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
@@ -20,8 +19,11 @@ abstract class SavingsLocalDataSource {
   /// Saves [model] locally, with its `isSynced` flag as given.
   Future<void> saveSavingsGoal(SavingsGoalModel model);
 
-  /// Deletes a goal and its contributions locally.
-  Future<void> deleteSavingsGoal(String id);
+  /// Soft-deletes a live goal at [at] and returns it, to be queued as an
+  /// update. Its contributions are deleted through their own datasource.
+  ///
+  /// Throws [CacheException] if no live goal has this [id].
+  Future<SavingsGoalModel> deleteSavingsGoal(String id, DateTime at);
 
   Future<void> enqueueSync({
     required String entityId,
@@ -39,14 +41,11 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
   /// Creates a [SavingsLocalDataSourceImpl].
   const SavingsLocalDataSourceImpl({
     required SavingsGoalsDao savingsGoalsDao,
-    required SavingsContributionsDao savingsContributionsDao,
     required SyncQueueDao syncQueueDao,
   })  : _goalsDao = savingsGoalsDao,
-        _contributionsDao = savingsContributionsDao,
         _syncQueueDao = syncQueueDao;
 
   final SavingsGoalsDao _goalsDao;
-  final SavingsContributionsDao _contributionsDao;
   final SyncQueueDao _syncQueueDao;
 
   static const _entityType = 'savings_goal';
@@ -96,11 +95,15 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
   }
 
   @override
-  Future<void> deleteSavingsGoal(String id) async {
+  Future<SavingsGoalModel> deleteSavingsGoal(String id, DateTime at) async {
     try {
-      await _contributionsDao.deleteByGoalId(id);
-      await _goalsDao.deleteById(id);
+      final row = await _goalsDao.markDeleted(id, at);
+      if (row == null) {
+        throw CacheException(message: 'Savings goal not found: $id');
+      }
+      return SavingsGoalModel.fromDrift(row);
     } catch (e) {
+      if (e is CacheException) rethrow;
       throw CacheException(message: 'Failed to delete savings goal: $e');
     }
   }

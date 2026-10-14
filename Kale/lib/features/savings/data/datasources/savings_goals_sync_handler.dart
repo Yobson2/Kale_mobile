@@ -37,10 +37,6 @@ class SavingsGoalsSyncHandler implements SyncHandler {
   }
 
   @override
-  Future<void> pushDelete(String entityId) =>
-      _remote.deleteSavingsGoal(entityId);
-
-  @override
   Future<String?> fetchRemote(String entityId) async {
     try {
       final model = await _remote.getSavingsGoalById(entityId);

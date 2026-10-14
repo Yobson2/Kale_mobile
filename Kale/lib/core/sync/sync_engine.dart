@@ -23,10 +23,10 @@ abstract class SyncHandler {
   Future<String> pushCreate(String entityId, String payload);
 
   /// Pushes an update operation to the server.
+  ///
+  /// Deletes are soft deletes: they arrive here as updates whose payload
+  /// carries `deleted_at`. Nothing is ever hard-deleted on the server.
   Future<void> pushUpdate(String entityId, String payload);
-
-  /// Pushes a delete operation to the server.
-  Future<void> pushDelete(String entityId);
 
   /// Fetches the latest version from the server for conflict resolution.
   /// Returns null if the entity doesn't exist on the server.
@@ -284,9 +284,8 @@ class SyncEngine {
           await handler.pushUpdate(entry.entityId, entry.payload!);
           await _syncQueueDao.markCompleted(entry.id);
 
-        case 'delete':
-          await handler.pushDelete(entry.entityId);
-          await _syncQueueDao.markCompleted(entry.id);
+        default:
+          throw StateError('Unknown sync operation "${entry.operation}"');
       }
     } on ServerException catch (e) {
       if (e.statusCode == 409) {

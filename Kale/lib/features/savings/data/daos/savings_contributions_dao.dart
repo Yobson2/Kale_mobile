@@ -42,10 +42,26 @@ class SavingsContributionsDao extends DatabaseAccessor<AppDatabase>
   Future<void> upsert(SavingsContributionsCompanion entry) =>
       into(savingsContributions).insertOnConflictUpdate(entry);
 
-  /// Deletes every contribution of a goal.
-  Future<void> deleteByGoalId(String goalId) =>
-      (delete(savingsContributions)..where((t) => t.goalId.equals(goalId)))
-          .go();
+  /// Soft-deletes every live contribution of a goal: sets `deletedAt` and
+  /// `updatedAt` to [at] and marks them unsynced. Returns the deleted rows.
+  Future<List<SavingsContribution>> markDeletedByGoalId(
+    String goalId,
+    DateTime at,
+  ) {
+    return transaction(() async {
+      final live = await _liveForGoal(goalId).get();
+      if (live.isEmpty) return const [];
+      final ids = [for (final row in live) row.id];
+      await (update(savingsContributions)..where((t) => t.id.isIn(ids))).write(
+        SavingsContributionsCompanion(
+          deletedAt: Value(at),
+          updatedAt: Value(at),
+          isSynced: const Value(false),
+        ),
+      );
+      return (select(savingsContributions)..where((t) => t.id.isIn(ids))).get();
+    });
+  }
 
   /// Marks a contribution as synced.
   Future<void> markSynced(String id, {String? serverId}) =>

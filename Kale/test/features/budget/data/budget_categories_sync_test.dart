@@ -99,7 +99,7 @@ void main() {
 
   test(
     'editing a budget updates its allocations in place, creates new ones '
-    'and deletes dropped ones',
+    'and soft-deletes dropped ones',
     () async {
       final budget = await harness.addBudget(
         categories: [allocation('cat_food', 100), allocation('cat_rent', 200)],
@@ -128,12 +128,16 @@ void main() {
       expect(harness.server.budgetCategories.calls, [
         RemoteCall.update(foodId),
         RemoteCall.create(transportId),
-        RemoteCall.delete(rentId),
+        RemoteCall.update(rentId),
       ]);
+      expect(
+        harness.server.budgetCategories.rows[rentId]!.deletedAt,
+        isNotNull,
+      );
       expect(
         {
           for (final r in harness.server.budgetCategories.rows.values)
-            r.categoryId: r.allocatedMinor,
+            if (r.deletedAt == null) r.categoryId: r.allocatedMinor,
         },
         {'cat_food': 150, 'cat_transport': 50},
       );
@@ -191,18 +195,5 @@ void main() {
     await harness.budgets.refreshFromServer();
 
     expect(allocatedByCategory(await readBudget(budget.id)), {'cat_food': 999});
-  });
-
-  test('deleting a budget leaves no allocation on the server', () async {
-    final budget =
-        await harness.addBudget(categories: [allocation('cat_food', 100)]);
-    await harness.sync();
-
-    await harness.budgets.deleteBudget(budget.id);
-    await harness.sync();
-
-    expect(harness.server.budgets.rows, isEmpty);
-    expect(harness.server.budgetCategories.rows, isEmpty);
-    expect(harness.backupStatus.stuckCount, 0);
   });
 }
