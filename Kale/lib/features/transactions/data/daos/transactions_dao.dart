@@ -60,6 +60,66 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     return query.get();
   }
 
+  /// One page of live transactions, newest first, keyset-ordered on
+  /// `(date, id)`: the page after the row with [afterDate] and [afterId]
+  /// (from the start when null), at most [limit] rows. Never an offset, so
+  /// a deep page costs the same as the first.
+  ///
+  /// With [untilDate] and [untilId], the page stops at that row (included):
+  /// used to reload exactly the rows a list already shows.
+  ///
+  /// Filters: [type]; and [search], which matches the description
+  /// (case-insensitive) or any of [searchCategoryIds].
+  Future<List<Transaction>> getPage({
+    required int limit,
+    DateTime? afterDate,
+    String? afterId,
+    DateTime? untilDate,
+    String? untilId,
+    String? type,
+    String? search,
+    Set<String> searchCategoryIds = const {},
+  }) {
+    final query = select(transactions)..where((t) => t.deletedAt.isNull());
+    if (afterDate != null && afterId != null) {
+      query.where(
+        (t) =>
+            t.date.isSmallerThanValue(afterDate) |
+            (t.date.equals(afterDate) & t.id.isSmallerThanValue(afterId)),
+      );
+    }
+    if (untilDate != null && untilId != null) {
+      query.where(
+        (t) =>
+            t.date.isBiggerThanValue(untilDate) |
+            (t.date.equals(untilDate) & t.id.isBiggerOrEqualValue(untilId)),
+      );
+    }
+    if (type != null) {
+      query.where((t) => t.type.equals(type));
+    }
+    if (search != null && search.isNotEmpty) {
+      final pattern = '%${search.toLowerCase()}%';
+      query.where(
+        (t) =>
+            t.description.lower().like(pattern) |
+            t.categoryId.isIn(searchCategoryIds),
+      );
+    }
+    query
+      ..orderBy([
+        (t) => OrderingTerm.desc(t.date),
+        (t) => OrderingTerm.desc(t.id),
+      ])
+      ..limit(limit);
+    return query.get();
+  }
+
+  /// Emits whenever the transactions table changes (insert, update,
+  /// soft delete), so a loaded list can refresh what it shows.
+  Stream<void> watchChanges() =>
+      db.tableUpdates(TableUpdateQuery.onTable(transactions));
+
   /// Gets a single live transaction by ID.
   Future<Transaction?> getById(String id) {
     return (select(transactions)

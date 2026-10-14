@@ -7,6 +7,7 @@ import 'package:kale/features/transactions/data/datasources/transactions_local_d
 import 'package:kale/features/transactions/data/models/transaction_model.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
+import 'package:kale/features/transactions/domain/entities/transaction_page.dart';
 import 'package:kale/features/transactions/domain/repositories/transactions_repository.dart';
 import 'package:uuid/uuid.dart';
 
@@ -168,6 +169,29 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
       return Left(CacheFailure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, TransactionPage>> getTransactionsPage({
+    required TransactionListFilter filter,
+    required int limit,
+    TransactionCursor? after,
+    TransactionCursor? until,
+  }) async {
+    try {
+      final rows = await _local.getTransactionsPage(
+        filter: filter,
+        limit: limit,
+        after: after,
+        until: until,
+      );
+      return Right(TransactionPage(rows, hasMore: rows.length == limit));
+    } on CacheException catch (e) {
+      return Left(CacheFailure(message: e.message));
+    }
+  }
+
+  @override
+  Stream<void> watchTransactionChanges() => _local.watchChanges();
 
   @override
   Future<Either<Failure, Transaction>> getTransactionById(String id) async {

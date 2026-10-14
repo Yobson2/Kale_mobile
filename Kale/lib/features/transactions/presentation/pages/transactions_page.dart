@@ -18,6 +18,8 @@ import 'package:kale/features/profile/presentation/providers/profile_providers.d
 import 'package:kale/features/transactions/domain/entities/category.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
+import 'package:kale/features/transactions/domain/entities/transaction_page.dart';
+import 'package:kale/features/transactions/presentation/providers/transaction_list_notifier.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 
 /// Page that lists all transactions with type filter chips.
@@ -38,7 +40,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final transactionsAsync = ref.watch(transactionsStreamProvider);
+    final list = ref.watch(transactionListProvider);
     final categoriesAsync = ref.watch(categoriesStreamProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -72,51 +74,39 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
             ),
             child: AppSearchField(
               hint: context.l10n.transactionsSearchHint,
-              onChanged: (query) => setState(() => _searchQuery = query),
+              onChanged: (query) {
+                setState(() => _searchQuery = query);
+                _applyFilter();
+              },
             ),
           ),
 
           // Filter chips row
           _FilterChipsRow(
             selectedType: _selectedType,
-            onTypeSelected: (type) => setState(() => _selectedType = type),
+            onTypeSelected: (type) {
+              setState(() => _selectedType = type);
+              _applyFilter();
+            },
           ),
 
           // Transaction list
           Expanded(
-            child: transactionsAsync.when(
-              loading: () => const AppShimmerList(),
-              error: (error, _) => AppErrorState(
-                message: error.toString(),
-              ),
-              data: (transactions) {
+            child: Builder(
+              builder: (context) {
+                if (list.isLoading) return const AppShimmerList();
+                if (list.failed && list.transactions.isEmpty) {
+                  return AppErrorState(message: context.l10n.errorGeneric);
+                }
+                final transactions = list.transactions;
+
                 // Build a category lookup map.
                 final categories = categoriesAsync.valueOrNull ?? [];
                 final categoryMap = {
                   for (final cat in categories) cat.id: cat,
                 };
 
-                // Apply local type filter.
-                var filtered = _selectedType == null
-                    ? transactions
-                    : transactions
-                        .where((t) => t.type == _selectedType)
-                        .toList();
-
-                // Apply search filter.
-                if (_searchQuery.isNotEmpty) {
-                  final query = _searchQuery.toLowerCase();
-                  filtered = filtered.where((t) {
-                    final descriptionMatch =
-                        t.description?.toLowerCase().contains(query) ?? false;
-                    final category = categoryMap[t.categoryId];
-                    final categoryMatch =
-                        category?.name.toLowerCase().contains(query) ?? false;
-                    return descriptionMatch || categoryMatch;
-                  }).toList();
-                }
-
-                if (filtered.isEmpty) {
+                if (transactions.isEmpty) {
                   return AppEmptyState(
                     title: context.l10n.transactionsNoTransactions,
                     subtitle:
@@ -128,101 +118,125 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 }
 
                 // Group transactions by date.
-                final groups = _groupTransactionsByDate(context, filtered);
+                final groups = _groupTransactionsByDate(context, transactions);
 
                 return RefreshIndicator(
                   onRefresh: () => refreshFromBackup(context, ref),
-                  child: CustomScrollView(
-                    slivers: [
-                      for (final group in groups) ...[
-                        // Sticky section header
-                        SliverPersistentHeader(
-                          pinned: true,
-                          delegate: _StickyHeaderDelegate(
-                            label: group.label,
+                  child: NotificationListener<ScrollNotification>(
+                    // Load the next page before the user reaches the end.
+                    onNotification: (notification) {
+                      if (notification.metrics.extentAfter < 600) {
+                        ref.read(transactionListProvider.notifier).loadMore();
+                      }
+                      return false;
+                    },
+                    child: CustomScrollView(
+                      slivers: [
+                        for (final group in groups) ...[
+                          // Sticky section header
+                          SliverPersistentHeader(
+                            pinned: true,
+                            delegate: _StickyHeaderDelegate(
+                              label: group.label,
+                            ),
                           ),
-                        ),
-                        // Transaction items for this group
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final transaction = group.transactions[index];
-                              final category =
-                                  categoryMap[transaction.categoryId];
+                          // Transaction items for this group
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final transaction = group.transactions[index];
+                                final category =
+                                    categoryMap[transaction.categoryId];
 
-                              return StaggeredListItem(
-                                index: index,
-                                child: Dismissible(
-                                  key: ValueKey(transaction.id),
-                                  direction: DismissDirection.endToStart,
-                                  background: Container(
-                                    alignment: Alignment.centerRight,
-                                    padding: const EdgeInsets.only(
-                                      right: AppSpacing.lg,
+                                return StaggeredListItem(
+                                  index: index,
+                                  child: Dismissible(
+                                    key: ValueKey(transaction.id),
+                                    direction: DismissDirection.endToStart,
+                                    background: Container(
+                                      alignment: Alignment.centerRight,
+                                      padding: const EdgeInsets.only(
+                                        right: AppSpacing.lg,
+                                      ),
+                                      color: Colors.red,
+                                      child: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                    color: Colors.red,
-                                    child: const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  confirmDismiss: (_) =>
-                                      _confirmDelete(context),
-                                  onDismissed: (_) =>
-                                      _deleteTransaction(transaction.id),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: AppSpacing.lg,
-                                    ),
-                                    child: _TransactionTile(
-                                      transaction: transaction,
-                                      category: category,
-                                      isDark: isDark,
-                                      onTap: () => context.pushNamed(
-                                        RouteNames.transactionDetailName,
-                                        extra: transaction.id,
+                                    confirmDismiss: (_) =>
+                                        _confirmDelete(context),
+                                    onDismissed: (_) =>
+                                        _deleteTransaction(transaction.id),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: AppSpacing.lg,
+                                      ),
+                                      child: _TransactionTile(
+                                        transaction: transaction,
+                                        category: category,
+                                        isDark: isDark,
+                                        onTap: () => context.pushNamed(
+                                          RouteNames.transactionDetailName,
+                                          extra: transaction.id,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                            childCount: group.transactions.length,
-                          ),
-                        ),
-                      ],
-                      // End-of-list message
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.xl,
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.history,
-                                  size: 16,
-                                  color: context.colorScheme.onSurfaceVariant,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Text(
-                                  'End of recent history',
-                                  style: context.textTheme.labelSmall?.copyWith(
-                                    color: context.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
+                                );
+                              },
+                              childCount: group.transactions.length,
                             ),
                           ),
+                        ],
+                        // More pages to load: a spinner; otherwise the end.
+                        if (list.hasMore)
+                          const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppSpacing.xl,
+                              ),
+                              child: Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
+                            ),
+                          )
+                        else
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: AppSpacing.xl,
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.history,
+                                      size: 16,
+                                      color:
+                                          context.colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(width: AppSpacing.sm),
+                                    Text(
+                                      'End of recent history',
+                                      style: context.textTheme.labelSmall
+                                          ?.copyWith(
+                                        color: context
+                                            .colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        // Bottom padding
+                        const SliverPadding(
+                          padding: EdgeInsets.only(bottom: AppSpacing.lg),
                         ),
-                      ),
-                      // Bottom padding
-                      const SliverPadding(
-                        padding: EdgeInsets.only(bottom: AppSpacing.lg),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
@@ -231,6 +245,27 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
         ],
       ),
     );
+  }
+
+  /// Sends the type filter and search to the list, which reloads from the
+  /// first page. Search matches the description, or a category whose name
+  /// contains the text.
+  void _applyFilter() {
+    final query = _searchQuery.trim().toLowerCase();
+    final categories = ref.read(categoriesStreamProvider).valueOrNull ?? [];
+    ref.read(transactionListProvider.notifier).setFilter(
+          TransactionListFilter(
+            type: _selectedType,
+            search: query,
+            searchCategoryIds: query.isEmpty
+                ? const {}
+                : {
+                    for (final category in categories)
+                      if (category.name.toLowerCase().contains(query))
+                        category.id,
+                  },
+          ),
+        );
   }
 
   /// Groups transactions into Today, Yesterday, This Week, and Earlier.
@@ -450,14 +485,13 @@ class _TransactionTile extends ConsumerWidget {
     final categoryIcon = _resolveIcon(category?.icon);
     final categoryColor = _resolveColor(category?.color);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.xs),
-      decoration: BoxDecoration(
+    // A Material (not a coloured box) so the ListTile's ink shows on it.
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+      child: Material(
         color: theme.colorScheme.surfaceContainerLow,
         borderRadius: AppRadius.borderRadiusMd,
-      ),
-      child: ClipRRect(
-        borderRadius: AppRadius.borderRadiusMd,
+        clipBehavior: Clip.antiAlias,
         child: IntrinsicHeight(
           child: Row(
             children: [
