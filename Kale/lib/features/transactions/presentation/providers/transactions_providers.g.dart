@@ -271,5 +271,27 @@ final watchTransactionChangesUseCaseProvider =
 // ignore: unused_element
 typedef WatchTransactionChangesUseCaseRef
     = AutoDisposeProviderRef<WatchTransactionChangesUseCase>;
+String _$exportTransactionsCsvUseCaseHash() =>
+    r'f24fd4e1d6f0cb614b814b30baedb2363ce3b041';
+
+/// Provides the [ExportTransactionsCsvUseCase].
+///
+/// Copied from [exportTransactionsCsvUseCase].
+@ProviderFor(exportTransactionsCsvUseCase)
+final exportTransactionsCsvUseCaseProvider =
+    AutoDisposeProvider<ExportTransactionsCsvUseCase>.internal(
+  exportTransactionsCsvUseCase,
+  name: r'exportTransactionsCsvUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$exportTransactionsCsvUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ExportTransactionsCsvUseCaseRef
+    = AutoDisposeProviderRef<ExportTransactionsCsvUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

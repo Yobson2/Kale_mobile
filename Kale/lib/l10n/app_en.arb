@@ -669,5 +669,19 @@
   "notifSavingsGoalReachedTitle": "Goal reached: {goal}",
   "notifSavingsGoalReachedBody": "Congratulations! You've saved everything for \"{goal}\".",
   "notifDailyReminderTitle": "Track your spending",
-  "notifDailyReminderBody": "Don't forget to log today's transactions."
+  "notifDailyReminderBody": "Don't forget to log today's transactions.",
+  "exportCsvTitle": "Export transactions (CSV)",
+  "exportCsvSubtitle": "Open them in a spreadsheet, or keep a copy",
+  "exportCsvAll": "All transactions",
+  "exportCsvDateRange": "Choose dates…",
+  "exportCsvEmpty": "No transactions to export",
+  "exportCsvFailed": "Couldn't export. Please try again.",
+  "csvDate": "Date",
+  "csvType": "Type",
+  "csvCategory": "Category",
+  "csvDescription": "Description",
+  "csvAmount": "Amount",
+  "csvCurrency": "Currency",
+  "csvPaymentMethod": "Payment method",
+  "csvMobileMoneyProvider": "Mobile money provider"
 }

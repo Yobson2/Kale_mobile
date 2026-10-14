@@ -6,7 +6,7 @@ part of 'transaction_list_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$transactionListHash() => r'cb30bd6c10eabbb80818304f4df6be13c0789816';
+String _$transactionListHash() => r'90ee06390fb92113d46e89c609fd13f7d649ea55';
 
 /// The paginated transaction list (decision Q23).
 ///

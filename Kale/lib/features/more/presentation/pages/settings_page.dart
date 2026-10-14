@@ -318,6 +318,81 @@ class SettingsPage extends ConsumerWidget {
     ref.invalidate(localStorageProvider);
   }
 
+  /// Asks for the range (everything, or chosen dates), then exports the
+  /// transactions as CSV to the share sheet.
+  Future<void> _exportCsv(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final allTime = await showModalBottomSheet<bool>(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.all_inclusive),
+              title: Text(l10n.exportCsvAll),
+              onTap: () => Navigator.pop(sheetContext, true),
+            ),
+            ListTile(
+              leading: const Icon(Icons.date_range),
+              title: Text(l10n.exportCsvDateRange),
+              onTap: () => Navigator.pop(sheetContext, false),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (allTime == null || !context.mounted) return;
+
+    DateTimeRange? range;
+    if (!allTime) {
+      range = await showDateRangePicker(
+        context: context,
+        firstDate: DateTime(2000),
+        lastDate: DateTime.now(),
+      );
+      if (range == null || !context.mounted) return;
+    }
+
+    final today = DateTime.now();
+    String two(int n) => n.toString().padLeft(2, '0');
+    final count = await ref
+        .read(transactionsNotifierProvider.notifier)
+        .exportCsv(
+          labels: CsvLabels(
+            date: l10n.csvDate,
+            type: l10n.csvType,
+            category: l10n.csvCategory,
+            description: l10n.csvDescription,
+            amount: l10n.csvAmount,
+            currency: l10n.csvCurrency,
+            paymentMethod: l10n.csvPaymentMethod,
+            mobileMoneyProvider: l10n.csvMobileMoneyProvider,
+            types: {
+              TransactionType.income: l10n.transactionsIncome,
+              TransactionType.expense: l10n.transactionsExpense,
+            },
+            paymentMethods: {
+              PaymentMethod.cash: l10n.transactionsPaymentCash,
+              PaymentMethod.mobileMoney: l10n.transactionsPaymentMobileMoney,
+              PaymentMethod.bank: l10n.transactionsPaymentBank,
+              PaymentMethod.card: l10n.transactionsPaymentCard,
+            },
+          ),
+          fileName: 'kale-transactions-${today.year}-'
+              '${two(today.month)}-${two(today.day)}.csv',
+          startDate: range?.start,
+          // The whole last day.
+          endDate: range?.end.add(const Duration(days: 1, microseconds: -1)),
+        );
+    if (!context.mounted) return;
+    if (count == null) {
+      context.showSnackBar(l10n.exportCsvFailed, isError: true);
+    } else if (count == 0) {
+      context.showSnackBar(l10n.exportCsvEmpty);
+    }
+  }
+
   void _showLanguagePicker(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final notifier = ref.read(appLanguageProvider.notifier);
