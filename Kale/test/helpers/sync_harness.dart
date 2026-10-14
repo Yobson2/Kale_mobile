@@ -198,7 +198,6 @@ class SyncHarness {
         transactionsRemoteDataSourceProvider
             .overrideWithValue(server.transactions),
         budgetsRemoteDataSourceProvider.overrideWithValue(server.budgets),
-        profileRemoteDataSourceProvider.overrideWithValue(server.profile),
         authRemoteDataSourceProvider.overrideWithValue(server.auth),
         authLocalDataSourceProvider.overrideWithValue(_authStorage),
       ],
