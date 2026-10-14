@@ -47,7 +47,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   /// PRE-RELEASE ONLY: any [schemaVersion] change (up or down) drops every
   /// table and recreates the schema, wiping all local data, including

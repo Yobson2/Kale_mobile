@@ -8,6 +8,10 @@ part 'savings_goal_model.freezed.dart';
 part 'savings_goal_model.g.dart';
 
 /// Data model for savings goals.
+///
+/// Amounts are integer minor units of the account's base currency. There
+/// is no per-goal currency. `current_amount_minor` is computed on the
+/// device from the goal's contributions and pushed as-is.
 @freezed
 abstract class SavingsGoalModel with _$SavingsGoalModel {
   const SavingsGoalModel._();
@@ -16,9 +20,8 @@ abstract class SavingsGoalModel with _$SavingsGoalModel {
     required String id,
     @JsonKey(name: 'server_id') String? serverId,
     required String name,
-    @JsonKey(name: 'target_amount') required double targetAmount,
-    @JsonKey(name: 'current_amount') @Default(0.0) double currentAmount,
-    @JsonKey(name: 'currency_code') required String currencyCode,
+    @JsonKey(name: 'target_amount_minor') required int targetAmountMinor,
+    @JsonKey(name: 'current_amount_minor') @Default(0) int currentAmountMinor,
     String? description,
     DateTime? deadline,
     @JsonKey(name: 'icon_name') String? iconName,
@@ -26,6 +29,7 @@ abstract class SavingsGoalModel with _$SavingsGoalModel {
     required String status,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(true)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
@@ -39,9 +43,8 @@ abstract class SavingsGoalModel with _$SavingsGoalModel {
         id: row.id,
         serverId: row.serverId,
         name: row.name,
-        targetAmount: row.targetAmount,
-        currentAmount: row.currentAmount,
-        currencyCode: row.currencyCode,
+        targetAmountMinor: row.targetAmountMinor,
+        currentAmountMinor: row.currentAmountMinor,
         description: row.description,
         deadline: row.deadline,
         iconName: row.iconName,
@@ -49,6 +52,7 @@ abstract class SavingsGoalModel with _$SavingsGoalModel {
         status: row.status,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt,
+        deletedAt: row.deletedAt,
         isSynced: row.isSynced,
       );
 
@@ -56,9 +60,8 @@ abstract class SavingsGoalModel with _$SavingsGoalModel {
   SavingsGoal toEntity() => SavingsGoal(
         id: id,
         name: name,
-        targetAmount: targetAmount,
-        currentAmount: currentAmount,
-        currencyCode: currencyCode,
+        targetAmountMinor: targetAmountMinor,
+        currentAmountMinor: currentAmountMinor,
         description: description,
         deadline: deadline,
         iconName: iconName,
@@ -73,24 +76,23 @@ abstract class SavingsGoalModel with _$SavingsGoalModel {
       );
 
   /// Converts to a Drift companion for upsert.
-  db.SavingsGoalsCompanion toDriftCompanion() => db.SavingsGoalsCompanion(
+  db.SavingsGoalsCompanion toDriftCompanion({required bool isSynced}) =>
+      db.SavingsGoalsCompanion(
         id: drift.Value(id),
         serverId: serverId != null
             ? drift.Value(serverId)
             : const drift.Value.absent(),
         name: drift.Value(name),
-        targetAmount: drift.Value(targetAmount),
-        currentAmount: drift.Value(currentAmount),
-        currencyCode: drift.Value(currencyCode),
+        targetAmountMinor: drift.Value(targetAmountMinor),
+        currentAmountMinor: drift.Value(currentAmountMinor),
         description: drift.Value(description),
-        deadline: deadline != null
-            ? drift.Value(deadline)
-            : const drift.Value.absent(),
+        deadline: drift.Value(deadline),
         iconName: drift.Value(iconName),
         colorHex: drift.Value(colorHex),
         status: drift.Value(status),
         createdAt: drift.Value(createdAt),
         updatedAt: drift.Value(updatedAt),
+        deletedAt: drift.Value(deletedAt),
         isSynced: drift.Value(isSynced),
       );
 }

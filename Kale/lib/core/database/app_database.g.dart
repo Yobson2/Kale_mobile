@@ -2924,28 +2924,20 @@ class $SavingsGoalsTable extends SavingsGoals
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _targetAmountMeta =
-      const VerificationMeta('targetAmount');
+  static const VerificationMeta _targetAmountMinorMeta =
+      const VerificationMeta('targetAmountMinor');
   @override
-  late final GeneratedColumn<double> targetAmount = GeneratedColumn<double>(
-      'target_amount', aliasedName, false,
-      type: DriftSqlType.double, requiredDuringInsert: true);
-  static const VerificationMeta _currentAmountMeta =
-      const VerificationMeta('currentAmount');
+  late final GeneratedColumn<int> targetAmountMinor = GeneratedColumn<int>(
+      'target_amount_minor', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _currentAmountMinorMeta =
+      const VerificationMeta('currentAmountMinor');
   @override
-  late final GeneratedColumn<double> currentAmount = GeneratedColumn<double>(
-      'current_amount', aliasedName, false,
-      type: DriftSqlType.double,
+  late final GeneratedColumn<int> currentAmountMinor = GeneratedColumn<int>(
+      'current_amount_minor', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultValue: const Constant(0.0));
-  static const VerificationMeta _currencyCodeMeta =
-      const VerificationMeta('currencyCode');
-  @override
-  late final GeneratedColumn<String> currencyCode = GeneratedColumn<String>(
-      'currency_code', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('XOF'));
+      defaultValue: const Constant(0));
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
@@ -2989,6 +2981,12 @@ class $SavingsGoalsTable extends SavingsGoals
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _deletedAtMeta =
+      const VerificationMeta('deletedAt');
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+      'deleted_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _isSyncedMeta =
       const VerificationMeta('isSynced');
   @override
@@ -3004,9 +3002,8 @@ class $SavingsGoalsTable extends SavingsGoals
         id,
         serverId,
         name,
-        targetAmount,
-        currentAmount,
-        currencyCode,
+        targetAmountMinor,
+        currentAmountMinor,
         description,
         deadline,
         iconName,
@@ -3014,6 +3011,7 @@ class $SavingsGoalsTable extends SavingsGoals
         status,
         createdAt,
         updatedAt,
+        deletedAt,
         isSynced
       ];
   @override
@@ -3041,25 +3039,19 @@ class $SavingsGoalsTable extends SavingsGoals
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('target_amount')) {
+    if (data.containsKey('target_amount_minor')) {
       context.handle(
-          _targetAmountMeta,
-          targetAmount.isAcceptableOrUnknown(
-              data['target_amount']!, _targetAmountMeta));
+          _targetAmountMinorMeta,
+          targetAmountMinor.isAcceptableOrUnknown(
+              data['target_amount_minor']!, _targetAmountMinorMeta));
     } else if (isInserting) {
-      context.missing(_targetAmountMeta);
+      context.missing(_targetAmountMinorMeta);
     }
-    if (data.containsKey('current_amount')) {
+    if (data.containsKey('current_amount_minor')) {
       context.handle(
-          _currentAmountMeta,
-          currentAmount.isAcceptableOrUnknown(
-              data['current_amount']!, _currentAmountMeta));
-    }
-    if (data.containsKey('currency_code')) {
-      context.handle(
-          _currencyCodeMeta,
-          currencyCode.isAcceptableOrUnknown(
-              data['currency_code']!, _currencyCodeMeta));
+          _currentAmountMinorMeta,
+          currentAmountMinor.isAcceptableOrUnknown(
+              data['current_amount_minor']!, _currentAmountMinorMeta));
     }
     if (data.containsKey('description')) {
       context.handle(
@@ -3095,6 +3087,10 @@ class $SavingsGoalsTable extends SavingsGoals
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(_deletedAtMeta,
+          deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
+    }
     if (data.containsKey('is_synced')) {
       context.handle(_isSyncedMeta,
           isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
@@ -3114,12 +3110,10 @@ class $SavingsGoalsTable extends SavingsGoals
           .read(DriftSqlType.string, data['${effectivePrefix}server_id']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      targetAmount: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}target_amount'])!,
-      currentAmount: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}current_amount'])!,
-      currencyCode: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}currency_code'])!,
+      targetAmountMinor: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}target_amount_minor'])!,
+      currentAmountMinor: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}current_amount_minor'])!,
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
       deadline: attachedDatabase.typeMapping
@@ -3134,6 +3128,8 @@ class $SavingsGoalsTable extends SavingsGoals
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      deletedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}deleted_at']),
       isSynced: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
     );
@@ -3146,12 +3142,18 @@ class $SavingsGoalsTable extends SavingsGoals
 }
 
 class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
+  /// Client-generated UUID.
   final String id;
+
+  /// Server-assigned ID. Null until first sync.
   final String? serverId;
   final String name;
-  final double targetAmount;
-  final double currentAmount;
-  final String currencyCode;
+
+  /// Target, in minor units of the base currency.
+  final int targetAmountMinor;
+
+  /// Saved so far, in minor units: the sum of the goal's contributions.
+  final int currentAmountMinor;
   final String? description;
   final DateTime? deadline;
   final String? iconName;
@@ -3161,14 +3163,16 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
   final String status;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  /// Soft-delete marker. Every read excludes rows where it is set.
+  final DateTime? deletedAt;
   final bool isSynced;
   const SavingsGoal(
       {required this.id,
       this.serverId,
       required this.name,
-      required this.targetAmount,
-      required this.currentAmount,
-      required this.currencyCode,
+      required this.targetAmountMinor,
+      required this.currentAmountMinor,
       this.description,
       this.deadline,
       this.iconName,
@@ -3176,6 +3180,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       required this.status,
       required this.createdAt,
       required this.updatedAt,
+      this.deletedAt,
       required this.isSynced});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3185,9 +3190,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       map['server_id'] = Variable<String>(serverId);
     }
     map['name'] = Variable<String>(name);
-    map['target_amount'] = Variable<double>(targetAmount);
-    map['current_amount'] = Variable<double>(currentAmount);
-    map['currency_code'] = Variable<String>(currencyCode);
+    map['target_amount_minor'] = Variable<int>(targetAmountMinor);
+    map['current_amount_minor'] = Variable<int>(currentAmountMinor);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
@@ -3203,6 +3207,9 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
     map['status'] = Variable<String>(status);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     map['is_synced'] = Variable<bool>(isSynced);
     return map;
   }
@@ -3214,9 +3221,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           ? const Value.absent()
           : Value(serverId),
       name: Value(name),
-      targetAmount: Value(targetAmount),
-      currentAmount: Value(currentAmount),
-      currencyCode: Value(currencyCode),
+      targetAmountMinor: Value(targetAmountMinor),
+      currentAmountMinor: Value(currentAmountMinor),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
@@ -3232,6 +3238,9 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       status: Value(status),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
       isSynced: Value(isSynced),
     );
   }
@@ -3243,9 +3252,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       id: serializer.fromJson<String>(json['id']),
       serverId: serializer.fromJson<String?>(json['serverId']),
       name: serializer.fromJson<String>(json['name']),
-      targetAmount: serializer.fromJson<double>(json['targetAmount']),
-      currentAmount: serializer.fromJson<double>(json['currentAmount']),
-      currencyCode: serializer.fromJson<String>(json['currencyCode']),
+      targetAmountMinor: serializer.fromJson<int>(json['targetAmountMinor']),
+      currentAmountMinor: serializer.fromJson<int>(json['currentAmountMinor']),
       description: serializer.fromJson<String?>(json['description']),
       deadline: serializer.fromJson<DateTime?>(json['deadline']),
       iconName: serializer.fromJson<String?>(json['iconName']),
@@ -3253,6 +3261,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       status: serializer.fromJson<String>(json['status']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
     );
   }
@@ -3263,9 +3272,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       'id': serializer.toJson<String>(id),
       'serverId': serializer.toJson<String?>(serverId),
       'name': serializer.toJson<String>(name),
-      'targetAmount': serializer.toJson<double>(targetAmount),
-      'currentAmount': serializer.toJson<double>(currentAmount),
-      'currencyCode': serializer.toJson<String>(currencyCode),
+      'targetAmountMinor': serializer.toJson<int>(targetAmountMinor),
+      'currentAmountMinor': serializer.toJson<int>(currentAmountMinor),
       'description': serializer.toJson<String?>(description),
       'deadline': serializer.toJson<DateTime?>(deadline),
       'iconName': serializer.toJson<String?>(iconName),
@@ -3273,6 +3281,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       'status': serializer.toJson<String>(status),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'isSynced': serializer.toJson<bool>(isSynced),
     };
   }
@@ -3281,9 +3290,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           {String? id,
           Value<String?> serverId = const Value.absent(),
           String? name,
-          double? targetAmount,
-          double? currentAmount,
-          String? currencyCode,
+          int? targetAmountMinor,
+          int? currentAmountMinor,
           Value<String?> description = const Value.absent(),
           Value<DateTime?> deadline = const Value.absent(),
           Value<String?> iconName = const Value.absent(),
@@ -3291,14 +3299,14 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           String? status,
           DateTime? createdAt,
           DateTime? updatedAt,
+          Value<DateTime?> deletedAt = const Value.absent(),
           bool? isSynced}) =>
       SavingsGoal(
         id: id ?? this.id,
         serverId: serverId.present ? serverId.value : this.serverId,
         name: name ?? this.name,
-        targetAmount: targetAmount ?? this.targetAmount,
-        currentAmount: currentAmount ?? this.currentAmount,
-        currencyCode: currencyCode ?? this.currencyCode,
+        targetAmountMinor: targetAmountMinor ?? this.targetAmountMinor,
+        currentAmountMinor: currentAmountMinor ?? this.currentAmountMinor,
         description: description.present ? description.value : this.description,
         deadline: deadline.present ? deadline.value : this.deadline,
         iconName: iconName.present ? iconName.value : this.iconName,
@@ -3306,6 +3314,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
         status: status ?? this.status,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
         isSynced: isSynced ?? this.isSynced,
       );
   SavingsGoal copyWithCompanion(SavingsGoalsCompanion data) {
@@ -3313,15 +3322,12 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       id: data.id.present ? data.id.value : this.id,
       serverId: data.serverId.present ? data.serverId.value : this.serverId,
       name: data.name.present ? data.name.value : this.name,
-      targetAmount: data.targetAmount.present
-          ? data.targetAmount.value
-          : this.targetAmount,
-      currentAmount: data.currentAmount.present
-          ? data.currentAmount.value
-          : this.currentAmount,
-      currencyCode: data.currencyCode.present
-          ? data.currencyCode.value
-          : this.currencyCode,
+      targetAmountMinor: data.targetAmountMinor.present
+          ? data.targetAmountMinor.value
+          : this.targetAmountMinor,
+      currentAmountMinor: data.currentAmountMinor.present
+          ? data.currentAmountMinor.value
+          : this.currentAmountMinor,
       description:
           data.description.present ? data.description.value : this.description,
       deadline: data.deadline.present ? data.deadline.value : this.deadline,
@@ -3330,6 +3336,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       status: data.status.present ? data.status.value : this.status,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
     );
   }
@@ -3340,9 +3347,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           ..write('id: $id, ')
           ..write('serverId: $serverId, ')
           ..write('name: $name, ')
-          ..write('targetAmount: $targetAmount, ')
-          ..write('currentAmount: $currentAmount, ')
-          ..write('currencyCode: $currencyCode, ')
+          ..write('targetAmountMinor: $targetAmountMinor, ')
+          ..write('currentAmountMinor: $currentAmountMinor, ')
           ..write('description: $description, ')
           ..write('deadline: $deadline, ')
           ..write('iconName: $iconName, ')
@@ -3350,6 +3356,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           ..write('status: $status, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced')
           ..write(')'))
         .toString();
@@ -3360,9 +3367,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       id,
       serverId,
       name,
-      targetAmount,
-      currentAmount,
-      currencyCode,
+      targetAmountMinor,
+      currentAmountMinor,
       description,
       deadline,
       iconName,
@@ -3370,6 +3376,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       status,
       createdAt,
       updatedAt,
+      deletedAt,
       isSynced);
   @override
   bool operator ==(Object other) =>
@@ -3378,9 +3385,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           other.id == this.id &&
           other.serverId == this.serverId &&
           other.name == this.name &&
-          other.targetAmount == this.targetAmount &&
-          other.currentAmount == this.currentAmount &&
-          other.currencyCode == this.currencyCode &&
+          other.targetAmountMinor == this.targetAmountMinor &&
+          other.currentAmountMinor == this.currentAmountMinor &&
           other.description == this.description &&
           other.deadline == this.deadline &&
           other.iconName == this.iconName &&
@@ -3388,6 +3394,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           other.status == this.status &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
           other.isSynced == this.isSynced);
 }
 
@@ -3395,9 +3402,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
   final Value<String> id;
   final Value<String?> serverId;
   final Value<String> name;
-  final Value<double> targetAmount;
-  final Value<double> currentAmount;
-  final Value<String> currencyCode;
+  final Value<int> targetAmountMinor;
+  final Value<int> currentAmountMinor;
   final Value<String?> description;
   final Value<DateTime?> deadline;
   final Value<String?> iconName;
@@ -3405,15 +3411,15 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
   final Value<String> status;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
   final Value<bool> isSynced;
   final Value<int> rowid;
   const SavingsGoalsCompanion({
     this.id = const Value.absent(),
     this.serverId = const Value.absent(),
     this.name = const Value.absent(),
-    this.targetAmount = const Value.absent(),
-    this.currentAmount = const Value.absent(),
-    this.currencyCode = const Value.absent(),
+    this.targetAmountMinor = const Value.absent(),
+    this.currentAmountMinor = const Value.absent(),
     this.description = const Value.absent(),
     this.deadline = const Value.absent(),
     this.iconName = const Value.absent(),
@@ -3421,6 +3427,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     this.status = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -3428,9 +3435,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     required String id,
     this.serverId = const Value.absent(),
     required String name,
-    required double targetAmount,
-    this.currentAmount = const Value.absent(),
-    this.currencyCode = const Value.absent(),
+    required int targetAmountMinor,
+    this.currentAmountMinor = const Value.absent(),
     this.description = const Value.absent(),
     this.deadline = const Value.absent(),
     this.iconName = const Value.absent(),
@@ -3438,20 +3444,20 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     this.status = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         name = Value(name),
-        targetAmount = Value(targetAmount),
+        targetAmountMinor = Value(targetAmountMinor),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
   static Insertable<SavingsGoal> custom({
     Expression<String>? id,
     Expression<String>? serverId,
     Expression<String>? name,
-    Expression<double>? targetAmount,
-    Expression<double>? currentAmount,
-    Expression<String>? currencyCode,
+    Expression<int>? targetAmountMinor,
+    Expression<int>? currentAmountMinor,
     Expression<String>? description,
     Expression<DateTime>? deadline,
     Expression<String>? iconName,
@@ -3459,6 +3465,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     Expression<String>? status,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
     Expression<bool>? isSynced,
     Expression<int>? rowid,
   }) {
@@ -3466,9 +3473,9 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
       if (id != null) 'id': id,
       if (serverId != null) 'server_id': serverId,
       if (name != null) 'name': name,
-      if (targetAmount != null) 'target_amount': targetAmount,
-      if (currentAmount != null) 'current_amount': currentAmount,
-      if (currencyCode != null) 'currency_code': currencyCode,
+      if (targetAmountMinor != null) 'target_amount_minor': targetAmountMinor,
+      if (currentAmountMinor != null)
+        'current_amount_minor': currentAmountMinor,
       if (description != null) 'description': description,
       if (deadline != null) 'deadline': deadline,
       if (iconName != null) 'icon_name': iconName,
@@ -3476,6 +3483,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
       if (status != null) 'status': status,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (isSynced != null) 'is_synced': isSynced,
       if (rowid != null) 'rowid': rowid,
     });
@@ -3485,9 +3493,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
       {Value<String>? id,
       Value<String?>? serverId,
       Value<String>? name,
-      Value<double>? targetAmount,
-      Value<double>? currentAmount,
-      Value<String>? currencyCode,
+      Value<int>? targetAmountMinor,
+      Value<int>? currentAmountMinor,
       Value<String?>? description,
       Value<DateTime?>? deadline,
       Value<String?>? iconName,
@@ -3495,15 +3502,15 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
       Value<String>? status,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
+      Value<DateTime?>? deletedAt,
       Value<bool>? isSynced,
       Value<int>? rowid}) {
     return SavingsGoalsCompanion(
       id: id ?? this.id,
       serverId: serverId ?? this.serverId,
       name: name ?? this.name,
-      targetAmount: targetAmount ?? this.targetAmount,
-      currentAmount: currentAmount ?? this.currentAmount,
-      currencyCode: currencyCode ?? this.currencyCode,
+      targetAmountMinor: targetAmountMinor ?? this.targetAmountMinor,
+      currentAmountMinor: currentAmountMinor ?? this.currentAmountMinor,
       description: description ?? this.description,
       deadline: deadline ?? this.deadline,
       iconName: iconName ?? this.iconName,
@@ -3511,6 +3518,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       isSynced: isSynced ?? this.isSynced,
       rowid: rowid ?? this.rowid,
     );
@@ -3528,14 +3536,11 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (targetAmount.present) {
-      map['target_amount'] = Variable<double>(targetAmount.value);
+    if (targetAmountMinor.present) {
+      map['target_amount_minor'] = Variable<int>(targetAmountMinor.value);
     }
-    if (currentAmount.present) {
-      map['current_amount'] = Variable<double>(currentAmount.value);
-    }
-    if (currencyCode.present) {
-      map['currency_code'] = Variable<String>(currencyCode.value);
+    if (currentAmountMinor.present) {
+      map['current_amount_minor'] = Variable<int>(currentAmountMinor.value);
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
@@ -3558,6 +3563,9 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -3573,9 +3581,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
           ..write('id: $id, ')
           ..write('serverId: $serverId, ')
           ..write('name: $name, ')
-          ..write('targetAmount: $targetAmount, ')
-          ..write('currentAmount: $currentAmount, ')
-          ..write('currencyCode: $currencyCode, ')
+          ..write('targetAmountMinor: $targetAmountMinor, ')
+          ..write('currentAmountMinor: $currentAmountMinor, ')
           ..write('description: $description, ')
           ..write('deadline: $deadline, ')
           ..write('iconName: $iconName, ')
@@ -3583,6 +3590,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
           ..write('status: $status, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -3601,16 +3609,23 @@ class $SavingsContributionsTable extends SavingsContributions
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _serverIdMeta =
+      const VerificationMeta('serverId');
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+      'server_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _goalIdMeta = const VerificationMeta('goalId');
   @override
   late final GeneratedColumn<String> goalId = GeneratedColumn<String>(
       'goal_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  static const VerificationMeta _amountMinorMeta =
+      const VerificationMeta('amountMinor');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-      'amount', aliasedName, false,
-      type: DriftSqlType.double, requiredDuringInsert: true);
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+      'amount_minor', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   static const VerificationMeta _sourceMeta = const VerificationMeta('source');
   @override
   late final GeneratedColumn<String> source = GeneratedColumn<String>(
@@ -3634,6 +3649,18 @@ class $SavingsContributionsTable extends SavingsContributions
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _deletedAtMeta =
+      const VerificationMeta('deletedAt');
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+      'deleted_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _isSyncedMeta =
       const VerificationMeta('isSynced');
   @override
@@ -3645,8 +3672,19 @@ class $SavingsContributionsTable extends SavingsContributions
           GeneratedColumn.constraintIsAlways('CHECK ("is_synced" IN (0, 1))'),
       defaultValue: const Constant(false));
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, goalId, amount, source, note, date, createdAt, isSynced];
+  List<GeneratedColumn> get $columns => [
+        id,
+        serverId,
+        goalId,
+        amountMinor,
+        source,
+        note,
+        date,
+        createdAt,
+        updatedAt,
+        deletedAt,
+        isSynced
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3663,17 +3701,23 @@ class $SavingsContributionsTable extends SavingsContributions
     } else if (isInserting) {
       context.missing(_idMeta);
     }
+    if (data.containsKey('server_id')) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
+    }
     if (data.containsKey('goal_id')) {
       context.handle(_goalIdMeta,
           goalId.isAcceptableOrUnknown(data['goal_id']!, _goalIdMeta));
     } else if (isInserting) {
       context.missing(_goalIdMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(_amountMeta,
-          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+    if (data.containsKey('amount_minor')) {
+      context.handle(
+          _amountMinorMeta,
+          amountMinor.isAcceptableOrUnknown(
+              data['amount_minor']!, _amountMinorMeta));
     } else if (isInserting) {
-      context.missing(_amountMeta);
+      context.missing(_amountMinorMeta);
     }
     if (data.containsKey('source')) {
       context.handle(_sourceMeta,
@@ -3695,6 +3739,16 @@ class $SavingsContributionsTable extends SavingsContributions
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(_deletedAtMeta,
+          deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
+    }
     if (data.containsKey('is_synced')) {
       context.handle(_isSyncedMeta,
           isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
@@ -3710,10 +3764,12 @@ class $SavingsContributionsTable extends SavingsContributions
     return SavingsContribution(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      serverId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}server_id']),
       goalId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}goal_id'])!,
-      amount: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}amount'])!,
+      amountMinor: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount_minor'])!,
       source: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}source'])!,
       note: attachedDatabase.typeMapping
@@ -3722,6 +3778,10 @@ class $SavingsContributionsTable extends SavingsContributions
           .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      deletedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}deleted_at']),
       isSynced: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
     );
@@ -3735,37 +3795,59 @@ class $SavingsContributionsTable extends SavingsContributions
 
 class SavingsContribution extends DataClass
     implements Insertable<SavingsContribution> {
+  /// Client-generated UUID.
   final String id;
+
+  /// Server-assigned ID. Null until first sync.
+  final String? serverId;
+
+  /// The goal this contribution belongs to.
   final String goalId;
-  final double amount;
+
+  /// Amount, in minor units of the base currency (always positive).
+  final int amountMinor;
 
   /// Enum stored as string: 'manual', 'auto', 'roundup'.
   final String source;
   final String? note;
   final DateTime date;
   final DateTime createdAt;
+  final DateTime updatedAt;
+
+  /// Soft-delete marker. Every read excludes rows where it is set.
+  final DateTime? deletedAt;
   final bool isSynced;
   const SavingsContribution(
       {required this.id,
+      this.serverId,
       required this.goalId,
-      required this.amount,
+      required this.amountMinor,
       required this.source,
       this.note,
       required this.date,
       required this.createdAt,
+      required this.updatedAt,
+      this.deletedAt,
       required this.isSynced});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<String>(serverId);
+    }
     map['goal_id'] = Variable<String>(goalId);
-    map['amount'] = Variable<double>(amount);
+    map['amount_minor'] = Variable<int>(amountMinor);
     map['source'] = Variable<String>(source);
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
     }
     map['date'] = Variable<DateTime>(date);
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     map['is_synced'] = Variable<bool>(isSynced);
     return map;
   }
@@ -3773,12 +3855,19 @@ class SavingsContribution extends DataClass
   SavingsContributionsCompanion toCompanion(bool nullToAbsent) {
     return SavingsContributionsCompanion(
       id: Value(id),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
       goalId: Value(goalId),
-      amount: Value(amount),
+      amountMinor: Value(amountMinor),
       source: Value(source),
       note: note == null && nullToAbsent ? const Value.absent() : Value(note),
       date: Value(date),
       createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
       isSynced: Value(isSynced),
     );
   }
@@ -3788,12 +3877,15 @@ class SavingsContribution extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SavingsContribution(
       id: serializer.fromJson<String>(json['id']),
+      serverId: serializer.fromJson<String?>(json['serverId']),
       goalId: serializer.fromJson<String>(json['goalId']),
-      amount: serializer.fromJson<double>(json['amount']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
       source: serializer.fromJson<String>(json['source']),
       note: serializer.fromJson<String?>(json['note']),
       date: serializer.fromJson<DateTime>(json['date']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
     );
   }
@@ -3802,44 +3894,57 @@ class SavingsContribution extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'serverId': serializer.toJson<String?>(serverId),
       'goalId': serializer.toJson<String>(goalId),
-      'amount': serializer.toJson<double>(amount),
+      'amountMinor': serializer.toJson<int>(amountMinor),
       'source': serializer.toJson<String>(source),
       'note': serializer.toJson<String?>(note),
       'date': serializer.toJson<DateTime>(date),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'isSynced': serializer.toJson<bool>(isSynced),
     };
   }
 
   SavingsContribution copyWith(
           {String? id,
+          Value<String?> serverId = const Value.absent(),
           String? goalId,
-          double? amount,
+          int? amountMinor,
           String? source,
           Value<String?> note = const Value.absent(),
           DateTime? date,
           DateTime? createdAt,
+          DateTime? updatedAt,
+          Value<DateTime?> deletedAt = const Value.absent(),
           bool? isSynced}) =>
       SavingsContribution(
         id: id ?? this.id,
+        serverId: serverId.present ? serverId.value : this.serverId,
         goalId: goalId ?? this.goalId,
-        amount: amount ?? this.amount,
+        amountMinor: amountMinor ?? this.amountMinor,
         source: source ?? this.source,
         note: note.present ? note.value : this.note,
         date: date ?? this.date,
         createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
         isSynced: isSynced ?? this.isSynced,
       );
   SavingsContribution copyWithCompanion(SavingsContributionsCompanion data) {
     return SavingsContribution(
       id: data.id.present ? data.id.value : this.id,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
       goalId: data.goalId.present ? data.goalId.value : this.goalId,
-      amount: data.amount.present ? data.amount.value : this.amount,
+      amountMinor:
+          data.amountMinor.present ? data.amountMinor.value : this.amountMinor,
       source: data.source.present ? data.source.value : this.source,
       note: data.note.present ? data.note.value : this.note,
       date: data.date.present ? data.date.value : this.date,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
     );
   }
@@ -3848,90 +3953,112 @@ class SavingsContribution extends DataClass
   String toString() {
     return (StringBuffer('SavingsContribution(')
           ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
           ..write('goalId: $goalId, ')
-          ..write('amount: $amount, ')
+          ..write('amountMinor: $amountMinor, ')
           ..write('source: $source, ')
           ..write('note: $note, ')
           ..write('date: $date, ')
           ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, goalId, amount, source, note, date, createdAt, isSynced);
+  int get hashCode => Object.hash(id, serverId, goalId, amountMinor, source,
+      note, date, createdAt, updatedAt, deletedAt, isSynced);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SavingsContribution &&
           other.id == this.id &&
+          other.serverId == this.serverId &&
           other.goalId == this.goalId &&
-          other.amount == this.amount &&
+          other.amountMinor == this.amountMinor &&
           other.source == this.source &&
           other.note == this.note &&
           other.date == this.date &&
           other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
           other.isSynced == this.isSynced);
 }
 
 class SavingsContributionsCompanion
     extends UpdateCompanion<SavingsContribution> {
   final Value<String> id;
+  final Value<String?> serverId;
   final Value<String> goalId;
-  final Value<double> amount;
+  final Value<int> amountMinor;
   final Value<String> source;
   final Value<String?> note;
   final Value<DateTime> date;
   final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
   final Value<bool> isSynced;
   final Value<int> rowid;
   const SavingsContributionsCompanion({
     this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
     this.goalId = const Value.absent(),
-    this.amount = const Value.absent(),
+    this.amountMinor = const Value.absent(),
     this.source = const Value.absent(),
     this.note = const Value.absent(),
     this.date = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   SavingsContributionsCompanion.insert({
     required String id,
+    this.serverId = const Value.absent(),
     required String goalId,
-    required double amount,
+    required int amountMinor,
     this.source = const Value.absent(),
     this.note = const Value.absent(),
     required DateTime date,
     required DateTime createdAt,
+    required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         goalId = Value(goalId),
-        amount = Value(amount),
+        amountMinor = Value(amountMinor),
         date = Value(date),
-        createdAt = Value(createdAt);
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
   static Insertable<SavingsContribution> custom({
     Expression<String>? id,
+    Expression<String>? serverId,
     Expression<String>? goalId,
-    Expression<double>? amount,
+    Expression<int>? amountMinor,
     Expression<String>? source,
     Expression<String>? note,
     Expression<DateTime>? date,
     Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
     Expression<bool>? isSynced,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
       if (goalId != null) 'goal_id': goalId,
-      if (amount != null) 'amount': amount,
+      if (amountMinor != null) 'amount_minor': amountMinor,
       if (source != null) 'source': source,
       if (note != null) 'note': note,
       if (date != null) 'date': date,
       if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (isSynced != null) 'is_synced': isSynced,
       if (rowid != null) 'rowid': rowid,
     });
@@ -3939,22 +4066,28 @@ class SavingsContributionsCompanion
 
   SavingsContributionsCompanion copyWith(
       {Value<String>? id,
+      Value<String?>? serverId,
       Value<String>? goalId,
-      Value<double>? amount,
+      Value<int>? amountMinor,
       Value<String>? source,
       Value<String?>? note,
       Value<DateTime>? date,
       Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<DateTime?>? deletedAt,
       Value<bool>? isSynced,
       Value<int>? rowid}) {
     return SavingsContributionsCompanion(
       id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
       goalId: goalId ?? this.goalId,
-      amount: amount ?? this.amount,
+      amountMinor: amountMinor ?? this.amountMinor,
       source: source ?? this.source,
       note: note ?? this.note,
       date: date ?? this.date,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       isSynced: isSynced ?? this.isSynced,
       rowid: rowid ?? this.rowid,
     );
@@ -3966,11 +4099,14 @@ class SavingsContributionsCompanion
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
     if (goalId.present) {
       map['goal_id'] = Variable<String>(goalId.value);
     }
-    if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
     }
     if (source.present) {
       map['source'] = Variable<String>(source.value);
@@ -3983,6 +4119,12 @@ class SavingsContributionsCompanion
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
     }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
@@ -3997,12 +4139,15 @@ class SavingsContributionsCompanion
   String toString() {
     return (StringBuffer('SavingsContributionsCompanion(')
           ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
           ..write('goalId: $goalId, ')
-          ..write('amount: $amount, ')
+          ..write('amountMinor: $amountMinor, ')
           ..write('source: $source, ')
           ..write('note: $note, ')
           ..write('date: $date, ')
           ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('isSynced: $isSynced, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -4312,6 +4457,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final Index idxTransactionsCategoryDate = Index(
       'idx_transactions_category_date',
       'CREATE INDEX idx_transactions_category_date ON transactions (category_id, date)');
+  late final Index idxSavingsContributionsGoal = Index(
+      'idx_savings_contributions_goal',
+      'CREATE INDEX idx_savings_contributions_goal ON savings_contributions (goal_id)');
   late final SyncQueueDao syncQueueDao = SyncQueueDao(this as AppDatabase);
   late final TransactionsDao transactionsDao =
       TransactionsDao(this as AppDatabase);
@@ -4338,7 +4486,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         savingsContributions,
         profiles,
         idxTransactionsDate,
-        idxTransactionsCategoryDate
+        idxTransactionsCategoryDate,
+        idxSavingsContributionsGoal
       ];
 }
 
@@ -5655,9 +5804,8 @@ typedef $$SavingsGoalsTableCreateCompanionBuilder = SavingsGoalsCompanion
   required String id,
   Value<String?> serverId,
   required String name,
-  required double targetAmount,
-  Value<double> currentAmount,
-  Value<String> currencyCode,
+  required int targetAmountMinor,
+  Value<int> currentAmountMinor,
   Value<String?> description,
   Value<DateTime?> deadline,
   Value<String?> iconName,
@@ -5665,6 +5813,7 @@ typedef $$SavingsGoalsTableCreateCompanionBuilder = SavingsGoalsCompanion
   Value<String> status,
   required DateTime createdAt,
   required DateTime updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -5673,9 +5822,8 @@ typedef $$SavingsGoalsTableUpdateCompanionBuilder = SavingsGoalsCompanion
   Value<String> id,
   Value<String?> serverId,
   Value<String> name,
-  Value<double> targetAmount,
-  Value<double> currentAmount,
-  Value<String> currencyCode,
+  Value<int> targetAmountMinor,
+  Value<int> currentAmountMinor,
   Value<String?> description,
   Value<DateTime?> deadline,
   Value<String?> iconName,
@@ -5683,6 +5831,7 @@ typedef $$SavingsGoalsTableUpdateCompanionBuilder = SavingsGoalsCompanion
   Value<String> status,
   Value<DateTime> createdAt,
   Value<DateTime> updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -5705,14 +5854,13 @@ class $$SavingsGoalsTableFilterComposer
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get targetAmount => $composableBuilder(
-      column: $table.targetAmount, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get targetAmountMinor => $composableBuilder(
+      column: $table.targetAmountMinor,
+      builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get currentAmount => $composableBuilder(
-      column: $table.currentAmount, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get currencyCode => $composableBuilder(
-      column: $table.currencyCode, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get currentAmountMinor => $composableBuilder(
+      column: $table.currentAmountMinor,
+      builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnFilters(column));
@@ -5734,6 +5882,9 @@ class $$SavingsGoalsTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnFilters(column));
@@ -5757,16 +5908,12 @@ class $$SavingsGoalsTableOrderingComposer
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get targetAmount => $composableBuilder(
-      column: $table.targetAmount,
+  ColumnOrderings<int> get targetAmountMinor => $composableBuilder(
+      column: $table.targetAmountMinor,
       builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get currentAmount => $composableBuilder(
-      column: $table.currentAmount,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get currencyCode => $composableBuilder(
-      column: $table.currencyCode,
+  ColumnOrderings<int> get currentAmountMinor => $composableBuilder(
+      column: $table.currentAmountMinor,
       builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get description => $composableBuilder(
@@ -5790,6 +5937,9 @@ class $$SavingsGoalsTableOrderingComposer
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnOrderings(column));
 }
@@ -5812,14 +5962,11 @@ class $$SavingsGoalsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<double> get targetAmount => $composableBuilder(
-      column: $table.targetAmount, builder: (column) => column);
+  GeneratedColumn<int> get targetAmountMinor => $composableBuilder(
+      column: $table.targetAmountMinor, builder: (column) => column);
 
-  GeneratedColumn<double> get currentAmount => $composableBuilder(
-      column: $table.currentAmount, builder: (column) => column);
-
-  GeneratedColumn<String> get currencyCode => $composableBuilder(
-      column: $table.currencyCode, builder: (column) => column);
+  GeneratedColumn<int> get currentAmountMinor => $composableBuilder(
+      column: $table.currentAmountMinor, builder: (column) => column);
 
   GeneratedColumn<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => column);
@@ -5841,6 +5988,9 @@ class $$SavingsGoalsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
@@ -5875,9 +6025,8 @@ class $$SavingsGoalsTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             Value<String?> serverId = const Value.absent(),
             Value<String> name = const Value.absent(),
-            Value<double> targetAmount = const Value.absent(),
-            Value<double> currentAmount = const Value.absent(),
-            Value<String> currencyCode = const Value.absent(),
+            Value<int> targetAmountMinor = const Value.absent(),
+            Value<int> currentAmountMinor = const Value.absent(),
             Value<String?> description = const Value.absent(),
             Value<DateTime?> deadline = const Value.absent(),
             Value<String?> iconName = const Value.absent(),
@@ -5885,6 +6034,7 @@ class $$SavingsGoalsTableTableManager extends RootTableManager<
             Value<String> status = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -5892,9 +6042,8 @@ class $$SavingsGoalsTableTableManager extends RootTableManager<
             id: id,
             serverId: serverId,
             name: name,
-            targetAmount: targetAmount,
-            currentAmount: currentAmount,
-            currencyCode: currencyCode,
+            targetAmountMinor: targetAmountMinor,
+            currentAmountMinor: currentAmountMinor,
             description: description,
             deadline: deadline,
             iconName: iconName,
@@ -5902,6 +6051,7 @@ class $$SavingsGoalsTableTableManager extends RootTableManager<
             status: status,
             createdAt: createdAt,
             updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),
@@ -5909,9 +6059,8 @@ class $$SavingsGoalsTableTableManager extends RootTableManager<
             required String id,
             Value<String?> serverId = const Value.absent(),
             required String name,
-            required double targetAmount,
-            Value<double> currentAmount = const Value.absent(),
-            Value<String> currencyCode = const Value.absent(),
+            required int targetAmountMinor,
+            Value<int> currentAmountMinor = const Value.absent(),
             Value<String?> description = const Value.absent(),
             Value<DateTime?> deadline = const Value.absent(),
             Value<String?> iconName = const Value.absent(),
@@ -5919,6 +6068,7 @@ class $$SavingsGoalsTableTableManager extends RootTableManager<
             Value<String> status = const Value.absent(),
             required DateTime createdAt,
             required DateTime updatedAt,
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -5926,9 +6076,8 @@ class $$SavingsGoalsTableTableManager extends RootTableManager<
             id: id,
             serverId: serverId,
             name: name,
-            targetAmount: targetAmount,
-            currentAmount: currentAmount,
-            currencyCode: currencyCode,
+            targetAmountMinor: targetAmountMinor,
+            currentAmountMinor: currentAmountMinor,
             description: description,
             deadline: deadline,
             iconName: iconName,
@@ -5936,6 +6085,7 @@ class $$SavingsGoalsTableTableManager extends RootTableManager<
             status: status,
             createdAt: createdAt,
             updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),
@@ -5964,24 +6114,30 @@ typedef $$SavingsGoalsTableProcessedTableManager = ProcessedTableManager<
 typedef $$SavingsContributionsTableCreateCompanionBuilder
     = SavingsContributionsCompanion Function({
   required String id,
+  Value<String?> serverId,
   required String goalId,
-  required double amount,
+  required int amountMinor,
   Value<String> source,
   Value<String?> note,
   required DateTime date,
   required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
 typedef $$SavingsContributionsTableUpdateCompanionBuilder
     = SavingsContributionsCompanion Function({
   Value<String> id,
+  Value<String?> serverId,
   Value<String> goalId,
-  Value<double> amount,
+  Value<int> amountMinor,
   Value<String> source,
   Value<String?> note,
   Value<DateTime> date,
   Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<DateTime?> deletedAt,
   Value<bool> isSynced,
   Value<int> rowid,
 });
@@ -5998,11 +6154,14 @@ class $$SavingsContributionsTableFilterComposer
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get goalId => $composableBuilder(
       column: $table.goalId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get amount => $composableBuilder(
-      column: $table.amount, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get amountMinor => $composableBuilder(
+      column: $table.amountMinor, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get source => $composableBuilder(
       column: $table.source, builder: (column) => ColumnFilters(column));
@@ -6015,6 +6174,12 @@ class $$SavingsContributionsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnFilters(column));
@@ -6032,11 +6197,14 @@ class $$SavingsContributionsTableOrderingComposer
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get serverId => $composableBuilder(
+      column: $table.serverId, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get goalId => $composableBuilder(
       column: $table.goalId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get amount => $composableBuilder(
-      column: $table.amount, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get amountMinor => $composableBuilder(
+      column: $table.amountMinor, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get source => $composableBuilder(
       column: $table.source, builder: (column) => ColumnOrderings(column));
@@ -6049,6 +6217,12 @@ class $$SavingsContributionsTableOrderingComposer
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<bool> get isSynced => $composableBuilder(
       column: $table.isSynced, builder: (column) => ColumnOrderings(column));
@@ -6066,11 +6240,14 @@ class $$SavingsContributionsTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
   GeneratedColumn<String> get goalId =>
       $composableBuilder(column: $table.goalId, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => column);
+  GeneratedColumn<int> get amountMinor => $composableBuilder(
+      column: $table.amountMinor, builder: (column) => column);
 
   GeneratedColumn<String> get source =>
       $composableBuilder(column: $table.source, builder: (column) => column);
@@ -6083,6 +6260,12 @@ class $$SavingsContributionsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
@@ -6119,45 +6302,57 @@ class $$SavingsContributionsTableTableManager extends RootTableManager<
                   $db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
+            Value<String?> serverId = const Value.absent(),
             Value<String> goalId = const Value.absent(),
-            Value<double> amount = const Value.absent(),
+            Value<int> amountMinor = const Value.absent(),
             Value<String> source = const Value.absent(),
             Value<String?> note = const Value.absent(),
             Value<DateTime> date = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               SavingsContributionsCompanion(
             id: id,
+            serverId: serverId,
             goalId: goalId,
-            amount: amount,
+            amountMinor: amountMinor,
             source: source,
             note: note,
             date: date,
             createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),
           createCompanionCallback: ({
             required String id,
+            Value<String?> serverId = const Value.absent(),
             required String goalId,
-            required double amount,
+            required int amountMinor,
             Value<String> source = const Value.absent(),
             Value<String?> note = const Value.absent(),
             required DateTime date,
             required DateTime createdAt,
+            required DateTime updatedAt,
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<bool> isSynced = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               SavingsContributionsCompanion.insert(
             id: id,
+            serverId: serverId,
             goalId: goalId,
-            amount: amount,
+            amountMinor: amountMinor,
             source: source,
             note: note,
             date: date,
             createdAt: createdAt,
+            updatedAt: updatedAt,
+            deletedAt: deletedAt,
             isSynced: isSynced,
             rowid: rowid,
           ),

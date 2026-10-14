@@ -6,9 +6,11 @@ part of 'savings_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$savingsNotifierHash() => r'59d2c325376a1c8a916e2293afb7c65fdf0d19d1';
+String _$savingsNotifierHash() => r'50dd59f70c4ffcf5b78f6902a69301c2fa6831e3';
 
 /// Manages savings goal mutation state and actions.
+///
+/// Amounts are integer minor units of the account's base currency.
 ///
 /// Copied from [SavingsNotifier].
 @ProviderFor(SavingsNotifier)

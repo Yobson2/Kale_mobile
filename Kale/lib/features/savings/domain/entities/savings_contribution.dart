@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
 
 /// Domain entity representing a contribution to a savings goal.
@@ -8,11 +9,12 @@ class SavingsContribution {
   const SavingsContribution({
     required this.id,
     required this.goalId,
-    required this.amount,
+    required this.amountMinor,
     required this.source,
     required this.date,
     required this.createdAt,
     this.note,
+    this.isSynced = true,
   });
 
   /// Unique identifier (client-generated UUID).
@@ -21,8 +23,8 @@ class SavingsContribution {
   /// The savings goal this contribution belongs to.
   final String goalId;
 
-  /// Amount contributed.
-  final double amount;
+  /// Amount contributed, in minor units of the base currency.
+  final int amountMinor;
 
   /// How the contribution was made.
   final ContributionSource source;
@@ -35,6 +37,13 @@ class SavingsContribution {
 
   /// When the contribution was created.
   final DateTime createdAt;
+
+  /// Whether this contribution has been synced to the server.
+  final bool isSynced;
+
+  /// The amount as [Money] in the account's base [currency].
+  Money amountIn(Currency currency) =>
+      Money.fromMinorUnits(amountMinor, currency);
 
   @override
   bool operator ==(Object other) =>

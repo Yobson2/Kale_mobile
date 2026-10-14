@@ -68,8 +68,22 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
   input and format output. Never sum or store money as `double`.
 - Transactions have a nullable `deletedAt`; every DAO read excludes rows where it is set. (Deletes are still hard
   deletes until the tombstone work lands; rows only arrive with `deletedAt` set through a pull.)
-- Budgets and savings still hold `double` amounts until their own schema reset. The budgets repository converts
+- Savings goals (`targetAmountMinor`, `currentAmountMinor`) and contributions (`amountMinor`) are minor units too,
+  with `deletedAt`, and no currency.
+- Budgets still hold `double` amounts until their own schema reset. The budgets repository converts
   transaction totals from minor units to major units of the base currency at that boundary.
+
+## Savings: two entity types, one derived amount
+
+- Goals sync as `savings_goal` and contributions as `savings_contribution`, each with its own local datasource,
+  remote datasource and `SyncHandler` (`SavingsGoalsSyncHandler`, `SavingsContributionsSyncHandler`).
+- A goal's `currentAmountMinor` is **derived on the device**: after each contribution, the repository recomputes it
+  as the sum of the goal's contributions, marks an active goal `completed` once it reaches its target, and queues a
+  goal `update`. The server has no trigger on the savings tables, so the amount is never counted twice.
+- Queue order matters: the goal's `create` is queued before its contributions (the server's foreign key needs the
+  goal first). `getPending` keeps insertion order for entries queued within the same second.
+- Contributions have no `user_id`: on the server they are owned through their goal (RLS checks the goal's owner).
+- Refresh pulls goals and contributions, and keeps local rows that are not synced yet.
 
 ## Reads and refresh
 
@@ -87,25 +101,19 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
    `onUpgrade` that creates the table. Also add it to `clearAllData()`.
 4. **Model** (Freezed) with `fromJson`/`toJson`, `fromDrift`, `toDriftCompanion({required bool isSynced})`, `toEntity`.
 5. **Local datasource** with save/delete/watch, `enqueueSync` using a unique `entityType` string, `markSynced`,
-   and `replaceAllFromServer`.
+   and `replaceAllFromServer`. One local datasource per entity type (see savings).
 6. **Remote datasource**: an abstract class, a Supabase implementation scoped by `user_id` that throws
    `ServerException` with a status code, and a mock twin behind a `USE_MOCK_<F>` flag.
 7. **`SyncHandler`** whose `entityType` matches the string used in step 5 exactly.
-8. **Providers**: a `<f>SyncHandler` provider that calls `ref.watch(syncEngineProvider).registerHandler(handler)`,
-   and a repository provider that `ref.watch`es the handler provider first, so that reading the repository
-   guarantees registration.
+8. **Providers**: a `<f>SyncHandler` provider (`keepAlive`), listed in `syncHandlersProvider`
+   (`core/sync/sync_providers.dart`) so the engine registers it at construction.
 9. **Repository**: write-local-first + enqueue for mutations; local reads; `refreshFromServer`.
 10. Add the entity's `refreshFromServer()` to the post-login refresh in the auth notifier.
 11. `make gen`, then test the repository and handler.
 
 ## Known issues
 
-- **Savings never syncs.** `savings_local_datasource.dart` enqueues `savings_goal` entries, but there is no
-  savings `SyncHandler`. The engine logs `No SyncHandler registered for "savings_goal"` and skips them, so
-  savings data never reaches Supabase. Those entries stay pending, so Settings counts them as waiting and
-  `lastBackupAt` is not updated while any exist.
-- **Refresh drops unsynced local rows.** `replaceAll` in the DAOs deletes the whole table before inserting the
-  server copy, including rows with `isSynced = false`. A record created while online disappears locally on the
-  next background refresh, and comes back only after its queued push succeeds and a later refresh runs.
-- **Handlers register lazily.** A handler registers only when its repository provider is first read. Queue
-  entries for an entity whose feature hasn't been opened this session are skipped.
+- **Refresh drops unsynced local rows** (all DAOs except the savings ones). `replaceAll` deletes the whole table
+  before inserting the server copy, including rows with `isSynced = false`. A record created while online
+  disappears locally on the next background refresh, and comes back only after its queued push succeeds and a
+  later refresh runs.

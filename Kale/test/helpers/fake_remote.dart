@@ -7,6 +7,10 @@ import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.
 import 'package:kale/features/budget/data/models/budget_model.dart';
 import 'package:kale/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:kale/features/profile/data/models/profile_model.dart';
+import 'package:kale/features/savings/data/datasources/savings_contributions_remote_datasource.dart';
+import 'package:kale/features/savings/data/datasources/savings_remote_datasource.dart';
+import 'package:kale/features/savings/data/models/savings_contribution_model.dart';
+import 'package:kale/features/savings/data/models/savings_goal_model.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_remote_datasource.dart';
 import 'package:kale/features/transactions/data/models/transaction_model.dart';
 
@@ -239,7 +243,13 @@ class FakeAuthRemote implements AuthRemoteDataSource {
 /// The fake backend: Auth, plus one [FakeRemote] per synced table.
 class FakeServer {
   FakeServer() {
-    for (final table in <FakeRemote<Object>>[transactions, budgets, profile]) {
+    for (final table in <FakeRemote<Object>>[
+      transactions,
+      budgets,
+      profile,
+      savingsGoals,
+      savingsContributions,
+    ]) {
       table.session = auth;
     }
   }
@@ -248,4 +258,7 @@ class FakeServer {
   final transactions = FakeTransactionsRemote();
   final budgets = FakeBudgetsRemote();
   final profile = FakeProfileRemote();
+  final savingsGoals = FakeSavingsGoalsRemote();
+  late final savingsContributions =
+      FakeSavingsContributionsRemote(savingsGoals);
 }

@@ -4,58 +4,79 @@ import 'package:kale/features/savings/data/tables/savings_contributions_table.da
 
 part 'savings_contributions_dao.g.dart';
 
-/// DAO for savings contribution CRUD operations.
+/// DAO for savings contributions.
+///
+/// Every read excludes soft-deleted rows (`deletedAt` set). Sums are
+/// integer minor units of the base currency.
 @DriftAccessor(tables: [SavingsContributions])
 class SavingsContributionsDao extends DatabaseAccessor<AppDatabase>
     with _$SavingsContributionsDaoMixin {
   /// Creates a [SavingsContributionsDao].
   SavingsContributionsDao(super.db);
 
-  /// Watches contributions for a specific goal.
-  Stream<List<SavingsContribution>> watchByGoalId(String goalId) {
-    return (select(savingsContributions)
-          ..where((t) => t.goalId.equals(goalId))
-          ..orderBy([(t) => OrderingTerm.desc(t.date)]))
-        .watch();
-  }
+  /// Watches the live contributions of a goal, newest first.
+  Stream<List<SavingsContribution>> watchByGoalId(String goalId) =>
+      _liveForGoal(goalId).watch();
 
-  /// Gets all contributions for a specific goal.
-  Future<List<SavingsContribution>> getByGoalId(String goalId) {
-    return (select(savingsContributions)
-          ..where((t) => t.goalId.equals(goalId))
-          ..orderBy([(t) => OrderingTerm.desc(t.date)]))
-        .get();
-  }
+  /// Gets the live contributions of a goal, newest first.
+  Future<List<SavingsContribution>> getByGoalId(String goalId) =>
+      _liveForGoal(goalId).get();
 
-  /// Gets total contributed for a goal.
-  Future<double> getTotalByGoalId(String goalId) async {
-    final sumExpr = savingsContributions.amount.sum();
+  SimpleSelectStatement<$SavingsContributionsTable, SavingsContribution>
+      _liveForGoal(String goalId) => select(savingsContributions)
+        ..where((t) => t.goalId.equals(goalId) & t.deletedAt.isNull())
+        ..orderBy([(t) => OrderingTerm.desc(t.date)]);
+
+  /// The total contributed to a goal, in minor units.
+  Future<int> getTotalByGoalId(String goalId) async {
+    final sumExpr = savingsContributions.amountMinor.sum();
     final query = selectOnly(savingsContributions)
       ..addColumns([sumExpr])
-      ..where(savingsContributions.goalId.equals(goalId));
+      ..where(savingsContributions.goalId.equals(goalId))
+      ..where(savingsContributions.deletedAt.isNull());
     final row = await query.getSingle();
-    return row.read(sumExpr) ?? 0.0;
+    return row.read(sumExpr) ?? 0;
   }
 
-  /// Inserts a contribution.
-  Future<void> insert(SavingsContributionsCompanion entry) =>
+  /// Inserts or updates a contribution.
+  Future<void> upsert(SavingsContributionsCompanion entry) =>
       into(savingsContributions).insertOnConflictUpdate(entry);
 
-  /// Deletes contributions for a goal.
+  /// Deletes every contribution of a goal.
   Future<void> deleteByGoalId(String goalId) =>
       (delete(savingsContributions)..where((t) => t.goalId.equals(goalId)))
           .go();
 
-  /// Replaces all contributions for a goal (server refresh).
-  Future<void> replaceForGoal(
-    String goalId,
-    List<SavingsContributionsCompanion> entries,
-  ) {
+  /// Marks a contribution as synced.
+  Future<void> markSynced(String id, {String? serverId}) =>
+      (update(savingsContributions)..where((t) => t.id.equals(id))).write(
+        SavingsContributionsCompanion(
+          isSynced: const Value(true),
+          serverId: serverId != null ? Value(serverId) : const Value.absent(),
+        ),
+      );
+
+  /// Replaces the synced contributions with the server's copy (server
+  /// refresh).
+  ///
+  /// Contributions not yet pushed are kept as they are.
+  Future<void> replaceAll(List<SavingsContributionsCompanion> entries) {
     return transaction(() async {
+      final unsynced = (await (selectOnly(savingsContributions)
+                ..addColumns([savingsContributions.id])
+                ..where(savingsContributions.isSynced.equals(false)))
+              .map((row) => row.read(savingsContributions.id)!)
+              .get())
+          .toSet();
       await (delete(savingsContributions)
-            ..where((t) => t.goalId.equals(goalId)))
+            ..where((t) => t.isSynced.equals(true)))
           .go();
-      await batch((b) => b.insertAll(savingsContributions, entries));
+      await batch(
+        (b) => b.insertAllOnConflictUpdate(
+          savingsContributions,
+          entries.where((e) => !unsynced.contains(e.id.value)),
+        ),
+      );
     });
   }
 }

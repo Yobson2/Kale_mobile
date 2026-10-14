@@ -19,7 +19,7 @@ class ContributeToGoalUseCase
   ) {
     return _repository.contributeToGoal(
       goalId: params.goalId,
-      amount: params.amount,
+      amountMinor: params.amountMinor,
       source: params.source,
       note: params.note,
     );
@@ -31,13 +31,15 @@ class ContributeToGoalParams {
   /// Creates [ContributeToGoalParams].
   const ContributeToGoalParams({
     required this.goalId,
-    required this.amount,
+    required this.amountMinor,
     this.source = ContributionSource.manual,
     this.note,
   });
 
   final String goalId;
-  final double amount;
+
+  /// Amount, in minor units of the base currency.
+  final int amountMinor;
   final ContributionSource source;
   final String? note;
 }

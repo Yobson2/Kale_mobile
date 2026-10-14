@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
@@ -40,7 +41,8 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currencyCode = ref.watch(baseCurrencyProvider).code;
+    final currency = ref.watch(baseCurrencyProvider);
+    final currencyCode = currency.code;
 
     ref.listen(savingsNotifierProvider, (_, state) {
       if (state is SavingsSuccess) {
@@ -88,20 +90,25 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
                 AppTextField(
                   controller: _amountController,
                   label: context.l10n.savingsTargetAmount(currencyCode),
-                  hint: '0.00',
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  hint: Money.zero(currency).format(
+                    locale: Localizations.localeOf(context).toString(),
+                    withSymbol: false,
+                  ),
+                  keyboardType: TextInputType.numberWithOptions(
+                    decimal: currency.decimalPlaces > 0,
+                  ),
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                      RegExp(r'^\d+\.?\d{0,2}'),
-                    ),
+                    // Digits, separators and spaces; Money.tryParse does
+                    // the rest (it rejects more decimals than the
+                    // currency has).
+                    FilteringTextInputFormatter.allow(RegExp(r'[\d.,\s  ]')),
                   ],
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return context.l10n.savingsTargetAmountRequired;
                     }
-                    final amount = double.tryParse(value);
-                    if (amount == null || amount <= 0) {
+                    final amount = _parseAmount(value);
+                    if (amount == null || !amount.isPositive) {
                       return context.l10n.savingsTargetAmountInvalid;
                     }
                     return null;
@@ -142,15 +149,21 @@ class _AddSavingsGoalPageState extends ConsumerState<AddSavingsGoalPage> {
     );
   }
 
+  /// Parses an amount typed in the base currency, or null if invalid.
+  Money? _parseAmount(String input) => Money.tryParse(
+        input,
+        ref.read(baseCurrencyProvider),
+        locale: Localizations.localeOf(context).toString(),
+      );
+
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
-
-    final currencyCode = ref.read(baseCurrencyProvider).code;
+    final target = _parseAmount(_amountController.text);
+    if (target == null) return;
 
     ref.read(savingsNotifierProvider.notifier).createGoal(
           name: _nameController.text.trim(),
-          targetAmount: double.parse(_amountController.text.trim()),
-          currencyCode: currencyCode,
+          targetAmountMinor: target.minorUnits,
           description: _descriptionController.text.trim().isNotEmpty
               ? _descriptionController.text.trim()
               : null,
