@@ -14,6 +14,9 @@ import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/features/more/presentation/widgets/backup_status_tile.dart';
 import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/profile/presentation/widgets/base_currency_picker.dart';
+import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
+import 'package:kale/features/transactions/domain/usecases/export_transactions_csv_usecase.dart';
+import 'package:kale/features/transactions/presentation/providers/transactions_notifier.dart';
 import 'package:kale/l10n/app_localizations.dart';
 
 /// Settings page with card-per-item layout, colored icon circles,
@@ -162,8 +165,21 @@ class SettingsPage extends ConsumerWidget {
                   AppSpacing.verticalXl,
 
                   // ── Data ──
-                  const _SectionHeader(title: 'Data'),
+                  _SectionHeader(title: l10n.settingsData),
                   AppSpacing.verticalMd,
+
+                  _SettingsCard(
+                    icon: Icons.file_download_outlined,
+                    iconColor: context.colorScheme.primary,
+                    title: l10n.exportCsvTitle,
+                    subtitle: l10n.exportCsvSubtitle,
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
+                    onTap: () => _exportCsv(context, ref),
+                  ),
+                  AppSpacing.verticalSm,
 
                   _SettingsCard(
                     icon: Icons.close,

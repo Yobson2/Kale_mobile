@@ -1,4 +1,5 @@
 import 'package:kale/core/providers/notification_provider.dart';
+import 'package:kale/core/providers/share_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/achievement_service.dart';
 import 'package:kale/core/services/budget_alert_checker.dart';
@@ -7,6 +8,7 @@ import 'package:kale/features/budget/presentation/providers/budgets_providers.da
 import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 import 'package:kale/features/transactions/domain/usecases/create_transaction_usecase.dart';
+import 'package:kale/features/transactions/domain/usecases/export_transactions_csv_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/update_transaction_usecase.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 import 'package:kale/features/transactions/presentation/providers/transactions_state.dart';
@@ -182,6 +184,43 @@ class TransactionsNotifier extends _$TransactionsNotifier {
         // Silently ignore — budget alert is best-effort.
       }
     });
+  }
+
+  /// Exports the transactions between [startDate] and [endDate] (all when
+  /// null) as CSV and opens the share sheet with it. Returns how many
+  /// transactions were exported, or null if it failed.
+  Future<int?> exportCsv({
+    required CsvLabels labels,
+    required String fileName,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      final categories = await ref.read(categoriesStreamProvider.future);
+      final result = await ref.read(exportTransactionsCsvUseCaseProvider).call(
+            ExportTransactionsCsvParams(
+              labels: labels,
+              categoryNames: {for (final c in categories) c.id: c.name},
+              currency: ref.read(baseCurrencyProvider),
+              startDate: startDate,
+              endDate: endDate,
+            ),
+          );
+      final csv = result.fold((_) => null, (csv) => csv);
+      if (csv == null) return null;
+      // The header is the first line; every other line is a transaction.
+      final count = '\r\n'.allMatches(csv).length - 1;
+      if (count > 0) {
+        await ref.read(shareServiceProvider).shareTextFile(
+              fileName: fileName,
+              content: csv,
+              mimeType: 'text/csv',
+            );
+      }
+      return count;
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Loads a single transaction by [id].
