@@ -1498,4 +1498,31 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsBackupNever => 'Pas encore sauvegardé';
+
+  @override
+  String get logoutUnsavedTitle =>
+      'Se déconnecter et perdre des modifications ?';
+
+  @override
+  String logoutUnsavedMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count modifications ne sont pas encore sauvegardées. Si vous vous déconnectez maintenant, elles seront définitivement perdues.',
+      one:
+          '1 modification n\'est pas encore sauvegardée. Si vous vous déconnectez maintenant, elle sera définitivement perdue.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get logoutUnsavedConfirm => 'Se déconnecter quand même';
+
+  @override
+  String get logoutUnsavedCancel => 'Rester connecté';
+
+  @override
+  String get logoutFailed =>
+      'Impossible de vérifier votre sauvegarde. Veuillez réessayer.';
 }

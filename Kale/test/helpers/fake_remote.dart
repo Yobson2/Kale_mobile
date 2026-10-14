@@ -93,8 +93,33 @@ abstract class FakeRemote<M> {
 
   @protected
   M findOrThrow(String id) =>
-      rows[id] ??
+      (visible(id) ? rows[id] : null) ??
       (throw const ServerException(message: 'Not found', statusCode: 404));
+
+  /// Who wrote each row, like Supabase stamping `user_id`. Rows seeded
+  /// straight into [rows] have no owner and every user sees them.
+  final Map<String, String?> owners = {};
+
+  /// Stores [model] under [id], owned by the signed-in user.
+  @protected
+  M put(String id, M model) {
+    owners[id] = session?.currentUserId;
+    return rows[id] = model;
+  }
+
+  /// Like RLS: whether the signed-in user may read row [id].
+  @protected
+  bool visible(String id) {
+    final owner = owners[id];
+    return owner == null || owner == session?.currentUserId;
+  }
+
+  /// The rows the signed-in user may read.
+  @protected
+  List<M> visibleRows() => [
+        for (final MapEntry(:key, :value) in rows.entries)
+          if (visible(key)) value,
+      ];
 }
 
 /// Fake server table for transactions.
@@ -102,7 +127,7 @@ class FakeTransactionsRemote extends FakeRemote<TransactionModel>
     implements TransactionsRemoteDataSource {
   @override
   Future<List<TransactionModel>> getAllTransactions() =>
-      handle(const RemoteCall.fetchAll(), () => rows.values.toList());
+      handle(const RemoteCall.fetchAll(), visibleRows);
 
   @override
   Future<TransactionModel> getTransactionById(String id) =>
@@ -110,11 +135,11 @@ class FakeTransactionsRemote extends FakeRemote<TransactionModel>
 
   @override
   Future<TransactionModel> createTransaction(TransactionModel model) =>
-      handle(RemoteCall.create(model.id), () => rows[model.id] = model);
+      handle(RemoteCall.create(model.id), () => put(model.id, model));
 
   @override
   Future<TransactionModel> updateTransaction(TransactionModel model) =>
-      handle(RemoteCall.update(model.id), () => rows[model.id] = model);
+      handle(RemoteCall.update(model.id), () => put(model.id, model));
 
   @override
   Future<void> deleteTransaction(String id) =>
@@ -126,7 +151,7 @@ class FakeBudgetsRemote extends FakeRemote<BudgetModel>
     implements BudgetsRemoteDataSource {
   @override
   Future<List<BudgetModel>> getAllBudgets() =>
-      handle(const RemoteCall.fetchAll(), () => rows.values.toList());
+      handle(const RemoteCall.fetchAll(), visibleRows);
 
   @override
   Future<BudgetModel> getBudgetById(String id) =>
@@ -134,11 +159,11 @@ class FakeBudgetsRemote extends FakeRemote<BudgetModel>
 
   @override
   Future<BudgetModel> createBudget(BudgetModel model) =>
-      handle(RemoteCall.create(model.id), () => rows[model.id] = model);
+      handle(RemoteCall.create(model.id), () => put(model.id, model));
 
   @override
   Future<BudgetModel> updateBudget(BudgetModel model) =>
-      handle(RemoteCall.update(model.id), () => rows[model.id] = model);
+      handle(RemoteCall.update(model.id), () => put(model.id, model));
 
   @override
   Future<void> deleteBudget(String id) =>
@@ -152,24 +177,39 @@ class FakeProfileRemote extends FakeRemote<ProfileModel>
   @override
   Future<ProfileModel?> getProfile() => handle(
         const RemoteCall.fetch(ProfileModel.localId),
-        () => rows[ProfileModel.localId],
+        () => visible(ProfileModel.localId) ? rows[ProfileModel.localId] : null,
       );
 
   @override
   Future<ProfileModel> updateProfile(ProfileModel model) => handle(
         const RemoteCall.update(ProfileModel.localId),
-        () => rows[ProfileModel.localId] = model,
+        () => put(ProfileModel.localId, model),
       );
 }
 
-/// Fake Supabase Auth. Only anonymous sign-in is implemented; the other
-/// flows throw until a test needs them.
+/// Fake Supabase Auth. Only anonymous and email sign-in are implemented;
+/// the other flows throw until a test needs them.
 class FakeAuthRemote implements AuthRemoteDataSource {
   /// The signed-in user's id, or `null` when signed out.
   String? currentUserId;
 
   /// How many anonymous users were created.
   int anonymousSignIns = 0;
+
+  /// Signs in a permanent user whose id is derived from [email]. Any
+  /// password is accepted.
+  @override
+  Future<({UserModel user, TokensModel tokens})> login({
+    required String email,
+    required String password,
+  }) async {
+    final id = 'user-$email';
+    currentUserId = id;
+    return (
+      user: UserModel(id: id, email: email, name: email.split('@').first),
+      tokens: TokensModel(accessToken: 'access-$id', refreshToken: 'r-$id'),
+    );
+  }
 
   @override
   Future<({UserModel user, TokensModel tokens})> signInAnonymously() async {
@@ -182,8 +222,14 @@ class FakeAuthRemote implements AuthRemoteDataSource {
     );
   }
 
+  /// How many times a user signed out.
+  int logouts = 0;
+
   @override
-  Future<void> logout() async => currentUserId = null;
+  Future<void> logout() async {
+    logouts++;
+    currentUserId = null;
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) =>

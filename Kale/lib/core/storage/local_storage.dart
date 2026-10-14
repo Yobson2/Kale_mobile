@@ -63,6 +63,27 @@ class LocalStorage {
   Future<bool> setLastBackupAt(DateTime time) =>
       _prefs.setInt(_lastBackupAtKey, time.millisecondsSinceEpoch);
 
+  /// Forgets the last backup time (the user logged out).
+  Future<bool> clearLastBackupAt() => _prefs.remove(_lastBackupAtKey);
+
+  // -- User progress --
+
+  /// Key prefixes of the signed-in user's own progress: the streak
+  /// (`StreakService`) and unlocked achievements (`AchievementService`).
+  /// Device settings (theme, locale, onboarding) are not included.
+  static const _userProgressKeyPrefixes = ['streak_', 'achievement_'];
+
+  /// Removes the user's own progress, so the next person to sign in on
+  /// this phone does not inherit it.
+  Future<void> clearUserProgress() async {
+    final keys = _prefs.getKeys().where(
+          (key) => _userProgressKeyPrefixes.any(key.startsWith),
+        );
+    for (final key in keys.toList()) {
+      await _prefs.remove(key);
+    }
+  }
+
   // -- Notifications --
 
   static const _notificationsEnabledKey = 'notifications_enabled';

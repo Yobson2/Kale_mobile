@@ -20,7 +20,8 @@ abstract class AuthLocalDataSource {
   /// Whether a valid access token exists.
   Future<bool> hasToken();
 
-  /// Clears all cached auth data.
+  /// Clears the cached session and the user's own progress (streak,
+  /// achievements). Device settings are kept.
   Future<void> clearAll();
 }
 
@@ -70,5 +71,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<void> clearAll() async {
     await _secureStorage.clearTokens();
     await _localStorage.remove(_cachedUserKey);
+    await _localStorage.clearUserProgress();
   }
 }
