@@ -7,6 +7,7 @@ import 'package:kale/features/transactions/data/daos/transactions_dao.dart';
 import 'package:kale/features/transactions/data/models/transaction_model.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
+import 'package:kale/features/transactions/domain/entities/transaction_page.dart';
 
 /// Local data source for transactions stored in the Drift database.
 abstract class TransactionsLocalDataSource {
@@ -24,6 +25,17 @@ abstract class TransactionsLocalDataSource {
     String? categoryId,
     PaymentMethod? paymentMethod,
   });
+
+  /// One keyset page of live transactions (see `TransactionsDao.getPage`).
+  Future<List<Transaction>> getTransactionsPage({
+    required TransactionListFilter filter,
+    required int limit,
+    TransactionCursor? after,
+    TransactionCursor? until,
+  });
+
+  /// Emits whenever the transactions table changes.
+  Stream<void> watchChanges();
 
   /// Gets a single transaction by ID.
   Future<Transaction> getTransactionById(String id);
@@ -126,6 +138,35 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
       throw CacheException(message: 'Failed to get transactions: $e');
     }
   }
+
+  @override
+  Future<List<Transaction>> getTransactionsPage({
+    required TransactionListFilter filter,
+    required int limit,
+    TransactionCursor? after,
+    TransactionCursor? until,
+  }) async {
+    try {
+      final rows = await _transactionsDao.getPage(
+        limit: limit,
+        afterDate: after?.date,
+        afterId: after?.id,
+        untilDate: until?.date,
+        untilId: until?.id,
+        type: filter.type?.name,
+        search: filter.search.trim(),
+        searchCategoryIds: filter.searchCategoryIds,
+      );
+      return [
+        for (final row in rows) TransactionModel.fromDrift(row).toEntity(),
+      ];
+    } catch (e) {
+      throw CacheException(message: 'Failed to get transactions: $e');
+    }
+  }
+
+  @override
+  Stream<void> watchChanges() => _transactionsDao.watchChanges();
 
   @override
   Future<Transaction> getTransactionById(String id) async {

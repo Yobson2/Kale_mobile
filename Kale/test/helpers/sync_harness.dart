@@ -140,6 +140,14 @@ class SyncHarness {
   /// The current auth state.
   AuthState get authState => _container.read(authNotifierProvider);
 
+  /// Keeps [provider] alive and returns a subscription to read it, as a
+  /// page watching it would. For providers the harness has no shortcut for.
+  ProviderSubscription<T> listen<T>(ProviderListenable<T> provider) =>
+      _container.listen(provider, (_, __) {});
+
+  /// Reads [provider] once.
+  T read<T>(ProviderListenable<T> provider) => _container.read(provider);
+
   /// The app's sync engine.
   SyncEngine get engine => _container.read(syncEngineProvider);
 

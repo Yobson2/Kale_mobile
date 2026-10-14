@@ -12,8 +12,10 @@ import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/repositories/transactions_repository.dart';
 import 'package:kale/features/transactions/domain/usecases/create_transaction_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/delete_transaction_usecase.dart';
+import 'package:kale/features/transactions/domain/usecases/get_transactions_page_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/get_transactions_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/update_transaction_usecase.dart';
+import 'package:kale/features/transactions/domain/usecases/watch_transaction_changes_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transactions_providers.g.dart';
@@ -99,4 +101,18 @@ DeleteTransactionUseCase deleteTransactionUseCase(Ref ref) {
 @riverpod
 GetTransactionsUseCase getTransactionsUseCase(Ref ref) {
   return GetTransactionsUseCase(ref.watch(transactionsRepositoryProvider));
+}
+
+/// Provides the [GetTransactionsPageUseCase].
+@riverpod
+GetTransactionsPageUseCase getTransactionsPageUseCase(Ref ref) {
+  return GetTransactionsPageUseCase(ref.watch(transactionsRepositoryProvider));
+}
+
+/// Provides the [WatchTransactionChangesUseCase].
+@riverpod
+WatchTransactionChangesUseCase watchTransactionChangesUseCase(Ref ref) {
+  return WatchTransactionChangesUseCase(
+    ref.watch(transactionsRepositoryProvider),
+  );
 }

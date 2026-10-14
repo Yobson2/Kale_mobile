@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/failures.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
+import 'package:kale/features/transactions/domain/entities/transaction_page.dart';
 
 /// Abstract transactions repository defined in the domain layer.
 abstract class TransactionsRepository {
@@ -19,6 +20,20 @@ abstract class TransactionsRepository {
     DateTime? startDate,
     DateTime? endDate,
   });
+
+  /// One page of the transaction list, newest first: at most [limit] rows
+  /// after [after] (from the start when null) matching [filter], stopping
+  /// at [until] (included) when given.
+  Future<Either<Failure, TransactionPage>> getTransactionsPage({
+    required TransactionListFilter filter,
+    required int limit,
+    TransactionCursor? after,
+    TransactionCursor? until,
+  });
+
+  /// Emits whenever stored transactions change, so a loaded list can
+  /// refresh the rows it shows.
+  Stream<void> watchTransactionChanges();
 
   /// Gets a single transaction by ID.
   Future<Either<Failure, Transaction>> getTransactionById(String id);
