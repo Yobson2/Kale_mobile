@@ -717,5 +717,19 @@
     }
   },
   "notifDailyReminderTitle": "Suivez vos dépenses",
-  "notifDailyReminderBody": "N'oubliez pas de noter les transactions du jour."
+  "notifDailyReminderBody": "N'oubliez pas de noter les transactions du jour.",
+  "exportCsvTitle": "Exporter les transactions (CSV)",
+  "exportCsvSubtitle": "À ouvrir dans un tableur ou à garder",
+  "exportCsvAll": "Toutes les transactions",
+  "exportCsvDateRange": "Choisir des dates…",
+  "exportCsvEmpty": "Aucune transaction à exporter",
+  "exportCsvFailed": "Impossible d'exporter. Veuillez réessayer.",
+  "csvDate": "Date",
+  "csvType": "Type",
+  "csvCategory": "Catégorie",
+  "csvDescription": "Description",
+  "csvAmount": "Montant",
+  "csvCurrency": "Devise",
+  "csvPaymentMethod": "Mode de paiement",
+  "csvMobileMoneyProvider": "Opérateur Mobile Money"
 }
