@@ -16,17 +16,21 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TransactionModel {
   String get id;
-  @JsonKey(name: 'server_id')
-  String? get serverId;
   @JsonKey(name: 'amount_minor')
   int get amountMinor;
   String get type;
   @JsonKey(name: 'category_id')
   String get categoryId;
-  String? get description;
   DateTime get date;
   @JsonKey(name: 'payment_method')
   String get paymentMethod;
+  @JsonKey(name: 'created_at')
+  DateTime get createdAt;
+  @JsonKey(name: 'updated_at')
+  DateTime get updatedAt;
+  @JsonKey(name: 'server_id')
+  String? get serverId;
+  String? get description;
   @JsonKey(name: 'is_recurring')
   bool get isRecurring;
   @JsonKey(name: 'recurring_rule_id')
@@ -37,10 +41,6 @@ mixin _$TransactionModel {
   String? get mobileMoneyRef;
   @JsonKey(name: 'account_id')
   String? get accountId;
-  @JsonKey(name: 'created_at')
-  DateTime get createdAt;
-  @JsonKey(name: 'updated_at')
-  DateTime get updatedAt;
   @JsonKey(name: 'deleted_at')
   DateTime? get deletedAt;
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -63,18 +63,22 @@ mixin _$TransactionModel {
         (other.runtimeType == runtimeType &&
             other is TransactionModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.serverId, serverId) ||
-                other.serverId == serverId) &&
             (identical(other.amountMinor, amountMinor) ||
                 other.amountMinor == amountMinor) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.categoryId, categoryId) ||
                 other.categoryId == categoryId) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.serverId, serverId) ||
+                other.serverId == serverId) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.isRecurring, isRecurring) ||
                 other.isRecurring == isRecurring) &&
             (identical(other.recurringRuleId, recurringRuleId) ||
@@ -85,10 +89,6 @@ mixin _$TransactionModel {
                 other.mobileMoneyRef == mobileMoneyRef) &&
             (identical(other.accountId, accountId) ||
                 other.accountId == accountId) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
             (identical(other.deletedAt, deletedAt) ||
                 other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
@@ -100,26 +100,26 @@ mixin _$TransactionModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      serverId,
       amountMinor,
       type,
       categoryId,
-      description,
       date,
       paymentMethod,
+      createdAt,
+      updatedAt,
+      serverId,
+      description,
       isRecurring,
       recurringRuleId,
       mobileMoneyProvider,
       mobileMoneyRef,
       accountId,
-      createdAt,
-      updatedAt,
       deletedAt,
       isSynced);
 
   @override
   String toString() {
-    return 'TransactionModel(id: $id, serverId: $serverId, amountMinor: $amountMinor, type: $type, categoryId: $categoryId, description: $description, date: $date, paymentMethod: $paymentMethod, isRecurring: $isRecurring, recurringRuleId: $recurringRuleId, mobileMoneyProvider: $mobileMoneyProvider, mobileMoneyRef: $mobileMoneyRef, accountId: $accountId, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
+    return 'TransactionModel(id: $id, amountMinor: $amountMinor, type: $type, categoryId: $categoryId, date: $date, paymentMethod: $paymentMethod, createdAt: $createdAt, updatedAt: $updatedAt, serverId: $serverId, description: $description, isRecurring: $isRecurring, recurringRuleId: $recurringRuleId, mobileMoneyProvider: $mobileMoneyProvider, mobileMoneyRef: $mobileMoneyRef, accountId: $accountId, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -131,20 +131,20 @@ abstract mixin class $TransactionModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'server_id') String? serverId,
       @JsonKey(name: 'amount_minor') int amountMinor,
       String type,
       @JsonKey(name: 'category_id') String categoryId,
-      String? description,
       DateTime date,
       @JsonKey(name: 'payment_method') String paymentMethod,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'server_id') String? serverId,
+      String? description,
       @JsonKey(name: 'is_recurring') bool isRecurring,
       @JsonKey(name: 'recurring_rule_id') String? recurringRuleId,
       @JsonKey(name: 'mobile_money_provider') String? mobileMoneyProvider,
       @JsonKey(name: 'mobile_money_ref') String? mobileMoneyRef,
       @JsonKey(name: 'account_id') String? accountId,
-      @JsonKey(name: 'created_at') DateTime createdAt,
-      @JsonKey(name: 'updated_at') DateTime updatedAt,
       @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
@@ -163,20 +163,20 @@ class _$TransactionModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? serverId = freezed,
     Object? amountMinor = null,
     Object? type = null,
     Object? categoryId = null,
-    Object? description = freezed,
     Object? date = null,
     Object? paymentMethod = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? serverId = freezed,
+    Object? description = freezed,
     Object? isRecurring = null,
     Object? recurringRuleId = freezed,
     Object? mobileMoneyProvider = freezed,
     Object? mobileMoneyRef = freezed,
     Object? accountId = freezed,
-    Object? createdAt = null,
-    Object? updatedAt = null,
     Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
@@ -185,10 +185,6 @@ class _$TransactionModelCopyWithImpl<$Res>
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      serverId: freezed == serverId
-          ? _self.serverId
-          : serverId // ignore: cast_nullable_to_non_nullable
-              as String?,
       amountMinor: null == amountMinor
           ? _self.amountMinor
           : amountMinor // ignore: cast_nullable_to_non_nullable
@@ -201,10 +197,6 @@ class _$TransactionModelCopyWithImpl<$Res>
           ? _self.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as String,
-      description: freezed == description
-          ? _self.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
       date: null == date
           ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -213,6 +205,22 @@ class _$TransactionModelCopyWithImpl<$Res>
           ? _self.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      serverId: freezed == serverId
+          ? _self.serverId
+          : serverId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _self.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       isRecurring: null == isRecurring
           ? _self.isRecurring
           : isRecurring // ignore: cast_nullable_to_non_nullable
@@ -233,14 +241,6 @@ class _$TransactionModelCopyWithImpl<$Res>
           ? _self.accountId
           : accountId // ignore: cast_nullable_to_non_nullable
               as String?,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _self.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       deletedAt: freezed == deletedAt
           ? _self.deletedAt
           : deletedAt // ignore: cast_nullable_to_non_nullable
@@ -258,20 +258,20 @@ class _$TransactionModelCopyWithImpl<$Res>
 class _TransactionModel extends TransactionModel {
   const _TransactionModel(
       {required this.id,
-      @JsonKey(name: 'server_id') this.serverId,
       @JsonKey(name: 'amount_minor') required this.amountMinor,
       required this.type,
       @JsonKey(name: 'category_id') required this.categoryId,
-      this.description,
       required this.date,
       @JsonKey(name: 'payment_method') required this.paymentMethod,
+      @JsonKey(name: 'created_at') required this.createdAt,
+      @JsonKey(name: 'updated_at') required this.updatedAt,
+      @JsonKey(name: 'server_id') this.serverId,
+      this.description,
       @JsonKey(name: 'is_recurring') this.isRecurring = false,
       @JsonKey(name: 'recurring_rule_id') this.recurringRuleId,
       @JsonKey(name: 'mobile_money_provider') this.mobileMoneyProvider,
       @JsonKey(name: 'mobile_money_ref') this.mobileMoneyRef,
       @JsonKey(name: 'account_id') this.accountId,
-      @JsonKey(name: 'created_at') required this.createdAt,
-      @JsonKey(name: 'updated_at') required this.updatedAt,
       @JsonKey(name: 'deleted_at') this.deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       this.isSynced = true})
@@ -282,9 +282,6 @@ class _TransactionModel extends TransactionModel {
   @override
   final String id;
   @override
-  @JsonKey(name: 'server_id')
-  final String? serverId;
-  @override
   @JsonKey(name: 'amount_minor')
   final int amountMinor;
   @override
@@ -293,12 +290,21 @@ class _TransactionModel extends TransactionModel {
   @JsonKey(name: 'category_id')
   final String categoryId;
   @override
-  final String? description;
-  @override
   final DateTime date;
   @override
   @JsonKey(name: 'payment_method')
   final String paymentMethod;
+  @override
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  final DateTime updatedAt;
+  @override
+  @JsonKey(name: 'server_id')
+  final String? serverId;
+  @override
+  final String? description;
   @override
   @JsonKey(name: 'is_recurring')
   final bool isRecurring;
@@ -314,12 +320,6 @@ class _TransactionModel extends TransactionModel {
   @override
   @JsonKey(name: 'account_id')
   final String? accountId;
-  @override
-  @JsonKey(name: 'created_at')
-  final DateTime createdAt;
-  @override
-  @JsonKey(name: 'updated_at')
-  final DateTime updatedAt;
   @override
   @JsonKey(name: 'deleted_at')
   final DateTime? deletedAt;
@@ -348,18 +348,22 @@ class _TransactionModel extends TransactionModel {
         (other.runtimeType == runtimeType &&
             other is _TransactionModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.serverId, serverId) ||
-                other.serverId == serverId) &&
             (identical(other.amountMinor, amountMinor) ||
                 other.amountMinor == amountMinor) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.categoryId, categoryId) ||
                 other.categoryId == categoryId) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.serverId, serverId) ||
+                other.serverId == serverId) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.isRecurring, isRecurring) ||
                 other.isRecurring == isRecurring) &&
             (identical(other.recurringRuleId, recurringRuleId) ||
@@ -370,10 +374,6 @@ class _TransactionModel extends TransactionModel {
                 other.mobileMoneyRef == mobileMoneyRef) &&
             (identical(other.accountId, accountId) ||
                 other.accountId == accountId) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
             (identical(other.deletedAt, deletedAt) ||
                 other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
@@ -385,26 +385,26 @@ class _TransactionModel extends TransactionModel {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      serverId,
       amountMinor,
       type,
       categoryId,
-      description,
       date,
       paymentMethod,
+      createdAt,
+      updatedAt,
+      serverId,
+      description,
       isRecurring,
       recurringRuleId,
       mobileMoneyProvider,
       mobileMoneyRef,
       accountId,
-      createdAt,
-      updatedAt,
       deletedAt,
       isSynced);
 
   @override
   String toString() {
-    return 'TransactionModel(id: $id, serverId: $serverId, amountMinor: $amountMinor, type: $type, categoryId: $categoryId, description: $description, date: $date, paymentMethod: $paymentMethod, isRecurring: $isRecurring, recurringRuleId: $recurringRuleId, mobileMoneyProvider: $mobileMoneyProvider, mobileMoneyRef: $mobileMoneyRef, accountId: $accountId, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
+    return 'TransactionModel(id: $id, amountMinor: $amountMinor, type: $type, categoryId: $categoryId, date: $date, paymentMethod: $paymentMethod, createdAt: $createdAt, updatedAt: $updatedAt, serverId: $serverId, description: $description, isRecurring: $isRecurring, recurringRuleId: $recurringRuleId, mobileMoneyProvider: $mobileMoneyProvider, mobileMoneyRef: $mobileMoneyRef, accountId: $accountId, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -418,20 +418,20 @@ abstract mixin class _$TransactionModelCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'server_id') String? serverId,
       @JsonKey(name: 'amount_minor') int amountMinor,
       String type,
       @JsonKey(name: 'category_id') String categoryId,
-      String? description,
       DateTime date,
       @JsonKey(name: 'payment_method') String paymentMethod,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'server_id') String? serverId,
+      String? description,
       @JsonKey(name: 'is_recurring') bool isRecurring,
       @JsonKey(name: 'recurring_rule_id') String? recurringRuleId,
       @JsonKey(name: 'mobile_money_provider') String? mobileMoneyProvider,
       @JsonKey(name: 'mobile_money_ref') String? mobileMoneyRef,
       @JsonKey(name: 'account_id') String? accountId,
-      @JsonKey(name: 'created_at') DateTime createdAt,
-      @JsonKey(name: 'updated_at') DateTime updatedAt,
       @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
@@ -450,20 +450,20 @@ class __$TransactionModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   $Res call({
     Object? id = null,
-    Object? serverId = freezed,
     Object? amountMinor = null,
     Object? type = null,
     Object? categoryId = null,
-    Object? description = freezed,
     Object? date = null,
     Object? paymentMethod = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? serverId = freezed,
+    Object? description = freezed,
     Object? isRecurring = null,
     Object? recurringRuleId = freezed,
     Object? mobileMoneyProvider = freezed,
     Object? mobileMoneyRef = freezed,
     Object? accountId = freezed,
-    Object? createdAt = null,
-    Object? updatedAt = null,
     Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
@@ -472,10 +472,6 @@ class __$TransactionModelCopyWithImpl<$Res>
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      serverId: freezed == serverId
-          ? _self.serverId
-          : serverId // ignore: cast_nullable_to_non_nullable
-              as String?,
       amountMinor: null == amountMinor
           ? _self.amountMinor
           : amountMinor // ignore: cast_nullable_to_non_nullable
@@ -488,10 +484,6 @@ class __$TransactionModelCopyWithImpl<$Res>
           ? _self.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as String,
-      description: freezed == description
-          ? _self.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
       date: null == date
           ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -500,6 +492,22 @@ class __$TransactionModelCopyWithImpl<$Res>
           ? _self.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _self.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      serverId: freezed == serverId
+          ? _self.serverId
+          : serverId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _self.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       isRecurring: null == isRecurring
           ? _self.isRecurring
           : isRecurring // ignore: cast_nullable_to_non_nullable
@@ -520,14 +528,6 @@ class __$TransactionModelCopyWithImpl<$Res>
           ? _self.accountId
           : accountId // ignore: cast_nullable_to_non_nullable
               as String?,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _self.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       deletedAt: freezed == deletedAt
           ? _self.deletedAt
           : deletedAt // ignore: cast_nullable_to_non_nullable

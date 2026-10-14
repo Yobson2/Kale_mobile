@@ -8,7 +8,7 @@ part of 'supabase_provider.dart';
 
 String _$supabaseClientHash() => r'2df5a38617329a3bb0a7e149189bea875722d7b8';
 
-/// Provides the [SupabaseClient] singleton initialised in [bootstrap].
+/// Provides the [SupabaseClient] singleton initialised in `bootstrap`.
 ///
 /// Copied from [supabaseClient].
 @ProviderFor(supabaseClient)
