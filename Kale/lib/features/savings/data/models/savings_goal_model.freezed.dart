@@ -19,12 +19,10 @@ mixin _$SavingsGoalModel {
   @JsonKey(name: 'server_id')
   String? get serverId;
   String get name;
-  @JsonKey(name: 'target_amount')
-  double get targetAmount;
-  @JsonKey(name: 'current_amount')
-  double get currentAmount;
-  @JsonKey(name: 'currency_code')
-  String get currencyCode;
+  @JsonKey(name: 'target_amount_minor')
+  int get targetAmountMinor;
+  @JsonKey(name: 'current_amount_minor')
+  int get currentAmountMinor;
   String? get description;
   DateTime? get deadline;
   @JsonKey(name: 'icon_name')
@@ -36,6 +34,8 @@ mixin _$SavingsGoalModel {
   DateTime get createdAt;
   @JsonKey(name: 'updated_at')
   DateTime get updatedAt;
+  @JsonKey(name: 'deleted_at')
+  DateTime? get deletedAt;
   @JsonKey(includeFromJson: false, includeToJson: false)
   bool get isSynced;
 
@@ -59,12 +59,10 @@ mixin _$SavingsGoalModel {
             (identical(other.serverId, serverId) ||
                 other.serverId == serverId) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.targetAmount, targetAmount) ||
-                other.targetAmount == targetAmount) &&
-            (identical(other.currentAmount, currentAmount) ||
-                other.currentAmount == currentAmount) &&
-            (identical(other.currencyCode, currencyCode) ||
-                other.currencyCode == currencyCode) &&
+            (identical(other.targetAmountMinor, targetAmountMinor) ||
+                other.targetAmountMinor == targetAmountMinor) &&
+            (identical(other.currentAmountMinor, currentAmountMinor) ||
+                other.currentAmountMinor == currentAmountMinor) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.deadline, deadline) ||
@@ -78,6 +76,8 @@ mixin _$SavingsGoalModel {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
+            (identical(other.deletedAt, deletedAt) ||
+                other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
                 other.isSynced == isSynced));
   }
@@ -89,9 +89,8 @@ mixin _$SavingsGoalModel {
       id,
       serverId,
       name,
-      targetAmount,
-      currentAmount,
-      currencyCode,
+      targetAmountMinor,
+      currentAmountMinor,
       description,
       deadline,
       iconName,
@@ -99,11 +98,12 @@ mixin _$SavingsGoalModel {
       status,
       createdAt,
       updatedAt,
+      deletedAt,
       isSynced);
 
   @override
   String toString() {
-    return 'SavingsGoalModel(id: $id, serverId: $serverId, name: $name, targetAmount: $targetAmount, currentAmount: $currentAmount, currencyCode: $currencyCode, description: $description, deadline: $deadline, iconName: $iconName, colorHex: $colorHex, status: $status, createdAt: $createdAt, updatedAt: $updatedAt, isSynced: $isSynced)';
+    return 'SavingsGoalModel(id: $id, serverId: $serverId, name: $name, targetAmountMinor: $targetAmountMinor, currentAmountMinor: $currentAmountMinor, description: $description, deadline: $deadline, iconName: $iconName, colorHex: $colorHex, status: $status, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -117,9 +117,8 @@ abstract mixin class $SavingsGoalModelCopyWith<$Res> {
       {String id,
       @JsonKey(name: 'server_id') String? serverId,
       String name,
-      @JsonKey(name: 'target_amount') double targetAmount,
-      @JsonKey(name: 'current_amount') double currentAmount,
-      @JsonKey(name: 'currency_code') String currencyCode,
+      @JsonKey(name: 'target_amount_minor') int targetAmountMinor,
+      @JsonKey(name: 'current_amount_minor') int currentAmountMinor,
       String? description,
       DateTime? deadline,
       @JsonKey(name: 'icon_name') String? iconName,
@@ -127,6 +126,7 @@ abstract mixin class $SavingsGoalModelCopyWith<$Res> {
       String status,
       @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
@@ -146,9 +146,8 @@ class _$SavingsGoalModelCopyWithImpl<$Res>
     Object? id = null,
     Object? serverId = freezed,
     Object? name = null,
-    Object? targetAmount = null,
-    Object? currentAmount = null,
-    Object? currencyCode = null,
+    Object? targetAmountMinor = null,
+    Object? currentAmountMinor = null,
     Object? description = freezed,
     Object? deadline = freezed,
     Object? iconName = freezed,
@@ -156,6 +155,7 @@ class _$SavingsGoalModelCopyWithImpl<$Res>
     Object? status = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
     return _then(_self.copyWith(
@@ -171,18 +171,14 @@ class _$SavingsGoalModelCopyWithImpl<$Res>
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      targetAmount: null == targetAmount
-          ? _self.targetAmount
-          : targetAmount // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentAmount: null == currentAmount
-          ? _self.currentAmount
-          : currentAmount // ignore: cast_nullable_to_non_nullable
-              as double,
-      currencyCode: null == currencyCode
-          ? _self.currencyCode
-          : currencyCode // ignore: cast_nullable_to_non_nullable
-              as String,
+      targetAmountMinor: null == targetAmountMinor
+          ? _self.targetAmountMinor
+          : targetAmountMinor // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentAmountMinor: null == currentAmountMinor
+          ? _self.currentAmountMinor
+          : currentAmountMinor // ignore: cast_nullable_to_non_nullable
+              as int,
       description: freezed == description
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -211,6 +207,10 @@ class _$SavingsGoalModelCopyWithImpl<$Res>
           ? _self.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      deletedAt: freezed == deletedAt
+          ? _self.deletedAt
+          : deletedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       isSynced: null == isSynced
           ? _self.isSynced
           : isSynced // ignore: cast_nullable_to_non_nullable
@@ -226,9 +226,8 @@ class _SavingsGoalModel extends SavingsGoalModel {
       {required this.id,
       @JsonKey(name: 'server_id') this.serverId,
       required this.name,
-      @JsonKey(name: 'target_amount') required this.targetAmount,
-      @JsonKey(name: 'current_amount') this.currentAmount = 0.0,
-      @JsonKey(name: 'currency_code') required this.currencyCode,
+      @JsonKey(name: 'target_amount_minor') required this.targetAmountMinor,
+      @JsonKey(name: 'current_amount_minor') this.currentAmountMinor = 0,
       this.description,
       this.deadline,
       @JsonKey(name: 'icon_name') this.iconName,
@@ -236,6 +235,7 @@ class _SavingsGoalModel extends SavingsGoalModel {
       required this.status,
       @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(name: 'updated_at') required this.updatedAt,
+      @JsonKey(name: 'deleted_at') this.deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       this.isSynced = true})
       : super._();
@@ -250,14 +250,11 @@ class _SavingsGoalModel extends SavingsGoalModel {
   @override
   final String name;
   @override
-  @JsonKey(name: 'target_amount')
-  final double targetAmount;
+  @JsonKey(name: 'target_amount_minor')
+  final int targetAmountMinor;
   @override
-  @JsonKey(name: 'current_amount')
-  final double currentAmount;
-  @override
-  @JsonKey(name: 'currency_code')
-  final String currencyCode;
+  @JsonKey(name: 'current_amount_minor')
+  final int currentAmountMinor;
   @override
   final String? description;
   @override
@@ -276,6 +273,9 @@ class _SavingsGoalModel extends SavingsGoalModel {
   @override
   @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
+  @override
+  @JsonKey(name: 'deleted_at')
+  final DateTime? deletedAt;
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   final bool isSynced;
@@ -304,12 +304,10 @@ class _SavingsGoalModel extends SavingsGoalModel {
             (identical(other.serverId, serverId) ||
                 other.serverId == serverId) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.targetAmount, targetAmount) ||
-                other.targetAmount == targetAmount) &&
-            (identical(other.currentAmount, currentAmount) ||
-                other.currentAmount == currentAmount) &&
-            (identical(other.currencyCode, currencyCode) ||
-                other.currencyCode == currencyCode) &&
+            (identical(other.targetAmountMinor, targetAmountMinor) ||
+                other.targetAmountMinor == targetAmountMinor) &&
+            (identical(other.currentAmountMinor, currentAmountMinor) ||
+                other.currentAmountMinor == currentAmountMinor) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.deadline, deadline) ||
@@ -323,6 +321,8 @@ class _SavingsGoalModel extends SavingsGoalModel {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
+            (identical(other.deletedAt, deletedAt) ||
+                other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
                 other.isSynced == isSynced));
   }
@@ -334,9 +334,8 @@ class _SavingsGoalModel extends SavingsGoalModel {
       id,
       serverId,
       name,
-      targetAmount,
-      currentAmount,
-      currencyCode,
+      targetAmountMinor,
+      currentAmountMinor,
       description,
       deadline,
       iconName,
@@ -344,11 +343,12 @@ class _SavingsGoalModel extends SavingsGoalModel {
       status,
       createdAt,
       updatedAt,
+      deletedAt,
       isSynced);
 
   @override
   String toString() {
-    return 'SavingsGoalModel(id: $id, serverId: $serverId, name: $name, targetAmount: $targetAmount, currentAmount: $currentAmount, currencyCode: $currencyCode, description: $description, deadline: $deadline, iconName: $iconName, colorHex: $colorHex, status: $status, createdAt: $createdAt, updatedAt: $updatedAt, isSynced: $isSynced)';
+    return 'SavingsGoalModel(id: $id, serverId: $serverId, name: $name, targetAmountMinor: $targetAmountMinor, currentAmountMinor: $currentAmountMinor, description: $description, deadline: $deadline, iconName: $iconName, colorHex: $colorHex, status: $status, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -364,9 +364,8 @@ abstract mixin class _$SavingsGoalModelCopyWith<$Res>
       {String id,
       @JsonKey(name: 'server_id') String? serverId,
       String name,
-      @JsonKey(name: 'target_amount') double targetAmount,
-      @JsonKey(name: 'current_amount') double currentAmount,
-      @JsonKey(name: 'currency_code') String currencyCode,
+      @JsonKey(name: 'target_amount_minor') int targetAmountMinor,
+      @JsonKey(name: 'current_amount_minor') int currentAmountMinor,
       String? description,
       DateTime? deadline,
       @JsonKey(name: 'icon_name') String? iconName,
@@ -374,6 +373,7 @@ abstract mixin class _$SavingsGoalModelCopyWith<$Res>
       String status,
       @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
@@ -393,9 +393,8 @@ class __$SavingsGoalModelCopyWithImpl<$Res>
     Object? id = null,
     Object? serverId = freezed,
     Object? name = null,
-    Object? targetAmount = null,
-    Object? currentAmount = null,
-    Object? currencyCode = null,
+    Object? targetAmountMinor = null,
+    Object? currentAmountMinor = null,
     Object? description = freezed,
     Object? deadline = freezed,
     Object? iconName = freezed,
@@ -403,6 +402,7 @@ class __$SavingsGoalModelCopyWithImpl<$Res>
     Object? status = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
     return _then(_SavingsGoalModel(
@@ -418,18 +418,14 @@ class __$SavingsGoalModelCopyWithImpl<$Res>
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      targetAmount: null == targetAmount
-          ? _self.targetAmount
-          : targetAmount // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentAmount: null == currentAmount
-          ? _self.currentAmount
-          : currentAmount // ignore: cast_nullable_to_non_nullable
-              as double,
-      currencyCode: null == currencyCode
-          ? _self.currencyCode
-          : currencyCode // ignore: cast_nullable_to_non_nullable
-              as String,
+      targetAmountMinor: null == targetAmountMinor
+          ? _self.targetAmountMinor
+          : targetAmountMinor // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentAmountMinor: null == currentAmountMinor
+          ? _self.currentAmountMinor
+          : currentAmountMinor // ignore: cast_nullable_to_non_nullable
+              as int,
       description: freezed == description
           ? _self.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -458,6 +454,10 @@ class __$SavingsGoalModelCopyWithImpl<$Res>
           ? _self.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      deletedAt: freezed == deletedAt
+          ? _self.deletedAt
+          : deletedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       isSynced: null == isSynced
           ? _self.isSynced
           : isSynced // ignore: cast_nullable_to_non_nullable

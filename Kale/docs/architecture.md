@@ -15,8 +15,8 @@ Each feature in `lib/features/<feature>/` follows Clean Architecture:
 Models convert to entities with `toEntity()`; syncable models also convert to and from Drift rows.
 
 **Notifiers call use cases, never repositories.** Each use case has its own provider in the feature's
-`*_providers.dart`. Legacy exceptions to fix when touched: `SavingsNotifier` (repository only, so its 2 use cases are
-unused), a few direct repository calls in the transactions, budget, and auth notifiers, and use cases with no caller
+`*_providers.dart`. Legacy exceptions to fix when touched: a few direct repository calls in the transactions,
+budget, and auth notifiers, and use cases with no caller
 (`GetBudgetsUseCase`, `GetCategoryTotalsUseCase`, `GetPeriodSummaryUseCase`). Notifiers emit state with
 no user-facing text; pages pick the localized message.
 

@@ -54,6 +54,7 @@ All feature tables matching the Flutter domain entities:
 - `budget_category_allocations` — per-category allocation within a budget (CASCADE on budget delete)
 - `savings_goals` — goal-based savings with status tracking
 - `savings_contributions` — individual contributions with auto-update trigger on `savings_goals.current_amount`
+  (both savings tables are reset, and the trigger dropped, by `20261014000100`)
 
 **Indexes:** Optimized for user-scoped queries — `(user_id, date DESC)`, `(user_id, type, date)`, `(user_id, status)`, etc.
 
@@ -92,6 +93,16 @@ Schema reset for issue #5 (decision Q11: dropped and recreated, data not kept):
   client-owned `updated_at` (no trigger), nullable `deleted_at`, index on `(user_id, updated_at)`, and one owner-only
   RLS policy for the `authenticated` role (anonymous users included); `anon` has no access
 
+### 20261014000100_reset_savings_minor_units.sql
+Schema reset for issue #7 (data not kept):
+- Drops the `on_savings_contribution_insert` trigger and `update_savings_goal_amount()`. The device computes a
+  goal's saved amount from its contributions and pushes it; with the trigger, synced contributions would count twice
+- `savings_goals` recreated: UUID id, `target_amount_minor` / `current_amount_minor BIGINT`, no `currency_code`,
+  client-owned `updated_at` (no trigger), nullable `deleted_at`, index on `(user_id, updated_at)`, owner-only RLS
+- `savings_contributions` recreated: UUID id, `goal_id` (CASCADE), `amount_minor BIGINT`, `updated_at`,
+  `deleted_at`, index on `(goal_id, updated_at)`. No `user_id`: readable and writable only through a goal the user
+  owns (one `EXISTS` RLS policy, also checked on write)
+
 ## Anonymous users
 
 Every fresh install signs in anonymously, so anonymous sign-ins must be **enabled** on each project, and
@@ -110,6 +121,8 @@ SQL tests (pgTAP) live in `supabase/tests/database/`. Run them against the local
 - `transactions_rls.test.sql`: the reset transactions table's shape, and that one user (permanent or anonymous) can
   neither read nor write another user's transactions. It creates two users, so it relies on
   `20261013000001_categories_key_per_user.sql`.
+- `savings_rls.test.sql`: the reset savings tables' shape, that no trigger writes a goal's saved amount, and that
+  contributions are reachable only through a goal the user owns.
 
 ## Database Schema
 
@@ -128,8 +141,7 @@ auth.users (Supabase managed)
     │               └── references category_id
     │
     └── savings_goals (1:many)
-            └── savings_contributions (1:many, CASCADE delete)
-                    └── trigger: auto-updates current_amount + auto-completes goal
+            └── savings_contributions (1:many, CASCADE delete, owned through the goal)
 ```
 
 ## App configuration
@@ -174,7 +186,8 @@ Checked statically against the app's remote datasources (no live access):
   creates a user on every fresh install. If the live project already has a composite key, that migration fails
   on `DROP CONSTRAINT categories_pkey` there: adjust it before `db push`.
 - `on_savings_contribution_insert` adds each contribution to `savings_goals.current_amount`. It is harmless
-  today (contributions never sync) but would double-count once they do; the schema reset drops it (decision Q6).
+  today (contributions never sync) but would double-count once they do; dropped by
+  `20261014000100_reset_savings_minor_units.sql` (decision Q6).
 
 ### Recorded differences
 

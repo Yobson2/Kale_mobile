@@ -11,9 +11,8 @@ _SavingsGoalModel _$SavingsGoalModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       serverId: json['server_id'] as String?,
       name: json['name'] as String,
-      targetAmount: (json['target_amount'] as num).toDouble(),
-      currentAmount: (json['current_amount'] as num?)?.toDouble() ?? 0.0,
-      currencyCode: json['currency_code'] as String,
+      targetAmountMinor: (json['target_amount_minor'] as num).toInt(),
+      currentAmountMinor: (json['current_amount_minor'] as num?)?.toInt() ?? 0,
       description: json['description'] as String?,
       deadline: json['deadline'] == null
           ? null
@@ -23,6 +22,9 @@ _SavingsGoalModel _$SavingsGoalModelFromJson(Map<String, dynamic> json) =>
       status: json['status'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
+      deletedAt: json['deleted_at'] == null
+          ? null
+          : DateTime.parse(json['deleted_at'] as String),
     );
 
 Map<String, dynamic> _$SavingsGoalModelToJson(_SavingsGoalModel instance) =>
@@ -30,9 +32,8 @@ Map<String, dynamic> _$SavingsGoalModelToJson(_SavingsGoalModel instance) =>
       'id': instance.id,
       'server_id': instance.serverId,
       'name': instance.name,
-      'target_amount': instance.targetAmount,
-      'current_amount': instance.currentAmount,
-      'currency_code': instance.currencyCode,
+      'target_amount_minor': instance.targetAmountMinor,
+      'current_amount_minor': instance.currentAmountMinor,
       'description': instance.description,
       'deadline': instance.deadline?.toIso8601String(),
       'icon_name': instance.iconName,
@@ -40,4 +41,5 @@ Map<String, dynamic> _$SavingsGoalModelToJson(_SavingsGoalModel instance) =>
       'status': instance.status,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
+      'deleted_at': instance.deletedAt?.toIso8601String(),
     };

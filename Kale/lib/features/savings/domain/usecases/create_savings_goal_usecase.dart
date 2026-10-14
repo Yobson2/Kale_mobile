@@ -18,8 +18,7 @@ class CreateSavingsGoalUseCase
   ) {
     return _repository.createSavingsGoal(
       name: params.name,
-      targetAmount: params.targetAmount,
-      currencyCode: params.currencyCode,
+      targetAmountMinor: params.targetAmountMinor,
       description: params.description,
       deadline: params.deadline,
       iconName: params.iconName,
@@ -33,8 +32,7 @@ class CreateSavingsGoalParams {
   /// Creates [CreateSavingsGoalParams].
   const CreateSavingsGoalParams({
     required this.name,
-    required this.targetAmount,
-    required this.currencyCode,
+    required this.targetAmountMinor,
     this.description,
     this.deadline,
     this.iconName,
@@ -42,8 +40,9 @@ class CreateSavingsGoalParams {
   });
 
   final String name;
-  final double targetAmount;
-  final String currencyCode;
+
+  /// Target, in minor units of the base currency.
+  final int targetAmountMinor;
   final String? description;
   final DateTime? deadline;
   final String? iconName;

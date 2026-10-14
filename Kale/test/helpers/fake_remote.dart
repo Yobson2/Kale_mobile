@@ -7,6 +7,10 @@ import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.
 import 'package:kale/features/budget/data/models/budget_model.dart';
 import 'package:kale/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:kale/features/profile/data/models/profile_model.dart';
+import 'package:kale/features/savings/data/datasources/savings_contributions_remote_datasource.dart';
+import 'package:kale/features/savings/data/datasources/savings_remote_datasource.dart';
+import 'package:kale/features/savings/data/models/savings_contribution_model.dart';
+import 'package:kale/features/savings/data/models/savings_goal_model.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_remote_datasource.dart';
 import 'package:kale/features/transactions/data/models/transaction_model.dart';
 
@@ -162,6 +166,73 @@ class FakeProfileRemote extends FakeRemote<ProfileModel>
       );
 }
 
+/// Fake server table for savings goals. Like the real schema, it has no
+/// trigger: a goal's saved amount is only what the device pushes.
+class FakeSavingsGoalsRemote extends FakeRemote<SavingsGoalModel>
+    implements SavingsRemoteDataSource {
+  @override
+  Future<List<SavingsGoalModel>> getAllSavingsGoals() =>
+      handle(const RemoteCall.fetchAll(), () => rows.values.toList());
+
+  @override
+  Future<SavingsGoalModel> getSavingsGoalById(String id) =>
+      handle(RemoteCall.fetch(id), () => findOrThrow(id));
+
+  @override
+  Future<SavingsGoalModel> createSavingsGoal(SavingsGoalModel model) =>
+      handle(RemoteCall.create(model.id), () => rows[model.id] = model);
+
+  @override
+  Future<SavingsGoalModel> updateSavingsGoal(SavingsGoalModel model) =>
+      handle(RemoteCall.update(model.id), () => rows[model.id] = model);
+
+  @override
+  Future<void> deleteSavingsGoal(String id) =>
+      handle(RemoteCall.delete(id), () => rows.remove(id));
+}
+
+/// Fake server table for savings contributions. Like the real foreign
+/// key, it rejects a contribution whose goal is not on the server.
+class FakeSavingsContributionsRemote
+    extends FakeRemote<SavingsContributionModel>
+    implements SavingsContributionsRemoteDataSource {
+  FakeSavingsContributionsRemote(this._goals);
+
+  final FakeSavingsGoalsRemote _goals;
+
+  @override
+  Future<List<SavingsContributionModel>> getAllContributions() =>
+      handle(const RemoteCall.fetchAll(), () => rows.values.toList());
+
+  @override
+  Future<SavingsContributionModel> getContributionById(String id) =>
+      handle(RemoteCall.fetch(id), () => findOrThrow(id));
+
+  @override
+  Future<SavingsContributionModel> createContribution(
+    SavingsContributionModel model,
+  ) =>
+      handle(RemoteCall.create(model.id), () {
+        if (!_goals.rows.containsKey(model.goalId)) {
+          throw const ServerException(
+            message: 'Foreign key violation: goal not found',
+            statusCode: 400,
+          );
+        }
+        return rows[model.id] = model;
+      });
+
+  @override
+  Future<SavingsContributionModel> updateContribution(
+    SavingsContributionModel model,
+  ) =>
+      handle(RemoteCall.update(model.id), () => rows[model.id] = model);
+
+  @override
+  Future<void> deleteContribution(String id) =>
+      handle(RemoteCall.delete(id), () => rows.remove(id));
+}
+
 /// Fake Supabase Auth. Only anonymous sign-in is implemented; the other
 /// flows throw until a test needs them.
 class FakeAuthRemote implements AuthRemoteDataSource {
@@ -193,7 +264,13 @@ class FakeAuthRemote implements AuthRemoteDataSource {
 /// The fake backend: Auth, plus one [FakeRemote] per synced table.
 class FakeServer {
   FakeServer() {
-    for (final table in <FakeRemote<Object>>[transactions, budgets, profile]) {
+    for (final table in <FakeRemote<Object>>[
+      transactions,
+      budgets,
+      profile,
+      savingsGoals,
+      savingsContributions,
+    ]) {
       table.session = auth;
     }
   }
@@ -202,4 +279,7 @@ class FakeServer {
   final transactions = FakeTransactionsRemote();
   final budgets = FakeBudgetsRemote();
   final profile = FakeProfileRemote();
+  final savingsGoals = FakeSavingsGoalsRemote();
+  late final savingsContributions =
+      FakeSavingsContributionsRemote(savingsGoals);
 }

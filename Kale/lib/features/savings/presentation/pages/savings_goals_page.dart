@@ -3,15 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/animations/staggered_list_item.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
 import 'package:kale/core/widgets/states/app_error_state.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/savings/domain/entities/savings_goal.dart';
 import 'package:kale/features/savings/presentation/providers/savings_notifier.dart';
 import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
@@ -43,8 +44,7 @@ class SavingsGoalsPage extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: context.l10n.savingsAddGoal,
-            onPressed: () =>
-                context.pushNamed(RouteNames.addSavingsGoalName),
+            onPressed: () => context.pushNamed(RouteNames.addSavingsGoalName),
           ),
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
@@ -60,9 +60,10 @@ class SavingsGoalsPage extends ConsumerWidget {
             return const _SavingsEmptyState();
           }
 
-          final totalSaved = goals.fold<double>(
-            0,
-            (sum, g) => sum + g.currentAmount,
+          final currency = ref.watch(baseCurrencyProvider);
+          final totalSaved = Money.sum(
+            goals.map((g) => g.savedIn(currency)),
+            currency,
           );
 
           return RefreshIndicator(
@@ -76,7 +77,6 @@ class SavingsGoalsPage extends ConsumerWidget {
                 _TotalSavedCard(
                   totalSaved: totalSaved,
                   isDark: isDark,
-                  currencyCode: goals.first.currencyCode,
                 ),
                 AppSpacing.verticalLg,
 
@@ -135,12 +135,10 @@ class _TotalSavedCard extends StatelessWidget {
   const _TotalSavedCard({
     required this.totalSaved,
     required this.isDark,
-    required this.currencyCode,
   });
 
-  final double totalSaved;
+  final Money totalSaved;
   final bool isDark;
-  final String currencyCode;
 
   @override
   Widget build(BuildContext context) {
@@ -174,10 +172,7 @@ class _TotalSavedCard extends StatelessWidget {
                 ),
                 AppSpacing.verticalSm,
                 Text(
-                  CurrencyFormatter.format(
-                    totalSaved,
-                    currencyCode: currencyCode,
-                  ),
+                  context.formatMoney(totalSaved),
                   style: context.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
@@ -206,6 +201,7 @@ class _GoalCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final progressPercent = (goal.progress * 100).round();
+    final currency = ref.watch(baseCurrencyProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -244,8 +240,8 @@ class _GoalCard extends ConsumerWidget {
                     ),
                     AppSpacing.verticalXs,
                     Text(
-                      '${CurrencyFormatter.format(goal.currentAmount, currencyCode: goal.currencyCode)}'
-                      ' / ${CurrencyFormatter.format(goal.targetAmount, currencyCode: goal.currencyCode)}',
+                      '${context.formatMoney(goal.savedIn(currency))}'
+                      ' / ${context.formatMoney(goal.targetIn(currency))}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -259,8 +255,7 @@ class _GoalCard extends ConsumerWidget {
                       SizedBox(
                         height: 32,
                         child: FilledButton.tonal(
-                          onPressed: () =>
-                              _showContributeSheet(context, ref),
+                          onPressed: () => _showContributeSheet(context, ref),
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                               horizontal: AppSpacing.md,
@@ -287,6 +282,8 @@ class _GoalCard extends ConsumerWidget {
 
   void _showContributeSheet(BuildContext context, WidgetRef ref) {
     final amountController = TextEditingController();
+    final currency = ref.read(baseCurrencyProvider);
+    final locale = Localizations.localeOf(context).toString();
 
     showModalBottomSheet<void>(
       context: context,
@@ -312,16 +309,15 @@ class _GoalCard extends ConsumerWidget {
             AppSpacing.verticalLg,
             TextField(
               controller: amountController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: currency.decimalPlaces > 0,
+              ),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp(r'^\d+\.?\d{0,2}'),
-                ),
+                FilteringTextInputFormatter.allow(RegExp(r'[\d.,\s  ]')),
               ],
               decoration: InputDecoration(
                 labelText: context.l10n.transactionsAmount,
-                prefixText: '${goal.currencyCode} ',
+                prefixText: '${currency.symbol} ',
                 border: OutlineInputBorder(
                   borderRadius: AppRadius.borderRadiusMd,
                 ),
@@ -331,11 +327,15 @@ class _GoalCard extends ConsumerWidget {
             AppSpacing.verticalLg,
             FilledButton(
               onPressed: () {
-                final amount = double.tryParse(amountController.text);
-                if (amount == null || amount <= 0) return;
+                final amount = Money.tryParse(
+                  amountController.text,
+                  currency,
+                  locale: locale,
+                );
+                if (amount == null || !amount.isPositive) return;
                 ref.read(savingsNotifierProvider.notifier).contribute(
                       goalId: goal.id,
-                      amount: amount,
+                      amountMinor: amount.minorUnits,
                     );
                 Navigator.pop(context);
               },
@@ -360,7 +360,8 @@ class _QuickStartGrid extends StatelessWidget {
       _QuickTemplate(Icons.flight_outlined, 'Vacation', Colors.orange, context),
       _QuickTemplate(
           Icons.directions_car_outlined, 'Car Fund', Colors.green, context),
-      _QuickTemplate(Icons.school_outlined, 'Education', Colors.purple, context),
+      _QuickTemplate(
+          Icons.school_outlined, 'Education', Colors.purple, context),
     ];
 
     return GridView.count(
@@ -492,8 +493,7 @@ class _SavingsEmptyState extends StatelessWidget {
             ),
             AppSpacing.verticalSm,
             FilledButton(
-              onPressed: () =>
-                  context.pushNamed(RouteNames.addSavingsGoalName),
+              onPressed: () => context.pushNamed(RouteNames.addSavingsGoalName),
               child: Text(context.l10n.savingsCreateGoal),
             ),
           ],
@@ -519,9 +519,8 @@ class _DeadlineChip extends StatelessWidget {
     final chipColor = isOverdue
         ? (isDark ? AppColors.expenseDark : AppColors.expenseLight)
         : theme.colorScheme.tertiaryContainer;
-    final textColor = isOverdue
-        ? Colors.white
-        : theme.colorScheme.onTertiaryContainer;
+    final textColor =
+        isOverdue ? Colors.white : theme.colorScheme.onTertiaryContainer;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),

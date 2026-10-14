@@ -30,6 +30,11 @@ import 'package:kale/features/dashboard/presentation/providers/dashboard_provide
 import 'package:kale/features/profile/domain/repositories/profile_repository.dart';
 import 'package:kale/features/profile/domain/usecases/change_base_currency_usecase.dart';
 import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
+import 'package:kale/features/savings/domain/entities/savings_contribution.dart';
+import 'package:kale/features/savings/domain/entities/savings_enums.dart';
+import 'package:kale/features/savings/domain/entities/savings_goal.dart';
+import 'package:kale/features/savings/domain/repositories/savings_repository.dart';
+import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 import 'package:kale/features/transactions/domain/repositories/transactions_repository.dart';
@@ -106,6 +111,10 @@ class SyncHarness {
 
   /// The budgets repository, as the feature's use cases get it.
   BudgetsRepository get budgets => _container.read(budgetsRepositoryProvider);
+
+  /// The savings repository (goals and contributions), as the feature's
+  /// use cases get it.
+  SavingsRepository get savings => _container.read(savingsRepositoryProvider);
 
   /// The profile repository (base currency), as the use cases get it.
   ProfileRepository get profile => _container.read(profileRepositoryProvider);
@@ -199,6 +208,9 @@ class SyncHarness {
             .overrideWithValue(server.transactions),
         budgetsRemoteDataSourceProvider.overrideWithValue(server.budgets),
         profileRemoteDataSourceProvider.overrideWithValue(server.profile),
+        savingsRemoteDataSourceProvider.overrideWithValue(server.savingsGoals),
+        savingsContributionsRemoteDataSourceProvider
+            .overrideWithValue(server.savingsContributions),
         authRemoteDataSourceProvider.overrideWithValue(server.auth),
         authLocalDataSourceProvider.overrideWithValue(_authStorage),
       ],
@@ -365,6 +377,43 @@ extension SyncHarnessFixtures on SyncHarness {
       categories: const [],
     );
     return result.fold((f) => throw StateError('$f'), (b) => b);
+  }
+
+  /// Creates a savings goal through [SyncHarness.savings].
+  Future<SavingsGoal> addSavingsGoal({
+    String name = 'Emergency fund',
+    int targetAmountMinor = 100000,
+  }) async {
+    final result = await savings.createSavingsGoal(
+      name: name,
+      targetAmountMinor: targetAmountMinor,
+    );
+    return result.fold((f) => throw StateError('$f'), (g) => g);
+  }
+
+  /// Adds a manual contribution to a goal through [SyncHarness.savings].
+  Future<SavingsContribution> contribute(
+    String goalId, {
+    required int amountMinor,
+  }) async {
+    final result = await savings.contributeToGoal(
+      goalId: goalId,
+      amountMinor: amountMinor,
+      source: ContributionSource.manual,
+    );
+    return result.fold((f) => throw StateError('$f'), (c) => c);
+  }
+
+  /// Reads one savings goal back through the repository.
+  Future<SavingsGoal> readSavingsGoal(String id) async {
+    final result = await savings.getSavingsGoalById(id);
+    return result.fold((f) => throw StateError('$f'), (g) => g);
+  }
+
+  /// Lists a goal's contributions through the repository.
+  Future<List<SavingsContribution>> listContributions(String goalId) async {
+    final result = await savings.getContributions(goalId);
+    return result.fold((f) => throw StateError('$f'), (c) => c);
   }
 
   /// Chooses the base currency the way onboarding does (no relabel
