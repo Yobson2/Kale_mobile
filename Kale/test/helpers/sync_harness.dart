@@ -85,6 +85,7 @@ class SyncHarness {
   /// SharedPreferences and the keychain do.
   final InMemoryAuthLocalDataSource _authStorage =
       InMemoryAuthLocalDataSource();
+  final InMemoryLastBackupStore _lastBackupStore = InMemoryLastBackupStore();
   late ProviderContainer _container;
   StreamSubscription<BackupStatus>? _statusSubscription;
   int _syncRuns = 0;
@@ -172,20 +173,34 @@ class SyncHarness {
     await db.close();
   }
 
-  ProviderContainer _newContainer() => ProviderContainer(
-        overrides: [
-          appDatabaseProvider.overrideWithValue(db),
-          networkInfoProvider.overrideWithValue(_network),
-          syncConfigProvider.overrideWithValue(
-            const SyncConfig(initialBackoffMs: 0),
-          ),
-          transactionsRemoteDataSourceProvider
-              .overrideWithValue(server.transactions),
-          budgetsRemoteDataSourceProvider.overrideWithValue(server.budgets),
-          authRemoteDataSourceProvider.overrideWithValue(server.auth),
-          authLocalDataSourceProvider.overrideWithValue(_authStorage),
-        ],
-      );
+  void _disposeContainer() {
+    unawaited(_statusSubscription?.cancel());
+    clock.cancelAll();
+    _container.dispose();
+  }
+
+  ProviderContainer _newContainer() {
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        networkInfoProvider.overrideWithValue(_network),
+        syncClockProvider.overrideWithValue(clock),
+        lastBackupStoreProvider.overrideWithValue(_lastBackupStore),
+        transactionsRemoteDataSourceProvider
+            .overrideWithValue(server.transactions),
+        budgetsRemoteDataSourceProvider.overrideWithValue(server.budgets),
+        authRemoteDataSourceProvider.overrideWithValue(server.auth),
+        authLocalDataSourceProvider.overrideWithValue(_authStorage),
+      ],
+    );
+    var wasSyncing = false;
+    _statusSubscription =
+        container.read(syncEngineProvider).watchBackupStatus().listen((status) {
+      if (status.isSyncing && !wasSyncing) _syncRuns++;
+      wasSyncing = status.isSyncing;
+    });
+    return container;
+  }
 }
 
 /// Device-side session cache kept in memory.
