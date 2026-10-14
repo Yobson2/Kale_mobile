@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/features/budget/data/datasources/budgets_local_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
@@ -40,22 +41,12 @@ class BudgetsSyncHandler implements SyncHandler {
   }
 
   @override
-  Future<String?> fetchRemote(String entityId) async {
-    try {
-      final model = await _remote.getBudgetById(entityId);
-      return jsonEncode(model.toJson());
-    } catch (_) {
-      return null;
-    }
-  }
-
-  @override
-  Future<void> applyServerVersion(
-    String entityId,
-    String serverPayload,
-  ) async {
-    final json = jsonDecode(serverPayload) as Map<String, dynamic>;
-    final model = BudgetModel.fromJson(json).copyWith(isSynced: true);
-    await _local.saveBudget(model);
+  Future<PulledPage> pullPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
+    final page = await _remote.fetchPage(after: after, limit: limit);
+    await _local.mergeFromServer(page.rows);
+    return PulledPage(rowCount: page.rows.length, last: page.last);
   }
 }

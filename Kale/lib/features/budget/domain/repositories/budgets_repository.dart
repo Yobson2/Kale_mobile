@@ -52,7 +52,4 @@ abstract class BudgetsRepository {
 
   /// Deletes a budget by ID.
   Future<Either<Failure, void>> deleteBudget(String id);
-
-  /// Triggers a full refresh from the server.
-  Future<Either<Failure, void>> refreshFromServer();
 }

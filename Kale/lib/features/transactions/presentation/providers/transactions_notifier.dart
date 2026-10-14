@@ -123,23 +123,6 @@ class TransactionsNotifier extends _$TransactionsNotifier {
     }
   }
 
-  /// Triggers a full refresh from the server.
-  Future<void> refreshFromServer() async {
-    state = const TransactionsState.loading();
-    try {
-      final repository = ref.read(transactionsRepositoryProvider);
-      final result = await repository.refreshFromServer();
-      state = result.fold(
-        (failure) => TransactionsState.error(failure.message),
-        (_) => const TransactionsState.success(
-          message: 'Transactions refreshed',
-        ),
-      );
-    } catch (e) {
-      state = TransactionsState.error(e.toString());
-    }
-  }
-
   /// Records streak and checks transaction-related achievements.
   void _checkAchievements() {
     Future(() async {

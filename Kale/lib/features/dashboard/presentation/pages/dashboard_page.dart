@@ -5,6 +5,7 @@ import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/data_display/app_avatar.dart';
+import 'package:kale/core/widgets/feedback/refresh_from_backup.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
@@ -40,6 +41,7 @@ class DashboardPage extends ConsumerWidget {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
+            await refreshFromBackup(context, ref);
             ref.invalidate(dashboardSummaryProvider);
           },
           child: CustomScrollView(

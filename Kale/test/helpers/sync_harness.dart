@@ -16,6 +16,7 @@ import 'package:kale/core/sync/last_backup_store.dart';
 import 'package:kale/core/sync/sync_clock.dart';
 import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/core/sync/sync_providers.dart';
+import 'package:kale/core/sync/sync_puller.dart';
 import 'package:kale/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:kale/features/auth/data/models/tokens_model.dart';
 import 'package:kale/features/auth/data/models/user_model.dart';
@@ -44,6 +45,8 @@ import 'package:kale/features/transactions/domain/repositories/transactions_repo
 import 'package:kale/features/transactions/presentation/providers/transactions_providers.dart';
 
 import 'fake_remote.dart';
+
+export 'package:kale/core/sync/sync_puller.dart' show PullOutcome, PullStatus;
 
 export 'fake_remote.dart';
 
@@ -142,6 +145,15 @@ class SyncHarness {
 
   /// Runs one sync cycle and waits for it to finish.
   Future<void> sync() => engine.processQueue();
+
+  /// The app's puller (restore and pull-to-refresh).
+  SyncPuller get puller => _container.read(syncPullerProvider);
+
+  /// Pull-to-refresh, as the main screens run it.
+  Future<PullOutcome> pull() => puller.pull();
+
+  /// The restore check the app runs after sign-in and at launch.
+  Future<PullOutcome?> restoreIfNeeded() => puller.restoreIfNeeded();
 
   /// The engine's current backup status.
   BackupStatus get backupStatus => engine.currentBackupStatus;

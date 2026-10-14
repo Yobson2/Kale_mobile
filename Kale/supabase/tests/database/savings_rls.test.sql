@@ -47,7 +47,9 @@ SELECT is_empty($$
     WHERE tgrelid IN ('public.savings_goals'::regclass,
                       'public.savings_contributions'::regclass)
       AND NOT tgisinternal
-$$, 'no trigger on the savings tables');
+      -- The pull-cursor stamp writes only server_updated_at, never client data.
+      AND tgfoid <> 'public.stamp_server_updated_at'::regproc
+$$, 'no trigger writes client data on the savings tables');
 
 -- ── Alice writes her own goal and a contribution ────────────────────────────
 SELECT pg_temp.act_as('11111111-1111-1111-1111-111111111111');

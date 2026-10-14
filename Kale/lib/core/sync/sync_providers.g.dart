@@ -62,12 +62,13 @@ final lastBackupStoreProvider = Provider<LastBackupStore>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef LastBackupStoreRef = ProviderRef<LastBackupStore>;
-String _$syncHandlersHash() => r'b1a43730e5d1a761f4492f56aa427fc0c8422bda';
+String _$syncHandlersHash() => r'74a21638d19998d0647e9528e1aa21e4ed419bee';
 
 /// Every [SyncHandler] in the app, one per syncable entity type.
 ///
 /// Add a feature's handler here when it starts enqueueing a new entity
-/// type; `test/core/sync/sync_wiring_test.dart` fails until you do.
+/// type; `test/core/sync/sync_wiring_test.dart` fails until you do. The
+/// order is the pull order: parents before their children.
 ///
 /// Copied from [syncHandlers].
 @ProviderFor(syncHandlers)
@@ -121,5 +122,41 @@ final backupStatusProvider = AutoDisposeStreamProvider<BackupStatus>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BackupStatusRef = AutoDisposeStreamProviderRef<BackupStatus>;
+String _$syncPullerHash() => r'edeed4eaeac72f20edf4506b22f2551db11b3578';
+
+/// Provides the [SyncPuller]: restore after sign-in and pull-to-refresh.
+///
+/// Copied from [syncPuller].
+@ProviderFor(syncPuller)
+final syncPullerProvider = Provider<SyncPuller>.internal(
+  syncPuller,
+  name: r'syncPullerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$syncPullerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SyncPullerRef = ProviderRef<SyncPuller>;
+String _$pullStatusHash() => r'7f232a19a3f8db32788105b67fcb33e8ccde3566';
+
+/// Streams the [PullStatus] for the restore banner.
+///
+/// Copied from [pullStatus].
+@ProviderFor(pullStatus)
+final pullStatusProvider = AutoDisposeStreamProvider<PullStatus>.internal(
+  pullStatus,
+  name: r'pullStatusProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$pullStatusHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PullStatusRef = AutoDisposeStreamProviderRef<PullStatus>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

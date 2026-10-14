@@ -9,6 +9,7 @@ import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/animations/staggered_list_item.dart';
 import 'package:kale/core/widgets/data_display/app_chip.dart';
+import 'package:kale/core/widgets/feedback/refresh_from_backup.dart';
 import 'package:kale/core/widgets/inputs/app_search_field.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
 import 'package:kale/core/widgets/states/app_empty_state.dart';
@@ -130,9 +131,7 @@ class _TransactionsPageState extends ConsumerState<TransactionsPage> {
                 final groups = _groupTransactionsByDate(context, filtered);
 
                 return RefreshIndicator(
-                  onRefresh: () async {
-                    ref.invalidate(transactionsStreamProvider);
-                  },
+                  onRefresh: () => refreshFromBackup(context, ref),
                   child: CustomScrollView(
                     slivers: [
                       for (final group in groups) ...[

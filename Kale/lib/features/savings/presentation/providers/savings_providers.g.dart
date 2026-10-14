@@ -55,7 +55,7 @@ final savingsContributionsRemoteDataSourceProvider =
 typedef SavingsContributionsRemoteDataSourceRef
     = AutoDisposeProviderRef<SavingsContributionsRemoteDataSource>;
 String _$savingsLocalDataSourceHash() =>
-    r'b508f9e1c11091fa7bfe8b0826bfb7bbebc488c3';
+    r'1dfbc09f2a447a2abbc32a759ca9601379420993';
 
 /// Provides the [SavingsLocalDataSource] (goals).
 ///
@@ -145,7 +145,7 @@ final savingsContributionsSyncHandlerProvider =
 // ignore: unused_element
 typedef SavingsContributionsSyncHandlerRef
     = ProviderRef<SavingsContributionsSyncHandler>;
-String _$savingsRepositoryHash() => r'e4c74140c77fcc5d9c9899b1389944f784b803b8';
+String _$savingsRepositoryHash() => r'a08740e21085b2c49fdb4988a7b393b8b22be2cd';
 
 /// Provides the [SavingsRepository].
 ///

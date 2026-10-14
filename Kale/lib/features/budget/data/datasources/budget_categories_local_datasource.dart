@@ -1,5 +1,6 @@
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/budget/data/daos/budget_categories_dao.dart';
 import 'package:kale/features/budget/data/models/budget_category_model.dart';
 
@@ -32,9 +33,9 @@ abstract class BudgetCategoriesLocalDataSource {
   });
   Future<void> markSynced(String id);
 
-  /// Replaces synced allocations with the server's copy; unsynced ones
-  /// are kept.
-  Future<void> replaceAllFromServer(List<BudgetCategoryModel> models);
+  /// Merges allocations pulled from the server (see `rowsToApply`):
+  /// local changes not yet pushed are kept.
+  Future<void> mergeFromServer(List<BudgetCategoryModel> pulled);
 }
 
 /// Implementation of [BudgetCategoriesLocalDataSource].
@@ -133,13 +134,18 @@ class BudgetCategoriesLocalDataSourceImpl
   }
 
   @override
-  Future<void> replaceAllFromServer(List<BudgetCategoryModel> models) async {
+  Future<void> mergeFromServer(List<BudgetCategoryModel> pulled) async {
     try {
-      await _dao.replaceAll(
-        models.map((m) => m.copyWith(isSynced: true).toDriftCompanion()),
+      final apply = rowsToApply(
+        pulled,
+        local: await _dao.statesByIds(pulled.map((m) => m.id)),
+        pendingIds: await _syncQueueDao.queuedEntityIds(_entityType),
       );
+      await _dao.upsertAll([
+        for (final m in apply) m.copyWith(isSynced: true).toDriftCompanion(),
+      ]);
     } catch (e) {
-      throw CacheException(message: 'Failed to replace budget categories: $e');
+      throw CacheException(message: 'Failed to merge budget categories: $e');
     }
   }
 }

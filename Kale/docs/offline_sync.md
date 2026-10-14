@@ -11,7 +11,8 @@ How Kalé keeps working without connectivity, and how to make a new entity synca
 | **Read-local-always** | The UI reads from Drift, usually via reactive `watch*` streams |
 | **Queued sync** | Every mutation adds a row to the sync queue; the `SyncEngine` replays it to Supabase |
 | **Client-generated IDs** | Records get a UUID v4 locally; `serverId` is filled after the first successful push |
-| **Server wins** | On a conflict (HTTP 409), the server version overwrites the local one |
+| **Local changes win until pushed** | A pull never overwrites a row with a change not yet pushed; otherwise the newer `updatedAt` wins |
+| **Pull only on restore or request** | Reads never pull. Pulling runs on restore (empty device) and pull-to-refresh |
 
 Auth and preferences are not part of this. They live in secure storage and SharedPreferences.
 
@@ -21,13 +22,14 @@ Auth and preferences are not part of this. They live in secure storage and Share
 |---|---|---|
 | `AppDatabase` | `core/database/` | Registers every table and DAO; owns `schemaVersion`, migrations, default-category seeding, and `clearAllData()` (logout) |
 | Sync queue table + `SyncQueueDao` | `core/database/` | FIFO queue: `entityType`, `entityId`, `operation` (`create`/`update`; a delete is an `update`), JSON `payload`, `status` (`pending`/`in_progress`/`stuck`), `retryCount`, `lastError` |
-| `SyncEngine` + `SyncHandler` | `core/sync/sync_engine.dart` | Engine processes the queue; one handler per entity type does the actual push |
+| `SyncEngine` + `SyncHandler` | `core/sync/sync_engine.dart` | Engine processes the queue; one handler per entity type does the actual push and pulls pages back (`pullPage`) |
+| `SyncPuller` + pull cursors | `core/sync/sync_puller.dart`, `core/sync/pull.dart`, `PullCursorsDao` | Restore and pull-to-refresh: pages each entity type from its saved cursor, merges with `rowsToApply` |
 | `SyncConfig` | `core/sync/` | Retries (max 5), exponential backoff (1s doubling, capped at 60s), write debounce (2s) |
 | `SyncClock` | `core/sync/` | The engine's only source of time and timers; tests swap in a fake clock |
 | `BackupStatus` | `core/sync/` | `pendingCount`, `stuckCount`, `isSyncing`, `isOffline`, `lastBackupAt` (persisted by `LastBackupStore`) |
-| Providers | `core/sync/sync_providers.dart` | `syncEngineProvider` (keepAlive), `backupStatusProvider` |
+| Providers | `core/sync/sync_providers.dart` | `syncEngineProvider`, `syncPullerProvider` (keepAlive), `backupStatusProvider`, `pullStatusProvider` |
 | App wiring | `core/sync/sync_app_lifecycle.dart` | `SyncAppLifecycle` wraps the app root: starts the engine at launch, calls `onAppResumed()` on resume |
-| UI | `core/widgets/feedback/`, `features/more/` | `SyncStatusBanner` (in the home shell; "N changes not backed up · Retry"), `BackupStatusTile` (Settings), `SyncStatusIcon` (per item) |
+| UI | `core/widgets/feedback/`, `features/more/` | `SyncStatusBanner` (in the home shell; "N changes not backed up · Retry"), `BackupStatusTile` (Settings), `SyncStatusIcon` (per item), `AppRestoreBanner` (in `AppScaffold`, restore progress), `refreshFromBackup` (pull-to-refresh) |
 
 Feature tables and DAOs live in the feature (`features/<f>/data/tables/`, `data/daos/`) but are registered in `AppDatabase`.
 
@@ -39,7 +41,6 @@ Feature tables and DAOs live in the feature (`features/<f>/data/tables/`, `data/
 4. When the engine runs `processQueue()`, for each pending entry that is not backing off it:
    - looks up the handler by `entityType` and calls `pushCreate` or `pushUpdate`;
    - on success, the handler marks the row synced (and stores `serverId`), and the entry is deleted from the queue;
-   - on `ServerException` 409, it calls `fetchRemote` then `applyServerVersion` (server wins), then completes the entry;
    - on `NetworkException`, it leaves the entry pending without using a retry;
    - on any other error, it records `lastError` and uses a retry. Below `maxRetries` the entry backs off
      (1s, 2s, 4s…, without blocking the run) and a run is triggered when the backoff expires. At `maxRetries`
@@ -89,7 +90,7 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
 - Queue order matters: the goal's `create` is queued before its contributions (the server's foreign key needs the
   goal first). `getPending` keeps insertion order for entries queued within the same second.
 - Contributions have no `user_id`: on the server they are owned through their goal (RLS checks the goal's owner).
-- Refresh pulls goals and contributions, and keeps local rows that are not synced yet.
+- Goals are pulled before contributions.
 
 ## Budgets: two entity types
 
@@ -101,7 +102,7 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
   repository reuses the id of the existing allocation for the same category; an edit updates rows in place.
 - Allocations have no `user_id` (the server table is `budget_category_allocations`, owned through its budget).
   Deleting a budget soft-deletes its allocations too (see [Deletes](#deletes)).
-- Refresh pulls budgets, then allocations, and keeps local allocations that are not synced yet.
+- Budgets are pulled before their allocations.
 
 ## Deletes
 
@@ -115,38 +116,48 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
 - Creating then deleting before a sync pushes the `create`, then the `update`: the server ends up with a tombstone,
   never an orphan. (Purging old tombstones on the server is #14.)
 
-## Reads and refresh
+## Pulling: restore and pull-to-refresh
 
-- Repositories expose `watch*` streams and `get*` queries over Drift.
-- When online, `get*` fires a background `refreshFromServer()`. The auth notifier also refreshes all
-  syncable features after login.
-- Refresh pulls everything for the current user and **replaces** the local table (`replaceAllFromServer`).
+- **Reads never pull.** Repositories expose `watch*` streams and `get*` queries over Drift only; they have no
+  remote datasource (`check_sync_wiring.sh` check 4).
+- **When:** `SyncPuller.restoreIfNeeded()` runs after sign-in and at launch for a signed-in user. It restores only
+  when the device holds none of the user's data and nothing was ever pulled, or when an earlier restore did not
+  finish. `SyncPuller.pull()` is pull-to-refresh, wired on the dashboard, transactions, budget and savings screens
+  through `refreshFromBackup`.
+- **Paging:** every synced server table has `server_updated_at`, stamped by a trigger on each write (migration
+  `20261015000100_pull_cursor.sql`); the client never writes it. Each entity type is pulled in pages of 500
+  keyset-ordered on `(server_updated_at, id)` from its cursor in the `pull_cursors` Drift table, saved after every
+  page: an interrupted restore resumes where it stopped. Handlers are pulled in `syncHandlersProvider` order,
+  parents first. The single-row profile has no cursor and is fetched whole.
+- **Merge** (`rowsToApply`, decision Q8): a pulled row is skipped if the local row is unsynced or still has a queue
+  entry; otherwise the newer `updatedAt` wins, tombstones included. A tombstone for a row the device never had is
+  skipped. `updatedAt` stays client-owned: it orders edits, `server_updated_at` only orders pages.
+- **Progress:** `PullStatus` (`pullStatusProvider`) drives `AppRestoreBanner`: "Restoring your data… N items".
 
 ## Adding a syncable entity
 
 1. **Table** in `features/<f>/data/tables/`: text UUID `id` primary key, nullable `serverId`, `isSynced`
    (default `false`), `createdAt`/`updatedAt`.
-2. **DAO** in `features/<f>/data/daos/` with at least `watchAll`, `upsert`, `markDeleted`, `markSynced`, `replaceAll`, a
-   nullable `deletedAt` column, and every read excluding rows where it is set.
+2. **DAO** in `features/<f>/data/daos/` with at least `watchAll`, `upsert`, `markDeleted`, `markSynced`, `statesByIds` and
+   `upsertAll`, a nullable `deletedAt` column, and every read excluding rows where it is set.
 3. **Register** the table and DAO in `AppDatabase`, bump `schemaVersion`, and add an `if (from < N)` step in
    `onUpgrade` that creates the table. Also add it to `clearAllData()`.
 4. **Model** (Freezed) with `fromJson`/`toJson`, `fromDrift`, `toDriftCompanion({required bool isSynced})`, `toEntity`.
 5. **Local datasource** with save, soft delete (returning the deleted row, to queue) and watch, `enqueueSync`
-   using a unique `entityType` string, `markSynced`,
-   and `replaceAllFromServer`. One local datasource per entity type (see savings).
-6. **Remote datasource**: an abstract class, a Supabase implementation scoped by `user_id` that throws
-   `ServerException` with a status code, and a mock twin behind a `USE_MOCK_<F>` flag.
-7. **`SyncHandler`** whose `entityType` matches the string used in step 5 exactly.
+   using a unique `entityType` string, `markSynced`, and `mergeFromServer` (filtered by `rowsToApply`). One local
+   datasource per entity type (see savings). The model implements `PulledRow`.
+6. **Remote datasource**: an abstract class with create, update and `fetchPage` (built with `pullPageQuery` and
+   `toRemotePage`), a Supabase implementation scoped by `user_id` that throws `ServerException` with a status code,
+   and a mock twin behind a `USE_MOCK_<F>` flag. The server table needs `server_updated_at` and its stamp trigger.
+7. **`SyncHandler`** whose `entityType` matches the string used in step 5 exactly, with `pullPage` fetching a page
+   and merging it.
 8. **Providers**: a `<f>SyncHandler` provider (`keepAlive`), listed in `syncHandlersProvider`
-   (`core/sync/sync_providers.dart`) so the engine registers it at construction.
-9. **Repository**: write-local-first + enqueue for mutations; local reads; `refreshFromServer`.
-10. Add the entity's `refreshFromServer()` to the post-login refresh in the auth notifier.
-11. `make gen`, then test the repository and handler.
+   (`core/sync/sync_providers.dart`) so the engine and the puller register it; its position is its pull order.
+9. **Repository**: write-local-first + enqueue for mutations; local reads only, no remote datasource.
+10. `make gen`, then test the repository and handler.
 
 ## Known issues
 
-- **Refresh drops unsynced local rows** (all DAOs except the savings ones). `replaceAll` deletes the whole table
-  before inserting the server copy, including rows with `isSynced = false`. A record created while online
-  disappears locally on the next background refresh, and comes back only after its queued push succeeds and a
-  later refresh runs. The same goes for an unsynced delete: the deleted row reappears until its update is pushed
-  and a later refresh brings the tombstone back.
+- **Clock skew between devices.** The merge compares client-written `updatedAt` (last writer wins, decision Q8):
+  an edit made on a device whose clock is behind loses against an older edit from a device whose clock is ahead.
+  Paging is not affected: it uses the server-stamped `server_updated_at`.

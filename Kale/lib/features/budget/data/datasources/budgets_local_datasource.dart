@@ -1,6 +1,7 @@
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/budget/data/daos/budgets_dao.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
 
@@ -36,6 +37,10 @@ abstract class BudgetsLocalDataSource {
 
   /// Marks a budget as synced.
   Future<void> markSynced(String id, {String? serverId});
+
+  /// Merges budgets pulled from the server (see `rowsToApply`): local
+  /// changes not yet pushed are kept.
+  Future<void> mergeFromServer(List<BudgetModel> pulled);
 }
 
 /// Implementation of [BudgetsLocalDataSource] using Drift DAOs.
@@ -135,6 +140,22 @@ class BudgetsLocalDataSourceImpl implements BudgetsLocalDataSource {
       await _budgetsDao.markSynced(id, serverId: serverId);
     } catch (e) {
       throw CacheException(message: 'Failed to mark budget synced: $e');
+    }
+  }
+
+  @override
+  Future<void> mergeFromServer(List<BudgetModel> pulled) async {
+    try {
+      final apply = rowsToApply(
+        pulled,
+        local: await _budgetsDao.statesByIds(pulled.map((m) => m.id)),
+        pendingIds: await _syncQueueDao.queuedEntityIds(_entityType),
+      );
+      await _budgetsDao.upsertAll([
+        for (final m in apply) m.copyWith(isSynced: true).toDriftCompanion(),
+      ]);
+    } catch (e) {
+      throw CacheException(message: 'Failed to merge budgets: $e');
     }
   }
 }

@@ -67,24 +67,18 @@ void main() {
     }
   });
 
-  test('every syncable repository is refreshed after login', () {
-    final notifier = File(
-      'lib/features/auth/presentation/providers/auth_notifier.dart',
-    ).readAsStringSync();
+  test('reads never pull: no syncable repository uses a remote datasource', () {
     final syncable =
         _dartFiles('lib/features', endingWith: '_repository_impl.dart')
             .where((f) => f.readAsStringSync().contains('enqueueSync'));
 
+    expect(syncable, isNotEmpty);
     for (final file in syncable) {
-      final repository = RegExp(r'implements (\w+Repository)')
-          .firstMatch(file.readAsStringSync())!
-          .group(1)!;
-      final provider =
-          '${repository[0].toLowerCase()}${repository.substring(1)}Provider';
       expect(
-        notifier,
-        contains('$provider).refreshFromServer'),
-        reason: '$repository is not refreshed in auth_notifier.dart',
+        file.readAsStringSync(),
+        isNot(contains('RemoteDataSource')),
+        reason: '${file.path}: pulling goes through the SyncHandlers '
+            '(SyncPuller), never through a repository',
       );
     }
   });

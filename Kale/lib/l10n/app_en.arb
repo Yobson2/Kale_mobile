@@ -614,5 +614,13 @@
   },
   "logoutUnsavedConfirm": "Log out anyway",
   "logoutUnsavedCancel": "Stay logged in",
-  "logoutFailed": "Couldn't check your backup. Please try again."
+  "logoutFailed": "Couldn't check your backup. Please try again.",
+  "restoreInProgress": "{count, plural, =0{Restoring your data…} =1{Restoring your data… 1 item} other{Restoring your data… {count} items}}",
+  "@restoreInProgress": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "refreshOffline": "You're offline. Pull to refresh again once you're connected.",
+  "refreshFailed": "Couldn't refresh from your backup. Please try again."
 }

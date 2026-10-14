@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
-import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
 import 'package:kale/features/savings/data/datasources/savings_contributions_local_datasource.dart';
 import 'package:kale/features/savings/data/datasources/savings_contributions_remote_datasource.dart';
@@ -101,13 +100,9 @@ SavingsContributionsSyncHandler savingsContributionsSyncHandler(Ref ref) {
 @riverpod
 SavingsRepository savingsRepository(Ref ref) {
   return SavingsRepositoryImpl(
-    remoteDataSource: ref.watch(savingsRemoteDataSourceProvider),
     localDataSource: ref.watch(savingsLocalDataSourceProvider),
-    contributionsRemoteDataSource:
-        ref.watch(savingsContributionsRemoteDataSourceProvider),
     contributionsLocalDataSource:
         ref.watch(savingsContributionsLocalDataSourceProvider),
-    networkInfo: ref.watch(networkInfoProvider),
   );
 }
 

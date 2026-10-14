@@ -70,7 +70,7 @@ void main() {
     );
     harness.server.transactions.rows[deleted.id] = deleted;
 
-    await harness.transactions.refreshFromServer();
+    await harness.pull();
 
     expect((await harness.listTransactions()).map((t) => t.id), [kept.id]);
     final summary = await harness.dashboardSummary(

@@ -31,7 +31,7 @@ final budgetsRemoteDataSourceProvider =
 typedef BudgetsRemoteDataSourceRef
     = AutoDisposeProviderRef<BudgetsRemoteDataSource>;
 String _$budgetsLocalDataSourceHash() =>
-    r'f45591dfd9e40e4b076c12d31f6059bd85912a6f';
+    r'b4a8f7c4b754b9af759fb09c0f3ea20c19a9b913';
 
 /// Provides the [BudgetsLocalDataSource].
 ///
@@ -143,7 +143,7 @@ final budgetCategoriesSyncHandlerProvider =
 // ignore: unused_element
 typedef BudgetCategoriesSyncHandlerRef
     = ProviderRef<BudgetCategoriesSyncHandler>;
-String _$budgetsRepositoryHash() => r'e73f5c5bd4387b6c4083e8ad75c501b0601517fd';
+String _$budgetsRepositoryHash() => r'3891f3146ae87012ebb0154de3bcf590e9c0ac09';
 
 /// Provides the [BudgetsRepository].
 ///

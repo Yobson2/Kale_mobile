@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/config/env_provider.dart';
 import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/money/currency.dart';
-import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
 import 'package:kale/features/profile/data/datasources/profile_local_datasource.dart';
 import 'package:kale/features/profile/data/datasources/profile_remote_datasource.dart';
@@ -52,9 +51,7 @@ ProfileSyncHandler profileSyncHandler(Ref ref) {
 @riverpod
 ProfileRepository profileRepository(Ref ref) {
   return ProfileRepositoryImpl(
-    remoteDataSource: ref.watch(profileRemoteDataSourceProvider),
     localDataSource: ref.watch(profileLocalDataSourceProvider),
-    networkInfo: ref.watch(networkInfoProvider),
   );
 }
 

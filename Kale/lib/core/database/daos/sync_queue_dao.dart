@@ -154,6 +154,17 @@ class SyncQueueDao extends DatabaseAccessor<AppDatabase>
     );
   }
 
+  /// Ids of the [entityType] rows with a change still in the queue
+  /// (pending, in progress or stuck). A pull must not overwrite them.
+  Future<Set<String>> queuedEntityIds(String entityType) async {
+    final query = selectOnly(syncQueueEntries, distinct: true)
+      ..addColumns([syncQueueEntries.entityId])
+      ..where(syncQueueEntries.entityType.equals(entityType));
+    final ids =
+        await query.map((r) => r.read(syncQueueEntries.entityId)!).get();
+    return ids.toSet();
+  }
+
   /// Removes all entries for a specific entity.
   Future<void> removeForEntity(String entityType, String entityId) {
     return (delete(syncQueueEntries)

@@ -54,9 +54,6 @@ abstract class TransactionsRepository {
   /// Deletes a transaction.
   Future<Either<Failure, void>> deleteTransaction(String id);
 
-  /// Triggers a full refresh from the server.
-  Future<Either<Failure, void>> refreshFromServer();
-
   /// Gets total amounts grouped by category for a period.
   Future<Either<Failure, Map<String, int>>> getCategoryTotals({
     required DateTime startDate,

@@ -8,10 +8,10 @@ import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
+import 'package:kale/core/widgets/feedback/refresh_from_backup.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
-import 'package:kale/features/budget/presentation/providers/budgets_notifier.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/budget/presentation/widgets/budget_gauge.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
@@ -45,10 +45,9 @@ class BudgetPage extends ConsumerWidget {
                   if (budget == null) return null;
                   return IconButton(
                     icon: const Icon(Icons.refresh_rounded),
-                    onPressed: () {
-                      ref
-                          .read(budgetsNotifierProvider.notifier)
-                          .refreshFromServer();
+                    onPressed: () async {
+                      await refreshFromBackup(context, ref);
+                      ref.invalidate(activeBudgetProvider);
                     },
                   );
                 },
@@ -217,6 +216,7 @@ class _BudgetContent extends ConsumerWidget {
 
     return RefreshIndicator(
       onRefresh: () async {
+        await refreshFromBackup(context, ref);
         ref.invalidate(activeBudgetProvider);
       },
       child: SingleChildScrollView(

@@ -1505,4 +1505,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logoutFailed => 'Couldn\'t check your backup. Please try again.';
+
+  @override
+  String restoreInProgress(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Restoring your data… $count items',
+      one: 'Restoring your data… 1 item',
+      zero: 'Restoring your data…',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get refreshOffline =>
+      'You\'re offline. Pull to refresh again once you\'re connected.';
+
+  @override
+  String get refreshFailed =>
+      'Couldn\'t refresh from your backup. Please try again.';
 }

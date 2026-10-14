@@ -47,6 +47,8 @@ SELECT is_empty($$
     SELECT tgname FROM pg_trigger
     WHERE NOT tgisinternal
       AND tgrelid IN ('public.budgets'::regclass, 'public.budget_category_allocations'::regclass)
+      -- The pull-cursor stamp writes only server_updated_at, never client data.
+      AND tgfoid <> 'public.stamp_server_updated_at'::regproc
 $$, 'no trigger rewrites client-owned columns');
 
 -- ── Alice writes her own budget and allocation ──────────────────────────────

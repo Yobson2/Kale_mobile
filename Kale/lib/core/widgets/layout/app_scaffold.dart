@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/providers/connectivity_provider.dart';
 import 'package:kale/core/widgets/states/app_offline_banner.dart';
+import 'package:kale/core/widgets/states/app_restore_banner.dart';
 
 /// Custom scaffold with safe area and connectivity banner.
 ///
@@ -62,6 +63,7 @@ class AppScaffold extends ConsumerWidget {
       body: Column(
         children: [
           if (showOfflineBanner && !isOnline) const AppOfflineBanner(),
+          const AppRestoreBanner(),
           Expanded(child: body),
         ],
       ),

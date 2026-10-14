@@ -51,12 +51,12 @@ for f in $(find "$lib" -path '*/data/tables/*_table.dart'); do
   done
 done
 
-echo "4. Every syncable repository is refreshed after login"
-notifier=lib/features/auth/presentation/providers/auth_notifier.dart
+echo "4. Reads never pull: no syncable repository uses a remote datasource"
+# Pulling happens only through the SyncHandlers (restore and pull-to-refresh,
+# see SyncPuller), so a repository has no reason to reach the server.
 for f in $(grep -rlE "enqueueSync" "$lib" --include='*_repository_impl.dart'); do
   iface=$(grep -oE "implements [A-Za-z]+Repository" "$f" | awk '{print $2}')
-  prov="$(tr '[:upper:]' '[:lower:]' <<<"${iface:0:1}")${iface:1}Provider"
-  if grep -q "$prov).refreshFromServer" "$notifier"; then ok "$iface"; else bad "$iface not in _syncFromServer() in auth_notifier.dart"; fi
+  if grep -qE "_remote_datasource.dart|RemoteDataSource" "$f"; then bad "$iface ($f) depends on a remote datasource"; else ok "$iface"; fi
 done
 
 echo

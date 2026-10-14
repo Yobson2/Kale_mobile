@@ -1,5 +1,6 @@
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/savings/data/daos/savings_goals_dao.dart';
 import 'package:kale/features/savings/data/models/savings_goal_model.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
@@ -32,8 +33,9 @@ abstract class SavingsLocalDataSource {
   });
   Future<void> markSynced(String id, {String? serverId});
 
-  /// Replaces synced goals with the server's copy; unsynced goals are kept.
-  Future<void> replaceAllFromServer(List<SavingsGoalModel> models);
+  /// Merges goals pulled from the server (see `rowsToApply`): local
+  /// changes not yet pushed are kept.
+  Future<void> mergeFromServer(List<SavingsGoalModel> pulled);
 }
 
 /// Implementation of [SavingsLocalDataSource].
@@ -136,13 +138,18 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
   }
 
   @override
-  Future<void> replaceAllFromServer(List<SavingsGoalModel> models) async {
+  Future<void> mergeFromServer(List<SavingsGoalModel> pulled) async {
     try {
-      await _goalsDao.replaceAll(
-        models.map((m) => m.toDriftCompanion(isSynced: true)).toList(),
+      final apply = rowsToApply(
+        pulled,
+        local: await _goalsDao.statesByIds(pulled.map((m) => m.id)),
+        pendingIds: await _syncQueueDao.queuedEntityIds(_entityType),
       );
+      await _goalsDao.upsertAll([
+        for (final m in apply) m.toDriftCompanion(isSynced: true),
+      ]);
     } catch (e) {
-      throw CacheException(message: 'Failed to replace savings goals: $e');
+      throw CacheException(message: 'Failed to merge savings goals: $e');
     }
   }
 }

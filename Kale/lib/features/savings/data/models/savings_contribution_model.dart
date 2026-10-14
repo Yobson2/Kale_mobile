@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kale/core/database/app_database.dart' as db;
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/savings/domain/entities/savings_contribution.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
 
@@ -12,7 +13,9 @@ part 'savings_contribution_model.g.dart';
 /// `amount_minor` is an integer count of minor units of the account's base
 /// currency. A contribution is owned through its goal (`goal_id`).
 @freezed
-abstract class SavingsContributionModel with _$SavingsContributionModel {
+abstract class SavingsContributionModel
+    with _$SavingsContributionModel
+    implements PulledRow {
   const factory SavingsContributionModel({
     required String id,
     @JsonKey(name: 'goal_id') required String goalId,

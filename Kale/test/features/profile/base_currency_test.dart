@@ -50,7 +50,7 @@ void main() {
       );
       expect(await harness.readBaseCurrency(), isNull);
 
-      await harness.profile.refreshFromServer();
+      await harness.restoreIfNeeded();
 
       expect(await harness.readBaseCurrency(), Currencies.eur);
     });
@@ -62,7 +62,7 @@ void main() {
       );
       await harness.chooseBaseCurrency(Currencies.ngn);
 
-      await harness.profile.refreshFromServer();
+      await harness.pull();
 
       expect(await harness.readBaseCurrency(), Currencies.ngn);
     });

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kale/core/database/app_database.dart' as db;
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 
@@ -12,7 +13,7 @@ part 'transaction_model.g.dart';
 /// `amount_minor` is an integer count of minor units of the account's base
 /// currency. There is no per-transaction currency.
 @freezed
-abstract class TransactionModel with _$TransactionModel {
+abstract class TransactionModel with _$TransactionModel implements PulledRow {
   const factory TransactionModel({
     required String id,
     @JsonKey(name: 'amount_minor') required int amountMinor,

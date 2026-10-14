@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kale/core/database/app_database.dart' as db;
 import 'package:kale/core/date/calendar_date.dart';
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
@@ -15,7 +16,7 @@ part 'budget_model.g.dart';
 /// `total_income_minor` is an integer count of minor units of the account's
 /// base currency. `start_date`/`end_date` are plain `YYYY-MM-DD` dates.
 @freezed
-abstract class BudgetModel with _$BudgetModel {
+abstract class BudgetModel with _$BudgetModel implements PulledRow {
   const factory BudgetModel({
     required String id,
     required String name,

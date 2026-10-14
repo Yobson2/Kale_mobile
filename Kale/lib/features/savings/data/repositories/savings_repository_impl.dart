@@ -3,11 +3,8 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
-import 'package:kale/core/network/network_info.dart';
 import 'package:kale/features/savings/data/datasources/savings_contributions_local_datasource.dart';
-import 'package:kale/features/savings/data/datasources/savings_contributions_remote_datasource.dart';
 import 'package:kale/features/savings/data/datasources/savings_local_datasource.dart';
-import 'package:kale/features/savings/data/datasources/savings_remote_datasource.dart';
 import 'package:kale/features/savings/data/models/savings_contribution_model.dart';
 import 'package:kale/features/savings/data/models/savings_goal_model.dart';
 import 'package:kale/features/savings/domain/entities/savings_contribution.dart';
@@ -24,22 +21,13 @@ import 'package:uuid/uuid.dart';
 class SavingsRepositoryImpl implements SavingsRepository {
   /// Creates a [SavingsRepositoryImpl].
   const SavingsRepositoryImpl({
-    required SavingsRemoteDataSource remoteDataSource,
     required SavingsLocalDataSource localDataSource,
-    required SavingsContributionsRemoteDataSource contributionsRemoteDataSource,
     required SavingsContributionsLocalDataSource contributionsLocalDataSource,
-    required NetworkInfo networkInfo,
-  })  : _remote = remoteDataSource,
-        _local = localDataSource,
-        _contributionsRemote = contributionsRemoteDataSource,
-        _contributionsLocal = contributionsLocalDataSource,
-        _networkInfo = networkInfo;
+  })  : _local = localDataSource,
+        _contributionsLocal = contributionsLocalDataSource;
 
-  final SavingsRemoteDataSource _remote;
   final SavingsLocalDataSource _local;
-  final SavingsContributionsRemoteDataSource _contributionsRemote;
   final SavingsContributionsLocalDataSource _contributionsLocal;
-  final NetworkInfo _networkInfo;
 
   @override
   Future<Either<Failure, SavingsGoal>> createSavingsGoal({
@@ -204,10 +192,6 @@ class SavingsRepositoryImpl implements SavingsRepository {
     try {
       final goals = await _local.getSavingsGoals(status: status);
 
-      if (await _networkInfo.isConnected) {
-        _backgroundRefresh();
-      }
-
       return Right(goals);
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
@@ -241,25 +225,6 @@ class SavingsRepositoryImpl implements SavingsRepository {
   Stream<List<SavingsContribution>> watchContributions(String goalId) =>
       _contributionsLocal.watchContributions(goalId);
 
-  @override
-  Future<Either<Failure, void>> refreshFromServer() async {
-    try {
-      if (!await _networkInfo.isConnected) {
-        return const Left(NetworkFailure());
-      }
-      await _pullFromServer();
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(
-        ServerFailure(message: e.message, statusCode: e.statusCode),
-      );
-    } on CacheException catch (e) {
-      return Left(CacheFailure(message: e.message));
-    } on NetworkException {
-      return const Left(NetworkFailure());
-    }
-  }
-
   /// Saves [model] as an unsynced local change and queues it for sync.
   Future<void> _saveGoal(
     SavingsGoalModel model, {
@@ -289,21 +254,4 @@ class SavingsRepositoryImpl implements SavingsRepository {
         updatedAt: goal.updatedAt,
         isSynced: goal.isSynced,
       );
-
-  Future<void> _pullFromServer() async {
-    final goals = await _remote.getAllSavingsGoals();
-    final contributions = await _contributionsRemote.getAllContributions();
-    await _local.replaceAllFromServer(goals);
-    await _contributionsLocal.replaceAllFromServer(contributions);
-  }
-
-  void _backgroundRefresh() {
-    Future(() async {
-      try {
-        await _pullFromServer();
-      } catch (_) {
-        // Silently ignore background refresh errors.
-      }
-    });
-  }
 }

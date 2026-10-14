@@ -1,14 +1,17 @@
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/sync/pull.dart';
+import 'package:kale/core/sync/supabase_pull.dart';
 import 'package:kale/features/savings/data/models/savings_goal_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Remote datasource for the `savings_goals` table.
 abstract class SavingsRemoteDataSource {
-  /// Fetches every goal of the signed-in user.
-  Future<List<SavingsGoalModel>> getAllSavingsGoals();
-
-  /// Fetches one goal. Throws [ServerException] if it does not exist.
-  Future<SavingsGoalModel> getSavingsGoalById(String id);
+  /// Fetches the rows changed after [after], at most [limit], in pull
+  /// order (see `pullPageQuery`). Includes tombstones.
+  Future<RemotePage<SavingsGoalModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  });
 
   /// Creates a goal. Keyed by the client UUID, so a retry is harmless.
   Future<SavingsGoalModel> createSavingsGoal(SavingsGoalModel model);
@@ -28,27 +31,17 @@ class SupabaseSavingsRemoteDataSource implements SavingsRemoteDataSource {
   SupabaseQueryBuilder get _table => _supabase.from('savings_goals');
 
   @override
-  Future<List<SavingsGoalModel>> getAllSavingsGoals() async {
+  Future<RemotePage<SavingsGoalModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     try {
-      final data = await _table
-          .select()
-          .eq('user_id', _userId)
-          .order('created_at', ascending: false);
-      return data
-          .cast<Map<String, dynamic>>()
-          .map(SavingsGoalModel.fromJson)
-          .toList();
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
-  @override
-  Future<SavingsGoalModel> getSavingsGoalById(String id) async {
-    try {
-      final data =
-          await _table.select().eq('id', id).eq('user_id', _userId).single();
-      return SavingsGoalModel.fromJson(data);
+      final data = await pullPageQuery(
+        _table.select().eq('user_id', _userId),
+        after: after,
+        limit: limit,
+      );
+      return toRemotePage(data, SavingsGoalModel.fromJson);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message, statusCode: _parseCode(e));
     }
@@ -94,18 +87,12 @@ class MockSavingsRemoteDataSource implements SavingsRemoteDataSource {
   static const _delay = Duration(milliseconds: 500);
 
   @override
-  Future<List<SavingsGoalModel>> getAllSavingsGoals() async {
+  Future<RemotePage<SavingsGoalModel>> fetchPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
     await Future<void>.delayed(_delay);
-    return [];
-  }
-
-  @override
-  Future<SavingsGoalModel> getSavingsGoalById(String id) async {
-    await Future<void>.delayed(_delay);
-    throw const ServerException(
-      message: 'Savings goal not found',
-      statusCode: 404,
-    );
+    return const RemotePage([]);
   }
 
   @override

@@ -4,11 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
-import 'package:kale/core/network/network_info.dart';
 import 'package:kale/features/budget/data/datasources/budget_categories_local_datasource.dart';
-import 'package:kale/features/budget/data/datasources/budget_categories_remote_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_local_datasource.dart';
-import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
 import 'package:kale/features/budget/data/models/budget_category_model.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
@@ -30,24 +27,15 @@ import 'package:uuid/uuid.dart';
 class BudgetsRepositoryImpl implements BudgetsRepository {
   /// Creates a [BudgetsRepositoryImpl].
   const BudgetsRepositoryImpl({
-    required BudgetsRemoteDataSource remoteDataSource,
     required BudgetsLocalDataSource localDataSource,
-    required BudgetCategoriesRemoteDataSource categoriesRemoteDataSource,
     required BudgetCategoriesLocalDataSource categoriesLocalDataSource,
-    required NetworkInfo networkInfo,
     required TransactionsDao transactionsDao,
-  })  : _remote = remoteDataSource,
-        _local = localDataSource,
-        _categoriesRemote = categoriesRemoteDataSource,
+  })  : _local = localDataSource,
         _categoriesLocal = categoriesLocalDataSource,
-        _networkInfo = networkInfo,
         _transactionsDao = transactionsDao;
 
-  final BudgetsRemoteDataSource _remote;
   final BudgetsLocalDataSource _local;
-  final BudgetCategoriesRemoteDataSource _categoriesRemote;
   final BudgetCategoriesLocalDataSource _categoriesLocal;
-  final NetworkInfo _networkInfo;
   final TransactionsDao _transactionsDao;
 
   static const _uuid = Uuid();
@@ -196,31 +184,6 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
       return const Right(null);
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> refreshFromServer() async {
-    if (!await _networkInfo.isConnected) {
-      return const Left(NetworkFailure());
-    }
-    try {
-      final serverModels = await _remote.getAllBudgets();
-      for (final model in serverModels) {
-        await _local.saveBudget(model.copyWith(isSynced: true));
-      }
-      await _categoriesLocal.replaceAllFromServer(
-        await _categoriesRemote.getAllBudgetCategories(),
-      );
-      return const Right(null);
-    } on ServerException catch (e) {
-      return Left(
-        ServerFailure(message: e.message, statusCode: e.statusCode),
-      );
-    } on CacheException catch (e) {
-      return Left(CacheFailure(message: e.message));
-    } on NetworkException {
-      return const Left(NetworkFailure());
     }
   }
 

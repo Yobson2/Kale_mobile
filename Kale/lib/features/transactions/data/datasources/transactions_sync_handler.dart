@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kale/core/sync/pull.dart';
 import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_local_datasource.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_remote_datasource.dart';
@@ -46,24 +47,12 @@ class TransactionsSyncHandler implements SyncHandler {
   }
 
   @override
-  Future<String?> fetchRemote(String entityId) async {
-    try {
-      final model = await _remote.getTransactionById(entityId);
-      return jsonEncode(model.toJson());
-    } catch (_) {
-      // Entity doesn't exist on server.
-      return null;
-    }
-  }
-
-  @override
-  Future<void> applyServerVersion(
-    String entityId,
-    String serverPayload,
-  ) async {
-    final json = jsonDecode(serverPayload) as Map<String, dynamic>;
-    final model = TransactionModel.fromJson(json);
-    await _local.saveTransaction(model);
-    await _local.markSynced(entityId, serverId: model.serverId);
+  Future<PulledPage> pullPage({
+    required PullCursor? after,
+    required int limit,
+  }) async {
+    final page = await _remote.fetchPage(after: after, limit: limit);
+    await _local.mergeFromServer(page.rows);
+    return PulledPage(rowCount: page.rows.length, last: page.last);
   }
 }
