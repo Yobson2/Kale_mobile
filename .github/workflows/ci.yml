@@ -32,6 +32,9 @@ jobs:
       - name: Analyze
         run: flutter analyze
 
+      - name: Check sync wiring
+        run: bash .claude/skills/add-syncable-entity/check_sync_wiring.sh
+
       - name: Run tests
         run: flutter test
 

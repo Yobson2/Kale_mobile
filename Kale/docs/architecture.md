@@ -28,18 +28,27 @@ aggregates data from the others. The rest (`insights`, `notifications`, `onboard
 
 ```
 Page → Notifier → UseCase → Repository ─┬─ LocalDataSource (Drift)   ← all reads, all writes first
-                                        ├─ SyncQueue (Drift)         ← every mutation enqueued
-                                        └─ RemoteDataSource (Supabase) ← refresh from server
+                                        └─ SyncQueue (Drift)         ← every mutation enqueued
             Either<Failure, T> flows back up; UI also watches Drift streams directly.
 
-SyncEngine (background) ── SyncHandler ── RemoteDataSource (Supabase)
+SyncEngine (push: queue → server) ─┐
+                                   ├─ SyncHandler (one per entity type) ── RemoteDataSource (Supabase)
+SyncPuller (pull: server → Drift) ─┘
 ```
+
+Syncable repositories have no remote datasource; only the handlers talk to Supabase.
 
 - **Writes** save to Drift, enqueue a sync entry, and return immediately, online or offline.
 - **Reads** always come from Drift and never pull from the server.
 - **Pulls** run only on restore (after sign-in on an empty device, or to finish an interrupted restore) and on
   pull-to-refresh, through `SyncPuller`. Pulled rows are merged without overwriting local changes not yet pushed
   (see `docs/offline_sync.md`).
+- **Money** is stored, sent and summed as integer minor units of the account's single base currency (`int
+  amountMinor`, wrapped in `Money` from `core/money/` for parsing and display). Floats are never used for money
+  (`test/core/money/no_float_money_test.dart` enforces it).
+- **Deletes** are soft: `deleted_at` is set and synced as an update; every read excludes deleted rows.
+- **Handlers are registered eagerly**: every `SyncHandler` is listed in `syncHandlersProvider` and handed to the
+  engine and the puller at construction, so entries queued in an earlier session sync before any feature opens.
 
 ## Dependency injection
 
@@ -47,7 +56,8 @@ The Riverpod provider graph (with `riverpod_generator`) is the DI container:
 env → Supabase client / database / storage → datasources → repositories → use cases → notifiers.
 
 - Core singletons (database, sync engine, router, storage) use `keepAlive: true`.
-- `bootstrap.dart` loads `.env`, initializes Supabase, pre-loads SharedPreferences, sets up crash
+- `bootstrap.dart` reads the compile-time defines (`AppConfig`, from `--dart-define-from-file`) and checks them
+  against the build flavor, initializes Supabase, pre-loads SharedPreferences, sets up crash
   reporting, then overrides `envProvider`, `sharedPreferencesProvider`, and `crashReporterProvider`
   in the root `ProviderScope`.
 - Each feature's DI wiring lives in its `presentation/providers/*_providers.dart`.
@@ -55,7 +65,8 @@ env → Supabase client / database / storage → datasources → repositories �
 ## Backend access
 
 - Supabase is the backend for auth and data. Remote datasources take a `SupabaseClient`, query tables
-  directly, scope every query to the current user (`user_id`), and rethrow errors as `ServerException`
+  directly, scope every query to the current user (`user_id`, or the parent's for allocations and contributions;
+  RLS enforces it), and rethrow errors as `ServerException`
   with a status code.
 - `core/network/` holds a Dio client with logging, auth (token refresh), and error interceptors. **No feature
   uses it today.** Reach for it only when calling a non-Supabase HTTP API.
@@ -88,6 +99,12 @@ Notifiers turn failures into user-facing error state, so presentation code only 
   sign-in fails (offline on first launch), the user is `unauthenticated` and lands on login.
 - Anonymous users are never offered "Log out" (they could never sign back in): `AccountActionButton` shows
   "Create an account to save your data" instead, and the home shell shows the same invitation as a banner.
+- **Saving a guest's data** (`SaveDataPage`, `/save-data`): the guest links an email (code, then password), Google
+  or Apple; the user id stays the same, so every entry stays. If the identity already belongs to an account, the
+  guest sees how many entries are involved and chooses: add them to that account (default: every row gets a new id
+  and is queued as a create, see `AppDatabase.rekeyForAnotherAccount`), discard them (local data wiped, the account
+  restored), or cancel (nothing changes). A guest on the login page goes through the same choice
+  (`SaveDataFlow`).
 - Logout is guarded (Q18). `AuthNotifier.logout()` first backs up through `BackUpPendingChangesUseCase`
   (`SyncEngine.backUpNow`, a manual push). If changes are still pending or stuck (offline, or the server refused
   them), it returns `LogoutOutcome.blocked(unsavedChanges: n)` and changes nothing; `AccountActionButton` then asks

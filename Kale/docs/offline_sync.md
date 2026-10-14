@@ -134,14 +134,24 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
   skipped. `updatedAt` stays client-owned: it orders edits, `server_updated_at` only orders pages.
 - **Progress:** `PullStatus` (`pullStatusProvider`) drives `AppRestoreBanner`: "Restoring your data… N items".
 
+## Moving data to another account
+
+When a guest signs in to an account that already exists and chooses to keep their entries
+(`AuthRepository.switchToExistingAccount`), the device signs in first, then `AppDatabase.rekeyForAnotherAccount()`
+gives every live row a new id (children follow their parent), drops deletion markers, marks rows unsynced and clears
+the queue and pull cursors. Each handler's `requeueAllAsCreates()` then queues its rows as creates, in handler order
+(parents first), and the device pushes, then pulls the account's own data. New ids are needed because the guest
+account keeps the old ones on the server. Discarding instead wipes local data and restores the account.
+
 ## Adding a syncable entity
 
 1. **Table** in `features/<f>/data/tables/`: text UUID `id` primary key, nullable `serverId`, `isSynced`
    (default `false`), `createdAt`/`updatedAt`.
 2. **DAO** in `features/<f>/data/daos/` with at least `watchAll`, `upsert`, `markDeleted`, `markSynced`, `statesByIds` and
    `upsertAll`, a nullable `deletedAt` column, and every read excluding rows where it is set.
-3. **Register** the table and DAO in `AppDatabase`, bump `schemaVersion`, and add an `if (from < N)` step in
-   `onUpgrade` that creates the table. Also add it to `clearAllData()`.
+3. **Register** the table and DAO in `AppDatabase` and bump `schemaVersion` (pre-release, any bump drops and
+   recreates every table, so there is no per-version step). Add the table to `clearAllData()`, and to
+   `rekeyForAnotherAccount()` (with its parent link, if any) so a guest's rows can move to another account.
 4. **Model** (Freezed) with `fromJson`/`toJson`, `fromDrift`, `toDriftCompanion({required bool isSynced})`, `toEntity`.
 5. **Local datasource** with save, soft delete (returning the deleted row, to queue) and watch, `enqueueSync`
    using a unique `entityType` string, `markSynced`, and `mergeFromServer` (filtered by `rowsToApply`). One local
@@ -150,7 +160,7 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
    `toRemotePage`), a Supabase implementation scoped by `user_id` that throws `ServerException` with a status code,
    and a mock twin behind a `USE_MOCK_<F>` flag. The server table needs `server_updated_at` and its stamp trigger.
 7. **`SyncHandler`** whose `entityType` matches the string used in step 5 exactly, with `pullPage` fetching a page
-   and merging it.
+   and merging it, and `requeueAllAsCreates` delegating to the local datasource's `enqueueAllAsCreates`.
 8. **Providers**: a `<f>SyncHandler` provider (`keepAlive`), listed in `syncHandlersProvider`
    (`core/sync/sync_providers.dart`) so the engine and the puller register it; its position is its pull order.
 9. **Repository**: write-local-first + enqueue for mutations; local reads only, no remote datasource.

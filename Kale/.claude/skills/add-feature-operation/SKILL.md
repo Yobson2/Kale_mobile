@@ -15,8 +15,10 @@ notifiers still call repositories directly; they are legacy and you should not c
 
 - **Syncable mutation** (create, update, or delete of transactions, budgets, savings…): the repository writes to Drift
   and enqueues a sync entry. Follow `docs/offline_sync.md` § "Lifecycle of a write". There's no remote call here; the
-  `SyncHandler` pushes later. If the entity is not syncable yet, use the `add-syncable-entity` skill first.
-- **Local read**: the repository reads from the local datasource (`watch*` stream or `get*`).
+  `SyncHandler` pushes later. A delete is a soft delete (`markDeleted`) queued as an `update`; see § "Deletes".
+  Money parameters are `int` minor units. If the entity is not syncable yet, use the `add-syncable-entity` skill first.
+- **Local read**: the repository reads from the local datasource (`watch*` stream or `get*`). It never pulls from the
+  server: pulling is restore and pull-to-refresh only (`SyncPuller`).
 - **Remote-only call** (auth, one-off server actions): the repository checks `NetworkInfo.isConnected` first and returns
   `Left(NetworkFailure())` when offline.
 

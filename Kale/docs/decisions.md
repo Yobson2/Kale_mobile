@@ -47,19 +47,28 @@ other docs (`architecture.md`, `offline_sync.md`) describe the current implement
 
 ## Work plan (dependency order)
 
-**Phase 0: Foundations.** Everything else depends on these.
-1. Restore `supabase/` from git (the parent of commit `0d589e2`) and diff it against the live project. (Q6)
-2. Staging and prod projects, build flavors, `--dart-define-from-file`; remove the bundled `.env` and `FCM_SERVER_KEY`. (Q15, Q22)
-3. Schema reset on device and server: minor units, base currency, currencies table with decimals (Q4, Q12);
+**Phase 0: Foundations.** Everything else depends on these. **Done in code** (#2, #5, #6, #7; spec #1); the steps
+that need the Supabase dashboard are listed under item 2.
+1. ✅ Restore `supabase/` from git (the parent of commit `0d589e2`) and diff it against the live project. (Q6)
+   *Done (#21). Still to do by hand: the written diff against the live project (`make db-diff-live`, needs the
+   database password).*
+2. ✅ Staging and prod projects, build flavors, `--dart-define-from-file`; remove the bundled `.env` and `FCM_SERVER_KEY`. (Q15, Q22)
+   *Done in code (#21). Still to do by hand: create the two projects, fill `config/staging.json` and
+   `config/production.json`, `npx supabase db push` to each, and add the iOS schemes in Xcode.*
+3. ✅ Schema reset on device and server: minor units, base currency, currencies table with decimals (Q4, Q12);
    `deleted_at` (Q17); date-based budget periods with a start day (Q21); indexes (Q23); drop the savings trigger (Q6);
-   RLS supporting anonymous users and future groups (Q3, Q24).
+   RLS supporting anonymous users and future groups (Q3, Q24). *Done (#25, #27, #32, #33, #38, #40).*
 
 **Phase 1: Sync correctness**
-4. Anonymous auth: linking, the "identity already exists" prompt, 90-day cleanup, rate limits. (Q3, Q10)
-5. Sync engine: four push triggers, stuck-entry UI, retry reset (Q9); merge-on-pull replacing `replaceAll` and the
+4. ✅ Anonymous auth: linking, the "identity already exists" prompt, 90-day cleanup, rate limits. (Q3, Q10)
+   *Done (#25, #42, #43). Linking needs "Manual linking" enabled and a change-email template with `{{ .Token }}` on
+   each project.*
+5. ✅ Sync engine: four push triggers, stuck-entry UI, retry reset (Q9); merge-on-pull replacing `replaceAll` and the
    background refresh (Q8); tombstones (Q17); paginated restore (Q23); remove the dead HTTP-409 conflict path.
-6. Savings: a separate `savings_contribution` entity type, with sync handlers for goals and contributions.
-7. Logout guard. (Q18)
+   *Done (#26, #39, #41, #42).*
+6. ✅ Savings: a separate `savings_contribution` entity type, with sync handlers for goals and contributions.
+   *Done (#32).*
+7. ✅ Logout guard. (Q18) *Done (#30).*
 
 **Phase 2: v1 product**
 8. Base-currency onboarding, currency-change rules, currency-aware formatting. (Q12, Q14)
@@ -70,7 +79,7 @@ other docs (`architecture.md`, `offline_sync.md`) describe the current implement
 
 **Phase 3: Release bar** (Q7, Q19)
 13. Account-deletion Edge Function with re-authentication.
-14. Release builds fail without a keystore; move CI to the repository root; Sentry; tests on the sync paths; legal text
+14. Release builds fail without a keystore; ~~move CI to the repository root~~ (done early, #15); Sentry; tests on the sync paths; legal text
     review (backups, anonymous data, deletion); APK-size budget.
 
 Each phase updates `docs/architecture.md`, `docs/offline_sync.md`, and the affected `.claude/skills/` in the same
