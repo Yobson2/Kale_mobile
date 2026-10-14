@@ -60,6 +60,20 @@ class LocalStorage {
   Future<bool> setCurrencyCode(String code) =>
       _prefs.setString(_currencyCodeKey, code);
 
+  // -- Backup --
+
+  static const _lastBackupAtKey = 'last_backup_at';
+
+  /// When the sync queue was last fully pushed, or null if never.
+  DateTime? getLastBackupAt() {
+    final millis = _prefs.getInt(_lastBackupAtKey);
+    return millis == null ? null : DateTime.fromMillisecondsSinceEpoch(millis);
+  }
+
+  /// Persists the last successful backup [time].
+  Future<bool> setLastBackupAt(DateTime time) =>
+      _prefs.setInt(_lastBackupAtKey, time.millisecondsSinceEpoch);
+
   // -- Notifications --
 
   static const _notificationsEnabledKey = 'notifications_enabled';
