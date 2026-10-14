@@ -111,6 +111,16 @@ Schema reset for issue #6 (decision Q11: dropped and recreated, data not kept):
 - `budget_category_allocations` recreated: `allocated_minor BIGINT`, UUID ids, `updated_at`, `deleted_at`, and one
   RLS policy granting access through the parent budget's owner; `anon` has no access to either table
 
+### 20261015000200_maintenance_jobs.sql
+Server clean-up (issue #14), scheduled daily with `pg_cron`:
+- `purge_tombstones(older_than default 30 days)` deletes rows whose `deleted_at` is older than the window
+  (job `purge-tombstones`, 03:17 UTC)
+- `delete_inactive_anonymous_users(inactive_for default 90 days)` deletes anonymous users whose latest creation,
+  sign-in or session refresh is older than the window; their data cascades (job `delete-inactive-anonymous-users`,
+  03:47 UTC). Permanent users are never deleted by it
+- Neither function is callable over the API. Check the jobs on a project with `select * from cron.job;` and their
+  runs with `select * from cron.job_run_details order by start_time desc limit 20;`
+
 ## Anonymous users
 
 Every fresh install signs in anonymously, so anonymous sign-ins must be **enabled** on each project, and
