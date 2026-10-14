@@ -48,6 +48,9 @@ class BudgetCategoriesSyncHandler implements SyncHandler {
     return PulledPage(rowCount: page.rows.length, last: page.last);
   }
 
+  @override
+  Future<void> requeueAllAsCreates() => _local.enqueueAllAsCreates();
+
   static BudgetCategoryModel _decode(String payload) =>
       BudgetCategoryModel.fromJson(jsonDecode(payload) as Map<String, dynamic>);
 }

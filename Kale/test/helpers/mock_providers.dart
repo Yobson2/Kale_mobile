@@ -3,6 +3,7 @@ import 'package:kale/core/network/network_info.dart';
 import 'package:kale/core/storage/local_storage.dart';
 import 'package:kale/core/storage/secure_storage.dart';
 import 'package:kale/core/sync/sync_engine.dart';
+import 'package:kale/core/sync/sync_puller.dart';
 import 'package:kale/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:kale/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:kale/features/auth/domain/repositories/auth_repository.dart';
@@ -32,6 +33,9 @@ class MockAppDatabase extends Mock implements AppDatabase {}
 
 /// Mock implementation of [SyncEngine].
 class MockSyncEngine extends Mock implements SyncEngine {}
+
+/// Mock [SyncPuller].
+class MockSyncPuller extends Mock implements SyncPuller {}
 
 // -- Auth mocks --
 

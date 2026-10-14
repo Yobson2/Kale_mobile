@@ -40,6 +40,7 @@ void main() {
       networkInfo: mockNetworkInfo,
       appDatabase: mockAppDatabase,
       syncEngine: mockSyncEngine,
+      syncPuller: MockSyncPuller(),
     );
   });
 

@@ -19,6 +19,10 @@ class SavingsContributionsDao extends DatabaseAccessor<AppDatabase>
   Stream<List<SavingsContribution>> watchByGoalId(String goalId) =>
       _liveForGoal(goalId).watch();
 
+  /// Gets every live contribution.
+  Future<List<SavingsContribution>> getAllLive() =>
+      (select(savingsContributions)..where((t) => t.deletedAt.isNull())).get();
+
   /// Gets the live contributions of a goal, newest first.
   Future<List<SavingsContribution>> getByGoalId(String goalId) =>
       _liveForGoal(goalId).get();

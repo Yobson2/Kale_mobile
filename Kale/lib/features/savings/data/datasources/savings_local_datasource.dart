@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/sync/pull.dart';
@@ -25,6 +27,10 @@ abstract class SavingsLocalDataSource {
   ///
   /// Throws [CacheException] if no live goal has this [id].
   Future<SavingsGoalModel> deleteSavingsGoal(String id, DateTime at);
+
+  /// Queues every live row as a `create` (the data is moving to another
+  /// account; see `SyncHandler.requeueAllAsCreates`).
+  Future<void> enqueueAllAsCreates();
 
   Future<void> enqueueSync({
     required String entityId,
@@ -150,6 +156,23 @@ class SavingsLocalDataSourceImpl implements SavingsLocalDataSource {
       ]);
     } catch (e) {
       throw CacheException(message: 'Failed to merge savings goals: $e');
+    }
+  }
+
+  @override
+  Future<void> enqueueAllAsCreates() async {
+    try {
+      for (final row in await _goalsDao.getAll()) {
+        final model = SavingsGoalModel.fromDrift(row).copyWith(isSynced: false);
+        await _syncQueueDao.enqueue(
+          entityType: _entityType,
+          entityId: model.id,
+          operation: 'create',
+          payload: jsonEncode(model.toJson()),
+        );
+      }
+    } catch (e) {
+      throw CacheException(message: 'Failed to queue rows as creates: $e');
     }
   }
 }

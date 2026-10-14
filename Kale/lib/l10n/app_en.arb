@@ -622,5 +622,31 @@
     }
   },
   "refreshOffline": "You're offline. Pull to refresh again once you're connected.",
-  "refreshFailed": "Couldn't refresh from your backup. Please try again."
+  "refreshFailed": "Couldn't refresh from your backup. Please try again.",
+  "saveDataTitle": "Save your data",
+  "saveDataSubtitle": "Create an account to keep everything you entered, on this phone and any other.",
+  "saveDataWithEmail": "Continue with email",
+  "saveDataCodeSent": "Enter the 6-digit code we sent to {email}.",
+  "@saveDataCodeSent": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "saveDataVerify": "Verify",
+  "saveDataDone": "Your data is saved to your account.",
+  "guestDataChoiceTitle": "This account already exists",
+  "guestDataChoiceMessage": "{count, plural, =0{You have no entries on this phone yet.} =1{You have 1 entry on this phone. Add it to that account, or discard it?} other{You have {count} entries on this phone. Add them to that account, or discard them?}}",
+  "@guestDataChoiceMessage": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "guestDataChoiceAdd": "{count, plural, =0{Sign in} =1{Add my entry to that account} other{Add my {count} entries to that account}}",
+  "@guestDataChoiceAdd": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "guestDataChoiceDiscard": "Discard them and sign in",
+  "guestDataChoiceCancel": "Cancel"
 }

@@ -11,6 +11,7 @@ import 'package:kale/features/auth/presentation/pages/forgot_password_page.dart'
 import 'package:kale/features/auth/presentation/pages/login_page.dart';
 import 'package:kale/features/auth/presentation/pages/otp_verification_page.dart';
 import 'package:kale/features/auth/presentation/pages/register_page.dart';
+import 'package:kale/features/auth/presentation/pages/save_data_page.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
@@ -177,6 +178,14 @@ GoRouter appRouter(Ref ref) {
             email: extra['email']?.toString() ?? '',
           );
         },
+      ),
+
+      // Guest upgrade: authenticated (anonymous) users only, so not public.
+      GoRoute(
+        path: RouteNames.saveData,
+        name: RouteNames.saveDataName,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SaveDataPage(),
       ),
 
       // Legal pages (accessible with or without auth)

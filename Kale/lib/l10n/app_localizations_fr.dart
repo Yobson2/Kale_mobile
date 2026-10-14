@@ -1545,4 +1545,60 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get refreshFailed =>
       'Impossible d\'actualiser depuis votre sauvegarde. Veuillez réessayer.';
+
+  @override
+  String get saveDataTitle => 'Sauvegarder vos données';
+
+  @override
+  String get saveDataSubtitle =>
+      'Créez un compte pour garder tout ce que vous avez saisi, sur ce téléphone et sur les autres.';
+
+  @override
+  String get saveDataWithEmail => 'Continuer avec l\'e-mail';
+
+  @override
+  String saveDataCodeSent(String email) {
+    return 'Saisissez le code à 6 chiffres envoyé à $email.';
+  }
+
+  @override
+  String get saveDataVerify => 'Vérifier';
+
+  @override
+  String get saveDataDone => 'Vos données sont sauvegardées sur votre compte.';
+
+  @override
+  String get guestDataChoiceTitle => 'Ce compte existe déjà';
+
+  @override
+  String guestDataChoiceMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Vous avez $count saisies sur ce téléphone. Les ajouter à ce compte, ou les supprimer ?',
+      one:
+          'Vous avez 1 saisie sur ce téléphone. L\'ajouter à ce compte, ou la supprimer ?',
+      zero: 'Vous n\'avez encore aucune saisie sur ce téléphone.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String guestDataChoiceAdd(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ajouter mes $count saisies à ce compte',
+      one: 'Ajouter ma saisie à ce compte',
+      zero: 'Se connecter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestDataChoiceDiscard => 'Les supprimer et se connecter';
+
+  @override
+  String get guestDataChoiceCancel => 'Annuler';
 }

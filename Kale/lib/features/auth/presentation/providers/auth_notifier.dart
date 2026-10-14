@@ -3,15 +3,19 @@ import 'dart:async';
 import 'package:kale/core/sync/sync_providers.dart';
 import 'package:kale/core/usecase/usecase.dart';
 import 'package:kale/core/utils/logger.dart';
+import 'package:kale/features/auth/domain/entities/account_link.dart';
+import 'package:kale/features/auth/domain/usecases/confirm_email_link_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/register_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/resend_otp_usecase.dart';
+import 'package:kale/features/auth/domain/usecases/switch_to_existing_account_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/update_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/auth/presentation/providers/logout_outcome.dart';
+import 'package:kale/features/auth/presentation/providers/save_data_outcome.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_notifier.g.dart';
@@ -330,6 +334,103 @@ class AuthNotifier extends _$AuthNotifier {
     } catch (e) {
       state = AuthState.error(e.toString());
       return false;
+    }
+  }
+
+  // ── Guest upgrade ─────────────────────────────────────────────────────────
+  //
+  // These steps leave the auth state alone until the guest actually becomes
+  // a permanent user, so a failure or a cancelled choice changes nothing.
+
+  /// Links a Google or Apple identity to the guest.
+  Future<SaveDataOutcome> linkSocialAccount(SocialProvider provider) async {
+    final result =
+        await ref.read(linkSocialAccountUseCaseProvider).call(provider);
+    return result.fold(
+      (failure) => SaveDataFailed(failure.message),
+      _onLinkResult,
+    );
+  }
+
+  /// Starts linking [email] to the guest: a code is sent to it.
+  Future<SaveDataOutcome> startEmailLink(String email) async {
+    final result = await ref.read(startEmailLinkUseCaseProvider).call(email);
+    return result.fold(
+      (failure) => SaveDataFailed(failure.message),
+      (link) async =>
+          link == null ? const SaveDataCodeSent() : _onLinkResult(link),
+    );
+  }
+
+  /// Confirms the emailed [code]: the guest becomes a permanent user with
+  /// [password], keeping every entry.
+  Future<SaveDataOutcome> confirmEmailLink({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    final result = await ref.read(confirmEmailLinkUseCaseProvider).call(
+          ConfirmEmailLinkParams(email: email, code: code, password: password),
+        );
+    return result.fold(
+      (failure) => SaveDataFailed(failure.message),
+      (user) {
+        state = AuthState.authenticated(user);
+        return const SaveDataDone();
+      },
+    );
+  }
+
+  /// Sends a sign-in code to an existing account's [email].
+  Future<SaveDataOutcome> sendSignInCode(String email) async {
+    final result = await ref.read(sendSignInCodeUseCaseProvider).call(email);
+    return result.fold(
+      (failure) => SaveDataFailed(failure.message),
+      (_) => const SaveDataCodeSent(),
+    );
+  }
+
+  /// How many of the guest's entries are on this device.
+  Future<int> countGuestEntries() async {
+    final result =
+        await ref.read(countGuestEntriesUseCaseProvider).call(const NoParams());
+    return result.getOrElse(() => 0);
+  }
+
+  /// Leaves the guest session for the existing account behind
+  /// [credential], adding the guest's entries to it ([keepGuestData]) or
+  /// discarding them. [code] is the emailed code for an email account.
+  Future<SaveDataOutcome> switchToExistingAccount(
+    AccountCredential credential, {
+    required bool keepGuestData,
+    String? code,
+  }) async {
+    final result = await ref.read(switchToExistingAccountUseCaseProvider).call(
+          SwitchToExistingAccountParams(
+            credential: credential,
+            keepGuestData: keepGuestData,
+            code: code,
+          ),
+        );
+    return result.fold(
+      (failure) => SaveDataFailed(failure.message),
+      (user) {
+        state = AuthState.authenticated(user);
+        return const SaveDataDone();
+      },
+    );
+  }
+
+  Future<SaveDataOutcome> _onLinkResult(LinkResult link) async {
+    switch (link) {
+      case AccountLinked(:final user):
+        state = AuthState.authenticated(user);
+        return const SaveDataDone();
+      case IdentityInUse(:final credential):
+        return SaveDataIdentityInUse(
+          credential: credential,
+          entryCount: await countGuestEntries(),
+        );
     }
   }
 
