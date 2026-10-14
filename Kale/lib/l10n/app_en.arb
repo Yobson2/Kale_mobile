@@ -439,6 +439,7 @@
   "settingsLanguage": "Language",
   "settingsLanguageEn": "English",
   "settingsLanguageFr": "French",
+  "settingsLanguageSystem": "Device language",
   "settingsAbout": "About",
   "settingsVersion": "Version {version}",
   "@settingsVersion": {

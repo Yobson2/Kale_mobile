@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:kale/core/config/env_provider.dart';
+import 'package:kale/core/l10n/app_locale.dart';
 import 'package:kale/core/router/app_router.dart';
 import 'package:kale/core/sync/sync_app_lifecycle.dart';
 import 'package:kale/core/theme/app_theme.dart';
@@ -20,6 +22,7 @@ class App extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeNotifierProvider);
     final env = ref.watch(envProvider);
+    final language = ref.watch(appLanguageProvider);
 
     return SyncAppLifecycle(
       child: ScreenUtilInit(
@@ -35,9 +38,19 @@ class App extends ConsumerWidget {
           themeMode: themeMode,
           // Router
           routerConfig: router,
-          // Localization
+          // Localization: the user's language, else the device's if Kalé
+          // speaks it, else French (decision Q14).
+          locale: language == null ? null : Locale(language),
+          localeResolutionCallback: (device, _) => resolveAppLocale(device),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
+          // Formatting that does not take a locale (`DateFormat(...)`)
+          // follows the app's language too.
+          builder: (context, child) {
+            Intl.defaultLocale =
+                Localizations.localeOf(context).toLanguageTag();
+            return child!;
+          },
         ),
       ),
     );
