@@ -92,6 +92,18 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
 - Contributions have no `user_id`: on the server they are owned through their goal (RLS checks the goal's owner).
 - Refresh pulls goals and contributions, and keeps local rows that are not synced yet.
 
+## Budgets: two entity types
+
+- Budgets sync as `budget` and their category allocations as `budget_category`, each with its own local datasource,
+  remote datasource and `SyncHandler` (`BudgetsSyncHandler`, `BudgetCategoriesSyncHandler`). Allocations share the
+  `USE_MOCK_BUDGETS` flag.
+- A budget's `create`/`update` is queued before its allocations. Saving a budget queues each allocation as a `create`
+  (new), an `update` (existing) or a `delete` (dropped). The setup screen sends allocations without ids, so the
+  repository reuses the id of the existing allocation for the same category; an edit updates rows in place.
+- Allocations have no `user_id` (the server table is `budget_category_allocations`, owned through its budget).
+  Deleting a budget queues only the budget: the server's foreign key cascades to its allocations.
+- Refresh pulls budgets, then allocations, and keeps local allocations that are not synced yet.
+
 ## Reads and refresh
 
 - Repositories expose `watch*` streams and `get*` queries over Drift.

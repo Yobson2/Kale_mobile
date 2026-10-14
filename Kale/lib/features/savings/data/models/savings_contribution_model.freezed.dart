@@ -16,19 +16,19 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SavingsContributionModel {
   String get id;
-  @JsonKey(name: 'server_id')
-  String? get serverId;
   @JsonKey(name: 'goal_id')
   String get goalId;
   @JsonKey(name: 'amount_minor')
   int get amountMinor;
   String get source;
-  String? get note;
   DateTime get date;
   @JsonKey(name: 'created_at')
   DateTime get createdAt;
   @JsonKey(name: 'updated_at')
   DateTime get updatedAt;
+  @JsonKey(name: 'server_id')
+  String? get serverId;
+  String? get note;
   @JsonKey(name: 'deleted_at')
   DateTime? get deletedAt;
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,18 +51,18 @@ mixin _$SavingsContributionModel {
         (other.runtimeType == runtimeType &&
             other is SavingsContributionModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.serverId, serverId) ||
-                other.serverId == serverId) &&
             (identical(other.goalId, goalId) || other.goalId == goalId) &&
             (identical(other.amountMinor, amountMinor) ||
                 other.amountMinor == amountMinor) &&
             (identical(other.source, source) || other.source == source) &&
-            (identical(other.note, note) || other.note == note) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
+            (identical(other.serverId, serverId) ||
+                other.serverId == serverId) &&
+            (identical(other.note, note) || other.note == note) &&
             (identical(other.deletedAt, deletedAt) ||
                 other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
@@ -71,23 +71,12 @@ mixin _$SavingsContributionModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      serverId,
-      goalId,
-      amountMinor,
-      source,
-      note,
-      date,
-      createdAt,
-      updatedAt,
-      deletedAt,
-      isSynced);
+  int get hashCode => Object.hash(runtimeType, id, goalId, amountMinor, source,
+      date, createdAt, updatedAt, serverId, note, deletedAt, isSynced);
 
   @override
   String toString() {
-    return 'SavingsContributionModel(id: $id, serverId: $serverId, goalId: $goalId, amountMinor: $amountMinor, source: $source, note: $note, date: $date, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
+    return 'SavingsContributionModel(id: $id, goalId: $goalId, amountMinor: $amountMinor, source: $source, date: $date, createdAt: $createdAt, updatedAt: $updatedAt, serverId: $serverId, note: $note, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -99,14 +88,14 @@ abstract mixin class $SavingsContributionModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'server_id') String? serverId,
       @JsonKey(name: 'goal_id') String goalId,
       @JsonKey(name: 'amount_minor') int amountMinor,
       String source,
-      String? note,
       DateTime date,
       @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'server_id') String? serverId,
+      String? note,
       @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
@@ -125,14 +114,14 @@ class _$SavingsContributionModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? serverId = freezed,
     Object? goalId = null,
     Object? amountMinor = null,
     Object? source = null,
-    Object? note = freezed,
     Object? date = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? serverId = freezed,
+    Object? note = freezed,
     Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
@@ -141,10 +130,6 @@ class _$SavingsContributionModelCopyWithImpl<$Res>
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      serverId: freezed == serverId
-          ? _self.serverId
-          : serverId // ignore: cast_nullable_to_non_nullable
-              as String?,
       goalId: null == goalId
           ? _self.goalId
           : goalId // ignore: cast_nullable_to_non_nullable
@@ -157,10 +142,6 @@ class _$SavingsContributionModelCopyWithImpl<$Res>
           ? _self.source
           : source // ignore: cast_nullable_to_non_nullable
               as String,
-      note: freezed == note
-          ? _self.note
-          : note // ignore: cast_nullable_to_non_nullable
-              as String?,
       date: null == date
           ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -173,6 +154,14 @@ class _$SavingsContributionModelCopyWithImpl<$Res>
           ? _self.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      serverId: freezed == serverId
+          ? _self.serverId
+          : serverId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      note: freezed == note
+          ? _self.note
+          : note // ignore: cast_nullable_to_non_nullable
+              as String?,
       deletedAt: freezed == deletedAt
           ? _self.deletedAt
           : deletedAt // ignore: cast_nullable_to_non_nullable
@@ -190,14 +179,14 @@ class _$SavingsContributionModelCopyWithImpl<$Res>
 class _SavingsContributionModel extends SavingsContributionModel {
   const _SavingsContributionModel(
       {required this.id,
-      @JsonKey(name: 'server_id') this.serverId,
       @JsonKey(name: 'goal_id') required this.goalId,
       @JsonKey(name: 'amount_minor') required this.amountMinor,
       required this.source,
-      this.note,
       required this.date,
       @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(name: 'updated_at') required this.updatedAt,
+      @JsonKey(name: 'server_id') this.serverId,
+      this.note,
       @JsonKey(name: 'deleted_at') this.deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       this.isSynced = true})
@@ -208,9 +197,6 @@ class _SavingsContributionModel extends SavingsContributionModel {
   @override
   final String id;
   @override
-  @JsonKey(name: 'server_id')
-  final String? serverId;
-  @override
   @JsonKey(name: 'goal_id')
   final String goalId;
   @override
@@ -219,8 +205,6 @@ class _SavingsContributionModel extends SavingsContributionModel {
   @override
   final String source;
   @override
-  final String? note;
-  @override
   final DateTime date;
   @override
   @JsonKey(name: 'created_at')
@@ -228,6 +212,11 @@ class _SavingsContributionModel extends SavingsContributionModel {
   @override
   @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
+  @override
+  @JsonKey(name: 'server_id')
+  final String? serverId;
+  @override
+  final String? note;
   @override
   @JsonKey(name: 'deleted_at')
   final DateTime? deletedAt;
@@ -257,18 +246,18 @@ class _SavingsContributionModel extends SavingsContributionModel {
         (other.runtimeType == runtimeType &&
             other is _SavingsContributionModel &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.serverId, serverId) ||
-                other.serverId == serverId) &&
             (identical(other.goalId, goalId) || other.goalId == goalId) &&
             (identical(other.amountMinor, amountMinor) ||
                 other.amountMinor == amountMinor) &&
             (identical(other.source, source) || other.source == source) &&
-            (identical(other.note, note) || other.note == note) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
+            (identical(other.serverId, serverId) ||
+                other.serverId == serverId) &&
+            (identical(other.note, note) || other.note == note) &&
             (identical(other.deletedAt, deletedAt) ||
                 other.deletedAt == deletedAt) &&
             (identical(other.isSynced, isSynced) ||
@@ -277,23 +266,12 @@ class _SavingsContributionModel extends SavingsContributionModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      serverId,
-      goalId,
-      amountMinor,
-      source,
-      note,
-      date,
-      createdAt,
-      updatedAt,
-      deletedAt,
-      isSynced);
+  int get hashCode => Object.hash(runtimeType, id, goalId, amountMinor, source,
+      date, createdAt, updatedAt, serverId, note, deletedAt, isSynced);
 
   @override
   String toString() {
-    return 'SavingsContributionModel(id: $id, serverId: $serverId, goalId: $goalId, amountMinor: $amountMinor, source: $source, note: $note, date: $date, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isSynced: $isSynced)';
+    return 'SavingsContributionModel(id: $id, goalId: $goalId, amountMinor: $amountMinor, source: $source, date: $date, createdAt: $createdAt, updatedAt: $updatedAt, serverId: $serverId, note: $note, deletedAt: $deletedAt, isSynced: $isSynced)';
   }
 }
 
@@ -307,14 +285,14 @@ abstract mixin class _$SavingsContributionModelCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'server_id') String? serverId,
       @JsonKey(name: 'goal_id') String goalId,
       @JsonKey(name: 'amount_minor') int amountMinor,
       String source,
-      String? note,
       DateTime date,
       @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'updated_at') DateTime updatedAt,
+      @JsonKey(name: 'server_id') String? serverId,
+      String? note,
       @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
@@ -333,14 +311,14 @@ class __$SavingsContributionModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   $Res call({
     Object? id = null,
-    Object? serverId = freezed,
     Object? goalId = null,
     Object? amountMinor = null,
     Object? source = null,
-    Object? note = freezed,
     Object? date = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? serverId = freezed,
+    Object? note = freezed,
     Object? deletedAt = freezed,
     Object? isSynced = null,
   }) {
@@ -349,10 +327,6 @@ class __$SavingsContributionModelCopyWithImpl<$Res>
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      serverId: freezed == serverId
-          ? _self.serverId
-          : serverId // ignore: cast_nullable_to_non_nullable
-              as String?,
       goalId: null == goalId
           ? _self.goalId
           : goalId // ignore: cast_nullable_to_non_nullable
@@ -365,10 +339,6 @@ class __$SavingsContributionModelCopyWithImpl<$Res>
           ? _self.source
           : source // ignore: cast_nullable_to_non_nullable
               as String,
-      note: freezed == note
-          ? _self.note
-          : note // ignore: cast_nullable_to_non_nullable
-              as String?,
       date: null == date
           ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -381,6 +351,14 @@ class __$SavingsContributionModelCopyWithImpl<$Res>
           ? _self.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      serverId: freezed == serverId
+          ? _self.serverId
+          : serverId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      note: freezed == note
+          ? _self.note
+          : note // ignore: cast_nullable_to_non_nullable
+              as String?,
       deletedAt: freezed == deletedAt
           ? _self.deletedAt
           : deletedAt // ignore: cast_nullable_to_non_nullable

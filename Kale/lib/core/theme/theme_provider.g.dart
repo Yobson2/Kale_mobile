@@ -11,7 +11,7 @@ String _$themeModeNotifierHash() => r'1fb264ef8b097bea16a059049f0ad381f8185e01';
 /// Manages the app [ThemeMode] and persists the user's preference.
 ///
 /// Supports system, light, and dark modes. Persists choice via
-/// [LocalStorage] so it survives app restarts.
+/// `LocalStorage` so it survives app restarts.
 ///
 /// Copied from [ThemeModeNotifier].
 @ProviderFor(ThemeModeNotifier)

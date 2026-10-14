@@ -52,6 +52,51 @@ final budgetsLocalDataSourceProvider =
 // ignore: unused_element
 typedef BudgetsLocalDataSourceRef
     = AutoDisposeProviderRef<BudgetsLocalDataSource>;
+String _$budgetCategoriesRemoteDataSourceHash() =>
+    r'4aebde0a88feaea058af0084db6a0e78f1b4ce70';
+
+/// Provides the [BudgetCategoriesRemoteDataSource]; mocked with budgets
+/// (`USE_MOCK_BUDGETS`).
+///
+/// Copied from [budgetCategoriesRemoteDataSource].
+@ProviderFor(budgetCategoriesRemoteDataSource)
+final budgetCategoriesRemoteDataSourceProvider =
+    AutoDisposeProvider<BudgetCategoriesRemoteDataSource>.internal(
+  budgetCategoriesRemoteDataSource,
+  name: r'budgetCategoriesRemoteDataSourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$budgetCategoriesRemoteDataSourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef BudgetCategoriesRemoteDataSourceRef
+    = AutoDisposeProviderRef<BudgetCategoriesRemoteDataSource>;
+String _$budgetCategoriesLocalDataSourceHash() =>
+    r'440999938244a7dbd05a16f0d03592a2ddb7381b';
+
+/// Provides the [BudgetCategoriesLocalDataSource].
+///
+/// Copied from [budgetCategoriesLocalDataSource].
+@ProviderFor(budgetCategoriesLocalDataSource)
+final budgetCategoriesLocalDataSourceProvider =
+    AutoDisposeProvider<BudgetCategoriesLocalDataSource>.internal(
+  budgetCategoriesLocalDataSource,
+  name: r'budgetCategoriesLocalDataSourceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$budgetCategoriesLocalDataSourceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef BudgetCategoriesLocalDataSourceRef
+    = AutoDisposeProviderRef<BudgetCategoriesLocalDataSource>;
 String _$budgetsSyncHandlerHash() =>
     r'353a4a357cdc29fba72ac7ab384a9b0c5f7d3328';
 
@@ -74,7 +119,31 @@ final budgetsSyncHandlerProvider = Provider<BudgetsSyncHandler>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BudgetsSyncHandlerRef = ProviderRef<BudgetsSyncHandler>;
-String _$budgetsRepositoryHash() => r'1db7aaca1faeea65dca6b5c72b5fc891453a4eaf';
+String _$budgetCategoriesSyncHandlerHash() =>
+    r'258b7648ec4acd10c532c02b4f27ef489abb19b2';
+
+/// Provides the [BudgetCategoriesSyncHandler].
+///
+/// Registered with the sync engine through `syncHandlersProvider`.
+///
+/// Copied from [budgetCategoriesSyncHandler].
+@ProviderFor(budgetCategoriesSyncHandler)
+final budgetCategoriesSyncHandlerProvider =
+    Provider<BudgetCategoriesSyncHandler>.internal(
+  budgetCategoriesSyncHandler,
+  name: r'budgetCategoriesSyncHandlerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$budgetCategoriesSyncHandlerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef BudgetCategoriesSyncHandlerRef
+    = ProviderRef<BudgetCategoriesSyncHandler>;
+String _$budgetsRepositoryHash() => r'e73f5c5bd4387b6c4083e8ad75c501b0601517fd';
 
 /// Provides the [BudgetsRepository].
 ///

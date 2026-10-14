@@ -20,12 +20,12 @@ mixin _$CategoryModel {
   String get icon;
   String get color;
   String get type;
+  @JsonKey(name: 'created_at')
+  DateTime get createdAt;
   @JsonKey(name: 'is_default')
   bool get isDefault;
   @JsonKey(name: 'sort_order')
   int get sortOrder;
-  @JsonKey(name: 'created_at')
-  DateTime get createdAt;
   @JsonKey(includeFromJson: false, includeToJson: false)
   bool get isSynced;
 
@@ -50,12 +50,12 @@ mixin _$CategoryModel {
             (identical(other.icon, icon) || other.icon == icon) &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.type, type) || other.type == type) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.isDefault, isDefault) ||
                 other.isDefault == isDefault) &&
             (identical(other.sortOrder, sortOrder) ||
                 other.sortOrder == sortOrder) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
             (identical(other.isSynced, isSynced) ||
                 other.isSynced == isSynced));
   }
@@ -63,11 +63,11 @@ mixin _$CategoryModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, icon, color, type,
-      isDefault, sortOrder, createdAt, isSynced);
+      createdAt, isDefault, sortOrder, isSynced);
 
   @override
   String toString() {
-    return 'CategoryModel(id: $id, name: $name, icon: $icon, color: $color, type: $type, isDefault: $isDefault, sortOrder: $sortOrder, createdAt: $createdAt, isSynced: $isSynced)';
+    return 'CategoryModel(id: $id, name: $name, icon: $icon, color: $color, type: $type, createdAt: $createdAt, isDefault: $isDefault, sortOrder: $sortOrder, isSynced: $isSynced)';
   }
 }
 
@@ -83,9 +83,9 @@ abstract mixin class $CategoryModelCopyWith<$Res> {
       String icon,
       String color,
       String type,
+      @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'is_default') bool isDefault,
       @JsonKey(name: 'sort_order') int sortOrder,
-      @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
@@ -107,9 +107,9 @@ class _$CategoryModelCopyWithImpl<$Res>
     Object? icon = null,
     Object? color = null,
     Object? type = null,
+    Object? createdAt = null,
     Object? isDefault = null,
     Object? sortOrder = null,
-    Object? createdAt = null,
     Object? isSynced = null,
   }) {
     return _then(_self.copyWith(
@@ -133,6 +133,10 @@ class _$CategoryModelCopyWithImpl<$Res>
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       isDefault: null == isDefault
           ? _self.isDefault
           : isDefault // ignore: cast_nullable_to_non_nullable
@@ -141,10 +145,6 @@ class _$CategoryModelCopyWithImpl<$Res>
           ? _self.sortOrder
           : sortOrder // ignore: cast_nullable_to_non_nullable
               as int,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       isSynced: null == isSynced
           ? _self.isSynced
           : isSynced // ignore: cast_nullable_to_non_nullable
@@ -162,9 +162,9 @@ class _CategoryModel extends CategoryModel {
       required this.icon,
       required this.color,
       required this.type,
+      @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(name: 'is_default') this.isDefault = true,
       @JsonKey(name: 'sort_order') this.sortOrder = 0,
-      @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(includeFromJson: false, includeToJson: false)
       this.isSynced = true})
       : super._();
@@ -182,14 +182,14 @@ class _CategoryModel extends CategoryModel {
   @override
   final String type;
   @override
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
+  @override
   @JsonKey(name: 'is_default')
   final bool isDefault;
   @override
   @JsonKey(name: 'sort_order')
   final int sortOrder;
-  @override
-  @JsonKey(name: 'created_at')
-  final DateTime createdAt;
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   final bool isSynced;
@@ -219,12 +219,12 @@ class _CategoryModel extends CategoryModel {
             (identical(other.icon, icon) || other.icon == icon) &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.type, type) || other.type == type) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.isDefault, isDefault) ||
                 other.isDefault == isDefault) &&
             (identical(other.sortOrder, sortOrder) ||
                 other.sortOrder == sortOrder) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
             (identical(other.isSynced, isSynced) ||
                 other.isSynced == isSynced));
   }
@@ -232,11 +232,11 @@ class _CategoryModel extends CategoryModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, icon, color, type,
-      isDefault, sortOrder, createdAt, isSynced);
+      createdAt, isDefault, sortOrder, isSynced);
 
   @override
   String toString() {
-    return 'CategoryModel(id: $id, name: $name, icon: $icon, color: $color, type: $type, isDefault: $isDefault, sortOrder: $sortOrder, createdAt: $createdAt, isSynced: $isSynced)';
+    return 'CategoryModel(id: $id, name: $name, icon: $icon, color: $color, type: $type, createdAt: $createdAt, isDefault: $isDefault, sortOrder: $sortOrder, isSynced: $isSynced)';
   }
 }
 
@@ -254,9 +254,9 @@ abstract mixin class _$CategoryModelCopyWith<$Res>
       String icon,
       String color,
       String type,
+      @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'is_default') bool isDefault,
       @JsonKey(name: 'sort_order') int sortOrder,
-      @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(includeFromJson: false, includeToJson: false) bool isSynced});
 }
 
@@ -278,9 +278,9 @@ class __$CategoryModelCopyWithImpl<$Res>
     Object? icon = null,
     Object? color = null,
     Object? type = null,
+    Object? createdAt = null,
     Object? isDefault = null,
     Object? sortOrder = null,
-    Object? createdAt = null,
     Object? isSynced = null,
   }) {
     return _then(_CategoryModel(
@@ -304,6 +304,10 @@ class __$CategoryModelCopyWithImpl<$Res>
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _self.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       isDefault: null == isDefault
           ? _self.isDefault
           : isDefault // ignore: cast_nullable_to_non_nullable
@@ -312,10 +316,6 @@ class __$CategoryModelCopyWithImpl<$Res>
           ? _self.sortOrder
           : sortOrder // ignore: cast_nullable_to_non_nullable
               as int,
-      createdAt: null == createdAt
-          ? _self.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
       isSynced: null == isSynced
           ? _self.isSynced
           : isSynced // ignore: cast_nullable_to_non_nullable

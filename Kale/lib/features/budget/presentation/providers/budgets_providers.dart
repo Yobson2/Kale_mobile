@@ -4,6 +4,9 @@ import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
+import 'package:kale/features/budget/data/datasources/budget_categories_local_datasource.dart';
+import 'package:kale/features/budget/data/datasources/budget_categories_remote_datasource.dart';
+import 'package:kale/features/budget/data/datasources/budget_categories_sync_handler.dart';
 import 'package:kale/features/budget/data/datasources/budgets_local_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_sync_handler.dart';
@@ -42,6 +45,28 @@ BudgetsLocalDataSource budgetsLocalDataSource(Ref ref) {
   );
 }
 
+/// Provides the [BudgetCategoriesRemoteDataSource]; mocked with budgets
+/// (`USE_MOCK_BUDGETS`).
+@riverpod
+BudgetCategoriesRemoteDataSource budgetCategoriesRemoteDataSource(Ref ref) {
+  if (ref.watch(envProvider).useMockBudgets) {
+    return MockBudgetCategoriesRemoteDataSource();
+  }
+  return SupabaseBudgetCategoriesRemoteDataSource(
+    ref.watch(supabaseClientProvider),
+  );
+}
+
+/// Provides the [BudgetCategoriesLocalDataSource].
+@riverpod
+BudgetCategoriesLocalDataSource budgetCategoriesLocalDataSource(Ref ref) {
+  final db = ref.watch(appDatabaseProvider);
+  return BudgetCategoriesLocalDataSourceImpl(
+    budgetCategoriesDao: db.budgetCategoriesDao,
+    syncQueueDao: db.syncQueueDao,
+  );
+}
+
 // ── Sync Handler ────────────────────────────────────────────────
 
 /// Provides the [BudgetsSyncHandler].
@@ -55,6 +80,17 @@ BudgetsSyncHandler budgetsSyncHandler(Ref ref) {
   );
 }
 
+/// Provides the [BudgetCategoriesSyncHandler].
+///
+/// Registered with the sync engine through `syncHandlersProvider`.
+@Riverpod(keepAlive: true)
+BudgetCategoriesSyncHandler budgetCategoriesSyncHandler(Ref ref) {
+  return BudgetCategoriesSyncHandler(
+    remoteDataSource: ref.watch(budgetCategoriesRemoteDataSourceProvider),
+    localDataSource: ref.watch(budgetCategoriesLocalDataSourceProvider),
+  );
+}
+
 // ── Repository ──────────────────────────────────────────────────
 
 /// Provides the [BudgetsRepository].
@@ -64,6 +100,10 @@ BudgetsRepository budgetsRepository(Ref ref) {
   return BudgetsRepositoryImpl(
     remoteDataSource: ref.watch(budgetsRemoteDataSourceProvider),
     localDataSource: ref.watch(budgetsLocalDataSourceProvider),
+    categoriesRemoteDataSource:
+        ref.watch(budgetCategoriesRemoteDataSourceProvider),
+    categoriesLocalDataSource:
+        ref.watch(budgetCategoriesLocalDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
     transactionsDao: db.transactionsDao,
   );
