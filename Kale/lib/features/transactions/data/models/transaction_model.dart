@@ -8,6 +8,9 @@ part 'transaction_model.freezed.dart';
 part 'transaction_model.g.dart';
 
 /// Data model for [Transaction] with JSON serialization and Drift mapping.
+///
+/// `amount_minor` is an integer count of minor units of the account's base
+/// currency. There is no per-transaction currency.
 @freezed
 abstract class TransactionModel with _$TransactionModel {
   const TransactionModel._();
@@ -15,13 +18,12 @@ abstract class TransactionModel with _$TransactionModel {
   const factory TransactionModel({
     required String id,
     @JsonKey(name: 'server_id') String? serverId,
-    required double amount,
+    @JsonKey(name: 'amount_minor') required int amountMinor,
     required String type,
     @JsonKey(name: 'category_id') required String categoryId,
     String? description,
     required DateTime date,
     @JsonKey(name: 'payment_method') required String paymentMethod,
-    @JsonKey(name: 'currency_code') required String currencyCode,
     @Default(false) @JsonKey(name: 'is_recurring') bool isRecurring,
     @JsonKey(name: 'recurring_rule_id') String? recurringRuleId,
     @JsonKey(name: 'mobile_money_provider') String? mobileMoneyProvider,
@@ -29,6 +31,7 @@ abstract class TransactionModel with _$TransactionModel {
     @JsonKey(name: 'account_id') String? accountId,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(true)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
@@ -42,13 +45,12 @@ abstract class TransactionModel with _$TransactionModel {
   factory TransactionModel.fromDrift(db.Transaction row) => TransactionModel(
         id: row.id,
         serverId: row.serverId,
-        amount: row.amount,
+        amountMinor: row.amountMinor,
         type: row.type,
         categoryId: row.categoryId,
         description: row.description,
         date: row.date,
         paymentMethod: row.paymentMethod,
-        currencyCode: row.currencyCode,
         isRecurring: row.isRecurring,
         recurringRuleId: row.recurringRuleId,
         mobileMoneyProvider: row.mobileMoneyProvider,
@@ -56,19 +58,19 @@ abstract class TransactionModel with _$TransactionModel {
         accountId: row.accountId,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt,
+        deletedAt: row.deletedAt,
         isSynced: row.isSynced,
       );
 
   /// Creates a [TransactionModel] from a domain [Transaction] entity.
   factory TransactionModel.fromEntity(Transaction entity) => TransactionModel(
         id: entity.id,
-        amount: entity.amount,
+        amountMinor: entity.amountMinor,
         type: entity.type.name,
         categoryId: entity.categoryId,
         description: entity.description,
         date: entity.date,
         paymentMethod: entity.paymentMethod.name,
-        currencyCode: entity.currencyCode,
         isRecurring: entity.isRecurring,
         recurringRuleId: entity.recurringRuleId,
         mobileMoneyProvider: entity.mobileMoneyProvider,
@@ -82,14 +84,13 @@ abstract class TransactionModel with _$TransactionModel {
   /// Converts this model to a domain [Transaction] entity.
   Transaction toEntity() => Transaction(
         id: id,
-        amount: amount,
+        amountMinor: amountMinor,
         type: TransactionType.values.firstWhere((e) => e.name == type),
         categoryId: categoryId,
         description: description,
         date: date,
         paymentMethod:
             PaymentMethod.values.firstWhere((e) => e.name == paymentMethod),
-        currencyCode: currencyCode,
         isRecurring: isRecurring,
         recurringRuleId: recurringRuleId,
         mobileMoneyProvider: mobileMoneyProvider,
@@ -107,13 +108,12 @@ abstract class TransactionModel with _$TransactionModel {
         serverId: serverId != null
             ? drift.Value(serverId)
             : const drift.Value.absent(),
-        amount: drift.Value(amount),
+        amountMinor: drift.Value(amountMinor),
         type: drift.Value(type),
         categoryId: drift.Value(categoryId),
         description: drift.Value(description),
         date: drift.Value(date),
         paymentMethod: drift.Value(paymentMethod),
-        currencyCode: drift.Value(currencyCode),
         isRecurring: drift.Value(isRecurring),
         recurringRuleId: drift.Value(recurringRuleId),
         mobileMoneyProvider: drift.Value(mobileMoneyProvider),
@@ -121,6 +121,7 @@ abstract class TransactionModel with _$TransactionModel {
         accountId: drift.Value(accountId),
         createdAt: drift.Value(createdAt),
         updatedAt: drift.Value(updatedAt),
+        deletedAt: drift.Value(deletedAt),
         isSynced: drift.Value(isSynced),
       );
 }

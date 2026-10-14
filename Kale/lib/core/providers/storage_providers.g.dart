@@ -65,27 +65,5 @@ final secureStorageProvider = Provider<SecureStorage>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SecureStorageRef = ProviderRef<SecureStorage>;
-String _$userCurrencyCodeHash() => r'79dbafbd3c23cff4ad0f78c6fb85c6bc97e6036f';
-
-/// Provides the user's preferred currency code.
-///
-/// On first launch, auto-detects from device locale.
-/// On subsequent launches, reads from persisted storage.
-/// Can be updated via [LocalStorage.setCurrencyCode].
-///
-/// Copied from [UserCurrencyCode].
-@ProviderFor(UserCurrencyCode)
-final userCurrencyCodeProvider =
-    NotifierProvider<UserCurrencyCode, String>.internal(
-  UserCurrencyCode.new,
-  name: r'userCurrencyCodeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$userCurrencyCodeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$UserCurrencyCode = Notifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

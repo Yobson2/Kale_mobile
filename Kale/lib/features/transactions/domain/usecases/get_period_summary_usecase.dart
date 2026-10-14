@@ -5,14 +5,13 @@ import 'package:kale/features/transactions/domain/entities/transaction_enums.dar
 import 'package:kale/features/transactions/domain/repositories/transactions_repository.dart';
 
 /// Gets the total amount for a period and type.
-class GetPeriodSummaryUseCase
-    extends UseCase<double, GetPeriodSummaryParams> {
+class GetPeriodSummaryUseCase extends UseCase<int, GetPeriodSummaryParams> {
   const GetPeriodSummaryUseCase(this._repository);
 
   final TransactionsRepository _repository;
 
   @override
-  Future<Either<Failure, double>> call(GetPeriodSummaryParams params) {
+  Future<Either<Failure, int>> call(GetPeriodSummaryParams params) {
     return _repository.getTotalForPeriod(
       startDate: params.startDate,
       endDate: params.endDate,

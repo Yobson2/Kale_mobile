@@ -5,6 +5,8 @@ import 'package:kale/features/auth/data/models/tokens_model.dart';
 import 'package:kale/features/auth/data/models/user_model.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
+import 'package:kale/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:kale/features/profile/data/models/profile_model.dart';
 import 'package:kale/features/transactions/data/datasources/transactions_remote_datasource.dart';
 import 'package:kale/features/transactions/data/models/transaction_model.dart';
 
@@ -182,4 +184,5 @@ class FakeServer {
   final auth = FakeAuthRemote();
   final transactions = FakeTransactionsRemote();
   final budgets = FakeBudgetsRemote();
+  final profile = FakeProfileRemote();
 }

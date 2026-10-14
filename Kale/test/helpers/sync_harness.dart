@@ -24,6 +24,11 @@ import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/domain/repositories/budgets_repository.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
+import 'package:kale/features/dashboard/domain/entities/dashboard_summary.dart';
+import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
+import 'package:kale/features/profile/domain/repositories/profile_repository.dart';
+import 'package:kale/features/profile/domain/usecases/change_base_currency_usecase.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 import 'package:kale/features/transactions/domain/repositories/transactions_repository.dart';
@@ -320,21 +325,19 @@ class _FakeTimer implements Timer {
 extension SyncHarnessFixtures on SyncHarness {
   /// Creates a transaction through [SyncHarness.transactions].
   Future<Transaction> addTransaction({
-    double amount = 1000,
+    int amountMinor = 1000,
     TransactionType type = TransactionType.expense,
     String categoryId = 'cat_food',
     DateTime? date,
     PaymentMethod paymentMethod = PaymentMethod.cash,
-    String currencyCode = 'XOF',
     String? description,
   }) async {
     final result = await transactions.createTransaction(
-      amount: amount,
+      amountMinor: amountMinor,
       type: type,
       categoryId: categoryId,
       date: date ?? DateTime(2026, 10),
       paymentMethod: paymentMethod,
-      currencyCode: currencyCode,
       description: description,
     );
     return result.fold((f) => throw StateError('$f'), (t) => t);
@@ -352,6 +355,43 @@ extension SyncHarnessFixtures on SyncHarness {
       categories: const [],
     );
     return result.fold((f) => throw StateError('$f'), (b) => b);
+  }
+
+  /// Chooses the base currency the way onboarding does (no relabel
+  /// confirmation), and fails the test if the rules refuse it.
+  Future<void> chooseBaseCurrency(Currency currency) async {
+    final result = await changeBaseCurrency(
+      ChangeBaseCurrencyParams(currency: currency),
+    );
+    final change = result.fold((f) => throw StateError('$f'), (c) => c);
+    if (change != BaseCurrencyChange.changed) throw StateError('$change');
+  }
+
+  /// The stored base currency, or null if none was chosen.
+  Future<Currency?> readBaseCurrency() async {
+    final result = await profile.getBaseCurrency();
+    return result.fold((f) => throw StateError('$f'), (c) => c);
+  }
+
+  /// Lists every transaction through the repository.
+  Future<List<Transaction>> listTransactions() async {
+    final result = await transactions.getTransactions();
+    return result.fold((f) => throw StateError('$f'), (t) => t);
+  }
+
+  /// The dashboard summary for [start]..[end], in the stored base currency
+  /// (or the default one), as the dashboard screen computes it.
+  Future<DashboardSummary> dashboardSummary({
+    required DateTime start,
+    required DateTime end,
+  }) async {
+    final result =
+        await _container.read(dashboardRepositoryProvider).getDashboardSummary(
+              startDate: start,
+              endDate: end,
+              currency: await readBaseCurrency() ?? defaultBaseCurrency,
+            );
+    return result.fold((f) => throw StateError('$f'), (s) => s);
   }
 
   /// Reads one transaction back through the repository.

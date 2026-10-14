@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 
-class TransactionTile extends StatelessWidget {
+class TransactionTile extends ConsumerWidget {
   const TransactionTile({
     required this.transaction,
     required this.categoryNames,
@@ -18,7 +19,7 @@ class TransactionTile extends StatelessWidget {
   final Map<String, String> categoryNames;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isIncome = transaction.type == TransactionType.income;
     final amountColor = isIncome
@@ -61,10 +62,8 @@ class TransactionTile extends StatelessWidget {
         ),
       ),
       trailing: Text(
-        '$sign${CurrencyFormatter.format(
-          transaction.amount,
-          currencyCode: transaction.currencyCode,
-          compact: true,
+        '$sign${context.formatMoney(
+          transaction.amountIn(ref.watch(baseCurrencyProvider)),
         )}',
         style: context.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.w700,

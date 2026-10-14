@@ -25,6 +25,9 @@ abstract class TransactionsLocalDataSource {
   /// Gets a single transaction by ID.
   Future<Transaction> getTransactionById(String id);
 
+  /// Counts live (not deleted) transactions.
+  Future<int> countTransactions();
+
   /// Saves a transaction locally (insert or update).
   Future<void> saveTransaction(TransactionModel model);
 
@@ -45,14 +48,14 @@ abstract class TransactionsLocalDataSource {
   Future<void> markSynced(String id, {String? serverId});
 
   /// Gets total amounts grouped by category for a period.
-  Future<Map<String, double>> getCategoryTotals({
+  Future<Map<String, int>> getCategoryTotals({
     required DateTime startDate,
     required DateTime endDate,
     TransactionType? type,
   });
 
   /// Gets the total amount for a period and type.
-  Future<double> getTotalForPeriod({
+  Future<int> getTotalForPeriod({
     required DateTime startDate,
     required DateTime endDate,
     required TransactionType type,
@@ -83,9 +86,9 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
     return _transactionsDao
         .watchAll(startDate: startDate, endDate: endDate)
         .map(
-          (rows) =>
-              rows.map((row) => TransactionModel.fromDrift(row).toEntity())
-                  .toList(),
+          (rows) => rows
+              .map((row) => TransactionModel.fromDrift(row).toEntity())
+              .toList(),
         );
   }
 
@@ -124,6 +127,15 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
     } catch (e) {
       if (e is CacheException) rethrow;
       throw CacheException(message: 'Failed to get transaction: $e');
+    }
+  }
+
+  @override
+  Future<int> countTransactions() async {
+    try {
+      return await _transactionsDao.count();
+    } catch (e) {
+      throw CacheException(message: 'Failed to count transactions: $e');
     }
   }
 
@@ -168,9 +180,8 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
   @override
   Future<void> replaceAllFromServer(List<TransactionModel> models) async {
     try {
-      final companions = models
-          .map((m) => m.toDriftCompanion(isSynced: true))
-          .toList();
+      final companions =
+          models.map((m) => m.toDriftCompanion(isSynced: true)).toList();
       await _transactionsDao.replaceAll(companions);
     } catch (e) {
       throw CacheException(message: 'Failed to replace transactions: $e');
@@ -187,7 +198,7 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
   }
 
   @override
-  Future<Map<String, double>> getCategoryTotals({
+  Future<Map<String, int>> getCategoryTotals({
     required DateTime startDate,
     required DateTime endDate,
     TransactionType? type,
@@ -199,7 +210,7 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
         type: type?.name,
       );
       return {
-        for (final ct in totals) ct.categoryId: ct.total,
+        for (final ct in totals) ct.categoryId: ct.totalMinor,
       };
     } catch (e) {
       throw CacheException(message: 'Failed to get category totals: $e');
@@ -207,7 +218,7 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
   }
 
   @override
-  Future<double> getTotalForPeriod({
+  Future<int> getTotalForPeriod({
     required DateTime startDate,
     required DateTime endDate,
     required TransactionType type,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/extensions/date_time_extensions.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
 import 'package:kale/core/widgets/feedback/app_dialog.dart';
 import 'package:kale/core/widgets/feedback/app_snackbar.dart';
@@ -14,6 +14,7 @@ import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/core/widgets/layout/app_scaffold.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
 import 'package:kale/core/widgets/states/app_error_state.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/transactions/domain/entities/category.dart';
 import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
@@ -35,8 +36,7 @@ class TransactionDetailPage extends ConsumerStatefulWidget {
       _TransactionDetailPageState();
 }
 
-class _TransactionDetailPageState
-    extends ConsumerState<TransactionDetailPage> {
+class _TransactionDetailPageState extends ConsumerState<TransactionDetailPage> {
   @override
   void initState() {
     super.initState();
@@ -126,9 +126,7 @@ class _TransactionDetailPageState
       TransactionsLoaded(:final transaction) => () {
           // Resolve category.
           final categories = categoriesAsync.valueOrNull ?? [];
-          final category = categories
-              .cast<Category?>()
-              .firstWhere(
+          final category = categories.cast<Category?>().firstWhere(
                 (c) => c!.id == transaction.categoryId,
                 orElse: () => null,
               );
@@ -162,7 +160,7 @@ class _TransactionDetailPageState
 }
 
 /// The detail content body.
-class _TransactionDetailContent extends StatelessWidget {
+class _TransactionDetailContent extends ConsumerWidget {
   const _TransactionDetailContent({
     required this.transaction,
     required this.category,
@@ -176,16 +174,15 @@ class _TransactionDetailContent extends StatelessWidget {
   final ThemeData theme;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isIncome = transaction.type.isIncome;
     final amountColor = isIncome
         ? (isDark ? AppColors.incomeDark : AppColors.incomeLight)
         : (isDark ? AppColors.expenseDark : AppColors.expenseLight);
 
     final amountPrefix = isIncome ? '+' : '-';
-    final formattedAmount = CurrencyFormatter.format(
-      transaction.amount,
-      currencyCode: transaction.currencyCode,
+    final formattedAmount = context.formatMoney(
+      transaction.amountIn(ref.watch(baseCurrencyProvider)),
     );
 
     final categoryIcon = iconMap[category?.icon] ?? Icons.category_outlined;
@@ -326,9 +323,8 @@ class _TransactionDetailContent extends StatelessWidget {
                     label: 'Sync Status',
                     value: 'Pending sync',
                     theme: theme,
-                    valueColor: isDark
-                        ? AppColors.warningDark
-                        : AppColors.warningLight,
+                    valueColor:
+                        isDark ? AppColors.warningDark : AppColors.warningLight,
                   ),
                 ],
               ],
@@ -368,8 +364,7 @@ class _TransactionDetailContent extends StatelessWidget {
                         const SizedBox(height: 6),
                         Text.rich(
                           TextSpan(
-                            text:
-                                'This transaction matches your recurring '
+                            text: 'This transaction matches your recurring '
                                 "spending pattern for '",
                             children: [
                               TextSpan(

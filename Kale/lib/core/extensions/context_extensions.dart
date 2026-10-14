@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kale/l10n/app_localizations.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_colors.dart';
+import 'package:kale/l10n/app_localizations.dart';
 
 /// Convenience extensions on [BuildContext].
 extension BuildContextX on BuildContext {
@@ -15,6 +16,11 @@ extension BuildContextX on BuildContext {
 
   /// Whether the current theme is dark mode.
   bool get isDark => theme.brightness == Brightness.dark;
+
+  /// Formats [money] for display in the app's locale (French fallback),
+  /// with the currency's own decimal places. Exact: no floating point.
+  String formatMoney(Money money) =>
+      money.format(locale: Localizations.localeOf(this).toString());
 
   // ── Surface Tier Convenience ───────────────────────────────
 
@@ -36,9 +42,8 @@ extension BuildContextX on BuildContext {
   // ── Gradient Convenience ───────────────────────────────────
 
   /// Primary gradient for the current theme.
-  LinearGradient get primaryGradient => isDark
-      ? AppColors.primaryGradientDark
-      : AppColors.primaryGradientLight;
+  LinearGradient get primaryGradient =>
+      isDark ? AppColors.primaryGradientDark : AppColors.primaryGradientLight;
 
   /// Screen size (uses [MediaQuery.sizeOf] for granular rebuilds).
   Size get screenSize => MediaQuery.sizeOf(this);
