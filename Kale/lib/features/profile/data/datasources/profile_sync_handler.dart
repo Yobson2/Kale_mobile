@@ -47,4 +47,9 @@ class ProfileSyncHandler implements SyncHandler {
     await _local.applyServerProfile(model);
     return const PulledPage(rowCount: 1);
   }
+
+  /// The profile is not moved: the account the data moves to keeps its own
+  /// profile (and base currency), pulled after the switch.
+  @override
+  Future<void> requeueAllAsCreates() async {}
 }

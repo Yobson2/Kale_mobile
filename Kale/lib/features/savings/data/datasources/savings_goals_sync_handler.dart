@@ -47,6 +47,9 @@ class SavingsGoalsSyncHandler implements SyncHandler {
     return PulledPage(rowCount: page.rows.length, last: page.last);
   }
 
+  @override
+  Future<void> requeueAllAsCreates() => _local.enqueueAllAsCreates();
+
   static SavingsGoalModel _decode(String payload) =>
       SavingsGoalModel.fromJson(jsonDecode(payload) as Map<String, dynamic>);
 }

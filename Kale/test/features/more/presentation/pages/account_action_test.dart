@@ -63,12 +63,13 @@ void main() {
   }
 
   group('logout with changes not backed up', () {
-    Future<_BlockedLogoutNotifier> tapLogout(WidgetTester tester) async {
+    Future<_DiscardLog> tapLogout(WidgetTester tester) async {
       tester.view.physicalSize = const Size(1080, 4000);
       tester.view.devicePixelRatio = 2;
       addTearDown(tester.view.reset);
 
-      final notifier = _BlockedLogoutNotifier(2);
+      final log = _DiscardLog();
+      final notifier = _BlockedLogoutNotifier(2, log);
       final overrides = await createTestOverrides();
       await tester.pumpWidget(
         createTestApp(
@@ -82,7 +83,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text(logout));
       await tester.pumpAndSettle();
-      return notifier;
+      return log;
     }
 
     const warning = "2 changes aren't backed up yet. If you log out now, "
@@ -95,22 +96,22 @@ void main() {
     });
 
     testWidgets('cancelling keeps the user logged in', (tester) async {
-      final notifier = await tapLogout(tester);
+      final log = await tapLogout(tester);
 
       await tester.tap(find.text('Stay logged in'));
       await tester.pumpAndSettle();
 
       expect(find.text(warning), findsNothing);
-      expect(notifier.discarded, isFalse);
+      expect(log.discarded, isFalse);
     });
 
     testWidgets('confirming logs out and discards them', (tester) async {
-      final notifier = await tapLogout(tester);
+      final log = await tapLogout(tester);
 
       await tester.tap(find.text('Log out anyway'));
       await tester.pumpAndSettle();
 
-      expect(notifier.discarded, isTrue);
+      expect(log.discarded, isTrue);
     });
   });
 }
@@ -124,12 +125,17 @@ class _FixedAuthNotifier extends AuthNotifier {
   AuthState build() => _state;
 }
 
-/// A permanent user whose logout is blocked by [unsaved] changes.
-class _BlockedLogoutNotifier extends AuthNotifier {
-  _BlockedLogoutNotifier(this.unsaved);
-
-  final int unsaved;
+/// Whether the user confirmed discarding their changes.
+class _DiscardLog {
   bool discarded = false;
+}
+
+/// A permanent user whose logout is blocked by unsaved changes.
+class _BlockedLogoutNotifier extends AuthNotifier {
+  _BlockedLogoutNotifier(this._unsaved, this._log);
+
+  final int _unsaved;
+  final _DiscardLog _log;
 
   @override
   AuthState build() => const AuthState.authenticated(
@@ -138,8 +144,8 @@ class _BlockedLogoutNotifier extends AuthNotifier {
 
   @override
   Future<LogoutOutcome> logout() async =>
-      LogoutOutcome.blocked(unsavedChanges: unsaved);
+      LogoutOutcome.blocked(unsavedChanges: _unsaved);
 
   @override
-  Future<void> discardChangesAndLogout() async => discarded = true;
+  Future<void> discardChangesAndLogout() async => _log.discarded = true;
 }

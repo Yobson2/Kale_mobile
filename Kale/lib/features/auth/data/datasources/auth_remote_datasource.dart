@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/features/auth/data/models/tokens_model.dart';
 import 'package:kale/features/auth/data/models/user_model.dart';
+import 'package:kale/features/auth/domain/entities/account_link.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -58,6 +59,45 @@ abstract class AuthRemoteDataSource {
 
   /// Creates an anonymous user and signs in as them.
   Future<({UserModel user, TokensModel tokens})> signInAnonymously();
+
+  /// Links a Google or Apple identity to the signed-in anonymous user,
+  /// keeping its id. Throws [IdentityInUseException] if the identity
+  /// belongs to another account.
+  Future<({UserModel user, TokensModel tokens})> linkSocialAccount(
+    SocialProvider provider,
+  );
+
+  /// Asks to link [email] to the signed-in anonymous user: a code is sent
+  /// to it. Throws [IdentityInUseException] if [email] belongs to another
+  /// account.
+  Future<void> startEmailLink(String email);
+
+  /// Confirms the emailed [code], then sets [password].
+  Future<({UserModel user, TokensModel tokens})> confirmEmailLink({
+    required String email,
+    required String code,
+    required String password,
+  });
+
+  /// Sends a sign-in code to an existing account's [email]; never creates
+  /// an account.
+  Future<void> sendSignInCode(String email);
+
+  /// Signs in to an existing account with [credential] ([code] for an
+  /// [EmailCodeCredential]).
+  Future<({UserModel user, TokensModel tokens})> signInWithCredential(
+    AccountCredential credential, {
+    String? code,
+  });
+}
+
+/// The identity a guest tried to link belongs to another Kalé account.
+class IdentityInUseException implements Exception {
+  /// Creates an [IdentityInUseException].
+  const IdentityInUseException(this.credential);
+
+  /// How to sign in to that account.
+  final AccountCredential credential;
 }
 
 /// Implementation of [AuthRemoteDataSource] using [SupabaseClient].
@@ -201,75 +241,198 @@ class SupabaseAuthRemoteDataSource implements AuthRemoteDataSource {
   // ---------------------------------------------------------------------------
 
   @override
-  Future<({UserModel user, TokensModel tokens})> signInWithGoogle() async {
-    try {
-      final googleSignIn = GoogleSignIn(
-        clientId: _googleIosClientId,
-        serverClientId: _googleWebClientId,
-      );
-      final googleUser = await googleSignIn.signIn();
-      if (googleUser == null) {
-        throw const ServerException(message: 'Google sign-in was cancelled');
-      }
-
-      final googleAuth = await googleUser.authentication;
-      final idToken = googleAuth.idToken;
-      if (idToken == null) {
-        throw const ServerException(
-          message: 'Failed to obtain Google ID token',
-        );
-      }
-
-      final response = await _supabase.auth.signInWithIdToken(
-        provider: OAuthProvider.google,
-        idToken: idToken,
-        accessToken: googleAuth.accessToken,
-      );
-      return _mapAuthResponse(response);
-    } on AuthException catch (e) {
-      throw ServerException(message: e.message);
-    } on ServerException {
-      rethrow;
-    } catch (e) {
-      throw ServerException(message: e.toString());
-    }
-  }
+  Future<({UserModel user, TokensModel tokens})> signInWithGoogle() =>
+      _socialAuth(() async {
+        final credential = await _socialCredential(SocialProvider.google);
+        return _mapAuthResponse(await _signInWithIdToken(credential));
+      });
 
   @override
-  Future<({UserModel user, TokensModel tokens})> signInWithApple() async {
+  Future<({UserModel user, TokensModel tokens})> signInWithApple() =>
+      _socialAuth(() async {
+        final credential = await _socialCredential(SocialProvider.apple);
+        return _mapAuthResponse(await _signInWithIdToken(credential));
+      });
+
+  /// Runs a social sign-in or link, mapping every failure to a
+  /// [ServerException] (an [IdentityInUseException] passes through).
+  Future<T> _socialAuth<T>(Future<T> Function() run) async {
     try {
-      final rawNonce = _generateNonce();
-      final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
-
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-        nonce: hashedNonce,
-      );
-
-      final idToken = credential.identityToken;
-      if (idToken == null) {
-        throw const ServerException(
-          message: 'Failed to obtain Apple ID token',
-        );
-      }
-
-      final response = await _supabase.auth.signInWithIdToken(
-        provider: OAuthProvider.apple,
-        idToken: idToken,
-        nonce: rawNonce,
-      );
-      return _mapAuthResponse(response);
+      return await run();
     } on AuthException catch (e) {
       throw ServerException(message: e.message);
     } on SignInWithAppleAuthorizationException catch (e) {
       throw ServerException(message: e.message);
     } on ServerException {
       rethrow;
+    } on IdentityInUseException {
+      rethrow;
     } catch (e) {
       throw ServerException(message: e.toString());
+    }
+  }
+
+  /// Asks the provider for an ID token (the platform sign-in sheet).
+  Future<IdTokenCredential> _socialCredential(SocialProvider provider) async {
+    switch (provider) {
+      case SocialProvider.google:
+        final googleSignIn = GoogleSignIn(
+          clientId: _googleIosClientId,
+          serverClientId: _googleWebClientId,
+        );
+        final googleUser = await googleSignIn.signIn();
+        if (googleUser == null) {
+          throw const ServerException(message: 'Google sign-in was cancelled');
+        }
+        final googleAuth = await googleUser.authentication;
+        final idToken = googleAuth.idToken;
+        if (idToken == null) {
+          throw const ServerException(
+            message: 'Failed to obtain Google ID token',
+          );
+        }
+        return IdTokenCredential(
+          provider: provider,
+          idToken: idToken,
+          accessToken: googleAuth.accessToken,
+        );
+      case SocialProvider.apple:
+        final rawNonce = _generateNonce();
+        final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
+        final credential = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+          nonce: hashedNonce,
+        );
+        final idToken = credential.identityToken;
+        if (idToken == null) {
+          throw const ServerException(
+            message: 'Failed to obtain Apple ID token',
+          );
+        }
+        return IdTokenCredential(
+          provider: provider,
+          idToken: idToken,
+          rawNonce: rawNonce,
+        );
+    }
+  }
+
+  Future<AuthResponse> _signInWithIdToken(IdTokenCredential credential) =>
+      _supabase.auth.signInWithIdToken(
+        provider: _oauthProvider(credential.provider),
+        idToken: credential.idToken,
+        accessToken: credential.accessToken,
+        nonce: credential.rawNonce,
+      );
+
+  static OAuthProvider _oauthProvider(SocialProvider provider) =>
+      switch (provider) {
+        SocialProvider.google => OAuthProvider.google,
+        SocialProvider.apple => OAuthProvider.apple,
+      };
+
+  // ---------------------------------------------------------------------------
+  // Guest upgrade
+  // ---------------------------------------------------------------------------
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> linkSocialAccount(
+    SocialProvider provider,
+  ) =>
+      _socialAuth(() async {
+        final credential = await _socialCredential(provider);
+        try {
+          final response = await _supabase.auth.linkIdentityWithIdToken(
+            provider: _oauthProvider(provider),
+            idToken: credential.idToken,
+            accessToken: credential.accessToken,
+            nonce: credential.rawNonce,
+          );
+          return _mapAuthResponse(response);
+        } on AuthException catch (e) {
+          if (e.code == 'identity_already_exists') {
+            throw IdentityInUseException(credential);
+          }
+          rethrow;
+        }
+      });
+
+  @override
+  Future<void> startEmailLink(String email) async {
+    try {
+      await _supabase.auth.updateUser(UserAttributes(email: email));
+    } on AuthException catch (e) {
+      if (e.code == 'email_exists') {
+        throw IdentityInUseException(EmailCodeCredential(email));
+      }
+      throw ServerException(
+        message: e.message,
+        statusCode: int.tryParse(e.statusCode ?? ''),
+      );
+    }
+  }
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> confirmEmailLink({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    try {
+      final response = await _supabase.auth.verifyOTP(
+        email: email,
+        token: code,
+        type: OtpType.emailChange,
+      );
+      final linked = _mapAuthResponse(response);
+      await _supabase.auth.updateUser(UserAttributes(password: password));
+      return linked;
+    } on AuthException catch (e) {
+      throw ServerException(
+        message: e.message,
+        statusCode: int.tryParse(e.statusCode ?? ''),
+      );
+    }
+  }
+
+  @override
+  Future<void> sendSignInCode(String email) async {
+    try {
+      await _supabase.auth.signInWithOtp(email: email, shouldCreateUser: false);
+    } on AuthException catch (e) {
+      throw ServerException(
+        message: e.message,
+        statusCode: int.tryParse(e.statusCode ?? ''),
+      );
+    }
+  }
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> signInWithCredential(
+    AccountCredential credential, {
+    String? code,
+  }) async {
+    try {
+      final response = switch (credential) {
+        IdTokenCredential() => await _signInWithIdToken(credential),
+        PasswordCredential(:final email, :final password) => await _supabase
+            .auth
+            .signInWithPassword(email: email, password: password),
+        EmailCodeCredential(:final email) => await _supabase.auth.verifyOTP(
+            email: email,
+            token: code ?? '',
+            type: OtpType.email,
+          ),
+      };
+      return _mapAuthResponse(response);
+    } on AuthException catch (e) {
+      throw ServerException(
+        message: e.message,
+        statusCode: int.tryParse(e.statusCode ?? ''),
+      );
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:kale/features/auth/data/models/tokens_model.dart';
 import 'package:kale/features/auth/data/models/user_model.dart';
+import 'package:kale/features/auth/domain/entities/account_link.dart';
 
 /// Mock implementation of [AuthRemoteDataSource] for local testing.
 ///
@@ -130,5 +131,57 @@ class MockAuthRemoteDataSource implements AuthRemoteDataSource {
       ),
       tokens: _mockTokens,
     );
+  }
+
+  // Guest upgrade: the mock test account (test@gmail.com) is the only
+  // "existing" identity; any other email or social identity links.
+
+  static const _linkedUser = UserModel(
+    id: 'mock-anonymous-user',
+    email: 'guest@example.com',
+    name: '',
+  );
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> linkSocialAccount(
+    SocialProvider provider,
+  ) async {
+    await Future<void>.delayed(_delay);
+    return (user: _linkedUser, tokens: _mockTokens);
+  }
+
+  @override
+  Future<void> startEmailLink(String email) async {
+    await Future<void>.delayed(_delay);
+    if (email == _email) {
+      throw const IdentityInUseException(EmailCodeCredential(_email));
+    }
+  }
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> confirmEmailLink({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    await Future<void>.delayed(_delay);
+    if (code != '123456') {
+      throw const ServerException(message: 'Invalid OTP. Use 123456');
+    }
+    return (user: _linkedUser.copyWith(email: email), tokens: _mockTokens);
+  }
+
+  @override
+  Future<void> sendSignInCode(String email) async {
+    await Future<void>.delayed(_delay);
+  }
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> signInWithCredential(
+    AccountCredential credential, {
+    String? code,
+  }) async {
+    await Future<void>.delayed(_delay);
+    return (user: _mockUser, tokens: _mockTokens);
   }
 }

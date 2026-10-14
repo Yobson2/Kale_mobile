@@ -20,6 +20,10 @@ class BudgetCategoriesDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
+  /// Gets every live allocation.
+  Future<List<BudgetCategory>> getAllLive() =>
+      (select(budgetCategories)..where((t) => t.deletedAt.isNull())).get();
+
   /// Gets all allocations for a budget.
   Future<List<BudgetCategory>> getByBudgetId(String budgetId) {
     return (select(budgetCategories)

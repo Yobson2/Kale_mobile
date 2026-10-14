@@ -2845,6 +2845,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t refresh from your backup. Please try again.'**
   String get refreshFailed;
+
+  /// No description provided for @saveDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your data'**
+  String get saveDataTitle;
+
+  /// No description provided for @saveDataSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account to keep everything you entered, on this phone and any other.'**
+  String get saveDataSubtitle;
+
+  /// No description provided for @saveDataWithEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with email'**
+  String get saveDataWithEmail;
+
+  /// No description provided for @saveDataCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code we sent to {email}.'**
+  String saveDataCodeSent(String email);
+
+  /// No description provided for @saveDataVerify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get saveDataVerify;
+
+  /// No description provided for @saveDataDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is saved to your account.'**
+  String get saveDataDone;
+
+  /// No description provided for @guestDataChoiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This account already exists'**
+  String get guestDataChoiceTitle;
+
+  /// No description provided for @guestDataChoiceMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{You have no entries on this phone yet.} =1{You have 1 entry on this phone. Add it to that account, or discard it?} other{You have {count} entries on this phone. Add them to that account, or discard them?}}'**
+  String guestDataChoiceMessage(int count);
+
+  /// No description provided for @guestDataChoiceAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Sign in} =1{Add my entry to that account} other{Add my {count} entries to that account}}'**
+  String guestDataChoiceAdd(int count);
+
+  /// No description provided for @guestDataChoiceDiscard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard them and sign in'**
+  String get guestDataChoiceDiscard;
+
+  /// No description provided for @guestDataChoiceCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get guestDataChoiceCancel;
 }
 
 class _AppLocalizationsDelegate
