@@ -1,14 +1,19 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kale/core/database/app_database.dart' as db;
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
+import 'package:kale/features/budget/domain/entities/budget_period_range.dart';
 
 part 'budget_model.freezed.dart';
 part 'budget_model.g.dart';
 
 /// Data model for [Budget] with JSON serialization and Drift conversion.
+///
+/// `total_income_minor` is an integer count of minor units of the account's
+/// base currency. `start_date`/`end_date` are plain `YYYY-MM-DD` dates.
 @freezed
 abstract class BudgetModel with _$BudgetModel {
   const BudgetModel._();
@@ -19,12 +24,20 @@ abstract class BudgetModel with _$BudgetModel {
     required String name,
     required String strategy,
     required String period,
-    @JsonKey(name: 'start_date') required DateTime startDate,
-    @JsonKey(name: 'end_date') required DateTime endDate,
-    @JsonKey(name: 'total_income') double? totalIncome,
+    @CalendarDateJsonConverter()
+    @JsonKey(name: 'start_date')
+    required CalendarDate startDate,
+    @CalendarDateJsonConverter()
+    @JsonKey(name: 'end_date')
+    required CalendarDate endDate,
+    @Default(BudgetPeriodRange.defaultStartDay)
+    @JsonKey(name: 'period_start_day')
+    int periodStartDay,
+    @JsonKey(name: 'total_income_minor') int? totalIncomeMinor,
     @Default(true) @JsonKey(name: 'is_percentage_based') bool isPercentageBased,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(false)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
@@ -43,10 +56,12 @@ abstract class BudgetModel with _$BudgetModel {
         period: row.period,
         startDate: row.startDate,
         endDate: row.endDate,
-        totalIncome: row.totalIncome,
+        periodStartDay: row.periodStartDay,
+        totalIncomeMinor: row.totalIncomeMinor,
         isPercentageBased: row.isPercentageBased,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt,
+        deletedAt: row.deletedAt,
         isSynced: row.isSynced,
       );
 
@@ -64,7 +79,8 @@ abstract class BudgetModel with _$BudgetModel {
         period: _parsePeriod(period),
         startDate: startDate,
         endDate: endDate,
-        totalIncome: totalIncome,
+        periodStartDay: periodStartDay,
+        totalIncomeMinor: totalIncomeMinor,
         isPercentageBased: isPercentageBased,
         categories: categories,
         createdAt: createdAt,
@@ -83,28 +99,13 @@ abstract class BudgetModel with _$BudgetModel {
         period: drift.Value(period),
         startDate: drift.Value(startDate),
         endDate: drift.Value(endDate),
-        totalIncome: totalIncome != null
-            ? drift.Value(totalIncome)
-            : const drift.Value.absent(),
+        periodStartDay: drift.Value(periodStartDay),
+        totalIncomeMinor: drift.Value(totalIncomeMinor),
         isPercentageBased: drift.Value(isPercentageBased),
         createdAt: drift.Value(createdAt),
         updatedAt: drift.Value(updatedAt),
+        deletedAt: drift.Value(deletedAt),
         isSynced: drift.Value(isSynced),
-      );
-
-  /// Creates a [BudgetModel] from a domain [Budget] entity.
-  factory BudgetModel.fromEntity(Budget entity) => BudgetModel(
-        id: entity.id,
-        name: entity.name,
-        strategy: entity.strategy.name,
-        period: entity.period.name,
-        startDate: entity.startDate,
-        endDate: entity.endDate,
-        totalIncome: entity.totalIncome,
-        isPercentageBased: entity.isPercentageBased,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-        isSynced: entity.isSynced,
       );
 
   static BudgetStrategy _parseStrategy(String value) {
@@ -120,4 +121,16 @@ abstract class BudgetModel with _$BudgetModel {
       orElse: () => BudgetPeriod.monthly,
     );
   }
+}
+
+/// Reads and writes a [CalendarDate] as a `YYYY-MM-DD` JSON string (a
+/// Postgres `DATE`).
+class CalendarDateJsonConverter extends JsonConverter<CalendarDate, String> {
+  const CalendarDateJsonConverter();
+
+  @override
+  CalendarDate fromJson(String json) => CalendarDate.parse(json);
+
+  @override
+  String toJson(CalendarDate object) => object.toIso();
 }

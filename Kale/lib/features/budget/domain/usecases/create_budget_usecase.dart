@@ -1,12 +1,15 @@
 import 'package:dartz/dartz.dart';
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/failures.dart';
 import 'package:kale/core/usecase/usecase.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
+import 'package:kale/features/budget/domain/entities/budget_period_range.dart';
 import 'package:kale/features/budget/domain/repositories/budgets_repository.dart';
 
-/// Creates a new budget with category allocations.
+/// Creates a new budget for the period that contains [CreateBudgetParams.today],
+/// computed from the period type and start day.
 /// Works offline via local save + sync queue.
 class CreateBudgetUseCase extends UseCase<Budget, CreateBudgetParams> {
   const CreateBudgetUseCase(this._repository);
@@ -15,13 +18,19 @@ class CreateBudgetUseCase extends UseCase<Budget, CreateBudgetParams> {
 
   @override
   Future<Either<Failure, Budget>> call(CreateBudgetParams params) {
+    final range = BudgetPeriodRange.containing(
+      params.today,
+      period: params.period,
+      startDay: params.periodStartDay,
+    );
     return _repository.createBudget(
       name: params.name,
       strategy: params.strategy,
       period: params.period,
-      startDate: params.startDate,
-      endDate: params.endDate,
-      totalIncome: params.totalIncome,
+      startDate: range.start,
+      endDate: range.end,
+      periodStartDay: params.periodStartDay,
+      totalIncomeMinor: params.totalIncomeMinor,
       isPercentageBased: params.isPercentageBased,
       categories: params.categories,
     );
@@ -34,19 +43,25 @@ class CreateBudgetParams {
     required this.name,
     required this.strategy,
     required this.period,
-    required this.startDate,
-    required this.endDate,
+    required this.today,
     required this.categories,
-    this.totalIncome,
+    this.periodStartDay = BudgetPeriodRange.defaultStartDay,
+    this.totalIncomeMinor,
     this.isPercentageBased = true,
   });
 
   final String name;
   final BudgetStrategy strategy;
   final BudgetPeriod period;
-  final DateTime startDate;
-  final DateTime endDate;
-  final double? totalIncome;
+
+  /// The day the budget is created on; its period is the one containing it.
+  final CalendarDate today;
+
+  /// See [BudgetPeriodRange.containing].
+  final int periodStartDay;
+
+  /// Expected income for the period, in minor units of the base currency.
+  final int? totalIncomeMinor;
   final bool isPercentageBased;
   final List<BudgetCategoryAllocation> categories;
 }

@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:kale/core/constants/default_categories.dart';
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/database/tables/sync_queue_table.dart';
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/features/budget/data/daos/budget_categories_dao.dart';
 import 'package:kale/features/budget/data/daos/budgets_dao.dart';
 import 'package:kale/features/budget/data/tables/budget_categories_table.dart';

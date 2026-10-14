@@ -5,6 +5,8 @@ import 'package:kale/features/budget/data/tables/budget_categories_table.dart';
 part 'budget_categories_dao.g.dart';
 
 /// DAO for budget category allocations.
+///
+/// Every read excludes soft-deleted rows (`deletedAt` set).
 @DriftAccessor(tables: [BudgetCategories])
 class BudgetCategoriesDao extends DatabaseAccessor<AppDatabase>
     with _$BudgetCategoriesDaoMixin {
@@ -13,14 +15,14 @@ class BudgetCategoriesDao extends DatabaseAccessor<AppDatabase>
   /// Watches all allocations for a budget.
   Stream<List<BudgetCategory>> watchByBudgetId(String budgetId) {
     return (select(budgetCategories)
-          ..where((t) => t.budgetId.equals(budgetId)))
+          ..where((t) => t.budgetId.equals(budgetId) & t.deletedAt.isNull()))
         .watch();
   }
 
   /// Gets all allocations for a budget.
   Future<List<BudgetCategory>> getByBudgetId(String budgetId) {
     return (select(budgetCategories)
-          ..where((t) => t.budgetId.equals(budgetId)))
+          ..where((t) => t.budgetId.equals(budgetId) & t.deletedAt.isNull()))
         .get();
   }
 
@@ -29,15 +31,9 @@ class BudgetCategoriesDao extends DatabaseAccessor<AppDatabase>
     return into(budgetCategories).insertOnConflictUpdate(entry);
   }
 
-  /// Inserts multiple allocations at once.
-  Future<void> insertAll(List<BudgetCategoriesCompanion> entries) {
-    return batch((b) => b.insertAll(budgetCategories, entries));
-  }
-
   /// Deletes all allocations for a budget.
   Future<void> deleteByBudgetId(String budgetId) {
-    return (delete(budgetCategories)
-          ..where((t) => t.budgetId.equals(budgetId)))
+    return (delete(budgetCategories)..where((t) => t.budgetId.equals(budgetId)))
         .go();
   }
 

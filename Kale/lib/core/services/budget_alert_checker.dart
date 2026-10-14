@@ -1,6 +1,7 @@
+import 'package:intl/intl.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/services/notification_service.dart';
 import 'package:kale/core/storage/local_storage.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/utils/logger.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 
@@ -20,23 +21,25 @@ class BudgetAlertChecker {
   Future<void> checkAndAlert({
     required Budget budget,
     required String categoryId,
+    required Currency currency,
     String? categoryName,
   }) async {
     if (!_storage.isNotificationsEnabled) return;
 
     final threshold = _storage.budgetAlertThreshold;
-    final allocation = budget.categories
-        .where((c) => c.categoryId == categoryId)
-        .firstOrNull;
+    final allocation =
+        budget.categories.where((c) => c.categoryId == categoryId).firstOrNull;
 
-    if (allocation == null || allocation.allocatedAmount <= 0) return;
+    if (allocation == null || allocation.allocatedMinor <= 0) return;
 
-    final utilization = allocation.spentAmount / allocation.allocatedAmount;
+    final utilization = allocation.utilization;
     if (utilization < threshold) return;
 
     final percentUsed = (utilization * 100).round();
     final displayName = categoryName ?? allocation.categoryId;
-    final budgetAmount = CurrencyFormatter.format(allocation.allocatedAmount);
+    final budgetAmount = allocation
+        .allocatedIn(currency)
+        .format(locale: Intl.getCurrentLocale());
 
     AppLogger.info(
       'Budget alert: $displayName at $percentUsed% (threshold: '

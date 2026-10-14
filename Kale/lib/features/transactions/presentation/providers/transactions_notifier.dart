@@ -4,6 +4,7 @@ import 'package:kale/core/services/achievement_service.dart';
 import 'package:kale/core/services/budget_alert_checker.dart';
 import 'package:kale/core/services/streak_service.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/transactions/domain/entities/transaction_enums.dart';
 import 'package:kale/features/transactions/domain/usecases/create_transaction_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/update_transaction_usecase.dart';
@@ -194,6 +195,7 @@ class TransactionsNotifier extends _$TransactionsNotifier {
         await checker.checkAndAlert(
           budget: budget,
           categoryId: categoryId,
+          currency: ref.read(baseCurrencyProvider),
           categoryName: category?.name,
         );
       } catch (_) {

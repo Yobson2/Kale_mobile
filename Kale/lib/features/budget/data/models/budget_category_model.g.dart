@@ -12,9 +12,13 @@ _BudgetCategoryModel _$BudgetCategoryModelFromJson(Map<String, dynamic> json) =>
       budgetId: json['budget_id'] as String,
       categoryId: json['category_id'] as String,
       groupName: json['group_name'] as String,
-      allocatedAmount: (json['allocated_amount'] as num).toDouble(),
+      allocatedMinor: (json['allocated_minor'] as num).toInt(),
       allocatedPercentage: (json['allocated_percentage'] as num?)?.toDouble(),
       createdAt: DateTime.parse(json['created_at'] as String),
+      updatedAt: DateTime.parse(json['updated_at'] as String),
+      deletedAt: json['deleted_at'] == null
+          ? null
+          : DateTime.parse(json['deleted_at'] as String),
     );
 
 Map<String, dynamic> _$BudgetCategoryModelToJson(
@@ -24,7 +28,9 @@ Map<String, dynamic> _$BudgetCategoryModelToJson(
       'budget_id': instance.budgetId,
       'category_id': instance.categoryId,
       'group_name': instance.groupName,
-      'allocated_amount': instance.allocatedAmount,
+      'allocated_minor': instance.allocatedMinor,
       'allocated_percentage': instance.allocatedPercentage,
       'created_at': instance.createdAt.toIso8601String(),
+      'updated_at': instance.updatedAt.toIso8601String(),
+      'deleted_at': instance.deletedAt?.toIso8601String(),
     };

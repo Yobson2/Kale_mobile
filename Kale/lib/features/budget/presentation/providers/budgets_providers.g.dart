@@ -74,7 +74,7 @@ final budgetsSyncHandlerProvider = Provider<BudgetsSyncHandler>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BudgetsSyncHandlerRef = ProviderRef<BudgetsSyncHandler>;
-String _$budgetsRepositoryHash() => r'01858b18676da629c39584494893261e70e08b98';
+String _$budgetsRepositoryHash() => r'1db7aaca1faeea65dca6b5c72b5fc891453a4eaf';
 
 /// Provides the [BudgetsRepository].
 ///
@@ -113,7 +113,7 @@ final budgetsStreamProvider = AutoDisposeStreamProvider<List<Budget>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BudgetsStreamRef = AutoDisposeStreamProviderRef<List<Budget>>;
-String _$activeBudgetHash() => r'4f1c65a83716c53587f2a3914cf8d92fb6745d5e';
+String _$activeBudgetHash() => r'7ce02e55922afdc0ffce5246148ea5039616da99';
 
 /// Provides the currently active budget (with enriched spent amounts).
 ///

@@ -8,6 +8,9 @@ part 'budget_category_model.g.dart';
 
 /// Data model for [BudgetCategoryAllocation] with JSON serialization
 /// and Drift conversion.
+///
+/// `allocated_minor` is an integer count of minor units of the account's
+/// base currency.
 @freezed
 abstract class BudgetCategoryModel with _$BudgetCategoryModel {
   const BudgetCategoryModel._();
@@ -17,9 +20,11 @@ abstract class BudgetCategoryModel with _$BudgetCategoryModel {
     @JsonKey(name: 'budget_id') required String budgetId,
     @JsonKey(name: 'category_id') required String categoryId,
     @JsonKey(name: 'group_name') required String groupName,
-    @JsonKey(name: 'allocated_amount') required double allocatedAmount,
+    @JsonKey(name: 'allocated_minor') required int allocatedMinor,
     @JsonKey(name: 'allocated_percentage') double? allocatedPercentage,
     @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(false)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
@@ -36,25 +41,26 @@ abstract class BudgetCategoryModel with _$BudgetCategoryModel {
         budgetId: row.budgetId,
         categoryId: row.categoryId,
         groupName: row.groupName,
-        allocatedAmount: row.allocatedAmount,
+        allocatedMinor: row.allocatedMinor,
         allocatedPercentage: row.allocatedPercentage,
         createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+        deletedAt: row.deletedAt,
         isSynced: row.isSynced,
       );
 
   /// Converts this model to a domain [BudgetCategoryAllocation] entity.
   ///
-  /// [spentAmount] must be provided externally since it is computed
-  /// from transactions and not stored in the budget_categories table.
-  BudgetCategoryAllocation toEntity(double spentAmount) =>
-      BudgetCategoryAllocation(
+  /// [spentMinor] must be provided externally since it is computed from
+  /// transactions and not stored in the budget_categories table.
+  BudgetCategoryAllocation toEntity(int spentMinor) => BudgetCategoryAllocation(
         id: id,
         budgetId: budgetId,
         categoryId: categoryId,
         groupName: groupName,
-        allocatedAmount: allocatedAmount,
+        allocatedMinor: allocatedMinor,
         allocatedPercentage: allocatedPercentage,
-        spentAmount: spentAmount,
+        spentMinor: spentMinor,
         createdAt: createdAt,
       );
 
@@ -66,11 +72,11 @@ abstract class BudgetCategoryModel with _$BudgetCategoryModel {
         budgetId: drift.Value(budgetId),
         categoryId: drift.Value(categoryId),
         groupName: drift.Value(groupName),
-        allocatedAmount: drift.Value(allocatedAmount),
-        allocatedPercentage: allocatedPercentage != null
-            ? drift.Value(allocatedPercentage)
-            : const drift.Value.absent(),
+        allocatedMinor: drift.Value(allocatedMinor),
+        allocatedPercentage: drift.Value(allocatedPercentage),
         createdAt: drift.Value(createdAt),
+        updatedAt: drift.Value(updatedAt),
+        deletedAt: drift.Value(deletedAt),
         isSynced: drift.Value(isSynced),
       );
 }

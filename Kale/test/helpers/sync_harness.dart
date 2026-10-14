@@ -6,6 +6,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kale/core/database/app_database.dart' show AppDatabase;
 import 'package:kale/core/database/database_providers.dart';
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/network/network_info.dart';
@@ -22,8 +23,10 @@ import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
+import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/domain/repositories/budgets_repository.dart';
+import 'package:kale/features/budget/domain/usecases/create_budget_usecase.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/dashboard/domain/entities/dashboard_summary.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
@@ -365,16 +368,21 @@ extension SyncHarnessFixtures on SyncHarness {
     return result.fold((f) => throw StateError('$f'), (t) => t);
   }
 
-  /// Creates a monthly budget with no category allocations through
-  /// [SyncHarness.budgets].
-  Future<Budget> addBudget({String name = 'October'}) async {
+  /// Creates a budget for October 2026 (no allocations unless given)
+  /// through [SyncHarness.budgets].
+  Future<Budget> addBudget({
+    String name = 'October',
+    List<BudgetCategoryAllocation> categories = const [],
+    int? totalIncomeMinor,
+  }) async {
     final result = await budgets.createBudget(
       name: name,
       strategy: BudgetStrategy.custom,
       period: BudgetPeriod.monthly,
-      startDate: DateTime(2026, 10),
-      endDate: DateTime(2026, 10, 31),
-      categories: const [],
+      startDate: const CalendarDate(2026, 10, 1),
+      endDate: const CalendarDate(2026, 10, 31),
+      categories: categories,
+      totalIncomeMinor: totalIncomeMinor,
     );
     return result.fold((f) => throw StateError('$f'), (b) => b);
   }

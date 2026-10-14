@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
-import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/network/network_info.dart';
 import 'package:kale/features/budget/data/datasources/budgets_local_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
@@ -12,8 +12,8 @@ import 'package:kale/features/budget/data/models/budget_model.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
+import 'package:kale/features/budget/domain/entities/budget_period_range.dart';
 import 'package:kale/features/budget/domain/repositories/budgets_repository.dart';
-import 'package:kale/features/profile/domain/repositories/profile_repository.dart';
 import 'package:kale/features/transactions/data/daos/transactions_dao.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,7 +21,7 @@ import 'package:uuid/uuid.dart';
 ///
 /// Saves locally first, enqueues sync operations, and enriches
 /// budget category allocations with spent amounts computed
-/// from the transactions table.
+/// from the transactions table, in minor units.
 class BudgetsRepositoryImpl implements BudgetsRepository {
   /// Creates a [BudgetsRepositoryImpl].
   const BudgetsRepositoryImpl({
@@ -29,37 +29,22 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
     required BudgetsLocalDataSource localDataSource,
     required NetworkInfo networkInfo,
     required TransactionsDao transactionsDao,
-    required ProfileRepository profileRepository,
   })  : _remote = remoteDataSource,
         _local = localDataSource,
         _networkInfo = networkInfo,
-        _transactionsDao = transactionsDao,
-        _profile = profileRepository;
+        _transactionsDao = transactionsDao;
 
   final BudgetsRemoteDataSource _remote;
   final BudgetsLocalDataSource _local;
   final NetworkInfo _networkInfo;
   final TransactionsDao _transactionsDao;
-  final ProfileRepository _profile;
 
   static const _uuid = Uuid();
 
   @override
   Future<Either<Failure, List<Budget>>> getBudgets() async {
     try {
-      final models = await _local.getBudgets();
-      final budgets = <Budget>[];
-
-      for (final model in models) {
-        final categories = await _enrichCategories(
-          model.id,
-          model.startDate,
-          model.endDate,
-        );
-        budgets.add(model.toEntity(categories: categories));
-      }
-
-      return Right(budgets);
+      return Right(await _toEntities(await _local.getBudgets()));
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }
@@ -67,33 +52,17 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
 
   @override
   Stream<List<Budget>> watchBudgets() {
-    return _local.watchBudgets().asyncMap((models) async {
-      final budgets = <Budget>[];
-      for (final model in models) {
-        final categories = await _enrichCategories(
-          model.id,
-          model.startDate,
-          model.endDate,
-        );
-        budgets.add(model.toEntity(categories: categories));
-      }
-      return budgets;
-    });
+    return _local.watchBudgets().asyncMap(_toEntities);
   }
 
   @override
-  Future<Either<Failure, Budget?>> getActiveBudget() async {
+  Future<Either<Failure, Budget?>> getActiveBudget({
+    required CalendarDate today,
+  }) async {
     try {
-      final model = await _local.getActiveBudget();
+      final model = await _local.getActiveBudget(today);
       if (model == null) return const Right(null);
-
-      final categories = await _enrichCategories(
-        model.id,
-        model.startDate,
-        model.endDate,
-      );
-
-      return Right(model.toEntity(categories: categories));
+      return Right(await _toEntity(model));
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }
@@ -104,10 +73,11 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
     required String name,
     required BudgetStrategy strategy,
     required BudgetPeriod period,
-    required DateTime startDate,
-    required DateTime endDate,
+    required CalendarDate startDate,
+    required CalendarDate endDate,
     required List<BudgetCategoryAllocation> categories,
-    double? totalIncome,
+    int periodStartDay = BudgetPeriodRange.defaultStartDay,
+    int? totalIncomeMinor,
     bool isPercentageBased = true,
   }) async {
     try {
@@ -121,42 +91,25 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
         period: period.name,
         startDate: startDate,
         endDate: endDate,
-        totalIncome: totalIncome,
+        periodStartDay: periodStartDay,
+        totalIncomeMinor: totalIncomeMinor,
         isPercentageBased: isPercentageBased,
         createdAt: now,
         updatedAt: now,
       );
 
-      // Save budget locally.
       await _local.saveBudget(budgetModel);
-
-      // Build and save category allocations.
-      final categoryModels = categories.map((cat) {
-        return BudgetCategoryModel(
-          id: cat.id.isEmpty ? _uuid.v4() : cat.id,
-          budgetId: budgetId,
-          categoryId: cat.categoryId,
-          groupName: cat.groupName,
-          allocatedAmount: cat.allocatedAmount,
-          allocatedPercentage: cat.allocatedPercentage,
-          createdAt: now,
-        );
-      }).toList();
-
-      await _local.saveBudgetCategories(budgetId, categoryModels);
-
-      // Enqueue sync.
+      await _local.saveBudgetCategories(
+        budgetId,
+        _allocationModels(budgetId, categories, now),
+      );
       await _local.enqueueSync(
         entityId: budgetId,
         operation: 'create',
         payload: jsonEncode(budgetModel.toJson()),
       );
 
-      // Return the entity with enriched categories (spent = 0 for new).
-      final enrichedCategories =
-          categoryModels.map((c) => c.toEntity(0)).toList();
-
-      return Right(budgetModel.toEntity(categories: enrichedCategories));
+      return Right(await _toEntity(budgetModel));
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }
@@ -168,10 +121,11 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
     required String name,
     required BudgetStrategy strategy,
     required BudgetPeriod period,
-    required DateTime startDate,
-    required DateTime endDate,
+    required CalendarDate startDate,
+    required CalendarDate endDate,
     required List<BudgetCategoryAllocation> categories,
-    double? totalIncome,
+    int periodStartDay = BudgetPeriodRange.defaultStartDay,
+    int? totalIncomeMinor,
     bool isPercentageBased = true,
   }) async {
     try {
@@ -183,53 +137,31 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
         return const Left(CacheFailure(message: 'Budget not found'));
       }
 
-      final updatedModel = BudgetModel(
-        id: id,
-        serverId: existing.serverId,
+      final updatedModel = existing.copyWith(
         name: name,
         strategy: strategy.name,
         period: period.name,
         startDate: startDate,
         endDate: endDate,
-        totalIncome: totalIncome,
+        periodStartDay: periodStartDay,
+        totalIncomeMinor: totalIncomeMinor,
         isPercentageBased: isPercentageBased,
-        createdAt: existing.createdAt,
         updatedAt: now,
+        isSynced: false,
       );
 
-      // Save budget locally.
       await _local.saveBudget(updatedModel);
-
-      // Build and save category allocations.
-      final categoryModels = categories.map((cat) {
-        return BudgetCategoryModel(
-          id: cat.id.isEmpty ? _uuid.v4() : cat.id,
-          budgetId: id,
-          categoryId: cat.categoryId,
-          groupName: cat.groupName,
-          allocatedAmount: cat.allocatedAmount,
-          allocatedPercentage: cat.allocatedPercentage,
-          createdAt: cat.createdAt,
-        );
-      }).toList();
-
-      await _local.saveBudgetCategories(id, categoryModels);
-
-      // Enqueue sync.
+      await _local.saveBudgetCategories(
+        id,
+        _allocationModels(id, categories, now),
+      );
       await _local.enqueueSync(
         entityId: id,
         operation: 'update',
         payload: jsonEncode(updatedModel.toJson()),
       );
 
-      // Enrich with spent amounts.
-      final enrichedCategories = await _enrichCategories(
-        id,
-        startDate,
-        endDate,
-      );
-
-      return Right(updatedModel.toEntity(categories: enrichedCategories));
+      return Right(await _toEntity(updatedModel));
     } on CacheException catch (e) {
       return Left(CacheFailure(message: e.message));
     }
@@ -269,44 +201,60 @@ class BudgetsRepositoryImpl implements BudgetsRepository {
     }
   }
 
-  /// Enriches budget category allocations with spent amounts
-  /// computed from the transactions table.
-  Future<List<BudgetCategoryAllocation>> _enrichCategories(
+  List<BudgetCategoryModel> _allocationModels(
     String budgetId,
-    DateTime startDate,
-    DateTime endDate,
-  ) async {
-    final categoryModels = await _local.getBudgetCategories(budgetId);
-    final currency =
-        (await _profile.getBaseCurrency()).fold((_) => null, (c) => c) ??
-            defaultBaseCurrency;
-
-    // Get expense totals per category for this budget's date range.
-    final categoryTotals = await _transactionsDao.getCategoryTotals(
-      startDate: startDate,
-      endDate: endDate,
-      type: 'expense',
-    );
-
-    // Build a lookup map: categoryId -> total spent.
-    final spentMap = <String, double>{};
-    for (final ct in categoryTotals) {
-      spentMap[ct.categoryId] = _toMajorUnits(ct.totalMinor, currency);
-    }
-
-    return categoryModels.map((model) {
-      final spent = spentMap[model.categoryId] ?? 0;
-      return model.toEntity(spent);
-    }).toList();
+    List<BudgetCategoryAllocation> categories,
+    DateTime now,
+  ) {
+    return categories
+        .map(
+          (cat) => BudgetCategoryModel(
+            id: cat.id.isEmpty ? _uuid.v4() : cat.id,
+            budgetId: budgetId,
+            categoryId: cat.categoryId,
+            groupName: cat.groupName,
+            allocatedMinor: cat.allocatedMinor,
+            allocatedPercentage: cat.allocatedPercentage,
+            createdAt: cat.id.isEmpty ? now : cat.createdAt,
+            updatedAt: now,
+          ),
+        )
+        .toList();
   }
 
-  /// Budgets still hold major-unit doubles until their own schema reset;
-  /// transaction totals are exact minor units of the base currency.
-  static double _toMajorUnits(int minorUnits, Currency currency) {
-    var scale = 1;
-    for (var i = 0; i < currency.decimalPlaces; i++) {
-      scale *= 10;
+  Future<List<Budget>> _toEntities(List<BudgetModel> models) async {
+    final budgets = <Budget>[];
+    for (final model in models) {
+      budgets.add(await _toEntity(model));
     }
-    return minorUnits / scale;
+    return budgets;
+  }
+
+  /// The budget with its allocations, each enriched with the amount spent
+  /// in its category during the budget's period.
+  Future<Budget> _toEntity(BudgetModel model) async {
+    final categoryModels = await _local.getBudgetCategories(model.id);
+
+    // The period's days, in the device's current time zone: from the first
+    // instant of the first day to the last second of the last day
+    // (transaction dates are stored to the second).
+    final categoryTotals = await _transactionsDao.getCategoryTotals(
+      startDate: model.startDate.startOfDayLocal(),
+      endDate: model.endDate
+          .addDays(1)
+          .startOfDayLocal()
+          .subtract(const Duration(seconds: 1)),
+      type: 'expense',
+    );
+    final spentMinor = {
+      for (final total in categoryTotals) total.categoryId: total.totalMinor,
+    };
+
+    return model.toEntity(
+      categories: [
+        for (final category in categoryModels)
+          category.toEntity(spentMinor[category.categoryId] ?? 0),
+      ],
+    );
   }
 }
