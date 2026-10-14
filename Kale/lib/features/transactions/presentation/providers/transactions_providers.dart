@@ -12,6 +12,7 @@ import 'package:kale/features/transactions/domain/entities/transaction.dart';
 import 'package:kale/features/transactions/domain/repositories/transactions_repository.dart';
 import 'package:kale/features/transactions/domain/usecases/create_transaction_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/delete_transaction_usecase.dart';
+import 'package:kale/features/transactions/domain/usecases/export_transactions_csv_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/get_transactions_usecase.dart';
 import 'package:kale/features/transactions/domain/usecases/update_transaction_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -99,4 +100,12 @@ DeleteTransactionUseCase deleteTransactionUseCase(Ref ref) {
 @riverpod
 GetTransactionsUseCase getTransactionsUseCase(Ref ref) {
   return GetTransactionsUseCase(ref.watch(transactionsRepositoryProvider));
+}
+
+/// Provides the [ExportTransactionsCsvUseCase].
+@riverpod
+ExportTransactionsCsvUseCase exportTransactionsCsvUseCase(Ref ref) {
+  return ExportTransactionsCsvUseCase(
+    ref.watch(transactionsRepositoryProvider),
+  );
 }

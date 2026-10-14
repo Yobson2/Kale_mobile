@@ -669,5 +669,19 @@
   },
   "budgetRenewAction": "Renew for this period",
   "budgetRenewed": "Budget renewed",
-  "budgetRenewFailed": "Couldn't renew the budget. Please try again."
+  "budgetRenewFailed": "Couldn't renew the budget. Please try again.",
+  "exportCsvTitle": "Export transactions (CSV)",
+  "exportCsvSubtitle": "Open them in a spreadsheet, or keep a copy",
+  "exportCsvAll": "All transactions",
+  "exportCsvDateRange": "Choose dates…",
+  "exportCsvEmpty": "No transactions to export",
+  "exportCsvFailed": "Couldn't export. Please try again.",
+  "csvDate": "Date",
+  "csvType": "Type",
+  "csvCategory": "Category",
+  "csvDescription": "Description",
+  "csvAmount": "Amount",
+  "csvCurrency": "Currency",
+  "csvPaymentMethod": "Payment method",
+  "csvMobileMoneyProvider": "Mobile money provider"
 }

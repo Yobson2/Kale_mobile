@@ -2965,6 +2965,90 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Impossible de renouveler le budget. Veuillez réessayer.'**
   String get budgetRenewFailed;
+
+  /// No description provided for @exportCsvTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter les transactions (CSV)'**
+  String get exportCsvTitle;
+
+  /// No description provided for @exportCsvSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'À ouvrir dans un tableur ou à garder'**
+  String get exportCsvSubtitle;
+
+  /// No description provided for @exportCsvAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes les transactions'**
+  String get exportCsvAll;
+
+  /// No description provided for @exportCsvDateRange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir des dates…'**
+  String get exportCsvDateRange;
+
+  /// No description provided for @exportCsvEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune transaction à exporter'**
+  String get exportCsvEmpty;
+
+  /// No description provided for @exportCsvFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible d\'exporter. Veuillez réessayer.'**
+  String get exportCsvFailed;
+
+  /// No description provided for @csvDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date'**
+  String get csvDate;
+
+  /// No description provided for @csvType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type'**
+  String get csvType;
+
+  /// No description provided for @csvCategory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get csvCategory;
+
+  /// No description provided for @csvDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get csvDescription;
+
+  /// No description provided for @csvAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get csvAmount;
+
+  /// No description provided for @csvCurrency.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devise'**
+  String get csvCurrency;
+
+  /// No description provided for @csvPaymentMethod.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mode de paiement'**
+  String get csvPaymentMethod;
+
+  /// No description provided for @csvMobileMoneyProvider.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérateur Mobile Money'**
+  String get csvMobileMoneyProvider;
 }
 
 class _AppLocalizationsDelegate

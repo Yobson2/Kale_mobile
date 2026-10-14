@@ -1613,4 +1613,46 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get budgetRenewFailed =>
       'Couldn\'t renew the budget. Please try again.';
+
+  @override
+  String get exportCsvTitle => 'Export transactions (CSV)';
+
+  @override
+  String get exportCsvSubtitle => 'Open them in a spreadsheet, or keep a copy';
+
+  @override
+  String get exportCsvAll => 'All transactions';
+
+  @override
+  String get exportCsvDateRange => 'Choose dates…';
+
+  @override
+  String get exportCsvEmpty => 'No transactions to export';
+
+  @override
+  String get exportCsvFailed => 'Couldn\'t export. Please try again.';
+
+  @override
+  String get csvDate => 'Date';
+
+  @override
+  String get csvType => 'Type';
+
+  @override
+  String get csvCategory => 'Category';
+
+  @override
+  String get csvDescription => 'Description';
+
+  @override
+  String get csvAmount => 'Amount';
+
+  @override
+  String get csvCurrency => 'Currency';
+
+  @override
+  String get csvPaymentMethod => 'Payment method';
+
+  @override
+  String get csvMobileMoneyProvider => 'Mobile money provider';
 }
