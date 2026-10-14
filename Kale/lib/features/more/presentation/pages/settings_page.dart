@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/l10n/app_locale.dart';
 import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/providers/notification_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
@@ -81,12 +82,16 @@ class SettingsPage extends ConsumerWidget {
                     icon: Icons.translate,
                     iconColor: context.colorScheme.primary,
                     title: l10n.settingsLanguage,
-                    subtitle: l10n.settingsLanguageEn.toUpperCase(),
+                    subtitle: switch (ref.watch(appLanguageProvider)) {
+                      'fr' => l10n.settingsLanguageFr,
+                      'en' => l10n.settingsLanguageEn,
+                      _ => l10n.settingsLanguageSystem,
+                    },
                     trailing: Icon(
                       Icons.chevron_right,
                       color: context.colorScheme.onSurfaceVariant,
                     ),
-                    onTap: () => _showLanguagePicker(context),
+                    onTap: () => _showLanguagePicker(context, ref),
                   ),
                   AppSpacing.verticalSm,
 
@@ -280,21 +285,27 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  void _showLanguagePicker(BuildContext context) {
+  void _showLanguagePicker(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final notifier = ref.read(appLanguageProvider.notifier);
+    final options = <(String?, String)>[
+      (null, l10n.settingsLanguageSystem),
+      ('fr', l10n.settingsLanguageFr),
+      ('en', l10n.settingsLanguageEn),
+    ];
     showDialog<void>(
       context: context,
-      builder: (context) => SimpleDialog(
+      builder: (dialogContext) => SimpleDialog(
         title: Text(l10n.settingsLanguage),
         children: [
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.settingsLanguageEn),
-          ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.settingsLanguageFr),
-          ),
+          for (final (language, label) in options)
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                notifier.select(language);
+              },
+              child: Text(label),
+            ),
         ],
       ),
     );

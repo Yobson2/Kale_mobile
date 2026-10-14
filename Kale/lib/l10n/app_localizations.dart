@@ -100,2816 +100,2822 @@ abstract class AppLocalizations {
 
   /// No description provided for @appTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Kale'**
+  /// In fr, this message translates to:
+  /// **'Kalé'**
   String get appTitle;
 
   /// No description provided for @commonOk.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'OK'**
   String get commonOk;
 
   /// No description provided for @commonCancel.
   ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
+  /// In fr, this message translates to:
+  /// **'Annuler'**
   String get commonCancel;
 
   /// No description provided for @commonSave.
   ///
-  /// In en, this message translates to:
-  /// **'Save'**
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
   String get commonSave;
 
   /// No description provided for @commonDelete.
   ///
-  /// In en, this message translates to:
-  /// **'Delete'**
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
   String get commonDelete;
 
   /// No description provided for @commonEdit.
   ///
-  /// In en, this message translates to:
-  /// **'Edit'**
+  /// In fr, this message translates to:
+  /// **'Modifier'**
   String get commonEdit;
 
   /// No description provided for @commonClose.
   ///
-  /// In en, this message translates to:
-  /// **'Close'**
+  /// In fr, this message translates to:
+  /// **'Fermer'**
   String get commonClose;
 
   /// No description provided for @commonRetry.
   ///
-  /// In en, this message translates to:
-  /// **'Retry'**
+  /// In fr, this message translates to:
+  /// **'Réessayer'**
   String get commonRetry;
 
   /// No description provided for @commonNext.
   ///
-  /// In en, this message translates to:
-  /// **'Next'**
+  /// In fr, this message translates to:
+  /// **'Suivant'**
   String get commonNext;
 
   /// No description provided for @commonBack.
   ///
-  /// In en, this message translates to:
-  /// **'Back'**
+  /// In fr, this message translates to:
+  /// **'Retour'**
   String get commonBack;
 
   /// No description provided for @commonSkip.
   ///
-  /// In en, this message translates to:
-  /// **'Skip'**
+  /// In fr, this message translates to:
+  /// **'Passer'**
   String get commonSkip;
 
   /// No description provided for @commonDone.
   ///
-  /// In en, this message translates to:
-  /// **'Done'**
+  /// In fr, this message translates to:
+  /// **'Terminé'**
   String get commonDone;
 
   /// No description provided for @commonSearch.
   ///
-  /// In en, this message translates to:
-  /// **'Search'**
+  /// In fr, this message translates to:
+  /// **'Rechercher'**
   String get commonSearch;
 
   /// No description provided for @commonLoading.
   ///
-  /// In en, this message translates to:
-  /// **'Loading...'**
+  /// In fr, this message translates to:
+  /// **'Chargement...'**
   String get commonLoading;
 
   /// No description provided for @commonNoResults.
   ///
-  /// In en, this message translates to:
-  /// **'No results found'**
+  /// In fr, this message translates to:
+  /// **'Aucun résultat trouvé'**
   String get commonNoResults;
 
   /// No description provided for @commonSeeAll.
   ///
-  /// In en, this message translates to:
-  /// **'See all'**
+  /// In fr, this message translates to:
+  /// **'Voir tout'**
   String get commonSeeAll;
 
   /// No description provided for @commonOr.
   ///
-  /// In en, this message translates to:
-  /// **'Or'**
+  /// In fr, this message translates to:
+  /// **'Ou'**
   String get commonOr;
 
   /// No description provided for @commonClear.
   ///
-  /// In en, this message translates to:
-  /// **'Clear'**
+  /// In fr, this message translates to:
+  /// **'Effacer'**
   String get commonClear;
 
   /// No description provided for @commonContinue.
   ///
-  /// In en, this message translates to:
-  /// **'Continue'**
+  /// In fr, this message translates to:
+  /// **'Continuer'**
   String get commonContinue;
 
   /// No description provided for @commonUser.
   ///
-  /// In en, this message translates to:
-  /// **'User'**
+  /// In fr, this message translates to:
+  /// **'Utilisateur'**
   String get commonUser;
 
   /// No description provided for @errorGeneric.
   ///
-  /// In en, this message translates to:
-  /// **'Something went wrong. Please try again.'**
+  /// In fr, this message translates to:
+  /// **'Une erreur est survenue. Veuillez réessayer.'**
   String get errorGeneric;
 
   /// No description provided for @errorNetwork.
   ///
-  /// In en, this message translates to:
-  /// **'No internet connection. Please check your network.'**
+  /// In fr, this message translates to:
+  /// **'Pas de connexion Internet. Vérifiez votre réseau.'**
   String get errorNetwork;
 
   /// No description provided for @errorServer.
   ///
-  /// In en, this message translates to:
-  /// **'Server error. Please try again later.'**
+  /// In fr, this message translates to:
+  /// **'Erreur serveur. Veuillez réessayer plus tard.'**
   String get errorServer;
 
   /// No description provided for @errorUnauthorized.
   ///
-  /// In en, this message translates to:
-  /// **'Session expired. Please log in again.'**
+  /// In fr, this message translates to:
+  /// **'Session expirée. Veuillez vous reconnecter.'**
   String get errorUnauthorized;
 
   /// No description provided for @errorValidation.
   ///
-  /// In en, this message translates to:
-  /// **'Please check your input and try again.'**
+  /// In fr, this message translates to:
+  /// **'Veuillez vérifier vos informations et réessayer.'**
   String get errorValidation;
 
   /// No description provided for @errorTimeout.
   ///
-  /// In en, this message translates to:
-  /// **'Request timed out. Please try again.'**
+  /// In fr, this message translates to:
+  /// **'La requête a expiré. Veuillez réessayer.'**
   String get errorTimeout;
 
   /// No description provided for @authLogin.
   ///
-  /// In en, this message translates to:
-  /// **'Log In'**
+  /// In fr, this message translates to:
+  /// **'Se connecter'**
   String get authLogin;
 
   /// No description provided for @authRegister.
   ///
-  /// In en, this message translates to:
-  /// **'Sign Up'**
+  /// In fr, this message translates to:
+  /// **'S\'inscrire'**
   String get authRegister;
 
   /// No description provided for @authLogout.
   ///
-  /// In en, this message translates to:
-  /// **'Log Out'**
+  /// In fr, this message translates to:
+  /// **'Se déconnecter'**
   String get authLogout;
 
   /// No description provided for @authForgotPassword.
   ///
-  /// In en, this message translates to:
-  /// **'Forgot Password?'**
+  /// In fr, this message translates to:
+  /// **'Mot de passe oublié ?'**
   String get authForgotPassword;
 
   /// No description provided for @authResetPassword.
   ///
-  /// In en, this message translates to:
-  /// **'Reset Password'**
+  /// In fr, this message translates to:
+  /// **'Réinitialiser le mot de passe'**
   String get authResetPassword;
 
   /// No description provided for @authEmail.
   ///
-  /// In en, this message translates to:
-  /// **'Email'**
+  /// In fr, this message translates to:
+  /// **'E-mail'**
   String get authEmail;
 
   /// No description provided for @authPassword.
   ///
-  /// In en, this message translates to:
-  /// **'Password'**
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
   String get authPassword;
 
   /// No description provided for @authConfirmPassword.
   ///
-  /// In en, this message translates to:
-  /// **'Confirm Password'**
+  /// In fr, this message translates to:
+  /// **'Confirmer le mot de passe'**
   String get authConfirmPassword;
 
   /// No description provided for @authName.
   ///
-  /// In en, this message translates to:
-  /// **'Full Name'**
+  /// In fr, this message translates to:
+  /// **'Nom complet'**
   String get authName;
 
   /// No description provided for @authLoginSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Welcome back! Your financial journey continues here.'**
+  /// In fr, this message translates to:
+  /// **'Bon retour ! Votre parcours financier continue ici.'**
   String get authLoginSubtitle;
 
   /// No description provided for @authRegisterSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Take control of your finances. Start your journey today.'**
+  /// In fr, this message translates to:
+  /// **'Prenez le contrôle de vos finances. Commencez votre parcours aujourd\'hui.'**
   String get authRegisterSubtitle;
 
   /// No description provided for @authForgotPasswordSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Enter your email and we\'ll send you a code to reset your password.'**
+  /// In fr, this message translates to:
+  /// **'Entrez votre e-mail et nous vous enverrons un code pour réinitialiser votre mot de passe.'**
   String get authForgotPasswordSubtitle;
 
   /// No description provided for @authNoAccount.
   ///
-  /// In en, this message translates to:
-  /// **'Don\'t have an account? '**
+  /// In fr, this message translates to:
+  /// **'Pas encore de compte ? '**
   String get authNoAccount;
 
   /// No description provided for @authHaveAccount.
   ///
-  /// In en, this message translates to:
-  /// **'Already have an account? '**
+  /// In fr, this message translates to:
+  /// **'Vous avez déjà un compte ? '**
   String get authHaveAccount;
 
   /// No description provided for @authOtpTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Verify Your Email'**
+  /// In fr, this message translates to:
+  /// **'Vérifiez votre e-mail'**
   String get authOtpTitle;
 
   /// No description provided for @authOtpSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Enter the 6-digit code sent to {email}'**
+  /// In fr, this message translates to:
+  /// **'Entrez le code à 6 chiffres envoyé à {email}'**
   String authOtpSubtitle(String email);
 
   /// No description provided for @authOtpResend.
   ///
-  /// In en, this message translates to:
-  /// **'Didn\'t receive the code? Resend'**
+  /// In fr, this message translates to:
+  /// **'Vous n\'avez pas reçu le code ? Renvoyer'**
   String get authOtpResend;
 
   /// No description provided for @authLoginWithGoogle.
   ///
-  /// In en, this message translates to:
-  /// **'Continue with Google'**
+  /// In fr, this message translates to:
+  /// **'Continuer avec Google'**
   String get authLoginWithGoogle;
 
   /// No description provided for @authLoginWithApple.
   ///
-  /// In en, this message translates to:
-  /// **'Continue with Apple'**
+  /// In fr, this message translates to:
+  /// **'Continuer avec Apple'**
   String get authLoginWithApple;
 
   /// No description provided for @authCreatePassword.
   ///
-  /// In en, this message translates to:
-  /// **'Create Password'**
+  /// In fr, this message translates to:
+  /// **'Créer un mot de passe'**
   String get authCreatePassword;
 
   /// No description provided for @authCreatePasswordSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Set a secure password for your account.'**
+  /// In fr, this message translates to:
+  /// **'Définissez un mot de passe sécurisé pour votre compte.'**
   String get authCreatePasswordSubtitle;
 
   /// No description provided for @authTerms.
   ///
-  /// In en, this message translates to:
-  /// **'By continuing, you agree to our Terms of Service and Privacy Policy.'**
+  /// In fr, this message translates to:
+  /// **'En continuant, vous acceptez nos Conditions d\'utilisation et notre Politique de confidentialité.'**
   String get authTerms;
 
   /// No description provided for @authTermsPrefix.
   ///
-  /// In en, this message translates to:
-  /// **'I agree to the '**
+  /// In fr, this message translates to:
+  /// **'J\'accepte les '**
   String get authTermsPrefix;
 
   /// No description provided for @authTermsOfService.
   ///
-  /// In en, this message translates to:
-  /// **'Terms of Service'**
+  /// In fr, this message translates to:
+  /// **'Conditions d\'utilisation'**
   String get authTermsOfService;
 
   /// No description provided for @authTermsAnd.
   ///
-  /// In en, this message translates to:
-  /// **' and '**
+  /// In fr, this message translates to:
+  /// **' et la '**
   String get authTermsAnd;
 
   /// No description provided for @authPrivacyPolicy.
   ///
-  /// In en, this message translates to:
-  /// **'Privacy Policy'**
+  /// In fr, this message translates to:
+  /// **'Politique de confidentialité'**
   String get authPrivacyPolicy;
 
   /// No description provided for @authTryFirst.
   ///
-  /// In en, this message translates to:
-  /// **'Try Kale First'**
+  /// In fr, this message translates to:
+  /// **'Essayer Kalé d\'abord'**
   String get authTryFirst;
 
   /// No description provided for @authTryFirstSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Explore the app without an account'**
+  /// In fr, this message translates to:
+  /// **'Explorez l\'application sans compte'**
   String get authTryFirstSubtitle;
 
   /// No description provided for @anonymousSaveDataCta.
   ///
-  /// In en, this message translates to:
-  /// **'Create an account to save your data'**
+  /// In fr, this message translates to:
+  /// **'Créez un compte pour sauvegarder vos données'**
   String get anonymousSaveDataCta;
 
   /// No description provided for @anonymousBannerAction.
   ///
-  /// In en, this message translates to:
-  /// **'Sign Up'**
+  /// In fr, this message translates to:
+  /// **'S\'inscrire'**
   String get anonymousBannerAction;
 
   /// No description provided for @authRegisterStep1Title.
   ///
-  /// In en, this message translates to:
-  /// **'Create Your Account'**
+  /// In fr, this message translates to:
+  /// **'Créez votre compte'**
   String get authRegisterStep1Title;
 
   /// No description provided for @authRegisterStep1Subtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Enter your email to get started'**
+  /// In fr, this message translates to:
+  /// **'Entrez votre e-mail pour commencer'**
   String get authRegisterStep1Subtitle;
 
   /// No description provided for @authRegisterStep2Subtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Complete your profile to finish signing up'**
+  /// In fr, this message translates to:
+  /// **'Complétez votre profil pour terminer l\'inscription'**
   String get authRegisterStep2Subtitle;
 
   /// No description provided for @authRegisterContinueWithEmail.
   ///
-  /// In en, this message translates to:
-  /// **'Continue with Email'**
+  /// In fr, this message translates to:
+  /// **'Continuer avec l\'e-mail'**
   String get authRegisterContinueWithEmail;
 
   /// No description provided for @validationRequired.
   ///
-  /// In en, this message translates to:
-  /// **'This field is required'**
+  /// In fr, this message translates to:
+  /// **'Ce champ est requis'**
   String get validationRequired;
 
   /// No description provided for @validationEmail.
   ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid email address'**
+  /// In fr, this message translates to:
+  /// **'Veuillez entrer une adresse e-mail valide'**
   String get validationEmail;
 
   /// No description provided for @validationPasswordLength.
   ///
-  /// In en, this message translates to:
-  /// **'Password must be at least 8 characters'**
+  /// In fr, this message translates to:
+  /// **'Le mot de passe doit contenir au moins 8 caractères'**
   String get validationPasswordLength;
 
   /// No description provided for @validationPasswordMatch.
   ///
-  /// In en, this message translates to:
-  /// **'Passwords do not match'**
+  /// In fr, this message translates to:
+  /// **'Les mots de passe ne correspondent pas'**
   String get validationPasswordMatch;
 
   /// No description provided for @validationTermsRequired.
   ///
-  /// In en, this message translates to:
-  /// **'You must accept the Terms of Service and Privacy Policy'**
+  /// In fr, this message translates to:
+  /// **'Vous devez accepter les Conditions d\'utilisation et la Politique de confidentialité'**
   String get validationTermsRequired;
 
   /// No description provided for @passwordStrengthWeak.
   ///
-  /// In en, this message translates to:
-  /// **'Weak'**
+  /// In fr, this message translates to:
+  /// **'Faible'**
   String get passwordStrengthWeak;
 
   /// No description provided for @passwordStrengthFair.
   ///
-  /// In en, this message translates to:
-  /// **'Fair'**
+  /// In fr, this message translates to:
+  /// **'Moyen'**
   String get passwordStrengthFair;
 
   /// No description provided for @passwordStrengthStrong.
   ///
-  /// In en, this message translates to:
-  /// **'Strong'**
+  /// In fr, this message translates to:
+  /// **'Fort'**
   String get passwordStrengthStrong;
 
   /// No description provided for @passwordStrengthVeryStrong.
   ///
-  /// In en, this message translates to:
-  /// **'Very strong'**
+  /// In fr, this message translates to:
+  /// **'Très fort'**
   String get passwordStrengthVeryStrong;
 
   /// No description provided for @onboardingTitle1.
   ///
-  /// In en, this message translates to:
-  /// **'Track Every Penny'**
+  /// In fr, this message translates to:
+  /// **'Suivez Chaque Dépense'**
   String get onboardingTitle1;
 
   /// No description provided for @onboardingDesc1.
   ///
-  /// In en, this message translates to:
-  /// **'Log your expenses and income in seconds. See exactly where your money goes with clear, instant insights.'**
+  /// In fr, this message translates to:
+  /// **'Enregistrez vos dépenses et revenus en quelques secondes. Voyez exactement où va votre argent avec des aperçus clairs et instantanés.'**
   String get onboardingDesc1;
 
   /// No description provided for @onboardingTitle2.
   ///
-  /// In en, this message translates to:
-  /// **'Budget Smarter'**
+  /// In fr, this message translates to:
+  /// **'Budgétez Plus Malin'**
   String get onboardingTitle2;
 
   /// No description provided for @onboardingDesc2.
   ///
-  /// In en, this message translates to:
-  /// **'Set custom budgets for each category and get notified before you overspend. Stay in control, effortlessly.'**
+  /// In fr, this message translates to:
+  /// **'Définissez des budgets personnalisés pour chaque catégorie et soyez alerté avant de trop dépenser. Gardez le contrôle, sans effort.'**
   String get onboardingDesc2;
 
   /// No description provided for @onboardingTitle3.
   ///
-  /// In en, this message translates to:
-  /// **'Reach Your Goals'**
+  /// In fr, this message translates to:
+  /// **'Atteignez Vos Objectifs'**
   String get onboardingTitle3;
 
   /// No description provided for @onboardingDesc3.
   ///
-  /// In en, this message translates to:
-  /// **'Create savings goals, track your progress, and watch your money grow. Your financial future starts here.'**
+  /// In fr, this message translates to:
+  /// **'Créez des objectifs d\'épargne, suivez votre progression et regardez votre argent grandir. Votre avenir financier commence ici.'**
   String get onboardingDesc3;
 
   /// No description provided for @onboardingGetStarted.
   ///
-  /// In en, this message translates to:
-  /// **'Get Started'**
+  /// In fr, this message translates to:
+  /// **'Commencer'**
   String get onboardingGetStarted;
 
   /// No description provided for @navDashboard.
   ///
-  /// In en, this message translates to:
-  /// **'Dashboard'**
+  /// In fr, this message translates to:
+  /// **'Tableau de bord'**
   String get navDashboard;
 
   /// No description provided for @navTransactions.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Transactions'**
   String get navTransactions;
 
   /// No description provided for @navBudget.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Budget'**
   String get navBudget;
 
   /// No description provided for @navMore.
   ///
-  /// In en, this message translates to:
-  /// **'More'**
+  /// In fr, this message translates to:
+  /// **'Plus'**
   String get navMore;
 
   /// No description provided for @homeTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Home'**
+  /// In fr, this message translates to:
+  /// **'Accueil'**
   String get homeTitle;
 
   /// No description provided for @homeGreeting.
   ///
-  /// In en, this message translates to:
-  /// **'Hello, {name}!'**
+  /// In fr, this message translates to:
+  /// **'Bonjour, {name} !'**
   String homeGreeting(String name);
 
   /// No description provided for @homeGreetingMorning.
   ///
-  /// In en, this message translates to:
-  /// **'Good morning'**
+  /// In fr, this message translates to:
+  /// **'Bonjour'**
   String get homeGreetingMorning;
 
   /// No description provided for @homeGreetingAfternoon.
   ///
-  /// In en, this message translates to:
-  /// **'Good afternoon'**
+  /// In fr, this message translates to:
+  /// **'Bon après-midi'**
   String get homeGreetingAfternoon;
 
   /// No description provided for @homeGreetingEvening.
   ///
-  /// In en, this message translates to:
-  /// **'Good evening'**
+  /// In fr, this message translates to:
+  /// **'Bonsoir'**
   String get homeGreetingEvening;
 
   /// No description provided for @dashboardCashFlow.
   ///
-  /// In en, this message translates to:
-  /// **'Cash Flow'**
+  /// In fr, this message translates to:
+  /// **'Flux de trésorerie'**
   String get dashboardCashFlow;
 
   /// No description provided for @dashboardIncome.
   ///
-  /// In en, this message translates to:
-  /// **'Income'**
+  /// In fr, this message translates to:
+  /// **'Revenus'**
   String get dashboardIncome;
 
   /// No description provided for @dashboardExpenses.
   ///
-  /// In en, this message translates to:
-  /// **'Expenses'**
+  /// In fr, this message translates to:
+  /// **'Dépenses'**
   String get dashboardExpenses;
 
   /// No description provided for @dashboardCouldNotLoad.
   ///
-  /// In en, this message translates to:
-  /// **'Could not load summary'**
+  /// In fr, this message translates to:
+  /// **'Impossible de charger le résumé'**
   String get dashboardCouldNotLoad;
 
   /// No description provided for @dashboardBudgetHealth.
   ///
-  /// In en, this message translates to:
-  /// **'Budget Health'**
+  /// In fr, this message translates to:
+  /// **'Santé du budget'**
   String get dashboardBudgetHealth;
 
   /// No description provided for @dashboardViewBudget.
   ///
-  /// In en, this message translates to:
-  /// **'View budget'**
+  /// In fr, this message translates to:
+  /// **'Voir le budget'**
   String get dashboardViewBudget;
 
   /// No description provided for @dashboardOnTrack.
   ///
-  /// In en, this message translates to:
-  /// **'On track'**
+  /// In fr, this message translates to:
+  /// **'En bonne voie'**
   String get dashboardOnTrack;
 
   /// No description provided for @dashboardGettingClose.
   ///
-  /// In en, this message translates to:
-  /// **'Getting close'**
+  /// In fr, this message translates to:
+  /// **'Presque atteint'**
   String get dashboardGettingClose;
 
   /// No description provided for @dashboardOverBudget.
   ///
-  /// In en, this message translates to:
-  /// **'Over budget'**
+  /// In fr, this message translates to:
+  /// **'Budget dépassé'**
   String get dashboardOverBudget;
 
   /// No description provided for @dashboardSpent.
   ///
-  /// In en, this message translates to:
-  /// **' spent'**
+  /// In fr, this message translates to:
+  /// **' dépensé'**
   String get dashboardSpent;
 
   /// No description provided for @dashboardSavingsGoals.
   ///
-  /// In en, this message translates to:
-  /// **'Savings Goals'**
+  /// In fr, this message translates to:
+  /// **'Objectifs d\'épargne'**
   String get dashboardSavingsGoals;
 
   /// No description provided for @dashboardViewAll.
   ///
-  /// In en, this message translates to:
-  /// **'View all'**
+  /// In fr, this message translates to:
+  /// **'Voir tout'**
   String get dashboardViewAll;
 
   /// No description provided for @dashboardSavedOf.
   ///
-  /// In en, this message translates to:
-  /// **' saved of '**
+  /// In fr, this message translates to:
+  /// **' épargné sur '**
   String get dashboardSavedOf;
 
   /// No description provided for @dashboardRecentTransactions.
   ///
-  /// In en, this message translates to:
-  /// **'Recent Transactions'**
+  /// In fr, this message translates to:
+  /// **'Transactions récentes'**
   String get dashboardRecentTransactions;
 
   /// No description provided for @dashboardNoTransactions.
   ///
-  /// In en, this message translates to:
-  /// **'No transactions yet'**
+  /// In fr, this message translates to:
+  /// **'Aucune transaction'**
   String get dashboardNoTransactions;
 
   /// No description provided for @dashboardNoTransactionsSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Tap the + button to add your first transaction'**
+  /// In fr, this message translates to:
+  /// **'Appuyez sur + pour ajouter votre première transaction'**
   String get dashboardNoTransactionsSubtitle;
 
   /// No description provided for @dashboardDaily.
   ///
-  /// In en, this message translates to:
-  /// **'Daily'**
+  /// In fr, this message translates to:
+  /// **'Quotidien'**
   String get dashboardDaily;
 
   /// No description provided for @dashboardWeekly.
   ///
-  /// In en, this message translates to:
-  /// **'Weekly'**
+  /// In fr, this message translates to:
+  /// **'Hebdomadaire'**
   String get dashboardWeekly;
 
   /// No description provided for @dashboardMonthly.
   ///
-  /// In en, this message translates to:
-  /// **'Monthly'**
+  /// In fr, this message translates to:
+  /// **'Mensuel'**
   String get dashboardMonthly;
 
   /// No description provided for @transactionsTitle.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Transactions'**
   String get transactionsTitle;
 
   /// No description provided for @transactionsAddTransaction.
   ///
-  /// In en, this message translates to:
-  /// **'Add Transaction'**
+  /// In fr, this message translates to:
+  /// **'Ajouter une transaction'**
   String get transactionsAddTransaction;
 
   /// No description provided for @transactionsEditTransaction.
   ///
-  /// In en, this message translates to:
-  /// **'Edit Transaction'**
+  /// In fr, this message translates to:
+  /// **'Modifier la transaction'**
   String get transactionsEditTransaction;
 
   /// No description provided for @transactionsAll.
   ///
-  /// In en, this message translates to:
-  /// **'All'**
+  /// In fr, this message translates to:
+  /// **'Tout'**
   String get transactionsAll;
 
   /// No description provided for @transactionsIncome.
   ///
-  /// In en, this message translates to:
-  /// **'Income'**
+  /// In fr, this message translates to:
+  /// **'Revenus'**
   String get transactionsIncome;
 
   /// No description provided for @transactionsExpense.
   ///
-  /// In en, this message translates to:
-  /// **'Expense'**
+  /// In fr, this message translates to:
+  /// **'Dépense'**
   String get transactionsExpense;
 
   /// No description provided for @transactionsNoTransactions.
   ///
-  /// In en, this message translates to:
-  /// **'No transactions yet'**
+  /// In fr, this message translates to:
+  /// **'Aucune transaction'**
   String get transactionsNoTransactions;
 
   /// No description provided for @transactionsNoTransactionsSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Tap + to add your first transaction'**
+  /// In fr, this message translates to:
+  /// **'Appuyez sur + pour ajouter votre première transaction'**
   String get transactionsNoTransactionsSubtitle;
 
   /// No description provided for @transactionsSaved.
   ///
-  /// In en, this message translates to:
-  /// **'Saved'**
+  /// In fr, this message translates to:
+  /// **'Enregistré'**
   String get transactionsSaved;
 
   /// No description provided for @transactionsAmount.
   ///
-  /// In en, this message translates to:
-  /// **'Amount'**
+  /// In fr, this message translates to:
+  /// **'Montant'**
   String get transactionsAmount;
 
   /// No description provided for @transactionsAmountHint.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'0'**
   String get transactionsAmountHint;
 
   /// No description provided for @transactionsAmountRequired.
   ///
-  /// In en, this message translates to:
-  /// **'Enter an amount'**
+  /// In fr, this message translates to:
+  /// **'Entrez un montant'**
   String get transactionsAmountRequired;
 
   /// No description provided for @transactionsAmountInvalid.
   ///
-  /// In en, this message translates to:
-  /// **'Enter a valid amount'**
+  /// In fr, this message translates to:
+  /// **'Entrez un montant valide'**
   String get transactionsAmountInvalid;
 
   /// No description provided for @transactionsCategory.
   ///
-  /// In en, this message translates to:
-  /// **'Category'**
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
   String get transactionsCategory;
 
   /// No description provided for @transactionsCategoryRequired.
   ///
-  /// In en, this message translates to:
-  /// **'Please select a category'**
+  /// In fr, this message translates to:
+  /// **'Veuillez sélectionner une catégorie'**
   String get transactionsCategoryRequired;
 
   /// No description provided for @transactionsNoCategoriesAvailable.
   ///
-  /// In en, this message translates to:
-  /// **'No categories available'**
+  /// In fr, this message translates to:
+  /// **'Aucune catégorie disponible'**
   String get transactionsNoCategoriesAvailable;
 
   /// No description provided for @transactionsDate.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Date'**
   String get transactionsDate;
 
   /// No description provided for @transactionsPaymentMethod.
   ///
-  /// In en, this message translates to:
-  /// **'Payment Method'**
+  /// In fr, this message translates to:
+  /// **'Mode de paiement'**
   String get transactionsPaymentMethod;
 
   /// No description provided for @transactionsPaymentCash.
   ///
-  /// In en, this message translates to:
-  /// **'Cash'**
+  /// In fr, this message translates to:
+  /// **'Espèces'**
   String get transactionsPaymentCash;
 
   /// No description provided for @transactionsPaymentMobileMoney.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Mobile Money'**
   String get transactionsPaymentMobileMoney;
 
   /// No description provided for @transactionsPaymentBank.
   ///
-  /// In en, this message translates to:
-  /// **'Bank'**
+  /// In fr, this message translates to:
+  /// **'Banque'**
   String get transactionsPaymentBank;
 
   /// No description provided for @transactionsPaymentCard.
   ///
-  /// In en, this message translates to:
-  /// **'Card'**
+  /// In fr, this message translates to:
+  /// **'Carte'**
   String get transactionsPaymentCard;
 
   /// No description provided for @transactionsMobileMoneyProvider.
   ///
-  /// In en, this message translates to:
-  /// **'Mobile Money Provider'**
+  /// In fr, this message translates to:
+  /// **'Fournisseur Mobile Money'**
   String get transactionsMobileMoneyProvider;
 
   /// No description provided for @transactionsSelectProvider.
   ///
-  /// In en, this message translates to:
-  /// **'Select provider'**
+  /// In fr, this message translates to:
+  /// **'Sélectionner un fournisseur'**
   String get transactionsSelectProvider;
 
   /// No description provided for @transactionsSelectProviderRequired.
   ///
-  /// In en, this message translates to:
-  /// **'Please select a provider'**
+  /// In fr, this message translates to:
+  /// **'Veuillez sélectionner un fournisseur'**
   String get transactionsSelectProviderRequired;
 
   /// No description provided for @transactionsDescription.
   ///
-  /// In en, this message translates to:
-  /// **'Description (optional)'**
+  /// In fr, this message translates to:
+  /// **'Description (optionnel)'**
   String get transactionsDescription;
 
   /// No description provided for @transactionsDescriptionHint.
   ///
-  /// In en, this message translates to:
-  /// **'e.g. Lunch at market, Uber to work'**
+  /// In fr, this message translates to:
+  /// **'ex. Déjeuner au marché, Uber au travail'**
   String get transactionsDescriptionHint;
 
   /// No description provided for @transactionsSaveTransaction.
   ///
-  /// In en, this message translates to:
-  /// **'Save Transaction'**
+  /// In fr, this message translates to:
+  /// **'Enregistrer la transaction'**
   String get transactionsSaveTransaction;
 
   /// No description provided for @transactionsUpdateTransaction.
   ///
-  /// In en, this message translates to:
-  /// **'Update Transaction'**
+  /// In fr, this message translates to:
+  /// **'Mettre à jour la transaction'**
   String get transactionsUpdateTransaction;
 
   /// No description provided for @transactionsUncategorized.
   ///
-  /// In en, this message translates to:
-  /// **'Uncategorized'**
+  /// In fr, this message translates to:
+  /// **'Non catégorisé'**
   String get transactionsUncategorized;
 
   /// No description provided for @transactionsValidAmountRequired.
   ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid amount'**
+  /// In fr, this message translates to:
+  /// **'Veuillez entrer un montant valide'**
   String get transactionsValidAmountRequired;
 
   /// No description provided for @transactionsSearchHint.
   ///
-  /// In en, this message translates to:
-  /// **'Search transactions...'**
+  /// In fr, this message translates to:
+  /// **'Rechercher des transactions...'**
   String get transactionsSearchHint;
 
   /// No description provided for @transactionsToday.
   ///
-  /// In en, this message translates to:
-  /// **'Today'**
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
   String get transactionsToday;
 
   /// No description provided for @transactionsYesterday.
   ///
-  /// In en, this message translates to:
-  /// **'Yesterday'**
+  /// In fr, this message translates to:
+  /// **'Hier'**
   String get transactionsYesterday;
 
   /// No description provided for @transactionsThisWeek.
   ///
-  /// In en, this message translates to:
-  /// **'This Week'**
+  /// In fr, this message translates to:
+  /// **'Cette semaine'**
   String get transactionsThisWeek;
 
   /// No description provided for @transactionsEarlier.
   ///
-  /// In en, this message translates to:
-  /// **'Earlier'**
+  /// In fr, this message translates to:
+  /// **'Plus ancien'**
   String get transactionsEarlier;
 
   /// No description provided for @transactionsDeleteConfirm.
   ///
-  /// In en, this message translates to:
-  /// **'Delete this transaction?'**
+  /// In fr, this message translates to:
+  /// **'Supprimer cette transaction ?'**
   String get transactionsDeleteConfirm;
 
   /// No description provided for @transactionsDeleted.
   ///
-  /// In en, this message translates to:
-  /// **'Transaction deleted'**
+  /// In fr, this message translates to:
+  /// **'Transaction supprimée'**
   String get transactionsDeleted;
 
   /// No description provided for @dashboardQuickAdd.
   ///
-  /// In en, this message translates to:
-  /// **'Add'**
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
   String get dashboardQuickAdd;
 
   /// No description provided for @dashboardQuickBudget.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Budget'**
   String get dashboardQuickBudget;
 
   /// No description provided for @dashboardQuickSavings.
   ///
-  /// In en, this message translates to:
-  /// **'Savings'**
+  /// In fr, this message translates to:
+  /// **'Épargne'**
   String get dashboardQuickSavings;
 
   /// No description provided for @dashboardIncomeVsExpenses.
   ///
-  /// In en, this message translates to:
-  /// **'Income vs Expenses'**
+  /// In fr, this message translates to:
+  /// **'Revenus vs Dépenses'**
   String get dashboardIncomeVsExpenses;
 
   /// No description provided for @dashboardExpenseBreakdown.
   ///
-  /// In en, this message translates to:
-  /// **'Expense Breakdown'**
+  /// In fr, this message translates to:
+  /// **'Répartition des dépenses'**
   String get dashboardExpenseBreakdown;
 
   /// No description provided for @dashboardNoChartData.
   ///
-  /// In en, this message translates to:
-  /// **'No transaction data yet'**
+  /// In fr, this message translates to:
+  /// **'Aucune donnée de transaction'**
   String get dashboardNoChartData;
 
   /// No description provided for @dashboardNoChartDataSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Add your first transaction to see the chart'**
+  /// In fr, this message translates to:
+  /// **'Ajoutez votre première transaction pour voir le graphique'**
   String get dashboardNoChartDataSubtitle;
 
   /// No description provided for @budgetTitle.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Budget'**
   String get budgetTitle;
 
   /// No description provided for @budgetNoActiveBudget.
   ///
-  /// In en, this message translates to:
-  /// **'No Active Budget'**
+  /// In fr, this message translates to:
+  /// **'Aucun budget actif'**
   String get budgetNoActiveBudget;
 
   /// No description provided for @budgetNoActiveBudgetSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Create a budget to start tracking your spending and stay on top of your finances.'**
+  /// In fr, this message translates to:
+  /// **'Créez un budget pour commencer à suivre vos dépenses et garder le contrôle de vos finances.'**
   String get budgetNoActiveBudgetSubtitle;
 
   /// No description provided for @budgetCreateBudget.
   ///
-  /// In en, this message translates to:
-  /// **'Create Budget'**
+  /// In fr, this message translates to:
+  /// **'Créer un budget'**
   String get budgetCreateBudget;
 
   /// No description provided for @budgetEditBudget.
   ///
-  /// In en, this message translates to:
-  /// **'Edit Budget'**
+  /// In fr, this message translates to:
+  /// **'Modifier le budget'**
   String get budgetEditBudget;
 
   /// No description provided for @budgetNewBudget.
   ///
-  /// In en, this message translates to:
-  /// **'New Budget'**
+  /// In fr, this message translates to:
+  /// **'Nouveau budget'**
   String get budgetNewBudget;
 
   /// No description provided for @budgetTotalSpent.
   ///
-  /// In en, this message translates to:
-  /// **'Total Spent'**
+  /// In fr, this message translates to:
+  /// **'Total dépensé'**
   String get budgetTotalSpent;
 
   /// No description provided for @budgetOfBudget.
   ///
-  /// In en, this message translates to:
-  /// **'of {amount} budget'**
+  /// In fr, this message translates to:
+  /// **'sur {amount} de budget'**
   String budgetOfBudget(String amount);
 
   /// No description provided for @budgetWeekly.
   ///
-  /// In en, this message translates to:
-  /// **'Weekly'**
+  /// In fr, this message translates to:
+  /// **'Hebdomadaire'**
   String get budgetWeekly;
 
   /// No description provided for @budgetBiWeekly.
   ///
-  /// In en, this message translates to:
-  /// **'Bi-weekly'**
+  /// In fr, this message translates to:
+  /// **'Bi-hebdomadaire'**
   String get budgetBiWeekly;
 
   /// No description provided for @budgetMonthly.
   ///
-  /// In en, this message translates to:
-  /// **'Monthly'**
+  /// In fr, this message translates to:
+  /// **'Mensuel'**
   String get budgetMonthly;
 
   /// No description provided for @budgetStrategy5030.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'50/30/20'**
   String get budgetStrategy5030;
 
   /// No description provided for @budgetStrategy8020.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'80/20'**
   String get budgetStrategy8020;
 
   /// No description provided for @budgetStrategyEnvelope.
   ///
-  /// In en, this message translates to:
-  /// **'Envelope'**
+  /// In fr, this message translates to:
+  /// **'Enveloppe'**
   String get budgetStrategyEnvelope;
 
   /// No description provided for @budgetStrategyCustom.
   ///
-  /// In en, this message translates to:
-  /// **'Custom'**
+  /// In fr, this message translates to:
+  /// **'Personnalisé'**
   String get budgetStrategyCustom;
 
   /// No description provided for @budgetSetupTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Create Budget'**
+  /// In fr, this message translates to:
+  /// **'Créer un budget'**
   String get budgetSetupTitle;
 
   /// No description provided for @budgetSetupStep.
   ///
-  /// In en, this message translates to:
-  /// **'Step {current} of {total}'**
+  /// In fr, this message translates to:
+  /// **'Étape {current} sur {total}'**
   String budgetSetupStep(int current, int total);
 
   /// No description provided for @budgetSetupChooseStrategy.
   ///
-  /// In en, this message translates to:
-  /// **'Choose Your Strategy'**
+  /// In fr, this message translates to:
+  /// **'Choisissez votre stratégie'**
   String get budgetSetupChooseStrategy;
 
   /// No description provided for @budgetSetupChooseStrategySubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Pick a budgeting method that fits your lifestyle.'**
+  /// In fr, this message translates to:
+  /// **'Choisissez une méthode de budget adaptée à votre style de vie.'**
   String get budgetSetupChooseStrategySubtitle;
 
   /// No description provided for @budgetSetupSetPeriod.
   ///
-  /// In en, this message translates to:
-  /// **'Set Your Period'**
+  /// In fr, this message translates to:
+  /// **'Définissez votre période'**
   String get budgetSetupSetPeriod;
 
   /// No description provided for @budgetSetupSetPeriodSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'How often do you want to budget?'**
+  /// In fr, this message translates to:
+  /// **'À quelle fréquence souhaitez-vous budgéter ?'**
   String get budgetSetupSetPeriodSubtitle;
 
   /// No description provided for @budgetSetupExpectedIncome.
   ///
-  /// In en, this message translates to:
-  /// **'Expected Income (optional)'**
+  /// In fr, this message translates to:
+  /// **'Revenu prévu (optionnel)'**
   String get budgetSetupExpectedIncome;
 
   /// No description provided for @budgetSetupExpectedIncomeSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Enter your expected income to auto-calculate allocations.'**
+  /// In fr, this message translates to:
+  /// **'Entrez votre revenu prévu pour calculer automatiquement les allocations.'**
   String get budgetSetupExpectedIncomeSubtitle;
 
   /// No description provided for @budgetSetupExpectedIncomeHint.
   ///
-  /// In en, this message translates to:
-  /// **'0.00'**
+  /// In fr, this message translates to:
+  /// **'0,00'**
   String get budgetSetupExpectedIncomeHint;
 
   /// No description provided for @budgetSetupBiWeekly.
   ///
-  /// In en, this message translates to:
-  /// **'Bi-weekly (Every 2 weeks)'**
+  /// In fr, this message translates to:
+  /// **'Bi-hebdomadaire (Toutes les 2 semaines)'**
   String get budgetSetupBiWeekly;
 
   /// No description provided for @budgetSetupCustomize.
   ///
-  /// In en, this message translates to:
-  /// **'Customize Allocations'**
+  /// In fr, this message translates to:
+  /// **'Personnaliser les allocations'**
   String get budgetSetupCustomize;
 
   /// No description provided for @budgetSetupCustomizeSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Adjust amounts for each spending category.'**
+  /// In fr, this message translates to:
+  /// **'Ajustez les montants pour chaque catégorie de dépenses.'**
   String get budgetSetupCustomizeSubtitle;
 
   /// No description provided for @budgetSetupReview.
   ///
-  /// In en, this message translates to:
-  /// **'Review Your Budget'**
+  /// In fr, this message translates to:
+  /// **'Vérifier votre budget'**
   String get budgetSetupReview;
 
   /// No description provided for @budgetSetupReviewSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Confirm the details below to create your budget.'**
+  /// In fr, this message translates to:
+  /// **'Confirmez les détails ci-dessous pour créer votre budget.'**
   String get budgetSetupReviewSubtitle;
 
   /// No description provided for @budgetSetupStrategy.
   ///
-  /// In en, this message translates to:
-  /// **'Strategy'**
+  /// In fr, this message translates to:
+  /// **'Stratégie'**
   String get budgetSetupStrategy;
 
   /// No description provided for @budgetSetupPeriod.
   ///
-  /// In en, this message translates to:
-  /// **'Period'**
+  /// In fr, this message translates to:
+  /// **'Période'**
   String get budgetSetupPeriod;
 
   /// No description provided for @budgetSetupIncome.
   ///
-  /// In en, this message translates to:
-  /// **'Income'**
+  /// In fr, this message translates to:
+  /// **'Revenu'**
   String get budgetSetupIncome;
 
   /// No description provided for @budgetSetupTotalBudget.
   ///
-  /// In en, this message translates to:
-  /// **'Total Budget'**
+  /// In fr, this message translates to:
+  /// **'Budget total'**
   String get budgetSetupTotalBudget;
 
   /// No description provided for @budgetSetupCategoryBreakdown.
   ///
-  /// In en, this message translates to:
-  /// **'Category Breakdown'**
+  /// In fr, this message translates to:
+  /// **'Répartition par catégorie'**
   String get budgetSetupCategoryBreakdown;
 
   /// No description provided for @budgetSetupContinue.
   ///
-  /// In en, this message translates to:
-  /// **'Continue'**
+  /// In fr, this message translates to:
+  /// **'Continuer'**
   String get budgetSetupContinue;
 
   /// No description provided for @budgetStrategy5030Name.
   ///
-  /// In en, this message translates to:
-  /// **'50/30/20 Rule'**
+  /// In fr, this message translates to:
+  /// **'Règle 50/30/20'**
   String get budgetStrategy5030Name;
 
   /// No description provided for @budgetStrategy5030Desc.
   ///
-  /// In en, this message translates to:
-  /// **'A balanced approach that splits your income into needs, wants, and savings.'**
+  /// In fr, this message translates to:
+  /// **'Une approche équilibrée qui répartit votre revenu entre besoins, envies et épargne.'**
   String get budgetStrategy5030Desc;
 
   /// No description provided for @budgetStrategy5030Formula.
   ///
-  /// In en, this message translates to:
-  /// **'50% Needs - 30% Wants - 20% Savings'**
+  /// In fr, this message translates to:
+  /// **'50% Besoins - 30% Envies - 20% Épargne'**
   String get budgetStrategy5030Formula;
 
   /// No description provided for @budgetStrategy8020Name.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'80/20 Entrepreneur'**
   String get budgetStrategy8020Name;
 
   /// No description provided for @budgetStrategy8020Desc.
   ///
-  /// In en, this message translates to:
-  /// **'For business owners: reinvest 80% into essentials and business, save 20%.'**
+  /// In fr, this message translates to:
+  /// **'Pour les entrepreneurs : réinvestissez 80% dans les essentiels et l\'entreprise, épargnez 20%.'**
   String get budgetStrategy8020Desc;
 
   /// No description provided for @budgetStrategy8020Formula.
   ///
-  /// In en, this message translates to:
-  /// **'80% Essentials & Business - 20% Savings'**
+  /// In fr, this message translates to:
+  /// **'80% Essentiels & Business - 20% Épargne'**
   String get budgetStrategy8020Formula;
 
   /// No description provided for @budgetStrategyEnvelopeName.
   ///
-  /// In en, this message translates to:
-  /// **'Envelope System'**
+  /// In fr, this message translates to:
+  /// **'Système d\'enveloppes'**
   String get budgetStrategyEnvelopeName;
 
   /// No description provided for @budgetStrategyEnvelopeDesc.
   ///
-  /// In en, this message translates to:
-  /// **'Assign fixed amounts to each category. When the envelope is empty, stop spending.'**
+  /// In fr, this message translates to:
+  /// **'Attribuez des montants fixes à chaque catégorie. Quand l\'enveloppe est vide, arrêtez de dépenser.'**
   String get budgetStrategyEnvelopeDesc;
 
   /// No description provided for @budgetStrategyEnvelopeFormula.
   ///
-  /// In en, this message translates to:
-  /// **'Fixed amounts per category'**
+  /// In fr, this message translates to:
+  /// **'Montants fixes par catégorie'**
   String get budgetStrategyEnvelopeFormula;
 
   /// No description provided for @budgetStrategyCustomName.
   ///
-  /// In en, this message translates to:
-  /// **'Custom'**
+  /// In fr, this message translates to:
+  /// **'Personnalisé'**
   String get budgetStrategyCustomName;
 
   /// No description provided for @budgetStrategyCustomDesc.
   ///
-  /// In en, this message translates to:
-  /// **'Set your own percentages and amounts for full control over your budget.'**
+  /// In fr, this message translates to:
+  /// **'Définissez vos propres pourcentages et montants pour un contrôle total de votre budget.'**
   String get budgetStrategyCustomDesc;
 
   /// No description provided for @budgetStrategyCustomFormula.
   ///
-  /// In en, this message translates to:
-  /// **'You decide the split'**
+  /// In fr, this message translates to:
+  /// **'Vous décidez la répartition'**
   String get budgetStrategyCustomFormula;
 
   /// No description provided for @categoryFoodGroceries.
   ///
-  /// In en, this message translates to:
-  /// **'Food & Groceries'**
+  /// In fr, this message translates to:
+  /// **'Alimentation & Courses'**
   String get categoryFoodGroceries;
 
   /// No description provided for @categoryRent.
   ///
-  /// In en, this message translates to:
-  /// **'Rent'**
+  /// In fr, this message translates to:
+  /// **'Loyer'**
   String get categoryRent;
 
   /// No description provided for @categoryTransport.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Transport'**
   String get categoryTransport;
 
   /// No description provided for @categoryUtilities.
   ///
-  /// In en, this message translates to:
-  /// **'Utilities'**
+  /// In fr, this message translates to:
+  /// **'Services publics'**
   String get categoryUtilities;
 
   /// No description provided for @categoryHealth.
   ///
-  /// In en, this message translates to:
-  /// **'Health'**
+  /// In fr, this message translates to:
+  /// **'Santé'**
   String get categoryHealth;
 
   /// No description provided for @categoryEntertainment.
   ///
-  /// In en, this message translates to:
-  /// **'Entertainment'**
+  /// In fr, this message translates to:
+  /// **'Divertissement'**
   String get categoryEntertainment;
 
   /// No description provided for @categoryClothing.
   ///
-  /// In en, this message translates to:
-  /// **'Clothing'**
+  /// In fr, this message translates to:
+  /// **'Vêtements'**
   String get categoryClothing;
 
   /// No description provided for @categoryAirtimeData.
   ///
-  /// In en, this message translates to:
-  /// **'Airtime & Data'**
+  /// In fr, this message translates to:
+  /// **'Crédit & Data'**
   String get categoryAirtimeData;
 
   /// No description provided for @categoryPersonalCare.
   ///
-  /// In en, this message translates to:
-  /// **'Personal Care'**
+  /// In fr, this message translates to:
+  /// **'Soins personnels'**
   String get categoryPersonalCare;
 
   /// No description provided for @categoryFamilySupport.
   ///
-  /// In en, this message translates to:
-  /// **'Family Support'**
+  /// In fr, this message translates to:
+  /// **'Soutien familial'**
   String get categoryFamilySupport;
 
   /// No description provided for @categorySavings.
   ///
-  /// In en, this message translates to:
-  /// **'Savings'**
+  /// In fr, this message translates to:
+  /// **'Épargne'**
   String get categorySavings;
 
   /// No description provided for @categoryDebtRepayment.
   ///
-  /// In en, this message translates to:
-  /// **'Debt Repayment'**
+  /// In fr, this message translates to:
+  /// **'Remboursement de dettes'**
   String get categoryDebtRepayment;
 
   /// No description provided for @categoryReligiousGiving.
   ///
-  /// In en, this message translates to:
-  /// **'Religious Giving'**
+  /// In fr, this message translates to:
+  /// **'Don religieux'**
   String get categoryReligiousGiving;
 
   /// No description provided for @categoryBusinessExpenses.
   ///
-  /// In en, this message translates to:
-  /// **'Business Expenses'**
+  /// In fr, this message translates to:
+  /// **'Dépenses professionnelles'**
   String get categoryBusinessExpenses;
 
   /// No description provided for @categoryMobileMoneyFees.
   ///
-  /// In en, this message translates to:
-  /// **'Mobile Money Fees'**
+  /// In fr, this message translates to:
+  /// **'Frais Mobile Money'**
   String get categoryMobileMoneyFees;
 
   /// No description provided for @categoryGroupNeeds.
   ///
-  /// In en, this message translates to:
-  /// **'Needs'**
+  /// In fr, this message translates to:
+  /// **'Besoins'**
   String get categoryGroupNeeds;
 
   /// No description provided for @categoryGroupWants.
   ///
-  /// In en, this message translates to:
-  /// **'Wants'**
+  /// In fr, this message translates to:
+  /// **'Envies'**
   String get categoryGroupWants;
 
   /// No description provided for @categoryGroupSavings.
   ///
-  /// In en, this message translates to:
-  /// **'Savings'**
+  /// In fr, this message translates to:
+  /// **'Épargne'**
   String get categoryGroupSavings;
 
   /// No description provided for @categoryGroupEssentialsBusiness.
   ///
-  /// In en, this message translates to:
-  /// **'Essentials & Business'**
+  /// In fr, this message translates to:
+  /// **'Essentiels & Business'**
   String get categoryGroupEssentialsBusiness;
 
   /// No description provided for @savingsGoalsTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Savings Goals'**
+  /// In fr, this message translates to:
+  /// **'Objectifs d\'épargne'**
   String get savingsGoalsTitle;
 
   /// No description provided for @savingsAddGoal.
   ///
-  /// In en, this message translates to:
-  /// **'Add goal'**
+  /// In fr, this message translates to:
+  /// **'Ajouter un objectif'**
   String get savingsAddGoal;
 
   /// No description provided for @savingsNoGoals.
   ///
-  /// In en, this message translates to:
-  /// **'No savings goals yet'**
+  /// In fr, this message translates to:
+  /// **'Aucun objectif d\'épargne'**
   String get savingsNoGoals;
 
   /// No description provided for @savingsNoGoalsSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'What are you saving for? Set a goal to start tracking.'**
+  /// In fr, this message translates to:
+  /// **'Pour quoi épargnez-vous ? Définissez un objectif pour commencer à suivre.'**
   String get savingsNoGoalsSubtitle;
 
   /// No description provided for @savingsCreateGoal.
   ///
-  /// In en, this message translates to:
-  /// **'Create Goal'**
+  /// In fr, this message translates to:
+  /// **'Créer un objectif'**
   String get savingsCreateGoal;
 
   /// No description provided for @savingsNewGoal.
   ///
-  /// In en, this message translates to:
-  /// **'New Savings Goal'**
+  /// In fr, this message translates to:
+  /// **'Nouvel objectif d\'épargne'**
   String get savingsNewGoal;
 
   /// No description provided for @savingsGoalName.
   ///
-  /// In en, this message translates to:
-  /// **'Goal Name'**
+  /// In fr, this message translates to:
+  /// **'Nom de l\'objectif'**
   String get savingsGoalName;
 
   /// No description provided for @savingsGoalNameHint.
   ///
-  /// In en, this message translates to:
-  /// **'e.g. Emergency Fund, New Laptop'**
+  /// In fr, this message translates to:
+  /// **'ex. Fonds d\'urgence, Nouvel ordinateur'**
   String get savingsGoalNameHint;
 
   /// No description provided for @savingsGoalNameRequired.
   ///
-  /// In en, this message translates to:
-  /// **'Please enter a goal name'**
+  /// In fr, this message translates to:
+  /// **'Veuillez entrer un nom d\'objectif'**
   String get savingsGoalNameRequired;
 
   /// No description provided for @savingsTargetAmount.
   ///
-  /// In en, this message translates to:
-  /// **'Target Amount ({currency})'**
+  /// In fr, this message translates to:
+  /// **'Montant cible ({currency})'**
   String savingsTargetAmount(String currency);
 
   /// No description provided for @savingsTargetAmountRequired.
   ///
-  /// In en, this message translates to:
-  /// **'Please enter a target amount'**
+  /// In fr, this message translates to:
+  /// **'Veuillez entrer un montant cible'**
   String get savingsTargetAmountRequired;
 
   /// No description provided for @savingsTargetAmountInvalid.
   ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid amount'**
+  /// In fr, this message translates to:
+  /// **'Veuillez entrer un montant valide'**
   String get savingsTargetAmountInvalid;
 
   /// No description provided for @savingsDescriptionOptional.
   ///
-  /// In en, this message translates to:
-  /// **'Description (optional)'**
+  /// In fr, this message translates to:
+  /// **'Description (optionnel)'**
   String get savingsDescriptionOptional;
 
   /// No description provided for @savingsDescriptionHint.
   ///
-  /// In en, this message translates to:
-  /// **'What are you saving for?'**
+  /// In fr, this message translates to:
+  /// **'Pour quoi épargnez-vous ?'**
   String get savingsDescriptionHint;
 
   /// No description provided for @savingsDeadlineOptional.
   ///
-  /// In en, this message translates to:
-  /// **'Deadline (optional)'**
+  /// In fr, this message translates to:
+  /// **'Échéance (optionnel)'**
   String get savingsDeadlineOptional;
 
   /// No description provided for @savingsNoDeadline.
   ///
-  /// In en, this message translates to:
-  /// **'No deadline set'**
+  /// In fr, this message translates to:
+  /// **'Aucune échéance définie'**
   String get savingsNoDeadline;
 
   /// No description provided for @savingsGoalDetails.
   ///
-  /// In en, this message translates to:
-  /// **'Goal Details'**
+  /// In fr, this message translates to:
+  /// **'Détails de l\'objectif'**
   String get savingsGoalDetails;
 
   /// No description provided for @savingsGoalNotFound.
   ///
-  /// In en, this message translates to:
-  /// **'Goal not found'**
+  /// In fr, this message translates to:
+  /// **'Objectif introuvable'**
   String get savingsGoalNotFound;
 
   /// No description provided for @savingsDeleteGoal.
   ///
-  /// In en, this message translates to:
-  /// **'Delete Goal'**
+  /// In fr, this message translates to:
+  /// **'Supprimer l\'objectif'**
   String get savingsDeleteGoal;
 
   /// No description provided for @savingsAddMoney.
   ///
-  /// In en, this message translates to:
-  /// **'Add Money'**
+  /// In fr, this message translates to:
+  /// **'Ajouter de l\'argent'**
   String get savingsAddMoney;
 
   /// No description provided for @savingsSaved.
   ///
-  /// In en, this message translates to:
-  /// **'Saved'**
+  /// In fr, this message translates to:
+  /// **'Épargné'**
   String get savingsSaved;
 
   /// No description provided for @savingsRemaining.
   ///
-  /// In en, this message translates to:
-  /// **'Remaining'**
+  /// In fr, this message translates to:
+  /// **'Restant'**
   String get savingsRemaining;
 
   /// No description provided for @savingsTarget.
   ///
-  /// In en, this message translates to:
-  /// **'Target'**
+  /// In fr, this message translates to:
+  /// **'Cible'**
   String get savingsTarget;
 
   /// No description provided for @savingsDeadline.
   ///
-  /// In en, this message translates to:
-  /// **'Deadline'**
+  /// In fr, this message translates to:
+  /// **'Échéance'**
   String get savingsDeadline;
 
   /// No description provided for @savingsNotes.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Notes'**
   String get savingsNotes;
 
   /// No description provided for @savingsContributionHistory.
   ///
-  /// In en, this message translates to:
-  /// **'Contribution History'**
+  /// In fr, this message translates to:
+  /// **'Historique des contributions'**
   String get savingsContributionHistory;
 
   /// No description provided for @savingsNoContributions.
   ///
-  /// In en, this message translates to:
-  /// **'No contributions yet. Tap \"Add Money\" to start!'**
+  /// In fr, this message translates to:
+  /// **'Aucune contribution. Appuyez sur \"Ajouter de l\'argent\" pour commencer !'**
   String get savingsNoContributions;
 
   /// No description provided for @savingsAddMoneyTo.
   ///
-  /// In en, this message translates to:
-  /// **'Add Money to \"{name}\"'**
+  /// In fr, this message translates to:
+  /// **'Ajouter de l\'argent à \"{name}\"'**
   String savingsAddMoneyTo(String name);
 
   /// No description provided for @savingsNoteOptional.
   ///
-  /// In en, this message translates to:
-  /// **'Note (optional)'**
+  /// In fr, this message translates to:
+  /// **'Note (optionnel)'**
   String get savingsNoteOptional;
 
   /// No description provided for @savingsAddContribution.
   ///
-  /// In en, this message translates to:
-  /// **'Add Contribution'**
+  /// In fr, this message translates to:
+  /// **'Ajouter une contribution'**
   String get savingsAddContribution;
 
   /// No description provided for @savingsDeleteGoalConfirm.
   ///
-  /// In en, this message translates to:
-  /// **'Delete \"{name}\"? This cannot be undone.'**
+  /// In fr, this message translates to:
+  /// **'Supprimer \"{name}\" ? Cette action est irréversible.'**
   String savingsDeleteGoalConfirm(String name);
 
   /// No description provided for @savingsSavedLabel.
   ///
-  /// In en, this message translates to:
-  /// **'saved'**
+  /// In fr, this message translates to:
+  /// **'épargné'**
   String get savingsSavedLabel;
 
   /// No description provided for @moreTitle.
   ///
-  /// In en, this message translates to:
-  /// **'More'**
+  /// In fr, this message translates to:
+  /// **'Plus'**
   String get moreTitle;
 
   /// No description provided for @moreAccountSection.
   ///
-  /// In en, this message translates to:
-  /// **'Account'**
+  /// In fr, this message translates to:
+  /// **'Compte'**
   String get moreAccountSection;
 
   /// No description provided for @moreFeaturesSection.
   ///
-  /// In en, this message translates to:
-  /// **'Features'**
+  /// In fr, this message translates to:
+  /// **'Fonctionnalités'**
   String get moreFeaturesSection;
 
   /// No description provided for @moreSupportSection.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Support'**
   String get moreSupportSection;
 
   /// No description provided for @moreProfile.
   ///
-  /// In en, this message translates to:
-  /// **'Profile'**
+  /// In fr, this message translates to:
+  /// **'Profil'**
   String get moreProfile;
 
   /// No description provided for @moreSettings.
   ///
-  /// In en, this message translates to:
-  /// **'Settings'**
+  /// In fr, this message translates to:
+  /// **'Paramètres'**
   String get moreSettings;
 
   /// No description provided for @moreSavingsGoals.
   ///
-  /// In en, this message translates to:
-  /// **'Savings Goals'**
+  /// In fr, this message translates to:
+  /// **'Objectifs d\'épargne'**
   String get moreSavingsGoals;
 
   /// No description provided for @moreTontineGroups.
   ///
-  /// In en, this message translates to:
-  /// **'Tontine Groups'**
+  /// In fr, this message translates to:
+  /// **'Groupes de tontine'**
   String get moreTontineGroups;
 
   /// No description provided for @moreInsights.
   ///
-  /// In en, this message translates to:
-  /// **'Insights'**
+  /// In fr, this message translates to:
+  /// **'Analyses'**
   String get moreInsights;
 
   /// No description provided for @moreHelpSupport.
   ///
-  /// In en, this message translates to:
-  /// **'Help & Support'**
+  /// In fr, this message translates to:
+  /// **'Aide & Support'**
   String get moreHelpSupport;
 
   /// No description provided for @moreRateApp.
   ///
-  /// In en, this message translates to:
-  /// **'Rate the App'**
+  /// In fr, this message translates to:
+  /// **'Noter l\'application'**
   String get moreRateApp;
 
   /// No description provided for @moreShareApp.
   ///
-  /// In en, this message translates to:
-  /// **'Share with Friends'**
+  /// In fr, this message translates to:
+  /// **'Partager avec des amis'**
   String get moreShareApp;
 
   /// No description provided for @moreShareAppMessage.
   ///
-  /// In en, this message translates to:
-  /// **'Check out Kale - a smart budget and expense tracker app!'**
+  /// In fr, this message translates to:
+  /// **'Découvrez Kalé - une application intelligente de budget et suivi des dépenses !'**
   String get moreShareAppMessage;
 
   /// No description provided for @moreComingSoon.
   ///
-  /// In en, this message translates to:
-  /// **'Coming Soon'**
+  /// In fr, this message translates to:
+  /// **'Bientôt disponible'**
   String get moreComingSoon;
 
   /// No description provided for @moreComingSoonMessage.
   ///
-  /// In en, this message translates to:
-  /// **'Coming soon! Stay tuned.'**
+  /// In fr, this message translates to:
+  /// **'Bientôt disponible ! Restez connecté.'**
   String get moreComingSoonMessage;
 
   /// No description provided for @tontineGroupsTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Community Savings'**
+  /// In fr, this message translates to:
+  /// **'Épargne communautaire'**
   String get tontineGroupsTitle;
 
   /// No description provided for @tontineGroupsDescription.
   ///
-  /// In en, this message translates to:
-  /// **'Join or create a tontine group to save together with friends and family. Pool contributions and take turns receiving the pot.'**
+  /// In fr, this message translates to:
+  /// **'Rejoignez ou créez un groupe de tontine pour épargner avec vos amis et votre famille. Mettez en commun vos cotisations et recevez la cagnotte à tour de rôle.'**
   String get tontineGroupsDescription;
 
   /// No description provided for @tontineGroupsHowItWorks.
   ///
-  /// In en, this message translates to:
-  /// **'How It Works'**
+  /// In fr, this message translates to:
+  /// **'Comment ça marche'**
   String get tontineGroupsHowItWorks;
 
   /// No description provided for @tontineGroupsStep1Title.
   ///
-  /// In en, this message translates to:
-  /// **'Create or Join a Group'**
+  /// In fr, this message translates to:
+  /// **'Créez ou rejoignez un groupe'**
   String get tontineGroupsStep1Title;
 
   /// No description provided for @tontineGroupsStep1Desc.
   ///
-  /// In en, this message translates to:
-  /// **'Start a new tontine group or join an existing one with an invite.'**
+  /// In fr, this message translates to:
+  /// **'Lancez un nouveau groupe de tontine ou rejoignez-en un existant grâce à une invitation.'**
   String get tontineGroupsStep1Desc;
 
   /// No description provided for @tontineGroupsStep2Title.
   ///
-  /// In en, this message translates to:
-  /// **'Contribute Regularly'**
+  /// In fr, this message translates to:
+  /// **'Cotisez régulièrement'**
   String get tontineGroupsStep2Title;
 
   /// No description provided for @tontineGroupsStep2Desc.
   ///
-  /// In en, this message translates to:
-  /// **'Each member contributes a fixed amount on a set schedule.'**
+  /// In fr, this message translates to:
+  /// **'Chaque membre verse un montant fixe selon un calendrier défini.'**
   String get tontineGroupsStep2Desc;
 
   /// No description provided for @tontineGroupsStep3Title.
   ///
-  /// In en, this message translates to:
-  /// **'Receive the Pot'**
+  /// In fr, this message translates to:
+  /// **'Recevez la cagnotte'**
   String get tontineGroupsStep3Title;
 
   /// No description provided for @tontineGroupsStep3Desc.
   ///
-  /// In en, this message translates to:
-  /// **'Members take turns receiving the full pooled amount.'**
+  /// In fr, this message translates to:
+  /// **'Les membres reçoivent à tour de rôle la totalité de la somme mise en commun.'**
   String get tontineGroupsStep3Desc;
 
   /// No description provided for @tontineGroupsEmpty.
   ///
-  /// In en, this message translates to:
-  /// **'No Groups Yet'**
+  /// In fr, this message translates to:
+  /// **'Aucun groupe pour l\'instant'**
   String get tontineGroupsEmpty;
 
   /// No description provided for @tontineGroupsEmptySubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Create your first tontine group and start saving together.'**
+  /// In fr, this message translates to:
+  /// **'Créez votre premier groupe de tontine et commencez à épargner ensemble.'**
   String get tontineGroupsEmptySubtitle;
 
   /// No description provided for @tontineGroupsCreateGroup.
   ///
-  /// In en, this message translates to:
-  /// **'Create Group'**
+  /// In fr, this message translates to:
+  /// **'Créer un groupe'**
   String get tontineGroupsCreateGroup;
 
   /// No description provided for @helpFaqTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Frequently Asked Questions'**
+  /// In fr, this message translates to:
+  /// **'Questions fréquentes'**
   String get helpFaqTitle;
 
   /// No description provided for @helpFaq1Question.
   ///
-  /// In en, this message translates to:
-  /// **'How do I add a transaction?'**
+  /// In fr, this message translates to:
+  /// **'Comment ajouter une transaction ?'**
   String get helpFaq1Question;
 
   /// No description provided for @helpFaq1Answer.
   ///
-  /// In en, this message translates to:
-  /// **'Tap the + button on the home screen to add a new income or expense transaction. Fill in the amount, category, and optional notes.'**
+  /// In fr, this message translates to:
+  /// **'Appuyez sur le bouton + de l\'écran d\'accueil pour ajouter un revenu ou une dépense. Renseignez le montant, la catégorie et des notes facultatives.'**
   String get helpFaq1Answer;
 
   /// No description provided for @helpFaq2Question.
   ///
-  /// In en, this message translates to:
-  /// **'How do budgets work?'**
+  /// In fr, this message translates to:
+  /// **'Comment fonctionnent les budgets ?'**
   String get helpFaq2Question;
 
   /// No description provided for @helpFaq2Answer.
   ///
-  /// In en, this message translates to:
-  /// **'Go to the Budget tab to set up monthly spending limits by category. Kale will track your spending and notify you when you\'re close to your limit.'**
+  /// In fr, this message translates to:
+  /// **'Allez dans l\'onglet Budget pour définir des limites de dépenses mensuelles par catégorie. Kalé suit vos dépenses et vous prévient lorsque vous approchez de votre limite.'**
   String get helpFaq2Answer;
 
   /// No description provided for @helpFaq3Question.
   ///
-  /// In en, this message translates to:
-  /// **'Can I set savings goals?'**
+  /// In fr, this message translates to:
+  /// **'Puis-je définir des objectifs d\'épargne ?'**
   String get helpFaq3Question;
 
   /// No description provided for @helpFaq3Answer.
   ///
-  /// In en, this message translates to:
-  /// **'Yes! Go to More > Savings Goals to create targets for things like vacations, emergencies, or big purchases. Track your progress over time.'**
+  /// In fr, this message translates to:
+  /// **'Oui ! Allez dans Plus > Objectifs d\'épargne pour créer des objectifs comme des vacances, un fonds d\'urgence ou un gros achat. Suivez votre progression au fil du temps.'**
   String get helpFaq3Answer;
 
   /// No description provided for @helpFaq4Question.
   ///
-  /// In en, this message translates to:
-  /// **'Is my data secure?'**
+  /// In fr, this message translates to:
+  /// **'Mes données sont-elles sécurisées ?'**
   String get helpFaq4Question;
 
   /// No description provided for @helpFaq4Answer.
   ///
-  /// In en, this message translates to:
-  /// **'Your data is encrypted and stored securely. We never share your financial information with third parties. You can clear local data anytime from Settings.'**
+  /// In fr, this message translates to:
+  /// **'Vos données sont chiffrées et stockées en toute sécurité. Nous ne partageons jamais vos informations financières avec des tiers. Vous pouvez effacer les données locales à tout moment depuis les Paramètres.'**
   String get helpFaq4Answer;
 
   /// No description provided for @helpContactTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Contact Us'**
+  /// In fr, this message translates to:
+  /// **'Nous contacter'**
   String get helpContactTitle;
 
   /// No description provided for @helpContactEmail.
   ///
-  /// In en, this message translates to:
-  /// **'Email Support'**
+  /// In fr, this message translates to:
+  /// **'Assistance par e-mail'**
   String get helpContactEmail;
 
   /// No description provided for @helpContactChat.
   ///
-  /// In en, this message translates to:
-  /// **'Live Chat'**
+  /// In fr, this message translates to:
+  /// **'Chat en direct'**
   String get helpContactChat;
 
   /// No description provided for @helpContactChatSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Available Mon-Fri, 9am-5pm'**
+  /// In fr, this message translates to:
+  /// **'Disponible du lundi au vendredi, de 9 h à 17 h'**
   String get helpContactChatSubtitle;
 
   /// No description provided for @helpLegalTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Legal'**
+  /// In fr, this message translates to:
+  /// **'Mentions légales'**
   String get helpLegalTitle;
 
   /// No description provided for @rateAppTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Enjoying Kale?'**
+  /// In fr, this message translates to:
+  /// **'Vous aimez Kalé ?'**
   String get rateAppTitle;
 
   /// No description provided for @rateAppSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Your feedback helps us improve. Let us know how we\'re doing!'**
+  /// In fr, this message translates to:
+  /// **'Votre avis nous aide à nous améliorer. Dites-nous ce que vous en pensez !'**
   String get rateAppSubtitle;
 
   /// No description provided for @rateAppSubmit.
   ///
-  /// In en, this message translates to:
-  /// **'Submit Rating'**
+  /// In fr, this message translates to:
+  /// **'Envoyer la note'**
   String get rateAppSubmit;
 
   /// No description provided for @rateAppLabel1.
   ///
-  /// In en, this message translates to:
-  /// **'Needs Work'**
+  /// In fr, this message translates to:
+  /// **'À améliorer'**
   String get rateAppLabel1;
 
   /// No description provided for @rateAppLabel2.
   ///
-  /// In en, this message translates to:
-  /// **'Could Be Better'**
+  /// In fr, this message translates to:
+  /// **'Pourrait être mieux'**
   String get rateAppLabel2;
 
   /// No description provided for @rateAppLabel3.
   ///
-  /// In en, this message translates to:
-  /// **'It\'s Okay'**
+  /// In fr, this message translates to:
+  /// **'Correct'**
   String get rateAppLabel3;
 
   /// No description provided for @rateAppLabel4.
   ///
-  /// In en, this message translates to:
-  /// **'Great App!'**
+  /// In fr, this message translates to:
+  /// **'Super appli !'**
   String get rateAppLabel4;
 
   /// No description provided for @rateAppLabel5.
   ///
-  /// In en, this message translates to:
-  /// **'Love It!'**
+  /// In fr, this message translates to:
+  /// **'J\'adore !'**
   String get rateAppLabel5;
 
   /// No description provided for @rateAppThankYou.
   ///
-  /// In en, this message translates to:
-  /// **'Thank You!'**
+  /// In fr, this message translates to:
+  /// **'Merci !'**
   String get rateAppThankYou;
 
   /// No description provided for @rateAppThankYouMessage.
   ///
-  /// In en, this message translates to:
-  /// **'We appreciate your feedback. It helps us make Kale even better for you.'**
+  /// In fr, this message translates to:
+  /// **'Nous apprécions votre avis. Il nous aide à rendre Kalé encore meilleure pour vous.'**
   String get rateAppThankYouMessage;
 
   /// No description provided for @shareAppTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Share Kale'**
+  /// In fr, this message translates to:
+  /// **'Partager Kalé'**
   String get shareAppTitle;
 
   /// No description provided for @shareAppDescription.
   ///
-  /// In en, this message translates to:
-  /// **'Help your friends and family take control of their finances with Kale.'**
+  /// In fr, this message translates to:
+  /// **'Aidez vos amis et votre famille à prendre le contrôle de leurs finances avec Kalé.'**
   String get shareAppDescription;
 
   /// No description provided for @shareAppShareVia.
   ///
-  /// In en, this message translates to:
-  /// **'SHARE VIA'**
+  /// In fr, this message translates to:
+  /// **'PARTAGER VIA'**
   String get shareAppShareVia;
 
   /// No description provided for @shareAppCopyLink.
   ///
-  /// In en, this message translates to:
-  /// **'Copy Download Link'**
+  /// In fr, this message translates to:
+  /// **'Copier le lien de téléchargement'**
   String get shareAppCopyLink;
 
   /// No description provided for @shareAppCopyMessage.
   ///
-  /// In en, this message translates to:
-  /// **'Copy Share Message'**
+  /// In fr, this message translates to:
+  /// **'Copier le message de partage'**
   String get shareAppCopyMessage;
 
   /// No description provided for @shareAppLinkCopied.
   ///
-  /// In en, this message translates to:
-  /// **'Link copied to clipboard'**
+  /// In fr, this message translates to:
+  /// **'Lien copié dans le presse-papiers'**
   String get shareAppLinkCopied;
 
   /// No description provided for @shareAppMessageCopied.
   ///
-  /// In en, this message translates to:
-  /// **'Message copied to clipboard'**
+  /// In fr, this message translates to:
+  /// **'Message copié dans le presse-papiers'**
   String get shareAppMessageCopied;
 
   /// No description provided for @onboardingTitle4.
   ///
-  /// In en, this message translates to:
-  /// **'Personalize Your Experience'**
+  /// In fr, this message translates to:
+  /// **'Personnalisez votre expérience'**
   String get onboardingTitle4;
 
   /// No description provided for @onboardingDesc4.
   ///
-  /// In en, this message translates to:
-  /// **'Choose your preferences to get the most out of Kale.'**
+  /// In fr, this message translates to:
+  /// **'Choisissez vos préférences pour tirer le meilleur parti de Kalé.'**
   String get onboardingDesc4;
 
   /// No description provided for @onboardingCurrency.
   ///
-  /// In en, this message translates to:
-  /// **'Currency'**
+  /// In fr, this message translates to:
+  /// **'Devise'**
   String get onboardingCurrency;
 
   /// No description provided for @onboardingLanguage.
   ///
-  /// In en, this message translates to:
-  /// **'Language'**
+  /// In fr, this message translates to:
+  /// **'Langue'**
   String get onboardingLanguage;
 
   /// No description provided for @onboardingGoal.
   ///
-  /// In en, this message translates to:
-  /// **'What\'s your primary goal?'**
+  /// In fr, this message translates to:
+  /// **'Quel est votre objectif principal ?'**
   String get onboardingGoal;
 
   /// No description provided for @onboardingGoalTrackSpending.
   ///
-  /// In en, this message translates to:
-  /// **'Track Spending'**
+  /// In fr, this message translates to:
+  /// **'Suivre mes dépenses'**
   String get onboardingGoalTrackSpending;
 
   /// No description provided for @onboardingGoalSaveMore.
   ///
-  /// In en, this message translates to:
-  /// **'Save More'**
+  /// In fr, this message translates to:
+  /// **'Épargner plus'**
   String get onboardingGoalSaveMore;
 
   /// No description provided for @onboardingGoalManageBudgets.
   ///
-  /// In en, this message translates to:
-  /// **'Manage Budgets'**
+  /// In fr, this message translates to:
+  /// **'Gérer mes budgets'**
   String get onboardingGoalManageBudgets;
 
   /// No description provided for @coachMarkFab.
   ///
-  /// In en, this message translates to:
-  /// **'Tap here to add your first transaction'**
+  /// In fr, this message translates to:
+  /// **'Appuyez ici pour ajouter votre première transaction'**
   String get coachMarkFab;
 
   /// No description provided for @coachMarkBudget.
   ///
-  /// In en, this message translates to:
-  /// **'Set up your monthly budget'**
+  /// In fr, this message translates to:
+  /// **'Configurez votre budget mensuel'**
   String get coachMarkBudget;
 
   /// No description provided for @coachMarkPeriod.
   ///
-  /// In en, this message translates to:
-  /// **'Switch between daily, weekly, and monthly views'**
+  /// In fr, this message translates to:
+  /// **'Basculez entre les vues quotidienne, hebdomadaire et mensuelle'**
   String get coachMarkPeriod;
 
   /// No description provided for @coachMarkGotIt.
   ///
-  /// In en, this message translates to:
-  /// **'Got it'**
+  /// In fr, this message translates to:
+  /// **'Compris'**
   String get coachMarkGotIt;
 
   /// No description provided for @profileTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Profile'**
+  /// In fr, this message translates to:
+  /// **'Profil'**
   String get profileTitle;
 
   /// No description provided for @profileEditProfile.
   ///
-  /// In en, this message translates to:
-  /// **'Edit Profile'**
+  /// In fr, this message translates to:
+  /// **'Modifier le profil'**
   String get profileEditProfile;
 
   /// No description provided for @profileChangePassword.
   ///
-  /// In en, this message translates to:
-  /// **'Change Password'**
+  /// In fr, this message translates to:
+  /// **'Changer le mot de passe'**
   String get profileChangePassword;
 
   /// No description provided for @profileLogout.
   ///
-  /// In en, this message translates to:
-  /// **'Logout'**
+  /// In fr, this message translates to:
+  /// **'Déconnexion'**
   String get profileLogout;
 
   /// No description provided for @profileAchievements.
   ///
-  /// In en, this message translates to:
-  /// **'Achievements'**
+  /// In fr, this message translates to:
+  /// **'Accomplissements'**
   String get profileAchievements;
 
   /// No description provided for @profileLevel.
   ///
-  /// In en, this message translates to:
-  /// **'Level: {level}'**
+  /// In fr, this message translates to:
+  /// **'Niveau : {level}'**
   String profileLevel(String level);
 
   /// No description provided for @profileBadgesUnlocked.
   ///
-  /// In en, this message translates to:
-  /// **'{count} of {total} badges unlocked'**
+  /// In fr, this message translates to:
+  /// **'{count} sur {total} badges débloqués'**
   String profileBadgesUnlocked(int count, int total);
 
   /// No description provided for @achievementFirstTransaction.
   ///
-  /// In en, this message translates to:
-  /// **'First Transaction'**
+  /// In fr, this message translates to:
+  /// **'Première transaction'**
   String get achievementFirstTransaction;
 
   /// No description provided for @achievementStreak7.
   ///
-  /// In en, this message translates to:
-  /// **'7-Day Streak'**
+  /// In fr, this message translates to:
+  /// **'Série de 7 jours'**
   String get achievementStreak7;
 
   /// No description provided for @achievementStreak30.
   ///
-  /// In en, this message translates to:
-  /// **'30-Day Streak'**
+  /// In fr, this message translates to:
+  /// **'Série de 30 jours'**
   String get achievementStreak30;
 
   /// No description provided for @achievementFirstBudget.
   ///
-  /// In en, this message translates to:
-  /// **'First Budget'**
+  /// In fr, this message translates to:
+  /// **'Premier budget'**
   String get achievementFirstBudget;
 
   /// No description provided for @achievementUnderBudget.
   ///
-  /// In en, this message translates to:
-  /// **'Under Budget'**
+  /// In fr, this message translates to:
+  /// **'Sous le budget'**
   String get achievementUnderBudget;
 
   /// No description provided for @achievementFirstGoalCompleted.
   ///
-  /// In en, this message translates to:
-  /// **'Goal Completed'**
+  /// In fr, this message translates to:
+  /// **'Objectif atteint'**
   String get achievementFirstGoalCompleted;
 
   /// No description provided for @achievementTransactions100.
   ///
-  /// In en, this message translates to:
-  /// **'100 Transactions'**
+  /// In fr, this message translates to:
+  /// **'100 transactions'**
   String get achievementTransactions100;
 
   /// No description provided for @levelBeginner.
   ///
-  /// In en, this message translates to:
-  /// **'Beginner'**
+  /// In fr, this message translates to:
+  /// **'Débutant'**
   String get levelBeginner;
 
   /// No description provided for @levelExplorer.
   ///
-  /// In en, this message translates to:
-  /// **'Explorer'**
+  /// In fr, this message translates to:
+  /// **'Explorateur'**
   String get levelExplorer;
 
   /// No description provided for @levelPro.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Pro'**
   String get levelPro;
 
   /// No description provided for @levelMaster.
   ///
-  /// In en, this message translates to:
-  /// **'Master'**
+  /// In fr, this message translates to:
+  /// **'Maître'**
   String get levelMaster;
 
   /// No description provided for @settingsTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Settings'**
+  /// In fr, this message translates to:
+  /// **'Paramètres'**
   String get settingsTitle;
 
   /// No description provided for @settingsAppearance.
   ///
-  /// In en, this message translates to:
-  /// **'Appearance'**
+  /// In fr, this message translates to:
+  /// **'Apparence'**
   String get settingsAppearance;
 
   /// No description provided for @settingsTheme.
   ///
-  /// In en, this message translates to:
-  /// **'Theme'**
+  /// In fr, this message translates to:
+  /// **'Thème'**
   String get settingsTheme;
 
   /// No description provided for @settingsThemeSystem.
   ///
-  /// In en, this message translates to:
-  /// **'System'**
+  /// In fr, this message translates to:
+  /// **'Système'**
   String get settingsThemeSystem;
 
   /// No description provided for @settingsThemeLight.
   ///
-  /// In en, this message translates to:
-  /// **'Light'**
+  /// In fr, this message translates to:
+  /// **'Clair'**
   String get settingsThemeLight;
 
   /// No description provided for @settingsThemeDark.
   ///
-  /// In en, this message translates to:
-  /// **'Dark'**
+  /// In fr, this message translates to:
+  /// **'Sombre'**
   String get settingsThemeDark;
 
   /// No description provided for @settingsLanguage.
   ///
-  /// In en, this message translates to:
-  /// **'Language'**
+  /// In fr, this message translates to:
+  /// **'Langue'**
   String get settingsLanguage;
 
   /// No description provided for @settingsLanguageEn.
   ///
-  /// In en, this message translates to:
-  /// **'English'**
+  /// In fr, this message translates to:
+  /// **'Anglais'**
   String get settingsLanguageEn;
 
   /// No description provided for @settingsLanguageFr.
   ///
-  /// In en, this message translates to:
-  /// **'French'**
+  /// In fr, this message translates to:
+  /// **'Français'**
   String get settingsLanguageFr;
+
+  /// No description provided for @settingsLanguageSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Langue de l\'appareil'**
+  String get settingsLanguageSystem;
 
   /// No description provided for @settingsAbout.
   ///
-  /// In en, this message translates to:
-  /// **'About'**
+  /// In fr, this message translates to:
+  /// **'À propos'**
   String get settingsAbout;
 
   /// No description provided for @settingsVersion.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Version {version}'**
   String settingsVersion(String version);
 
   /// No description provided for @settingsTerms.
   ///
-  /// In en, this message translates to:
-  /// **'Terms of Service'**
+  /// In fr, this message translates to:
+  /// **'Conditions d\'utilisation'**
   String get settingsTerms;
 
   /// No description provided for @settingsPrivacy.
   ///
-  /// In en, this message translates to:
-  /// **'Privacy Policy'**
+  /// In fr, this message translates to:
+  /// **'Politique de confidentialité'**
   String get settingsPrivacy;
 
   /// No description provided for @settingsCurrency.
   ///
-  /// In en, this message translates to:
-  /// **'Currency'**
+  /// In fr, this message translates to:
+  /// **'Devise'**
   String get settingsCurrency;
 
   /// No description provided for @settingsSelectCurrency.
   ///
-  /// In en, this message translates to:
-  /// **'Select Currency'**
+  /// In fr, this message translates to:
+  /// **'Sélectionner la devise'**
   String get settingsSelectCurrency;
 
   /// No description provided for @settingsNotifications.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Notifications'**
   String get settingsNotifications;
 
   /// No description provided for @settingsPushNotifications.
   ///
-  /// In en, this message translates to:
-  /// **'Push Notifications'**
+  /// In fr, this message translates to:
+  /// **'Notifications push'**
   String get settingsPushNotifications;
 
   /// No description provided for @settingsEnabled.
   ///
-  /// In en, this message translates to:
-  /// **'Enabled'**
+  /// In fr, this message translates to:
+  /// **'Activé'**
   String get settingsEnabled;
 
   /// No description provided for @settingsDisabled.
   ///
-  /// In en, this message translates to:
-  /// **'Disabled'**
+  /// In fr, this message translates to:
+  /// **'Désactivé'**
   String get settingsDisabled;
 
   /// No description provided for @settingsDailyReminder.
   ///
-  /// In en, this message translates to:
-  /// **'Daily Reminder'**
+  /// In fr, this message translates to:
+  /// **'Rappel quotidien'**
   String get settingsDailyReminder;
 
   /// No description provided for @settingsDailyReminderSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Remind me to log transactions'**
+  /// In fr, this message translates to:
+  /// **'Me rappeler de saisir mes transactions'**
   String get settingsDailyReminderSubtitle;
 
   /// No description provided for @settingsBudgetAlertThreshold.
   ///
-  /// In en, this message translates to:
-  /// **'Budget Alert Threshold'**
+  /// In fr, this message translates to:
+  /// **'Seuil d\'alerte budget'**
   String get settingsBudgetAlertThreshold;
 
   /// No description provided for @settingsBudgetAlertThresholdSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Alert when spending reaches {percentage}% of budget'**
+  /// In fr, this message translates to:
+  /// **'Alerte lorsque les dépenses atteignent {percentage} % du budget'**
   String settingsBudgetAlertThresholdSubtitle(int percentage);
 
   /// No description provided for @settingsData.
   ///
-  /// In en, this message translates to:
-  /// **'Data'**
+  /// In fr, this message translates to:
+  /// **'Données'**
   String get settingsData;
 
   /// No description provided for @settingsClearLocalData.
   ///
-  /// In en, this message translates to:
-  /// **'Clear Local Data'**
+  /// In fr, this message translates to:
+  /// **'Effacer les données locales'**
   String get settingsClearLocalData;
 
   /// No description provided for @settingsClearLocalDataSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Remove all cached data from this device'**
+  /// In fr, this message translates to:
+  /// **'Supprimer toutes les données en cache de cet appareil'**
   String get settingsClearLocalDataSubtitle;
 
   /// No description provided for @settingsClearLocalDataConfirm.
   ///
-  /// In en, this message translates to:
-  /// **'This will remove all cached data from this device. Your account and synced data on the server will not be affected.\n\nAre you sure?'**
+  /// In fr, this message translates to:
+  /// **'Cela supprimera toutes les données en cache de cet appareil. Votre compte et vos données synchronisées sur le serveur ne seront pas affectés.\n\nÊtes-vous sûr ?'**
   String get settingsClearLocalDataConfirm;
 
   /// No description provided for @settingsClearLocalDataSuccess.
   ///
-  /// In en, this message translates to:
-  /// **'Local data cleared'**
+  /// In fr, this message translates to:
+  /// **'Données locales effacées'**
   String get settingsClearLocalDataSuccess;
 
   /// No description provided for @legalLastUpdated.
   ///
-  /// In en, this message translates to:
-  /// **'Last updated: February 20, 2026'**
+  /// In fr, this message translates to:
+  /// **'Dernière mise à jour : 20 février 2026'**
   String get legalLastUpdated;
 
   /// No description provided for @legalContactFooter.
   ///
-  /// In en, this message translates to:
-  /// **'If you have any questions, contact us at support@kale.app'**
+  /// In fr, this message translates to:
+  /// **'Si vous avez des questions, contactez-nous à support@kale.app'**
   String get legalContactFooter;
 
   /// No description provided for @legalTosTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Terms of Service'**
+  /// In fr, this message translates to:
+  /// **'Conditions d\'utilisation'**
   String get legalTosTitle;
 
   /// No description provided for @legalTosIntroHeading.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'1. Introduction'**
   String get legalTosIntroHeading;
 
   /// No description provided for @legalTosIntroBody.
   ///
-  /// In en, this message translates to:
-  /// **'Welcome to Kale. These Terms of Service govern your use of the Kale mobile application and related services. By creating an account or using Kale, you agree to be bound by these terms. If you do not agree, please do not use the app.'**
+  /// In fr, this message translates to:
+  /// **'Bienvenue sur Kalé. Ces Conditions d\'utilisation régissent votre utilisation de l\'application mobile Kalé et des services associés. En créant un compte ou en utilisant Kalé, vous acceptez d\'être lié par ces conditions. Si vous n\'êtes pas d\'accord, veuillez ne pas utiliser l\'application.'**
   String get legalTosIntroBody;
 
   /// No description provided for @legalTosAccountHeading.
   ///
-  /// In en, this message translates to:
-  /// **'2. Account Registration'**
+  /// In fr, this message translates to:
+  /// **'2. Inscription au compte'**
   String get legalTosAccountHeading;
 
   /// No description provided for @legalTosAccountBody.
   ///
-  /// In en, this message translates to:
-  /// **'To use Kale, you must create an account with accurate and complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. You must be at least 13 years old to create an account. If you are under 18, you confirm that you have your parent or guardian\'s consent.'**
+  /// In fr, this message translates to:
+  /// **'Pour utiliser Kalé, vous devez créer un compte avec des informations exactes et complètes. Vous êtes responsable du maintien de la confidentialité de vos identifiants de connexion et de toute activité sous votre compte. Vous devez avoir au moins 13 ans pour créer un compte. Si vous avez moins de 18 ans, vous confirmez avoir le consentement de votre parent ou tuteur.'**
   String get legalTosAccountBody;
 
   /// No description provided for @legalTosServicesHeading.
   ///
-  /// In en, this message translates to:
-  /// **'3. Services Provided'**
+  /// In fr, this message translates to:
+  /// **'3. Services fournis'**
   String get legalTosServicesHeading;
 
   /// No description provided for @legalTosServicesBody.
   ///
-  /// In en, this message translates to:
-  /// **'Kale provides personal finance management tools including expense and income tracking, budget creation and monitoring, savings goal management, and financial insights. These tools are designed to help you organize and understand your personal finances.'**
+  /// In fr, this message translates to:
+  /// **'Kalé fournit des outils de gestion des finances personnelles comprenant le suivi des dépenses et des revenus, la création et le suivi de budgets, la gestion des objectifs d\'épargne et des analyses financières. Ces outils sont conçus pour vous aider à organiser et comprendre vos finances personnelles.'**
   String get legalTosServicesBody;
 
   /// No description provided for @legalTosResponsibilitiesHeading.
   ///
-  /// In en, this message translates to:
-  /// **'4. User Responsibilities'**
+  /// In fr, this message translates to:
+  /// **'4. Responsabilités de l\'utilisateur'**
   String get legalTosResponsibilitiesHeading;
 
   /// No description provided for @legalTosResponsibilitiesBody.
   ///
-  /// In en, this message translates to:
-  /// **'You are solely responsible for the accuracy of the financial data you enter into Kale. Kale is a tracking and organizational tool and does not provide professional financial, investment, tax, or legal advice. You agree to use the app in compliance with all applicable laws and regulations.'**
+  /// In fr, this message translates to:
+  /// **'Vous êtes seul responsable de l\'exactitude des données financières que vous saisissez dans Kalé. Kalé est un outil de suivi et d\'organisation et ne fournit pas de conseils financiers, d\'investissement, fiscaux ou juridiques professionnels. Vous acceptez d\'utiliser l\'application conformément à toutes les lois et réglementations applicables.'**
   String get legalTosResponsibilitiesBody;
 
   /// No description provided for @legalTosFinancialDataHeading.
   ///
-  /// In en, this message translates to:
-  /// **'5. Financial Data'**
+  /// In fr, this message translates to:
+  /// **'5. Données financières'**
   String get legalTosFinancialDataHeading;
 
   /// No description provided for @legalTosFinancialDataBody.
   ///
-  /// In en, this message translates to:
-  /// **'Kale is not a bank, payment processor, or financial institution. We do not hold, transfer, or have custody of your funds. All financial data within Kale is user-entered information intended for personal tracking purposes only. We do not verify the accuracy of transactions, balances, or other financial information you enter.'**
+  /// In fr, this message translates to:
+  /// **'Kalé n\'est pas une banque, un processeur de paiement ou une institution financière. Nous ne détenons pas, ne transférons pas et n\'avons pas la garde de vos fonds. Toutes les données financières dans Kalé sont des informations saisies par l\'utilisateur à des fins de suivi personnel uniquement. Nous ne vérifions pas l\'exactitude des transactions, soldes ou autres informations financières que vous saisissez.'**
   String get legalTosFinancialDataBody;
 
   /// No description provided for @legalTosIpHeading.
   ///
-  /// In en, this message translates to:
-  /// **'6. Intellectual Property'**
+  /// In fr, this message translates to:
+  /// **'6. Propriété intellectuelle'**
   String get legalTosIpHeading;
 
   /// No description provided for @legalTosIpBody.
   ///
-  /// In en, this message translates to:
-  /// **'The Kale app, including its design, code, features, and branding, is owned by Kale and protected by intellectual property laws. You retain full ownership of the personal data and financial information you enter into the app. You grant Kale a limited license to process your data solely to provide and improve the services.'**
+  /// In fr, this message translates to:
+  /// **'L\'application Kalé, y compris sa conception, son code, ses fonctionnalités et sa marque, est la propriété de Kalé et protégée par les lois sur la propriété intellectuelle. Vous conservez la pleine propriété des données personnelles et des informations financières que vous saisissez dans l\'application. Vous accordez à Kalé une licence limitée pour traiter vos données uniquement pour fournir et améliorer les services.'**
   String get legalTosIpBody;
 
   /// No description provided for @legalTosLiabilityHeading.
   ///
-  /// In en, this message translates to:
-  /// **'7. Limitation of Liability'**
+  /// In fr, this message translates to:
+  /// **'7. Limitation de responsabilité'**
   String get legalTosLiabilityHeading;
 
   /// No description provided for @legalTosLiabilityBody.
   ///
-  /// In en, this message translates to:
-  /// **'Kale is provided on an \"as is\" basis. We are not liable for any financial decisions you make based on information displayed in the app. We do not guarantee the accuracy of calculations, summaries, or insights derived from your data. To the maximum extent permitted by law, Kale shall not be liable for any indirect, incidental, or consequential damages.'**
+  /// In fr, this message translates to:
+  /// **'Kalé est fourni \"en l\'état\". Nous ne sommes pas responsables des décisions financières que vous prenez sur la base des informations affichées dans l\'application. Nous ne garantissons pas l\'exactitude des calculs, résumés ou analyses dérivées de vos données. Dans la mesure maximale permise par la loi, Kalé ne sera pas responsable des dommages indirects, accessoires ou consécutifs.'**
   String get legalTosLiabilityBody;
 
   /// No description provided for @legalTosTerminationHeading.
   ///
-  /// In en, this message translates to:
-  /// **'8. Termination'**
+  /// In fr, this message translates to:
+  /// **'8. Résiliation'**
   String get legalTosTerminationHeading;
 
   /// No description provided for @legalTosTerminationBody.
   ///
-  /// In en, this message translates to:
-  /// **'You may delete your account at any time through the app settings. We may suspend or terminate your account if you violate these terms. Upon termination, your data will be deleted from our servers within 30 days unless retention is required by law.'**
+  /// In fr, this message translates to:
+  /// **'Vous pouvez supprimer votre compte à tout moment via les paramètres de l\'application. Nous pouvons suspendre ou résilier votre compte si vous violez ces conditions. À la résiliation, vos données seront supprimées de nos serveurs dans les 30 jours, sauf si la conservation est requise par la loi.'**
   String get legalTosTerminationBody;
 
   /// No description provided for @legalTosChangesHeading.
   ///
-  /// In en, this message translates to:
-  /// **'9. Changes to These Terms'**
+  /// In fr, this message translates to:
+  /// **'9. Modifications de ces conditions'**
   String get legalTosChangesHeading;
 
   /// No description provided for @legalTosChangesBody.
   ///
-  /// In en, this message translates to:
-  /// **'We may update these Terms of Service from time to time. We will notify you of material changes through the app or by email. Your continued use of Kale after changes are posted constitutes your acceptance of the updated terms.'**
+  /// In fr, this message translates to:
+  /// **'Nous pouvons mettre à jour ces Conditions d\'utilisation de temps en temps. Nous vous informerons des modifications importantes via l\'application ou par e-mail. Votre utilisation continue de Kalé après la publication des modifications constitue votre acceptation des conditions mises à jour.'**
   String get legalTosChangesBody;
 
   /// No description provided for @legalTosContactHeading.
   ///
-  /// In en, this message translates to:
-  /// **'10. Contact Us'**
+  /// In fr, this message translates to:
+  /// **'10. Nous contacter'**
   String get legalTosContactHeading;
 
   /// No description provided for @legalTosContactBody.
   ///
-  /// In en, this message translates to:
-  /// **'If you have questions about these Terms of Service, please contact us at support@kale.app.'**
+  /// In fr, this message translates to:
+  /// **'Si vous avez des questions sur ces Conditions d\'utilisation, veuillez nous contacter à support@kale.app.'**
   String get legalTosContactBody;
 
   /// No description provided for @legalPrivacyTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Privacy Policy'**
+  /// In fr, this message translates to:
+  /// **'Politique de confidentialité'**
   String get legalPrivacyTitle;
 
   /// No description provided for @legalPrivacyIntroHeading.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'1. Introduction'**
   String get legalPrivacyIntroHeading;
 
   /// No description provided for @legalPrivacyIntroBody.
   ///
-  /// In en, this message translates to:
-  /// **'Your privacy is important to us. This Privacy Policy explains how Kale collects, uses, stores, and protects your personal and financial information. We are committed to handling your data with transparency and care.'**
+  /// In fr, this message translates to:
+  /// **'Votre vie privée est importante pour nous. Cette Politique de confidentialité explique comment Kalé collecte, utilise, stocke et protège vos informations personnelles et financières. Nous nous engageons à traiter vos données avec transparence et soin.'**
   String get legalPrivacyIntroBody;
 
   /// No description provided for @legalPrivacyCollectionHeading.
   ///
-  /// In en, this message translates to:
-  /// **'2. Information We Collect'**
+  /// In fr, this message translates to:
+  /// **'2. Informations que nous collectons'**
   String get legalPrivacyCollectionHeading;
 
   /// No description provided for @legalPrivacyCollectionBody.
   ///
-  /// In en, this message translates to:
-  /// **'We collect the following types of information:\n\nAccount Information: Your name, email address, and authentication credentials when you create an account.\n\nFinancial Data: Transaction records, budget configurations, savings goals, and category preferences that you enter into the app.\n\nUsage Data: Anonymous analytics about how you interact with the app, including screen views and feature usage, to help us improve the experience.\n\nDevice Information: Device type, operating system version, and app version for compatibility and troubleshooting purposes.'**
+  /// In fr, this message translates to:
+  /// **'Nous collectons les types d\'informations suivants :\n\nInformations de compte : Votre nom, adresse e-mail et identifiants d\'authentification lors de la création de votre compte.\n\nDonnées financières : Enregistrements de transactions, configurations de budget, objectifs d\'épargne et préférences de catégories que vous saisissez dans l\'application.\n\nDonnées d\'utilisation : Analyses anonymes de la façon dont vous interagissez avec l\'application, y compris les vues d\'écran et l\'utilisation des fonctionnalités, pour nous aider à améliorer l\'expérience.\n\nInformations sur l\'appareil : Type d\'appareil, version du système d\'exploitation et version de l\'application à des fins de compatibilité et de dépannage.'**
   String get legalPrivacyCollectionBody;
 
   /// No description provided for @legalPrivacyUsageHeading.
   ///
-  /// In en, this message translates to:
-  /// **'3. How We Use Your Data'**
+  /// In fr, this message translates to:
+  /// **'3. Comment nous utilisons vos données'**
   String get legalPrivacyUsageHeading;
 
   /// No description provided for @legalPrivacyUsageBody.
   ///
-  /// In en, this message translates to:
-  /// **'We use your information to:\n\n- Provide, maintain, and improve Kale\'s features and services\n- Generate personalized financial summaries, charts, and insights\n- Send you notifications such as budget alerts and daily reminders (when enabled)\n- Authenticate your identity and secure your account\n- Analyze aggregate usage patterns to improve the app experience'**
+  /// In fr, this message translates to:
+  /// **'Nous utilisons vos informations pour :\n\n- Fournir, maintenir et améliorer les fonctionnalités et services de Kalé\n- Générer des résumés financiers personnalisés, des graphiques et des analyses\n- Vous envoyer des notifications telles que des alertes de budget et des rappels quotidiens (lorsqu\'ils sont activés)\n- Authentifier votre identité et sécuriser votre compte\n- Analyser les tendances d\'utilisation agrégées pour améliorer l\'expérience de l\'application'**
   String get legalPrivacyUsageBody;
 
   /// No description provided for @legalPrivacyStorageHeading.
   ///
-  /// In en, this message translates to:
-  /// **'4. Data Storage & Security'**
+  /// In fr, this message translates to:
+  /// **'4. Stockage et sécurité des données'**
   String get legalPrivacyStorageHeading;
 
   /// No description provided for @legalPrivacyStorageBody.
   ///
-  /// In en, this message translates to:
-  /// **'Your data is stored securely using industry-standard practices. All data is encrypted in transit using TLS and at rest on our servers. We use Supabase as our backend infrastructure, which provides enterprise-grade security, access controls, and data isolation. We regularly review our security practices and limit access to your data to authorized personnel only.'**
+  /// In fr, this message translates to:
+  /// **'Vos données sont stockées de manière sécurisée en utilisant des pratiques conformes aux normes de l\'industrie. Toutes les données sont chiffrées en transit via TLS et au repos sur nos serveurs. Nous utilisons Supabase comme infrastructure backend, qui fournit une sécurité de niveau entreprise, des contrôles d\'accès et une isolation des données. Nous révisons régulièrement nos pratiques de sécurité et limitons l\'accès à vos données au personnel autorisé uniquement.'**
   String get legalPrivacyStorageBody;
 
   /// No description provided for @legalPrivacyThirdPartyHeading.
   ///
-  /// In en, this message translates to:
-  /// **'5. Third-Party Services'**
+  /// In fr, this message translates to:
+  /// **'5. Services tiers'**
   String get legalPrivacyThirdPartyHeading;
 
   /// No description provided for @legalPrivacyThirdPartyBody.
   ///
-  /// In en, this message translates to:
-  /// **'Kale integrates with the following third-party services:\n\n- Google Sign-In and Apple Sign-In for authentication\n- Analytics services for anonymous usage tracking\n- Crash reporting services to identify and fix app issues\n\nWe do not sell, rent, or share your personal or financial data with third parties for marketing purposes. Third-party services only receive the minimum data necessary to perform their function.'**
+  /// In fr, this message translates to:
+  /// **'Kalé s\'intègre aux services tiers suivants :\n\n- Google Sign-In et Apple Sign-In pour l\'authentification\n- Services d\'analyse pour le suivi anonyme de l\'utilisation\n- Services de signalement de crash pour identifier et corriger les problèmes de l\'application\n\nNous ne vendons pas, ne louons pas et ne partageons pas vos données personnelles ou financières avec des tiers à des fins de marketing. Les services tiers ne reçoivent que les données minimales nécessaires pour remplir leur fonction.'**
   String get legalPrivacyThirdPartyBody;
 
   /// No description provided for @legalPrivacyRightsHeading.
   ///
-  /// In en, this message translates to:
-  /// **'6. Your Rights'**
+  /// In fr, this message translates to:
+  /// **'6. Vos droits'**
   String get legalPrivacyRightsHeading;
 
   /// No description provided for @legalPrivacyRightsBody.
   ///
-  /// In en, this message translates to:
-  /// **'You have the right to:\n\n- Access the personal data we hold about you\n- Correct inaccurate information in your account\n- Delete your account and all associated data\n- Export your financial data\n- Restrict or object to certain processing of your data\n\nTo exercise any of these rights, contact us at privacy@kale.app or use the account management features within the app.'**
+  /// In fr, this message translates to:
+  /// **'Vous avez le droit de :\n\n- Accéder aux données personnelles que nous détenons sur vous\n- Corriger les informations inexactes de votre compte\n- Supprimer votre compte et toutes les données associées\n- Exporter vos données financières\n- Restreindre ou vous opposer à certains traitements de vos données\n\nPour exercer l\'un de ces droits, contactez-nous à privacy@kale.app ou utilisez les fonctionnalités de gestion de compte dans l\'application.'**
   String get legalPrivacyRightsBody;
 
   /// No description provided for @legalPrivacyRetentionHeading.
   ///
-  /// In en, this message translates to:
-  /// **'7. Data Retention'**
+  /// In fr, this message translates to:
+  /// **'7. Conservation des données'**
   String get legalPrivacyRetentionHeading;
 
   /// No description provided for @legalPrivacyRetentionBody.
   ///
-  /// In en, this message translates to:
-  /// **'We retain your data for as long as your account is active. If you delete your account, we will remove your personal and financial data from our servers within 30 days. Some anonymized, aggregate data may be retained for analytical purposes. We may also retain certain data as required by law.'**
+  /// In fr, this message translates to:
+  /// **'Nous conservons vos données aussi longtemps que votre compte est actif. Si vous supprimez votre compte, nous supprimerons vos données personnelles et financières de nos serveurs dans les 30 jours. Certaines données anonymisées et agrégées peuvent être conservées à des fins d\'analyse. Nous pouvons également conserver certaines données comme requis par la loi.'**
   String get legalPrivacyRetentionBody;
 
   /// No description provided for @legalPrivacyChildrenHeading.
   ///
-  /// In en, this message translates to:
-  /// **'8. Children\'s Privacy'**
+  /// In fr, this message translates to:
+  /// **'8. Vie privée des enfants'**
   String get legalPrivacyChildrenHeading;
 
   /// No description provided for @legalPrivacyChildrenBody.
   ///
-  /// In en, this message translates to:
-  /// **'Kale is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected data from a child under 13 without parental consent, we will take steps to delete that information promptly.'**
+  /// In fr, this message translates to:
+  /// **'Kalé ne s\'adresse pas aux enfants de moins de 13 ans. Nous ne collectons pas sciemment d\'informations personnelles auprès d\'enfants de moins de 13 ans. Si nous apprenons que nous avons collecté des données d\'un enfant de moins de 13 ans sans le consentement parental, nous prendrons des mesures pour supprimer ces informations rapidement.'**
   String get legalPrivacyChildrenBody;
 
   /// No description provided for @legalPrivacyChangesHeading.
   ///
-  /// In en, this message translates to:
-  /// **'9. Changes to This Policy'**
+  /// In fr, this message translates to:
+  /// **'9. Modifications de cette politique'**
   String get legalPrivacyChangesHeading;
 
   /// No description provided for @legalPrivacyChangesBody.
   ///
-  /// In en, this message translates to:
-  /// **'We may update this Privacy Policy from time to time. We will notify you of material changes through an in-app notice or by email. We encourage you to review this policy periodically. Your continued use of Kale after changes are posted constitutes your acceptance of the updated policy.'**
+  /// In fr, this message translates to:
+  /// **'Nous pouvons mettre à jour cette Politique de confidentialité de temps en temps. Nous vous informerons des modifications importantes via une notification dans l\'application ou par e-mail. Nous vous encourageons à consulter cette politique périodiquement. Votre utilisation continue de Kalé après la publication des modifications constitue votre acceptation de la politique mise à jour.'**
   String get legalPrivacyChangesBody;
 
   /// No description provided for @legalPrivacyContactHeading.
   ///
-  /// In en, this message translates to:
-  /// **'10. Contact Us'**
+  /// In fr, this message translates to:
+  /// **'10. Nous contacter'**
   String get legalPrivacyContactHeading;
 
   /// No description provided for @legalPrivacyContactBody.
   ///
-  /// In en, this message translates to:
-  /// **'If you have questions about this Privacy Policy or how your data is handled, please contact us at privacy@kale.app.'**
+  /// In fr, this message translates to:
+  /// **'Si vous avez des questions sur cette Politique de confidentialité ou sur la façon dont vos données sont traitées, veuillez nous contacter à privacy@kale.app.'**
   String get legalPrivacyContactBody;
 
   /// No description provided for @offlineBanner.
   ///
-  /// In en, this message translates to:
-  /// **'You are offline'**
+  /// In fr, this message translates to:
+  /// **'Vous êtes hors ligne'**
   String get offlineBanner;
 
   /// No description provided for @emptyStateTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Nothing here yet'**
+  /// In fr, this message translates to:
+  /// **'Rien ici pour le moment'**
   String get emptyStateTitle;
 
   /// No description provided for @emptyStateSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Check back later for updates.'**
+  /// In fr, this message translates to:
+  /// **'Revenez plus tard pour les mises à jour.'**
   String get emptyStateSubtitle;
 
   /// No description provided for @budgetEmptyRecommendation.
   ///
-  /// In en, this message translates to:
-  /// **'We recommend the 50/30/20 rule to get started'**
+  /// In fr, this message translates to:
+  /// **'Nous recommandons la règle 50/30/20 pour commencer'**
   String get budgetEmptyRecommendation;
 
   /// No description provided for @budgetStartWith5030.
   ///
-  /// In en, this message translates to:
-  /// **'Start with 50/30/20'**
+  /// In fr, this message translates to:
+  /// **'Commencer avec 50/30/20'**
   String get budgetStartWith5030;
 
   /// No description provided for @budgetCustomBudget.
   ///
-  /// In en, this message translates to:
-  /// **'Custom Budget'**
+  /// In fr, this message translates to:
+  /// **'Budget personnalise'**
   String get budgetCustomBudget;
 
   /// No description provided for @budgetEmptyQuickTip.
   ///
-  /// In en, this message translates to:
-  /// **'It only takes a minute to set up'**
+  /// In fr, this message translates to:
+  /// **'Cela ne prend qu\'une minute à configurer'**
   String get budgetEmptyQuickTip;
 
   /// No description provided for @savingsEmptyTemplateTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Popular goals to get you started'**
+  /// In fr, this message translates to:
+  /// **'Objectifs populaires pour vous inspirer'**
   String get savingsEmptyTemplateTitle;
 
   /// No description provided for @savingsTemplateEmergency.
   ///
-  /// In en, this message translates to:
-  /// **'Emergency Fund'**
+  /// In fr, this message translates to:
+  /// **'Fonds d\'urgence'**
   String get savingsTemplateEmergency;
 
   /// No description provided for @savingsTemplateVacation.
   ///
-  /// In en, this message translates to:
-  /// **'Vacation'**
+  /// In fr, this message translates to:
+  /// **'Vacances'**
   String get savingsTemplateVacation;
 
   /// No description provided for @savingsTemplateNewPhone.
   ///
-  /// In en, this message translates to:
-  /// **'New Phone'**
+  /// In fr, this message translates to:
+  /// **'Nouveau téléphone'**
   String get savingsTemplateNewPhone;
 
   /// No description provided for @savingsEmptyOrCreate.
   ///
-  /// In en, this message translates to:
-  /// **'Or create your own goal'**
+  /// In fr, this message translates to:
+  /// **'Ou créez votre propre objectif'**
   String get savingsEmptyOrCreate;
 
   /// No description provided for @transactionsEmptyQuickTip.
   ///
-  /// In en, this message translates to:
-  /// **'It takes just 10 seconds'**
+  /// In fr, this message translates to:
+  /// **'Cela ne prend que 10 secondes'**
   String get transactionsEmptyQuickTip;
 
   /// No description provided for @dashboardEmptyTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Welcome to Kale!'**
+  /// In fr, this message translates to:
+  /// **'Bienvenue sur Kalé !'**
   String get dashboardEmptyTitle;
 
   /// No description provided for @dashboardEmptySubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Complete these steps to get the most out of your finances:'**
+  /// In fr, this message translates to:
+  /// **'Complétez ces étapes pour tirer le meilleur parti de vos finances :'**
   String get dashboardEmptySubtitle;
 
   /// No description provided for @dashboardEmptyStep1.
   ///
-  /// In en, this message translates to:
-  /// **'Add your first transaction'**
+  /// In fr, this message translates to:
+  /// **'Ajoutez votre première transaction'**
   String get dashboardEmptyStep1;
 
   /// No description provided for @dashboardEmptyStep2.
   ///
-  /// In en, this message translates to:
-  /// **'Set up a budget'**
+  /// In fr, this message translates to:
+  /// **'Configurez un budget'**
   String get dashboardEmptyStep2;
 
   /// No description provided for @dashboardEmptyStep3.
   ///
-  /// In en, this message translates to:
-  /// **'Create a savings goal'**
+  /// In fr, this message translates to:
+  /// **'Créez un objectif d\'épargne'**
   String get dashboardEmptyStep3;
 
   /// No description provided for @dashboardStreak.
   ///
-  /// In en, this message translates to:
-  /// **'{count}-day streak'**
+  /// In fr, this message translates to:
+  /// **'Série de {count} jours'**
   String dashboardStreak(int count);
 
   /// No description provided for @dashboardStreakStart.
   ///
-  /// In en, this message translates to:
-  /// **'Start your streak!'**
+  /// In fr, this message translates to:
+  /// **'Commencez votre série !'**
   String get dashboardStreakStart;
 
   /// No description provided for @dashboardFinancialHealth.
   ///
-  /// In en, this message translates to:
-  /// **'Financial Health'**
+  /// In fr, this message translates to:
+  /// **'Santé financière'**
   String get dashboardFinancialHealth;
 
   /// No description provided for @dashboardHealthExcellent.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Excellent'**
   String get dashboardHealthExcellent;
 
   /// No description provided for @dashboardHealthGood.
   ///
-  /// In en, this message translates to:
-  /// **'Good'**
+  /// In fr, this message translates to:
+  /// **'Bien'**
   String get dashboardHealthGood;
 
   /// No description provided for @dashboardHealthFair.
   ///
-  /// In en, this message translates to:
-  /// **'Fair'**
+  /// In fr, this message translates to:
+  /// **'Moyen'**
   String get dashboardHealthFair;
 
   /// No description provided for @dashboardHealthNeedsWork.
   ///
-  /// In en, this message translates to:
-  /// **'Needs work'**
+  /// In fr, this message translates to:
+  /// **'À améliorer'**
   String get dashboardHealthNeedsWork;
 
   /// No description provided for @notificationsTitle.
   ///
-  /// In en, this message translates to:
+  /// In fr, this message translates to:
   /// **'Notifications'**
   String get notificationsTitle;
 
   /// No description provided for @notificationsEmpty.
   ///
-  /// In en, this message translates to:
-  /// **'No notifications yet'**
+  /// In fr, this message translates to:
+  /// **'Aucune notification'**
   String get notificationsEmpty;
 
   /// No description provided for @notificationsEmptySubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'You\'re all caught up! Notifications about your budgets, savings, and reminders will appear here.'**
+  /// In fr, this message translates to:
+  /// **'Vous êtes à jour ! Les notifications concernant vos budgets, épargnes et rappels apparaîtront ici.'**
   String get notificationsEmptySubtitle;
 
   /// No description provided for @baseCurrencyStepTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Choose your currency'**
+  /// In fr, this message translates to:
+  /// **'Choisissez votre devise'**
   String get baseCurrencyStepTitle;
 
   /// No description provided for @baseCurrencyStepDescription.
   ///
-  /// In en, this message translates to:
-  /// **'Every amount in Kalé is recorded in this currency. You can change it later.'**
+  /// In fr, this message translates to:
+  /// **'Tous les montants dans Kalé sont enregistrés dans cette devise. Vous pourrez la changer plus tard.'**
   String get baseCurrencyStepDescription;
 
   /// No description provided for @baseCurrencyLabel.
   ///
-  /// In en, this message translates to:
-  /// **'Base currency'**
+  /// In fr, this message translates to:
+  /// **'Devise de base'**
   String get baseCurrencyLabel;
 
   /// No description provided for @baseCurrencyRelabelTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Change base currency?'**
+  /// In fr, this message translates to:
+  /// **'Changer la devise de base ?'**
   String get baseCurrencyRelabelTitle;
 
   /// No description provided for @baseCurrencyRelabelMessage.
   ///
-  /// In en, this message translates to:
-  /// **'Your existing transactions keep the same numbers and will be shown in {currency}. Nothing is converted.'**
+  /// In fr, this message translates to:
+  /// **'Vos transactions existantes gardent les mêmes chiffres et seront affichées en {currency}. Aucune conversion n\'est faite.'**
   String baseCurrencyRelabelMessage(String currency);
 
   /// No description provided for @baseCurrencyRelabelConfirm.
   ///
-  /// In en, this message translates to:
-  /// **'Change anyway'**
+  /// In fr, this message translates to:
+  /// **'Changer quand même'**
   String get baseCurrencyRelabelConfirm;
 
   /// No description provided for @baseCurrencyChangeFailed.
   ///
-  /// In en, this message translates to:
-  /// **'Could not change the currency. Please try again.'**
+  /// In fr, this message translates to:
+  /// **'Impossible de changer la devise. Veuillez réessayer.'**
   String get baseCurrencyChangeFailed;
 
   /// Sync banner and Settings: changes that failed every retry
   ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 change not backed up} other{{count} changes not backed up}}'**
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 modification non sauvegardée} other{{count} modifications non sauvegardées}}'**
   String backupStuck(int count);
 
   /// Sync banner while offline with changes not yet backed up
   ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{Offline · 1 change waiting} other{Offline · {count} changes waiting}}'**
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Hors ligne · 1 modification en attente} other{Hors ligne · {count} modifications en attente}}'**
   String backupOfflinePending(int count);
 
   /// No description provided for @backupSyncing.
   ///
-  /// In en, this message translates to:
-  /// **'Backing up…'**
+  /// In fr, this message translates to:
+  /// **'Sauvegarde en cours…'**
   String get backupSyncing;
 
   /// No description provided for @settingsBackup.
   ///
-  /// In en, this message translates to:
-  /// **'Backup'**
+  /// In fr, this message translates to:
+  /// **'Sauvegarde'**
   String get settingsBackup;
 
   /// No description provided for @settingsBackupUpToDate.
   ///
-  /// In en, this message translates to:
-  /// **'All changes backed up'**
+  /// In fr, this message translates to:
+  /// **'Toutes les modifications sont sauvegardées'**
   String get settingsBackupUpToDate;
 
   /// No description provided for @settingsBackupPending.
   ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 change waiting to back up} other{{count} changes waiting to back up}}'**
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 modification en attente de sauvegarde} other{{count} modifications en attente de sauvegarde}}'**
   String settingsBackupPending(int count);
 
   /// No description provided for @settingsBackupLast.
   ///
-  /// In en, this message translates to:
-  /// **'Last backup: {date}'**
+  /// In fr, this message translates to:
+  /// **'Dernière sauvegarde : {date}'**
   String settingsBackupLast(String date);
 
   /// No description provided for @settingsBackupNever.
   ///
-  /// In en, this message translates to:
-  /// **'Not backed up yet'**
+  /// In fr, this message translates to:
+  /// **'Pas encore sauvegardé'**
   String get settingsBackupNever;
 
   /// No description provided for @logoutUnsavedTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Log out and lose changes?'**
+  /// In fr, this message translates to:
+  /// **'Se déconnecter et perdre des modifications ?'**
   String get logoutUnsavedTitle;
 
   /// No description provided for @logoutUnsavedMessage.
   ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 change isn\'t backed up yet. If you log out now, it will be lost for good.} other{{count} changes aren\'t backed up yet. If you log out now, they will be lost for good.}}'**
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 modification n\'est pas encore sauvegardée. Si vous vous déconnectez maintenant, elle sera définitivement perdue.} other{{count} modifications ne sont pas encore sauvegardées. Si vous vous déconnectez maintenant, elles seront définitivement perdues.}}'**
   String logoutUnsavedMessage(int count);
 
   /// No description provided for @logoutUnsavedConfirm.
   ///
-  /// In en, this message translates to:
-  /// **'Log out anyway'**
+  /// In fr, this message translates to:
+  /// **'Se déconnecter quand même'**
   String get logoutUnsavedConfirm;
 
   /// No description provided for @logoutUnsavedCancel.
   ///
-  /// In en, this message translates to:
-  /// **'Stay logged in'**
+  /// In fr, this message translates to:
+  /// **'Rester connecté'**
   String get logoutUnsavedCancel;
 
   /// No description provided for @logoutFailed.
   ///
-  /// In en, this message translates to:
-  /// **'Couldn\'t check your backup. Please try again.'**
+  /// In fr, this message translates to:
+  /// **'Impossible de vérifier votre sauvegarde. Veuillez réessayer.'**
   String get logoutFailed;
 
   /// No description provided for @restoreInProgress.
   ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =0{Restoring your data…} =1{Restoring your data… 1 item} other{Restoring your data… {count} items}}'**
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Restauration de vos données…} =1{Restauration de vos données… 1 élément} other{Restauration de vos données… {count} éléments}}'**
   String restoreInProgress(int count);
 
   /// No description provided for @refreshOffline.
   ///
-  /// In en, this message translates to:
-  /// **'You\'re offline. Pull to refresh again once you\'re connected.'**
+  /// In fr, this message translates to:
+  /// **'Vous êtes hors ligne. Tirez pour actualiser une fois connecté.'**
   String get refreshOffline;
 
   /// No description provided for @refreshFailed.
   ///
-  /// In en, this message translates to:
-  /// **'Couldn\'t refresh from your backup. Please try again.'**
+  /// In fr, this message translates to:
+  /// **'Impossible d\'actualiser depuis votre sauvegarde. Veuillez réessayer.'**
   String get refreshFailed;
 
   /// No description provided for @saveDataTitle.
   ///
-  /// In en, this message translates to:
-  /// **'Save your data'**
+  /// In fr, this message translates to:
+  /// **'Sauvegarder vos données'**
   String get saveDataTitle;
 
   /// No description provided for @saveDataSubtitle.
   ///
-  /// In en, this message translates to:
-  /// **'Create an account to keep everything you entered, on this phone and any other.'**
+  /// In fr, this message translates to:
+  /// **'Créez un compte pour garder tout ce que vous avez saisi, sur ce téléphone et sur les autres.'**
   String get saveDataSubtitle;
 
   /// No description provided for @saveDataWithEmail.
   ///
-  /// In en, this message translates to:
-  /// **'Continue with email'**
+  /// In fr, this message translates to:
+  /// **'Continuer avec l\'e-mail'**
   String get saveDataWithEmail;
 
   /// No description provided for @saveDataCodeSent.
   ///
-  /// In en, this message translates to:
-  /// **'Enter the 6-digit code we sent to {email}.'**
+  /// In fr, this message translates to:
+  /// **'Saisissez le code à 6 chiffres envoyé à {email}.'**
   String saveDataCodeSent(String email);
 
   /// No description provided for @saveDataVerify.
   ///
-  /// In en, this message translates to:
-  /// **'Verify'**
+  /// In fr, this message translates to:
+  /// **'Vérifier'**
   String get saveDataVerify;
 
   /// No description provided for @saveDataDone.
   ///
-  /// In en, this message translates to:
-  /// **'Your data is saved to your account.'**
+  /// In fr, this message translates to:
+  /// **'Vos données sont sauvegardées sur votre compte.'**
   String get saveDataDone;
 
   /// No description provided for @guestDataChoiceTitle.
   ///
-  /// In en, this message translates to:
-  /// **'This account already exists'**
+  /// In fr, this message translates to:
+  /// **'Ce compte existe déjà'**
   String get guestDataChoiceTitle;
 
   /// No description provided for @guestDataChoiceMessage.
   ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =0{You have no entries on this phone yet.} =1{You have 1 entry on this phone. Add it to that account, or discard it?} other{You have {count} entries on this phone. Add them to that account, or discard them?}}'**
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Vous n\'avez encore aucune saisie sur ce téléphone.} =1{Vous avez 1 saisie sur ce téléphone. L\'ajouter à ce compte, ou la supprimer ?} other{Vous avez {count} saisies sur ce téléphone. Les ajouter à ce compte, ou les supprimer ?}}'**
   String guestDataChoiceMessage(int count);
 
   /// No description provided for @guestDataChoiceAdd.
   ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =0{Sign in} =1{Add my entry to that account} other{Add my {count} entries to that account}}'**
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Se connecter} =1{Ajouter ma saisie à ce compte} other{Ajouter mes {count} saisies à ce compte}}'**
   String guestDataChoiceAdd(int count);
 
   /// No description provided for @guestDataChoiceDiscard.
   ///
-  /// In en, this message translates to:
-  /// **'Discard them and sign in'**
+  /// In fr, this message translates to:
+  /// **'Les supprimer et se connecter'**
   String get guestDataChoiceDiscard;
 
   /// No description provided for @guestDataChoiceCancel.
   ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
+  /// In fr, this message translates to:
+  /// **'Annuler'**
   String get guestDataChoiceCancel;
 }
 

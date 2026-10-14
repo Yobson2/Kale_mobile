@@ -171,9 +171,14 @@ signed-in device then restores its data from the server.
 
 ## Localization
 
-- ARB sources are in `lib/l10n/` (`app_en.arb` is the template, `app_fr.arb` the French copy). `make l10n`
-  regenerates `AppLocalizations`.
-- Add every new key to both files. Access strings through the `context.l10n` extension.
+- French first (decisions Q1, Q14). ARB sources are in `lib/l10n/`: `app_fr.arb` is the **template** (it carries the
+  `@key` metadata), `app_en.arb` the English copy. `make l10n` regenerates `AppLocalizations`.
+- Add every new key to both files, with real French (accents included). `test/core/l10n/app_locale_test.dart` fails if
+  the files differ in keys or placeholders. Access strings through the `context.l10n` extension.
+- The app's locale (`lib/core/l10n/app_locale.dart`): the language picked in Settings, else the device's language if
+  it is French or English, else **French**. Money (`context.formatMoney`) and `DateFormat` follow it:
+  `10 000 FCFA`, `13 oct. 2026`.
+- Before beta, every French string gets a native-speaker review: see `docs/l10n_review.md`.
 
 ## Lint and format
 

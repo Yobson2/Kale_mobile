@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'Kale';
+  String get appTitle => 'Kalé';
 
   @override
   String get commonOk => 'OK';
@@ -30,7 +30,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get commonClose => 'Fermer';
 
   @override
-  String get commonRetry => 'Reessayer';
+  String get commonRetry => 'Réessayer';
 
   @override
   String get commonNext => 'Suivant';
@@ -42,7 +42,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get commonSkip => 'Passer';
 
   @override
-  String get commonDone => 'Termine';
+  String get commonDone => 'Terminé';
 
   @override
   String get commonSearch => 'Rechercher';
@@ -51,7 +51,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get commonLoading => 'Chargement...';
 
   @override
-  String get commonNoResults => 'Aucun resultat trouve';
+  String get commonNoResults => 'Aucun résultat trouvé';
 
   @override
   String get commonSeeAll => 'Voir tout';
@@ -69,24 +69,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get commonUser => 'Utilisateur';
 
   @override
-  String get errorGeneric => 'Une erreur est survenue. Veuillez reessayer.';
+  String get errorGeneric => 'Une erreur est survenue. Veuillez réessayer.';
 
   @override
   String get errorNetwork =>
-      'Pas de connexion Internet. Verifiez votre reseau.';
+      'Pas de connexion Internet. Vérifiez votre réseau.';
 
   @override
-  String get errorServer => 'Erreur serveur. Veuillez reessayer plus tard.';
+  String get errorServer => 'Erreur serveur. Veuillez réessayer plus tard.';
 
   @override
-  String get errorUnauthorized => 'Session expiree. Veuillez vous reconnecter.';
+  String get errorUnauthorized => 'Session expirée. Veuillez vous reconnecter.';
 
   @override
   String get errorValidation =>
-      'Veuillez verifier vos informations et reessayer.';
+      'Veuillez vérifier vos informations et réessayer.';
 
   @override
-  String get errorTimeout => 'La requete a expire. Veuillez reessayer.';
+  String get errorTimeout => 'La requête a expiré. Veuillez réessayer.';
 
   @override
   String get authLogin => 'Se connecter';
@@ -95,13 +95,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authRegister => 'S\'inscrire';
 
   @override
-  String get authLogout => 'Se deconnecter';
+  String get authLogout => 'Se déconnecter';
 
   @override
-  String get authForgotPassword => 'Mot de passe oublie ?';
+  String get authForgotPassword => 'Mot de passe oublié ?';
 
   @override
-  String get authResetPassword => 'Reinitialiser le mot de passe';
+  String get authResetPassword => 'Réinitialiser le mot de passe';
 
   @override
   String get authEmail => 'E-mail';
@@ -121,28 +121,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get authRegisterSubtitle =>
-      'Prenez le controle de vos finances. Commencez votre parcours aujourd\'hui.';
+      'Prenez le contrôle de vos finances. Commencez votre parcours aujourd\'hui.';
 
   @override
   String get authForgotPasswordSubtitle =>
-      'Entrez votre e-mail et nous vous enverrons un code pour reinitialiser votre mot de passe.';
+      'Entrez votre e-mail et nous vous enverrons un code pour réinitialiser votre mot de passe.';
 
   @override
   String get authNoAccount => 'Pas encore de compte ? ';
 
   @override
-  String get authHaveAccount => 'Vous avez deja un compte ? ';
+  String get authHaveAccount => 'Vous avez déjà un compte ? ';
 
   @override
-  String get authOtpTitle => 'Verifiez votre e-mail';
+  String get authOtpTitle => 'Vérifiez votre e-mail';
 
   @override
   String authOtpSubtitle(String email) {
-    return 'Entrez le code a 6 chiffres envoye a $email';
+    return 'Entrez le code à 6 chiffres envoyé à $email';
   }
 
   @override
-  String get authOtpResend => 'Vous n\'avez pas recu le code ? Renvoyer';
+  String get authOtpResend => 'Vous n\'avez pas reçu le code ? Renvoyer';
 
   @override
   String get authLoginWithGoogle => 'Continuer avec Google';
@@ -151,15 +151,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authLoginWithApple => 'Continuer avec Apple';
 
   @override
-  String get authCreatePassword => 'Creer un mot de passe';
+  String get authCreatePassword => 'Créer un mot de passe';
 
   @override
   String get authCreatePasswordSubtitle =>
-      'Definissez un mot de passe securise pour votre compte.';
+      'Définissez un mot de passe sécurisé pour votre compte.';
 
   @override
   String get authTerms =>
-      'En continuant, vous acceptez nos Conditions d\'utilisation et notre Politique de confidentialite.';
+      'En continuant, vous acceptez nos Conditions d\'utilisation et notre Politique de confidentialité.';
 
   @override
   String get authTermsPrefix => 'J\'accepte les ';
@@ -171,30 +171,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authTermsAnd => ' et la ';
 
   @override
-  String get authPrivacyPolicy => 'Politique de confidentialite';
+  String get authPrivacyPolicy => 'Politique de confidentialité';
 
   @override
-  String get authTryFirst => 'Essayer Kale d\'abord';
+  String get authTryFirst => 'Essayer Kalé d\'abord';
 
   @override
   String get authTryFirstSubtitle => 'Explorez l\'application sans compte';
 
   @override
   String get anonymousSaveDataCta =>
-      'Creez un compte pour sauvegarder vos donnees';
+      'Créez un compte pour sauvegarder vos données';
 
   @override
   String get anonymousBannerAction => 'S\'inscrire';
 
   @override
-  String get authRegisterStep1Title => 'Creez votre compte';
+  String get authRegisterStep1Title => 'Créez votre compte';
 
   @override
   String get authRegisterStep1Subtitle => 'Entrez votre e-mail pour commencer';
 
   @override
   String get authRegisterStep2Subtitle =>
-      'Completez votre profil pour terminer l\'inscription';
+      'Complétez votre profil pour terminer l\'inscription';
 
   @override
   String get authRegisterContinueWithEmail => 'Continuer avec l\'e-mail';
@@ -207,7 +207,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get validationPasswordLength =>
-      'Le mot de passe doit contenir au moins 8 caracteres';
+      'Le mot de passe doit contenir au moins 8 caractères';
 
   @override
   String get validationPasswordMatch =>
@@ -215,7 +215,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get validationTermsRequired =>
-      'Vous devez accepter les Conditions d\'utilisation et la Politique de confidentialite';
+      'Vous devez accepter les Conditions d\'utilisation et la Politique de confidentialité';
 
   @override
   String get passwordStrengthWeak => 'Faible';
@@ -227,28 +227,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get passwordStrengthStrong => 'Fort';
 
   @override
-  String get passwordStrengthVeryStrong => 'Tres fort';
+  String get passwordStrengthVeryStrong => 'Très fort';
 
   @override
-  String get onboardingTitle1 => 'Suivez Chaque Depense';
+  String get onboardingTitle1 => 'Suivez Chaque Dépense';
 
   @override
   String get onboardingDesc1 =>
-      'Enregistrez vos depenses et revenus en quelques secondes. Voyez exactement ou va votre argent avec des apercus clairs et instantanes.';
+      'Enregistrez vos dépenses et revenus en quelques secondes. Voyez exactement où va votre argent avec des aperçus clairs et instantanés.';
 
   @override
-  String get onboardingTitle2 => 'Budgetez Plus Malin';
+  String get onboardingTitle2 => 'Budgétez Plus Malin';
 
   @override
   String get onboardingDesc2 =>
-      'Definissez des budgets personnalises pour chaque categorie et soyez alerte avant de trop depenser. Gardez le controle, sans effort.';
+      'Définissez des budgets personnalisés pour chaque catégorie et soyez alerté avant de trop dépenser. Gardez le contrôle, sans effort.';
 
   @override
   String get onboardingTitle3 => 'Atteignez Vos Objectifs';
 
   @override
   String get onboardingDesc3 =>
-      'Creez des objectifs d\'epargne, suivez votre progression et regardez votre argent grandir. Votre avenir financier commence ici.';
+      'Créez des objectifs d\'épargne, suivez votre progression et regardez votre argent grandir. Votre avenir financier commence ici.';
 
   @override
   String get onboardingGetStarted => 'Commencer';
@@ -277,25 +277,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeGreetingMorning => 'Bonjour';
 
   @override
-  String get homeGreetingAfternoon => 'Bon apres-midi';
+  String get homeGreetingAfternoon => 'Bon après-midi';
 
   @override
   String get homeGreetingEvening => 'Bonsoir';
 
   @override
-  String get dashboardCashFlow => 'Flux de tresorerie';
+  String get dashboardCashFlow => 'Flux de trésorerie';
 
   @override
   String get dashboardIncome => 'Revenus';
 
   @override
-  String get dashboardExpenses => 'Depenses';
+  String get dashboardExpenses => 'Dépenses';
 
   @override
-  String get dashboardCouldNotLoad => 'Impossible de charger le resume';
+  String get dashboardCouldNotLoad => 'Impossible de charger le résumé';
 
   @override
-  String get dashboardBudgetHealth => 'Sante du budget';
+  String get dashboardBudgetHealth => 'Santé du budget';
 
   @override
   String get dashboardViewBudget => 'Voir le budget';
@@ -307,29 +307,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dashboardGettingClose => 'Presque atteint';
 
   @override
-  String get dashboardOverBudget => 'Budget depasse';
+  String get dashboardOverBudget => 'Budget dépassé';
 
   @override
-  String get dashboardSpent => ' depense';
+  String get dashboardSpent => ' dépensé';
 
   @override
-  String get dashboardSavingsGoals => 'Objectifs d\'epargne';
+  String get dashboardSavingsGoals => 'Objectifs d\'épargne';
 
   @override
   String get dashboardViewAll => 'Voir tout';
 
   @override
-  String get dashboardSavedOf => ' epargne sur ';
+  String get dashboardSavedOf => ' épargné sur ';
 
   @override
-  String get dashboardRecentTransactions => 'Transactions recentes';
+  String get dashboardRecentTransactions => 'Transactions récentes';
 
   @override
   String get dashboardNoTransactions => 'Aucune transaction';
 
   @override
   String get dashboardNoTransactionsSubtitle =>
-      'Appuyez sur + pour ajouter votre premiere transaction';
+      'Appuyez sur + pour ajouter votre première transaction';
 
   @override
   String get dashboardDaily => 'Quotidien';
@@ -356,17 +356,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transactionsIncome => 'Revenus';
 
   @override
-  String get transactionsExpense => 'Depense';
+  String get transactionsExpense => 'Dépense';
 
   @override
   String get transactionsNoTransactions => 'Aucune transaction';
 
   @override
   String get transactionsNoTransactionsSubtitle =>
-      'Appuyez sur + pour ajouter votre premiere transaction';
+      'Appuyez sur + pour ajouter votre première transaction';
 
   @override
-  String get transactionsSaved => 'Enregistre';
+  String get transactionsSaved => 'Enregistré';
 
   @override
   String get transactionsAmount => 'Montant';
@@ -381,14 +381,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transactionsAmountInvalid => 'Entrez un montant valide';
 
   @override
-  String get transactionsCategory => 'Categorie';
+  String get transactionsCategory => 'Catégorie';
 
   @override
   String get transactionsCategoryRequired =>
-      'Veuillez selectionner une categorie';
+      'Veuillez sélectionner une catégorie';
 
   @override
-  String get transactionsNoCategoriesAvailable => 'Aucune categorie disponible';
+  String get transactionsNoCategoriesAvailable => 'Aucune catégorie disponible';
 
   @override
   String get transactionsDate => 'Date';
@@ -397,7 +397,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transactionsPaymentMethod => 'Mode de paiement';
 
   @override
-  String get transactionsPaymentCash => 'Especes';
+  String get transactionsPaymentCash => 'Espèces';
 
   @override
   String get transactionsPaymentMobileMoney => 'Mobile Money';
@@ -412,27 +412,27 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transactionsMobileMoneyProvider => 'Fournisseur Mobile Money';
 
   @override
-  String get transactionsSelectProvider => 'Selectionner un fournisseur';
+  String get transactionsSelectProvider => 'Sélectionner un fournisseur';
 
   @override
   String get transactionsSelectProviderRequired =>
-      'Veuillez selectionner un fournisseur';
+      'Veuillez sélectionner un fournisseur';
 
   @override
   String get transactionsDescription => 'Description (optionnel)';
 
   @override
   String get transactionsDescriptionHint =>
-      'ex. Dejeuner au marche, Uber au travail';
+      'ex. Déjeuner au marché, Uber au travail';
 
   @override
   String get transactionsSaveTransaction => 'Enregistrer la transaction';
 
   @override
-  String get transactionsUpdateTransaction => 'Mettre a jour la transaction';
+  String get transactionsUpdateTransaction => 'Mettre à jour la transaction';
 
   @override
-  String get transactionsUncategorized => 'Non categorise';
+  String get transactionsUncategorized => 'Non catégorisé';
 
   @override
   String get transactionsValidAmountRequired =>
@@ -457,7 +457,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get transactionsDeleteConfirm => 'Supprimer cette transaction ?';
 
   @override
-  String get transactionsDeleted => 'Transaction supprimee';
+  String get transactionsDeleted => 'Transaction supprimée';
 
   @override
   String get dashboardQuickAdd => 'Ajouter';
@@ -466,20 +466,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dashboardQuickBudget => 'Budget';
 
   @override
-  String get dashboardQuickSavings => 'Epargne';
+  String get dashboardQuickSavings => 'Épargne';
 
   @override
-  String get dashboardIncomeVsExpenses => 'Revenus vs Depenses';
+  String get dashboardIncomeVsExpenses => 'Revenus vs Dépenses';
 
   @override
-  String get dashboardExpenseBreakdown => 'Repartition des depenses';
+  String get dashboardExpenseBreakdown => 'Répartition des dépenses';
 
   @override
-  String get dashboardNoChartData => 'Aucune donnee de transaction';
+  String get dashboardNoChartData => 'Aucune donnée de transaction';
 
   @override
   String get dashboardNoChartDataSubtitle =>
-      'Ajoutez votre premiere transaction pour voir le graphique';
+      'Ajoutez votre première transaction pour voir le graphique';
 
   @override
   String get budgetTitle => 'Budget';
@@ -489,10 +489,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get budgetNoActiveBudgetSubtitle =>
-      'Creez un budget pour commencer a suivre vos depenses et garder le controle de vos finances.';
+      'Créez un budget pour commencer à suivre vos dépenses et garder le contrôle de vos finances.';
 
   @override
-  String get budgetCreateBudget => 'Creer un budget';
+  String get budgetCreateBudget => 'Créer un budget';
 
   @override
   String get budgetEditBudget => 'Modifier le budget';
@@ -501,7 +501,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get budgetNewBudget => 'Nouveau budget';
 
   @override
-  String get budgetTotalSpent => 'Total depense';
+  String get budgetTotalSpent => 'Total dépensé';
 
   @override
   String budgetOfBudget(String amount) {
@@ -527,36 +527,36 @@ class AppLocalizationsFr extends AppLocalizations {
   String get budgetStrategyEnvelope => 'Enveloppe';
 
   @override
-  String get budgetStrategyCustom => 'Personnalise';
+  String get budgetStrategyCustom => 'Personnalisé';
 
   @override
-  String get budgetSetupTitle => 'Creer un budget';
+  String get budgetSetupTitle => 'Créer un budget';
 
   @override
   String budgetSetupStep(int current, int total) {
-    return 'Etape $current sur $total';
+    return 'Étape $current sur $total';
   }
 
   @override
-  String get budgetSetupChooseStrategy => 'Choisissez votre strategie';
+  String get budgetSetupChooseStrategy => 'Choisissez votre stratégie';
 
   @override
   String get budgetSetupChooseStrategySubtitle =>
-      'Choisissez une methode de budget adaptee a votre style de vie.';
+      'Choisissez une méthode de budget adaptée à votre style de vie.';
 
   @override
-  String get budgetSetupSetPeriod => 'Definissez votre periode';
+  String get budgetSetupSetPeriod => 'Définissez votre période';
 
   @override
   String get budgetSetupSetPeriodSubtitle =>
-      'A quelle frequence souhaitez-vous budgeter ?';
+      'À quelle fréquence souhaitez-vous budgéter ?';
 
   @override
-  String get budgetSetupExpectedIncome => 'Revenu prevu (optionnel)';
+  String get budgetSetupExpectedIncome => 'Revenu prévu (optionnel)';
 
   @override
   String get budgetSetupExpectedIncomeSubtitle =>
-      'Entrez votre revenu prevu pour calculer automatiquement les allocations.';
+      'Entrez votre revenu prévu pour calculer automatiquement les allocations.';
 
   @override
   String get budgetSetupExpectedIncomeHint => '0,00';
@@ -569,20 +569,20 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get budgetSetupCustomizeSubtitle =>
-      'Ajustez les montants pour chaque categorie de depenses.';
+      'Ajustez les montants pour chaque catégorie de dépenses.';
 
   @override
-  String get budgetSetupReview => 'Verifier votre budget';
+  String get budgetSetupReview => 'Vérifier votre budget';
 
   @override
   String get budgetSetupReviewSubtitle =>
-      'Confirmez les details ci-dessous pour creer votre budget.';
+      'Confirmez les détails ci-dessous pour créer votre budget.';
 
   @override
-  String get budgetSetupStrategy => 'Strategie';
+  String get budgetSetupStrategy => 'Stratégie';
 
   @override
-  String get budgetSetupPeriod => 'Periode';
+  String get budgetSetupPeriod => 'Période';
 
   @override
   String get budgetSetupIncome => 'Revenu';
@@ -591,52 +591,52 @@ class AppLocalizationsFr extends AppLocalizations {
   String get budgetSetupTotalBudget => 'Budget total';
 
   @override
-  String get budgetSetupCategoryBreakdown => 'Repartition par categorie';
+  String get budgetSetupCategoryBreakdown => 'Répartition par catégorie';
 
   @override
   String get budgetSetupContinue => 'Continuer';
 
   @override
-  String get budgetStrategy5030Name => 'Regle 50/30/20';
+  String get budgetStrategy5030Name => 'Règle 50/30/20';
 
   @override
   String get budgetStrategy5030Desc =>
-      'Une approche equilibree qui repartit votre revenu entre besoins, envies et epargne.';
+      'Une approche équilibrée qui répartit votre revenu entre besoins, envies et épargne.';
 
   @override
   String get budgetStrategy5030Formula =>
-      '50% Besoins - 30% Envies - 20% Epargne';
+      '50% Besoins - 30% Envies - 20% Épargne';
 
   @override
   String get budgetStrategy8020Name => '80/20 Entrepreneur';
 
   @override
   String get budgetStrategy8020Desc =>
-      'Pour les entrepreneurs : reinvestissez 80% dans les essentiels et l\'entreprise, epargnez 20%.';
+      'Pour les entrepreneurs : réinvestissez 80% dans les essentiels et l\'entreprise, épargnez 20%.';
 
   @override
   String get budgetStrategy8020Formula =>
-      '80% Essentiels & Business - 20% Epargne';
+      '80% Essentiels & Business - 20% Épargne';
 
   @override
-  String get budgetStrategyEnvelopeName => 'Systeme d\'enveloppes';
+  String get budgetStrategyEnvelopeName => 'Système d\'enveloppes';
 
   @override
   String get budgetStrategyEnvelopeDesc =>
-      'Attribuez des montants fixes a chaque categorie. Quand l\'enveloppe est vide, arretez de depenser.';
+      'Attribuez des montants fixes à chaque catégorie. Quand l\'enveloppe est vide, arrêtez de dépenser.';
 
   @override
-  String get budgetStrategyEnvelopeFormula => 'Montants fixes par categorie';
+  String get budgetStrategyEnvelopeFormula => 'Montants fixes par catégorie';
 
   @override
-  String get budgetStrategyCustomName => 'Personnalise';
+  String get budgetStrategyCustomName => 'Personnalisé';
 
   @override
   String get budgetStrategyCustomDesc =>
-      'Definissez vos propres pourcentages et montants pour un controle total de votre budget.';
+      'Définissez vos propres pourcentages et montants pour un contrôle total de votre budget.';
 
   @override
-  String get budgetStrategyCustomFormula => 'Vous decidez la repartition';
+  String get budgetStrategyCustomFormula => 'Vous décidez la répartition';
 
   @override
   String get categoryFoodGroceries => 'Alimentation & Courses';
@@ -651,16 +651,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryUtilities => 'Services publics';
 
   @override
-  String get categoryHealth => 'Sante';
+  String get categoryHealth => 'Santé';
 
   @override
   String get categoryEntertainment => 'Divertissement';
 
   @override
-  String get categoryClothing => 'Vetements';
+  String get categoryClothing => 'Vêtements';
 
   @override
-  String get categoryAirtimeData => 'Credit & Data';
+  String get categoryAirtimeData => 'Crédit & Data';
 
   @override
   String get categoryPersonalCare => 'Soins personnels';
@@ -669,7 +669,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryFamilySupport => 'Soutien familial';
 
   @override
-  String get categorySavings => 'Epargne';
+  String get categorySavings => 'Épargne';
 
   @override
   String get categoryDebtRepayment => 'Remboursement de dettes';
@@ -678,7 +678,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryReligiousGiving => 'Don religieux';
 
   @override
-  String get categoryBusinessExpenses => 'Depenses professionnelles';
+  String get categoryBusinessExpenses => 'Dépenses professionnelles';
 
   @override
   String get categoryMobileMoneyFees => 'Frais Mobile Money';
@@ -690,29 +690,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryGroupWants => 'Envies';
 
   @override
-  String get categoryGroupSavings => 'Epargne';
+  String get categoryGroupSavings => 'Épargne';
 
   @override
   String get categoryGroupEssentialsBusiness => 'Essentiels & Business';
 
   @override
-  String get savingsGoalsTitle => 'Objectifs d\'epargne';
+  String get savingsGoalsTitle => 'Objectifs d\'épargne';
 
   @override
   String get savingsAddGoal => 'Ajouter un objectif';
 
   @override
-  String get savingsNoGoals => 'Aucun objectif d\'epargne';
+  String get savingsNoGoals => 'Aucun objectif d\'épargne';
 
   @override
   String get savingsNoGoalsSubtitle =>
-      'Pour quoi epargnez-vous ? Definissez un objectif pour commencer a suivre.';
+      'Pour quoi épargnez-vous ? Définissez un objectif pour commencer à suivre.';
 
   @override
-  String get savingsCreateGoal => 'Creer un objectif';
+  String get savingsCreateGoal => 'Créer un objectif';
 
   @override
-  String get savingsNewGoal => 'Nouvel objectif d\'epargne';
+  String get savingsNewGoal => 'Nouvel objectif d\'épargne';
 
   @override
   String get savingsGoalName => 'Nom de l\'objectif';
@@ -738,16 +738,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get savingsDescriptionOptional => 'Description (optionnel)';
 
   @override
-  String get savingsDescriptionHint => 'Pour quoi epargnez-vous ?';
+  String get savingsDescriptionHint => 'Pour quoi épargnez-vous ?';
 
   @override
-  String get savingsDeadlineOptional => 'Echeance (optionnel)';
+  String get savingsDeadlineOptional => 'Échéance (optionnel)';
 
   @override
-  String get savingsNoDeadline => 'Aucune echeance definie';
+  String get savingsNoDeadline => 'Aucune échéance définie';
 
   @override
-  String get savingsGoalDetails => 'Details de l\'objectif';
+  String get savingsGoalDetails => 'Détails de l\'objectif';
 
   @override
   String get savingsGoalNotFound => 'Objectif introuvable';
@@ -759,7 +759,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get savingsAddMoney => 'Ajouter de l\'argent';
 
   @override
-  String get savingsSaved => 'Epargne';
+  String get savingsSaved => 'Épargné';
 
   @override
   String get savingsRemaining => 'Restant';
@@ -768,7 +768,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get savingsTarget => 'Cible';
 
   @override
-  String get savingsDeadline => 'Echeance';
+  String get savingsDeadline => 'Échéance';
 
   @override
   String get savingsNotes => 'Notes';
@@ -782,7 +782,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String savingsAddMoneyTo(String name) {
-    return 'Ajouter de l\'argent a \"$name\"';
+    return 'Ajouter de l\'argent à \"$name\"';
   }
 
   @override
@@ -793,11 +793,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String savingsDeleteGoalConfirm(String name) {
-    return 'Supprimer \"$name\" ? Cette action est irreversible.';
+    return 'Supprimer \"$name\" ? Cette action est irréversible.';
   }
 
   @override
-  String get savingsSavedLabel => 'epargne';
+  String get savingsSavedLabel => 'épargné';
 
   @override
   String get moreTitle => 'Plus';
@@ -806,7 +806,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get moreAccountSection => 'Compte';
 
   @override
-  String get moreFeaturesSection => 'Fonctionnalites';
+  String get moreFeaturesSection => 'Fonctionnalités';
 
   @override
   String get moreSupportSection => 'Support';
@@ -815,10 +815,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get moreProfile => 'Profil';
 
   @override
-  String get moreSettings => 'Parametres';
+  String get moreSettings => 'Paramètres';
 
   @override
-  String get moreSavingsGoals => 'Objectifs d\'epargne';
+  String get moreSavingsGoals => 'Objectifs d\'épargne';
 
   @override
   String get moreTontineGroups => 'Groupes de tontine';
@@ -837,85 +837,85 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get moreShareAppMessage =>
-      'Decouvrez Kale - une application intelligente de budget et suivi des depenses !';
+      'Découvrez Kalé - une application intelligente de budget et suivi des dépenses !';
 
   @override
-  String get moreComingSoon => 'Bientot disponible';
+  String get moreComingSoon => 'Bientôt disponible';
 
   @override
-  String get moreComingSoonMessage => 'Bientot disponible ! Restez connecte.';
+  String get moreComingSoonMessage => 'Bientôt disponible ! Restez connecté.';
 
   @override
-  String get tontineGroupsTitle => 'Epargne communautaire';
+  String get tontineGroupsTitle => 'Épargne communautaire';
 
   @override
   String get tontineGroupsDescription =>
-      'Rejoignez ou creez un groupe de tontine pour epargner avec vos amis et votre famille. Mettez en commun vos cotisations et recevez la cagnotte a tour de role.';
+      'Rejoignez ou créez un groupe de tontine pour épargner avec vos amis et votre famille. Mettez en commun vos cotisations et recevez la cagnotte à tour de rôle.';
 
   @override
-  String get tontineGroupsHowItWorks => 'Comment ca marche';
+  String get tontineGroupsHowItWorks => 'Comment ça marche';
 
   @override
-  String get tontineGroupsStep1Title => 'Creez ou rejoignez un groupe';
+  String get tontineGroupsStep1Title => 'Créez ou rejoignez un groupe';
 
   @override
   String get tontineGroupsStep1Desc =>
-      'Lancez un nouveau groupe de tontine ou rejoignez-en un existant grace a une invitation.';
+      'Lancez un nouveau groupe de tontine ou rejoignez-en un existant grâce à une invitation.';
 
   @override
-  String get tontineGroupsStep2Title => 'Cotisez regulierement';
+  String get tontineGroupsStep2Title => 'Cotisez régulièrement';
 
   @override
   String get tontineGroupsStep2Desc =>
-      'Chaque membre verse un montant fixe selon un calendrier defini.';
+      'Chaque membre verse un montant fixe selon un calendrier défini.';
 
   @override
   String get tontineGroupsStep3Title => 'Recevez la cagnotte';
 
   @override
   String get tontineGroupsStep3Desc =>
-      'Les membres recoivent a tour de role la totalite de la somme mise en commun.';
+      'Les membres reçoivent à tour de rôle la totalité de la somme mise en commun.';
 
   @override
   String get tontineGroupsEmpty => 'Aucun groupe pour l\'instant';
 
   @override
   String get tontineGroupsEmptySubtitle =>
-      'Creez votre premier groupe de tontine et commencez a epargner ensemble.';
+      'Créez votre premier groupe de tontine et commencez à épargner ensemble.';
 
   @override
-  String get tontineGroupsCreateGroup => 'Creer un groupe';
+  String get tontineGroupsCreateGroup => 'Créer un groupe';
 
   @override
-  String get helpFaqTitle => 'Questions frequentes';
+  String get helpFaqTitle => 'Questions fréquentes';
 
   @override
   String get helpFaq1Question => 'Comment ajouter une transaction ?';
 
   @override
   String get helpFaq1Answer =>
-      'Appuyez sur le bouton + de l\'ecran d\'accueil pour ajouter un revenu ou une depense. Renseignez le montant, la categorie et des notes facultatives.';
+      'Appuyez sur le bouton + de l\'écran d\'accueil pour ajouter un revenu ou une dépense. Renseignez le montant, la catégorie et des notes facultatives.';
 
   @override
   String get helpFaq2Question => 'Comment fonctionnent les budgets ?';
 
   @override
   String get helpFaq2Answer =>
-      'Allez dans l\'onglet Budget pour definir des limites de depenses mensuelles par categorie. Kale suit vos depenses et vous previent lorsque vous approchez de votre limite.';
+      'Allez dans l\'onglet Budget pour définir des limites de dépenses mensuelles par catégorie. Kalé suit vos dépenses et vous prévient lorsque vous approchez de votre limite.';
 
   @override
-  String get helpFaq3Question => 'Puis-je definir des objectifs d\'epargne ?';
+  String get helpFaq3Question => 'Puis-je définir des objectifs d\'épargne ?';
 
   @override
   String get helpFaq3Answer =>
-      'Oui ! Allez dans Plus > Objectifs d\'epargne pour creer des objectifs comme des vacances, un fonds d\'urgence ou un gros achat. Suivez votre progression au fil du temps.';
+      'Oui ! Allez dans Plus > Objectifs d\'épargne pour créer des objectifs comme des vacances, un fonds d\'urgence ou un gros achat. Suivez votre progression au fil du temps.';
 
   @override
-  String get helpFaq4Question => 'Mes donnees sont-elles securisees ?';
+  String get helpFaq4Question => 'Mes données sont-elles sécurisées ?';
 
   @override
   String get helpFaq4Answer =>
-      'Vos donnees sont chiffrees et stockees en toute securite. Nous ne partageons jamais vos informations financieres avec des tiers. Vous pouvez effacer les donnees locales a tout moment depuis les Parametres.';
+      'Vos données sont chiffrées et stockées en toute sécurité. Nous ne partageons jamais vos informations financières avec des tiers. Vous pouvez effacer les données locales à tout moment depuis les Paramètres.';
 
   @override
   String get helpContactTitle => 'Nous contacter';
@@ -928,26 +928,26 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get helpContactChatSubtitle =>
-      'Disponible du lundi au vendredi, de 9h a 17h';
+      'Disponible du lundi au vendredi, de 9 h à 17 h';
 
   @override
-  String get helpLegalTitle => 'Mentions legales';
+  String get helpLegalTitle => 'Mentions légales';
 
   @override
-  String get rateAppTitle => 'Vous aimez Kale ?';
+  String get rateAppTitle => 'Vous aimez Kalé ?';
 
   @override
   String get rateAppSubtitle =>
-      'Votre avis nous aide a nous ameliorer. Dites-nous ce que vous en pensez !';
+      'Votre avis nous aide à nous améliorer. Dites-nous ce que vous en pensez !';
 
   @override
   String get rateAppSubmit => 'Envoyer la note';
 
   @override
-  String get rateAppLabel1 => 'A ameliorer';
+  String get rateAppLabel1 => 'À améliorer';
 
   @override
-  String get rateAppLabel2 => 'Pourrait etre mieux';
+  String get rateAppLabel2 => 'Pourrait être mieux';
 
   @override
   String get rateAppLabel3 => 'Correct';
@@ -963,36 +963,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rateAppThankYouMessage =>
-      'Nous apprecions votre avis. Il nous aide a rendre Kale encore meilleure pour vous.';
+      'Nous apprécions votre avis. Il nous aide à rendre Kalé encore meilleure pour vous.';
 
   @override
-  String get shareAppTitle => 'Partager Kale';
+  String get shareAppTitle => 'Partager Kalé';
 
   @override
   String get shareAppDescription =>
-      'Aidez vos amis et votre famille a prendre le controle de leurs finances avec Kale.';
+      'Aidez vos amis et votre famille à prendre le contrôle de leurs finances avec Kalé.';
 
   @override
   String get shareAppShareVia => 'PARTAGER VIA';
 
   @override
-  String get shareAppCopyLink => 'Copier le lien de telechargement';
+  String get shareAppCopyLink => 'Copier le lien de téléchargement';
 
   @override
   String get shareAppCopyMessage => 'Copier le message de partage';
 
   @override
-  String get shareAppLinkCopied => 'Lien copie dans le presse-papiers';
+  String get shareAppLinkCopied => 'Lien copié dans le presse-papiers';
 
   @override
-  String get shareAppMessageCopied => 'Message copie dans le presse-papiers';
+  String get shareAppMessageCopied => 'Message copié dans le presse-papiers';
 
   @override
-  String get onboardingTitle4 => 'Personnalisez votre experience';
+  String get onboardingTitle4 => 'Personnalisez votre expérience';
 
   @override
   String get onboardingDesc4 =>
-      'Choisissez vos preferences pour tirer le meilleur parti de Kale.';
+      'Choisissez vos préférences pour tirer le meilleur parti de Kalé.';
 
   @override
   String get onboardingCurrency => 'Devise';
@@ -1004,17 +1004,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingGoal => 'Quel est votre objectif principal ?';
 
   @override
-  String get onboardingGoalTrackSpending => 'Suivre mes depenses';
+  String get onboardingGoalTrackSpending => 'Suivre mes dépenses';
 
   @override
-  String get onboardingGoalSaveMore => 'Epargner plus';
+  String get onboardingGoalSaveMore => 'Épargner plus';
 
   @override
-  String get onboardingGoalManageBudgets => 'Gerer mes budgets';
+  String get onboardingGoalManageBudgets => 'Gérer mes budgets';
 
   @override
   String get coachMarkFab =>
-      'Appuyez ici pour ajouter votre premiere transaction';
+      'Appuyez ici pour ajouter votre première transaction';
 
   @override
   String get coachMarkBudget => 'Configurez votre budget mensuel';
@@ -1036,7 +1036,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileChangePassword => 'Changer le mot de passe';
 
   @override
-  String get profileLogout => 'Deconnexion';
+  String get profileLogout => 'Déconnexion';
 
   @override
   String get profileAchievements => 'Accomplissements';
@@ -1048,17 +1048,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String profileBadgesUnlocked(int count, int total) {
-    return '$count sur $total badges debloques';
+    return '$count sur $total badges débloqués';
   }
 
   @override
-  String get achievementFirstTransaction => 'Premiere transaction';
+  String get achievementFirstTransaction => 'Première transaction';
 
   @override
-  String get achievementStreak7 => 'Serie de 7 jours';
+  String get achievementStreak7 => 'Série de 7 jours';
 
   @override
-  String get achievementStreak30 => 'Serie de 30 jours';
+  String get achievementStreak30 => 'Série de 30 jours';
 
   @override
   String get achievementFirstBudget => 'Premier budget';
@@ -1073,7 +1073,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get achievementTransactions100 => '100 transactions';
 
   @override
-  String get levelBeginner => 'Debutant';
+  String get levelBeginner => 'Débutant';
 
   @override
   String get levelExplorer => 'Explorateur';
@@ -1082,19 +1082,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get levelPro => 'Pro';
 
   @override
-  String get levelMaster => 'Maitre';
+  String get levelMaster => 'Maître';
 
   @override
-  String get settingsTitle => 'Parametres';
+  String get settingsTitle => 'Paramètres';
 
   @override
   String get settingsAppearance => 'Apparence';
 
   @override
-  String get settingsTheme => 'Theme';
+  String get settingsTheme => 'Thème';
 
   @override
-  String get settingsThemeSystem => 'Systeme';
+  String get settingsThemeSystem => 'Système';
 
   @override
   String get settingsThemeLight => 'Clair';
@@ -1109,10 +1109,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsLanguageEn => 'Anglais';
 
   @override
-  String get settingsLanguageFr => 'Francais';
+  String get settingsLanguageFr => 'Français';
 
   @override
-  String get settingsAbout => 'A propos';
+  String get settingsLanguageSystem => 'Langue de l\'appareil';
+
+  @override
+  String get settingsAbout => 'À propos';
 
   @override
   String settingsVersion(String version) {
@@ -1123,13 +1126,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsTerms => 'Conditions d\'utilisation';
 
   @override
-  String get settingsPrivacy => 'Politique de confidentialite';
+  String get settingsPrivacy => 'Politique de confidentialité';
 
   @override
   String get settingsCurrency => 'Devise';
 
   @override
-  String get settingsSelectCurrency => 'Selectionner la devise';
+  String get settingsSelectCurrency => 'Sélectionner la devise';
 
   @override
   String get settingsNotifications => 'Notifications';
@@ -1138,10 +1141,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsPushNotifications => 'Notifications push';
 
   @override
-  String get settingsEnabled => 'Active';
+  String get settingsEnabled => 'Activé';
 
   @override
-  String get settingsDisabled => 'Desactive';
+  String get settingsDisabled => 'Désactivé';
 
   @override
   String get settingsDailyReminder => 'Rappel quotidien';
@@ -1155,32 +1158,32 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String settingsBudgetAlertThresholdSubtitle(int percentage) {
-    return 'Alerte lorsque les depenses atteignent $percentage% du budget';
+    return 'Alerte lorsque les dépenses atteignent $percentage % du budget';
   }
 
   @override
-  String get settingsData => 'Donnees';
+  String get settingsData => 'Données';
 
   @override
-  String get settingsClearLocalData => 'Effacer les donnees locales';
+  String get settingsClearLocalData => 'Effacer les données locales';
 
   @override
   String get settingsClearLocalDataSubtitle =>
-      'Supprimer toutes les donnees en cache de cet appareil';
+      'Supprimer toutes les données en cache de cet appareil';
 
   @override
   String get settingsClearLocalDataConfirm =>
-      'Cela supprimera toutes les donnees en cache de cet appareil. Votre compte et vos donnees synchronisees sur le serveur ne seront pas affectes.\n\nEtes-vous sur ?';
+      'Cela supprimera toutes les données en cache de cet appareil. Votre compte et vos données synchronisées sur le serveur ne seront pas affectés.\n\nÊtes-vous sûr ?';
 
   @override
-  String get settingsClearLocalDataSuccess => 'Donnees locales effacees';
+  String get settingsClearLocalDataSuccess => 'Données locales effacées';
 
   @override
-  String get legalLastUpdated => 'Derniere mise a jour : 20 fevrier 2026';
+  String get legalLastUpdated => 'Dernière mise à jour : 20 février 2026';
 
   @override
   String get legalContactFooter =>
-      'Si vous avez des questions, contactez-nous a support@kale.app';
+      'Si vous avez des questions, contactez-nous à support@kale.app';
 
   @override
   String get legalTosTitle => 'Conditions d\'utilisation';
@@ -1190,81 +1193,81 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get legalTosIntroBody =>
-      'Bienvenue sur Kale. Ces Conditions d\'utilisation regissent votre utilisation de l\'application mobile Kale et des services associes. En creant un compte ou en utilisant Kale, vous acceptez d\'etre lie par ces conditions. Si vous n\'etes pas d\'accord, veuillez ne pas utiliser l\'application.';
+      'Bienvenue sur Kalé. Ces Conditions d\'utilisation régissent votre utilisation de l\'application mobile Kalé et des services associés. En créant un compte ou en utilisant Kalé, vous acceptez d\'être lié par ces conditions. Si vous n\'êtes pas d\'accord, veuillez ne pas utiliser l\'application.';
 
   @override
   String get legalTosAccountHeading => '2. Inscription au compte';
 
   @override
   String get legalTosAccountBody =>
-      'Pour utiliser Kale, vous devez creer un compte avec des informations exactes et completes. Vous etes responsable du maintien de la confidentialite de vos identifiants de connexion et de toute activite sous votre compte. Vous devez avoir au moins 13 ans pour creer un compte. Si vous avez moins de 18 ans, vous confirmez avoir le consentement de votre parent ou tuteur.';
+      'Pour utiliser Kalé, vous devez créer un compte avec des informations exactes et complètes. Vous êtes responsable du maintien de la confidentialité de vos identifiants de connexion et de toute activité sous votre compte. Vous devez avoir au moins 13 ans pour créer un compte. Si vous avez moins de 18 ans, vous confirmez avoir le consentement de votre parent ou tuteur.';
 
   @override
   String get legalTosServicesHeading => '3. Services fournis';
 
   @override
   String get legalTosServicesBody =>
-      'Kale fournit des outils de gestion des finances personnelles comprenant le suivi des depenses et des revenus, la creation et le suivi de budgets, la gestion des objectifs d\'epargne et des analyses financieres. Ces outils sont concus pour vous aider a organiser et comprendre vos finances personnelles.';
+      'Kalé fournit des outils de gestion des finances personnelles comprenant le suivi des dépenses et des revenus, la création et le suivi de budgets, la gestion des objectifs d\'épargne et des analyses financières. Ces outils sont conçus pour vous aider à organiser et comprendre vos finances personnelles.';
 
   @override
   String get legalTosResponsibilitiesHeading =>
-      '4. Responsabilites de l\'utilisateur';
+      '4. Responsabilités de l\'utilisateur';
 
   @override
   String get legalTosResponsibilitiesBody =>
-      'Vous etes seul responsable de l\'exactitude des donnees financieres que vous saisissez dans Kale. Kale est un outil de suivi et d\'organisation et ne fournit pas de conseils financiers, d\'investissement, fiscaux ou juridiques professionnels. Vous acceptez d\'utiliser l\'application conformement a toutes les lois et reglementations applicables.';
+      'Vous êtes seul responsable de l\'exactitude des données financières que vous saisissez dans Kalé. Kalé est un outil de suivi et d\'organisation et ne fournit pas de conseils financiers, d\'investissement, fiscaux ou juridiques professionnels. Vous acceptez d\'utiliser l\'application conformément à toutes les lois et réglementations applicables.';
 
   @override
-  String get legalTosFinancialDataHeading => '5. Donnees financieres';
+  String get legalTosFinancialDataHeading => '5. Données financières';
 
   @override
   String get legalTosFinancialDataBody =>
-      'Kale n\'est pas une banque, un processeur de paiement ou une institution financiere. Nous ne detenons pas, ne transferons pas et n\'avons pas la garde de vos fonds. Toutes les donnees financieres dans Kale sont des informations saisies par l\'utilisateur a des fins de suivi personnel uniquement. Nous ne verifions pas l\'exactitude des transactions, soldes ou autres informations financieres que vous saisissez.';
+      'Kalé n\'est pas une banque, un processeur de paiement ou une institution financière. Nous ne détenons pas, ne transférons pas et n\'avons pas la garde de vos fonds. Toutes les données financières dans Kalé sont des informations saisies par l\'utilisateur à des fins de suivi personnel uniquement. Nous ne vérifions pas l\'exactitude des transactions, soldes ou autres informations financières que vous saisissez.';
 
   @override
-  String get legalTosIpHeading => '6. Propriete intellectuelle';
+  String get legalTosIpHeading => '6. Propriété intellectuelle';
 
   @override
   String get legalTosIpBody =>
-      'L\'application Kale, y compris sa conception, son code, ses fonctionnalites et sa marque, est la propriete de Kale et protegee par les lois sur la propriete intellectuelle. Vous conservez la pleine propriete des donnees personnelles et des informations financieres que vous saisissez dans l\'application. Vous accordez a Kale une licence limitee pour traiter vos donnees uniquement pour fournir et ameliorer les services.';
+      'L\'application Kalé, y compris sa conception, son code, ses fonctionnalités et sa marque, est la propriété de Kalé et protégée par les lois sur la propriété intellectuelle. Vous conservez la pleine propriété des données personnelles et des informations financières que vous saisissez dans l\'application. Vous accordez à Kalé une licence limitée pour traiter vos données uniquement pour fournir et améliorer les services.';
 
   @override
-  String get legalTosLiabilityHeading => '7. Limitation de responsabilite';
+  String get legalTosLiabilityHeading => '7. Limitation de responsabilité';
 
   @override
   String get legalTosLiabilityBody =>
-      'Kale est fourni \"en l\'etat\". Nous ne sommes pas responsables des decisions financieres que vous prenez sur la base des informations affichees dans l\'application. Nous ne garantissons pas l\'exactitude des calculs, resumes ou analyses derivees de vos donnees. Dans la mesure maximale permise par la loi, Kale ne sera pas responsable des dommages indirects, accessoires ou consecutifs.';
+      'Kalé est fourni \"en l\'état\". Nous ne sommes pas responsables des décisions financières que vous prenez sur la base des informations affichées dans l\'application. Nous ne garantissons pas l\'exactitude des calculs, résumés ou analyses dérivées de vos données. Dans la mesure maximale permise par la loi, Kalé ne sera pas responsable des dommages indirects, accessoires ou consécutifs.';
 
   @override
-  String get legalTosTerminationHeading => '8. Resiliation';
+  String get legalTosTerminationHeading => '8. Résiliation';
 
   @override
   String get legalTosTerminationBody =>
-      'Vous pouvez supprimer votre compte a tout moment via les parametres de l\'application. Nous pouvons suspendre ou resilier votre compte si vous violez ces conditions. A la resiliation, vos donnees seront supprimees de nos serveurs dans les 30 jours, sauf si la conservation est requise par la loi.';
+      'Vous pouvez supprimer votre compte à tout moment via les paramètres de l\'application. Nous pouvons suspendre ou résilier votre compte si vous violez ces conditions. À la résiliation, vos données seront supprimées de nos serveurs dans les 30 jours, sauf si la conservation est requise par la loi.';
 
   @override
   String get legalTosChangesHeading => '9. Modifications de ces conditions';
 
   @override
   String get legalTosChangesBody =>
-      'Nous pouvons mettre a jour ces Conditions d\'utilisation de temps en temps. Nous vous informerons des modifications importantes via l\'application ou par e-mail. Votre utilisation continue de Kale apres la publication des modifications constitue votre acceptation des conditions mises a jour.';
+      'Nous pouvons mettre à jour ces Conditions d\'utilisation de temps en temps. Nous vous informerons des modifications importantes via l\'application ou par e-mail. Votre utilisation continue de Kalé après la publication des modifications constitue votre acceptation des conditions mises à jour.';
 
   @override
   String get legalTosContactHeading => '10. Nous contacter';
 
   @override
   String get legalTosContactBody =>
-      'Si vous avez des questions sur ces Conditions d\'utilisation, veuillez nous contacter a support@kale.app.';
+      'Si vous avez des questions sur ces Conditions d\'utilisation, veuillez nous contacter à support@kale.app.';
 
   @override
-  String get legalPrivacyTitle => 'Politique de confidentialite';
+  String get legalPrivacyTitle => 'Politique de confidentialité';
 
   @override
   String get legalPrivacyIntroHeading => '1. Introduction';
 
   @override
   String get legalPrivacyIntroBody =>
-      'Votre vie privee est importante pour nous. Cette Politique de confidentialite explique comment Kale collecte, utilise, stocke et protege vos informations personnelles et financieres. Nous nous engageons a traiter vos donnees avec transparence et soin.';
+      'Votre vie privée est importante pour nous. Cette Politique de confidentialité explique comment Kalé collecte, utilise, stocke et protège vos informations personnelles et financières. Nous nous engageons à traiter vos données avec transparence et soin.';
 
   @override
   String get legalPrivacyCollectionHeading =>
@@ -1272,51 +1275,51 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get legalPrivacyCollectionBody =>
-      'Nous collectons les types d\'informations suivants :\n\nInformations de compte : Votre nom, adresse e-mail et identifiants d\'authentification lors de la creation de votre compte.\n\nDonnees financieres : Enregistrements de transactions, configurations de budget, objectifs d\'epargne et preferences de categories que vous saisissez dans l\'application.\n\nDonnees d\'utilisation : Analyses anonymes de la facon dont vous interagissez avec l\'application, y compris les vues d\'ecran et l\'utilisation des fonctionnalites, pour nous aider a ameliorer l\'experience.\n\nInformations sur l\'appareil : Type d\'appareil, version du systeme d\'exploitation et version de l\'application a des fins de compatibilite et de depannage.';
+      'Nous collectons les types d\'informations suivants :\n\nInformations de compte : Votre nom, adresse e-mail et identifiants d\'authentification lors de la création de votre compte.\n\nDonnées financières : Enregistrements de transactions, configurations de budget, objectifs d\'épargne et préférences de catégories que vous saisissez dans l\'application.\n\nDonnées d\'utilisation : Analyses anonymes de la façon dont vous interagissez avec l\'application, y compris les vues d\'écran et l\'utilisation des fonctionnalités, pour nous aider à améliorer l\'expérience.\n\nInformations sur l\'appareil : Type d\'appareil, version du système d\'exploitation et version de l\'application à des fins de compatibilité et de dépannage.';
 
   @override
   String get legalPrivacyUsageHeading =>
-      '3. Comment nous utilisons vos donnees';
+      '3. Comment nous utilisons vos données';
 
   @override
   String get legalPrivacyUsageBody =>
-      'Nous utilisons vos informations pour :\n\n- Fournir, maintenir et ameliorer les fonctionnalites et services de Kale\n- Generer des resumes financiers personnalises, des graphiques et des analyses\n- Vous envoyer des notifications telles que des alertes de budget et des rappels quotidiens (lorsqu\'ils sont actives)\n- Authentifier votre identite et securiser votre compte\n- Analyser les tendances d\'utilisation agregees pour ameliorer l\'experience de l\'application';
+      'Nous utilisons vos informations pour :\n\n- Fournir, maintenir et améliorer les fonctionnalités et services de Kalé\n- Générer des résumés financiers personnalisés, des graphiques et des analyses\n- Vous envoyer des notifications telles que des alertes de budget et des rappels quotidiens (lorsqu\'ils sont activés)\n- Authentifier votre identité et sécuriser votre compte\n- Analyser les tendances d\'utilisation agrégées pour améliorer l\'expérience de l\'application';
 
   @override
   String get legalPrivacyStorageHeading =>
-      '4. Stockage et securite des donnees';
+      '4. Stockage et sécurité des données';
 
   @override
   String get legalPrivacyStorageBody =>
-      'Vos donnees sont stockees de maniere securisee en utilisant des pratiques conformes aux normes de l\'industrie. Toutes les donnees sont chiffrees en transit via TLS et au repos sur nos serveurs. Nous utilisons Supabase comme infrastructure backend, qui fournit une securite de niveau entreprise, des controles d\'acces et une isolation des donnees. Nous revisons regulierement nos pratiques de securite et limitons l\'acces a vos donnees au personnel autorise uniquement.';
+      'Vos données sont stockées de manière sécurisée en utilisant des pratiques conformes aux normes de l\'industrie. Toutes les données sont chiffrées en transit via TLS et au repos sur nos serveurs. Nous utilisons Supabase comme infrastructure backend, qui fournit une sécurité de niveau entreprise, des contrôles d\'accès et une isolation des données. Nous révisons régulièrement nos pratiques de sécurité et limitons l\'accès à vos données au personnel autorisé uniquement.';
 
   @override
   String get legalPrivacyThirdPartyHeading => '5. Services tiers';
 
   @override
   String get legalPrivacyThirdPartyBody =>
-      'Kale s\'integre aux services tiers suivants :\n\n- Google Sign-In et Apple Sign-In pour l\'authentification\n- Services d\'analyse pour le suivi anonyme de l\'utilisation\n- Services de signalement de crash pour identifier et corriger les problemes de l\'application\n\nNous ne vendons pas, ne louons pas et ne partageons pas vos donnees personnelles ou financieres avec des tiers a des fins de marketing. Les services tiers ne recoivent que les donnees minimales necessaires pour remplir leur fonction.';
+      'Kalé s\'intègre aux services tiers suivants :\n\n- Google Sign-In et Apple Sign-In pour l\'authentification\n- Services d\'analyse pour le suivi anonyme de l\'utilisation\n- Services de signalement de crash pour identifier et corriger les problèmes de l\'application\n\nNous ne vendons pas, ne louons pas et ne partageons pas vos données personnelles ou financières avec des tiers à des fins de marketing. Les services tiers ne reçoivent que les données minimales nécessaires pour remplir leur fonction.';
 
   @override
   String get legalPrivacyRightsHeading => '6. Vos droits';
 
   @override
   String get legalPrivacyRightsBody =>
-      'Vous avez le droit de :\n\n- Acceder aux donnees personnelles que nous detenons sur vous\n- Corriger les informations inexactes de votre compte\n- Supprimer votre compte et toutes les donnees associees\n- Exporter vos donnees financieres\n- Restreindre ou vous opposer a certains traitements de vos donnees\n\nPour exercer l\'un de ces droits, contactez-nous a privacy@kale.app ou utilisez les fonctionnalites de gestion de compte dans l\'application.';
+      'Vous avez le droit de :\n\n- Accéder aux données personnelles que nous détenons sur vous\n- Corriger les informations inexactes de votre compte\n- Supprimer votre compte et toutes les données associées\n- Exporter vos données financières\n- Restreindre ou vous opposer à certains traitements de vos données\n\nPour exercer l\'un de ces droits, contactez-nous à privacy@kale.app ou utilisez les fonctionnalités de gestion de compte dans l\'application.';
 
   @override
-  String get legalPrivacyRetentionHeading => '7. Conservation des donnees';
+  String get legalPrivacyRetentionHeading => '7. Conservation des données';
 
   @override
   String get legalPrivacyRetentionBody =>
-      'Nous conservons vos donnees aussi longtemps que votre compte est actif. Si vous supprimez votre compte, nous supprimerons vos donnees personnelles et financieres de nos serveurs dans les 30 jours. Certaines donnees anonymisees et agregees peuvent etre conservees a des fins d\'analyse. Nous pouvons egalement conserver certaines donnees comme requis par la loi.';
+      'Nous conservons vos données aussi longtemps que votre compte est actif. Si vous supprimez votre compte, nous supprimerons vos données personnelles et financières de nos serveurs dans les 30 jours. Certaines données anonymisées et agrégées peuvent être conservées à des fins d\'analyse. Nous pouvons également conserver certaines données comme requis par la loi.';
 
   @override
-  String get legalPrivacyChildrenHeading => '8. Vie privee des enfants';
+  String get legalPrivacyChildrenHeading => '8. Vie privée des enfants';
 
   @override
   String get legalPrivacyChildrenBody =>
-      'Kale ne s\'adresse pas aux enfants de moins de 13 ans. Nous ne collectons pas sciemment d\'informations personnelles aupres d\'enfants de moins de 13 ans. Si nous apprenons que nous avons collecte des donnees d\'un enfant de moins de 13 ans sans le consentement parental, nous prendrons des mesures pour supprimer ces informations rapidement.';
+      'Kalé ne s\'adresse pas aux enfants de moins de 13 ans. Nous ne collectons pas sciemment d\'informations personnelles auprès d\'enfants de moins de 13 ans. Si nous apprenons que nous avons collecté des données d\'un enfant de moins de 13 ans sans le consentement parental, nous prendrons des mesures pour supprimer ces informations rapidement.';
 
   @override
   String get legalPrivacyChangesHeading =>
@@ -1324,27 +1327,27 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get legalPrivacyChangesBody =>
-      'Nous pouvons mettre a jour cette Politique de confidentialite de temps en temps. Nous vous informerons des modifications importantes via une notification dans l\'application ou par e-mail. Nous vous encourageons a consulter cette politique periodiquement. Votre utilisation continue de Kale apres la publication des modifications constitue votre acceptation de la politique mise a jour.';
+      'Nous pouvons mettre à jour cette Politique de confidentialité de temps en temps. Nous vous informerons des modifications importantes via une notification dans l\'application ou par e-mail. Nous vous encourageons à consulter cette politique périodiquement. Votre utilisation continue de Kalé après la publication des modifications constitue votre acceptation de la politique mise à jour.';
 
   @override
   String get legalPrivacyContactHeading => '10. Nous contacter';
 
   @override
   String get legalPrivacyContactBody =>
-      'Si vous avez des questions sur cette Politique de confidentialite ou sur la facon dont vos donnees sont traitees, veuillez nous contacter a privacy@kale.app.';
+      'Si vous avez des questions sur cette Politique de confidentialité ou sur la façon dont vos données sont traitées, veuillez nous contacter à privacy@kale.app.';
 
   @override
-  String get offlineBanner => 'Vous etes hors ligne';
+  String get offlineBanner => 'Vous êtes hors ligne';
 
   @override
   String get emptyStateTitle => 'Rien ici pour le moment';
 
   @override
-  String get emptyStateSubtitle => 'Revenez plus tard pour les mises a jour.';
+  String get emptyStateSubtitle => 'Revenez plus tard pour les mises à jour.';
 
   @override
   String get budgetEmptyRecommendation =>
-      'Nous recommandons la regle 50/30/20 pour commencer';
+      'Nous recommandons la règle 50/30/20 pour commencer';
 
   @override
   String get budgetStartWith5030 => 'Commencer avec 50/30/20';
@@ -1353,7 +1356,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get budgetCustomBudget => 'Budget personnalise';
 
   @override
-  String get budgetEmptyQuickTip => 'Cela ne prend qu\'une minute a configurer';
+  String get budgetEmptyQuickTip => 'Cela ne prend qu\'une minute à configurer';
 
   @override
   String get savingsEmptyTemplateTitle =>
@@ -1366,40 +1369,40 @@ class AppLocalizationsFr extends AppLocalizations {
   String get savingsTemplateVacation => 'Vacances';
 
   @override
-  String get savingsTemplateNewPhone => 'Nouveau telephone';
+  String get savingsTemplateNewPhone => 'Nouveau téléphone';
 
   @override
-  String get savingsEmptyOrCreate => 'Ou creez votre propre objectif';
+  String get savingsEmptyOrCreate => 'Ou créez votre propre objectif';
 
   @override
   String get transactionsEmptyQuickTip => 'Cela ne prend que 10 secondes';
 
   @override
-  String get dashboardEmptyTitle => 'Bienvenue sur Kale !';
+  String get dashboardEmptyTitle => 'Bienvenue sur Kalé !';
 
   @override
   String get dashboardEmptySubtitle =>
-      'Completez ces etapes pour tirer le meilleur parti de vos finances :';
+      'Complétez ces étapes pour tirer le meilleur parti de vos finances :';
 
   @override
-  String get dashboardEmptyStep1 => 'Ajoutez votre premiere transaction';
+  String get dashboardEmptyStep1 => 'Ajoutez votre première transaction';
 
   @override
   String get dashboardEmptyStep2 => 'Configurez un budget';
 
   @override
-  String get dashboardEmptyStep3 => 'Creez un objectif d\'epargne';
+  String get dashboardEmptyStep3 => 'Créez un objectif d\'épargne';
 
   @override
   String dashboardStreak(int count) {
-    return 'Serie de $count jours';
+    return 'Série de $count jours';
   }
 
   @override
-  String get dashboardStreakStart => 'Commencez votre serie !';
+  String get dashboardStreakStart => 'Commencez votre série !';
 
   @override
-  String get dashboardFinancialHealth => 'Sante financiere';
+  String get dashboardFinancialHealth => 'Santé financière';
 
   @override
   String get dashboardHealthExcellent => 'Excellent';
@@ -1411,7 +1414,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dashboardHealthFair => 'Moyen';
 
   @override
-  String get dashboardHealthNeedsWork => 'A ameliorer';
+  String get dashboardHealthNeedsWork => 'À améliorer';
 
   @override
   String get notificationsTitle => 'Notifications';
@@ -1421,7 +1424,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notificationsEmptySubtitle =>
-      'Vous etes a jour ! Les notifications concernant vos budgets, epargnes et rappels apparaitront ici.';
+      'Vous êtes à jour ! Les notifications concernant vos budgets, épargnes et rappels apparaîtront ici.';
 
   @override
   String get baseCurrencyStepTitle => 'Choisissez votre devise';
