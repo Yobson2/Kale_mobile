@@ -12,14 +12,12 @@ sealed class AuthState with _$AuthState {
   /// Loading state during auth operations.
   const factory AuthState.loading() = AuthLoading;
 
-  /// User is authenticated.
+  /// User is authenticated. Someone trying the app without an account is
+  /// authenticated too, as an anonymous user ([User.isAnonymous]).
   const factory AuthState.authenticated(User user) = AuthAuthenticated;
 
   /// User is not authenticated.
   const factory AuthState.unauthenticated() = AuthUnauthenticated;
-
-  /// User is exploring the app as a guest (no account).
-  const factory AuthState.guest() = AuthGuest;
 
   /// An error occurred during an auth operation.
   const factory AuthState.error(String message) = AuthError;

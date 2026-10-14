@@ -1,53 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kale/core/extensions/context_extensions.dart';
+import 'package:kale/core/sync/backup_status.dart';
 import 'package:kale/core/sync/sync_providers.dart';
-import 'package:kale/core/sync/sync_status.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 
-/// Banner that displays the current sync status.
+/// Banner that tells the user when their data is not safely backed up.
 ///
-/// Shows contextual messages for offline, syncing, error, and synced states.
-/// Place below the app bar in a [Column] or as part of a [Scaffold] body.
+/// Shows, in priority order: stuck changes ("N changes not backed up ·
+/// Retry"), pending changes while offline, and a backup in progress.
+/// Hidden otherwise. Place below the app bar in a [Column] or as part of
+/// a [Scaffold] body.
 class SyncStatusBanner extends ConsumerWidget {
   /// Creates a [SyncStatusBanner].
   const SyncStatusBanner({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statusAsync = ref.watch(syncStatusProvider);
+    final status = ref.watch(backupStatusProvider).valueOrNull;
+    if (status == null) return const SizedBox.shrink();
 
-    return statusAsync.when(
-      data: (status) => switch (status) {
-        SyncOffline(:final pendingCount) => _Banner(
-            icon: Icons.cloud_off,
-            message:
-                'Offline. $pendingCount change${pendingCount == 1 ? '' : 's'} pending.',
-            color: Theme.of(context).colorScheme.error,
-          ),
-        SyncSyncing(:final total, :final completed) => _Banner(
-            icon: Icons.cloud_sync,
-            message: 'Syncing... ($completed/$total)',
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        SyncError(:final message) => _Banner(
-            icon: Icons.cloud_off,
-            message: 'Sync failed: $message',
-            color: Theme.of(context).colorScheme.error,
-            action: TextButton(
-              onPressed: () => ref.read(syncEngineProvider).processQueue(),
-              child: Text(
-                'Retry',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onError,
-                ),
-              ),
+    final colors = context.colorScheme;
+    final l10n = context.l10n;
+
+    return switch (status) {
+      BackupStatus(:final stuckCount) when stuckCount > 0 => _Banner(
+          icon: Icons.cloud_off,
+          message: l10n.backupStuck(stuckCount),
+          color: colors.error,
+          action: TextButton(
+            onPressed: () => ref.read(syncEngineProvider).retry(),
+            child: Text(
+              l10n.commonRetry,
+              style: TextStyle(color: colors.onError),
             ),
           ),
-        SyncSynced() || SyncIdle() => const SizedBox.shrink(),
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
-    );
+        ),
+      BackupStatus(:final pendingCount, isOffline: true)
+          when pendingCount > 0 =>
+        _Banner(
+          icon: Icons.cloud_off,
+          message: l10n.backupOfflinePending(pendingCount),
+          color: colors.surfaceContainerHighest,
+        ),
+      BackupStatus(isSyncing: true) => _Banner(
+          icon: Icons.cloud_sync,
+          message: l10n.backupSyncing,
+          color: colors.primary,
+        ),
+      _ => const SizedBox.shrink(),
+    };
   }
 }
 

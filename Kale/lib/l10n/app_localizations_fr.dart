@@ -180,11 +180,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authTryFirstSubtitle => 'Explorez l\'application sans compte';
 
   @override
-  String get guestBannerMessage =>
-      'Creez un compte pour synchroniser vos donnees';
+  String get anonymousSaveDataCta =>
+      'Creez un compte pour sauvegarder vos donnees';
 
   @override
-  String get guestBannerAction => 'S\'inscrire';
+  String get anonymousBannerAction => 'S\'inscrire';
 
   @override
   String get authRegisterStep1Title => 'Creez votre compte';
@@ -1424,27 +1424,53 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vous etes a jour ! Les notifications concernant vos budgets, epargnes et rappels apparaitront ici.';
 
   @override
-  String get baseCurrencyStepTitle => 'Choisissez votre devise';
-
-  @override
-  String get baseCurrencyStepDescription =>
-      'Tous les montants dans Kalé sont enregistrés dans cette devise. Vous pourrez la changer plus tard.';
-
-  @override
-  String get baseCurrencyLabel => 'Devise de base';
-
-  @override
-  String get baseCurrencyRelabelTitle => 'Changer la devise de base ?';
-
-  @override
-  String baseCurrencyRelabelMessage(String currency) {
-    return 'Vos transactions existantes gardent les mêmes chiffres et seront affichées en $currency. Aucune conversion n\'est faite.';
+  String backupStuck(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications non sauvegardées',
+      one: '1 modification non sauvegardée',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get baseCurrencyRelabelConfirm => 'Changer quand même';
+  String backupOfflinePending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Hors ligne · $count modifications en attente',
+      one: 'Hors ligne · 1 modification en attente',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get baseCurrencyChangeFailed =>
-      'Impossible de changer la devise. Veuillez réessayer.';
+  String get backupSyncing => 'Sauvegarde en cours…';
+
+  @override
+  String get settingsBackup => 'Sauvegarde';
+
+  @override
+  String get settingsBackupUpToDate =>
+      'Toutes les modifications sont sauvegardées';
+
+  @override
+  String settingsBackupPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modifications en attente de sauvegarde',
+      one: '1 modification en attente de sauvegarde',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsBackupLast(String date) {
+    return 'Dernière sauvegarde : $date';
+  }
+
+  @override
+  String get settingsBackupNever => 'Pas encore sauvegardé';
 }

@@ -65,8 +65,8 @@
   "authPrivacyPolicy": "Privacy Policy",
   "authTryFirst": "Try Kale First",
   "authTryFirstSubtitle": "Explore the app without an account",
-  "guestBannerMessage": "Create an account to sync your data",
-  "guestBannerAction": "Sign Up",
+  "anonymousSaveDataCta": "Create an account to save your data",
+  "anonymousBannerAction": "Sign Up",
   "authRegisterStep1Title": "Create Your Account",
   "authRegisterStep1Subtitle": "Enter your email to get started",
   "authRegisterStep2Subtitle": "Complete your profile to finish signing up",
@@ -563,16 +563,34 @@
   "notificationsEmpty": "No notifications yet",
   "notificationsEmptySubtitle": "You're all caught up! Notifications about your budgets, savings, and reminders will appear here.",
 
-  "baseCurrencyStepTitle": "Choose your currency",
-  "baseCurrencyStepDescription": "Every amount in Kalé is recorded in this currency. You can change it later.",
-  "baseCurrencyLabel": "Base currency",
-  "baseCurrencyRelabelTitle": "Change base currency?",
-  "baseCurrencyRelabelMessage": "Your existing transactions keep the same numbers and will be shown in {currency}. Nothing is converted.",
-  "@baseCurrencyRelabelMessage": {
+  "backupStuck": "{count, plural, =1{1 change not backed up} other{{count} changes not backed up}}",
+  "@backupStuck": {
+    "description": "Sync banner and Settings: changes that failed every retry",
     "placeholders": {
-      "currency": {"type": "String"}
+      "count": { "type": "int" }
     }
   },
-  "baseCurrencyRelabelConfirm": "Change anyway",
-  "baseCurrencyChangeFailed": "Could not change the currency. Please try again."
+  "backupOfflinePending": "{count, plural, =1{Offline · 1 change waiting} other{Offline · {count} changes waiting}}",
+  "@backupOfflinePending": {
+    "description": "Sync banner while offline with changes not yet backed up",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "backupSyncing": "Backing up…",
+  "settingsBackup": "Backup",
+  "settingsBackupUpToDate": "All changes backed up",
+  "settingsBackupPending": "{count, plural, =1{1 change waiting to back up} other{{count} changes waiting to back up}}",
+  "@settingsBackupPending": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsBackupLast": "Last backup: {date}",
+  "@settingsBackupLast": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "settingsBackupNever": "Not backed up yet"
 }

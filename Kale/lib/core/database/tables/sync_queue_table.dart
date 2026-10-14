@@ -27,7 +27,7 @@ class SyncQueueEntries extends Table {
   /// Number of retry attempts so far.
   IntColumn get retryCount => integer().withDefault(const Constant(0))();
 
-  /// Status: 'pending', 'in_progress', 'failed'.
+  /// Status: 'pending', 'in_progress' or 'stuck' (see `SyncQueueStatus`).
   TextColumn get status => text().withDefault(const Constant('pending'))();
 
   /// Optional error message from the last failed attempt.

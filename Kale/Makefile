@@ -1,4 +1,4 @@
-.PHONY: help get gen watch test analyze format l10n clean run run-local run-staging run-prod build-staging build-prod icons splash integration db-start db-stop db-reset db-diff-live
+.PHONY: help get gen watch test analyze format l10n clean run run-local run-staging run-prod build-staging build-prod icons splash integration db-start db-stop db-reset db-test db-diff-live
 
 # The project is pinned to the Flutter version in .fvmrc (see docs/development.md).
 # Override to use another SDK, e.g. `make test FLUTTER=flutter DART=dart`.
@@ -62,6 +62,9 @@ db-stop: ## Stop the local Supabase stack
 
 db-reset: ## Recreate the local database from supabase/migrations
 	npx supabase db reset
+
+db-test: ## Run the server SQL tests (supabase/tests, pgTAP) against the local stack
+	npx supabase test db
 
 db-diff-live: ## Diff the linked (live) project against supabase/migrations
 	npx supabase db diff --linked --schema public,auth,storage > supabase/live_drift.sql

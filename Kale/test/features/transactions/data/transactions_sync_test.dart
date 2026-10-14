@@ -5,7 +5,10 @@ import '../../../helpers/sync_harness.dart';
 void main() {
   late SyncHarness harness;
 
-  setUp(() => harness = SyncHarness());
+  setUp(() async {
+    harness = SyncHarness();
+    await harness.settle(); // Let the launch sync finish.
+  });
   tearDown(() => harness.dispose());
 
   test('a created transaction is pushed once and marked synced', () async {
@@ -31,7 +34,9 @@ void main() {
   });
 
   for (final failure in SimulatedFailure.values) {
-    test('a ${failure.name} error fails only that push; the next sync retries',
+    test(
+        'a ${failure.name} error fails only that push; it is retried '
+        '${failure == SimulatedFailure.network ? 'by the next sync' : 'after its backoff'}',
         () async {
       final first = await harness.addTransaction(description: 'first');
       final second = await harness.addTransaction(description: 'second');
@@ -46,7 +51,12 @@ void main() {
       expect((await harness.readTransaction(first.id)).isSynced, isFalse);
       expect((await harness.readTransaction(second.id)).isSynced, isTrue);
 
-      await harness.sync();
+      switch (failure) {
+        case SimulatedFailure.network:
+          await harness.sync();
+        case SimulatedFailure.server:
+          await harness.elapse(const Duration(seconds: 1));
+      }
 
       expect(
         harness.server.transactions.calls.last,

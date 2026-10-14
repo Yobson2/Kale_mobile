@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
-import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/utils/validators.dart';
@@ -13,8 +12,8 @@ import 'package:kale/core/widgets/inputs/app_text_field.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
 import 'package:kale/features/auth/presentation/widgets/auth_header.dart';
-import 'package:kale/features/auth/presentation/widgets/guest_mode_button.dart';
 import 'package:kale/features/auth/presentation/widgets/social_login_buttons.dart';
+import 'package:kale/features/auth/presentation/widgets/try_first_button.dart';
 
 /// Login page with editorial header, gradient CTA, and social login grid.
 class LoginPage extends ConsumerStatefulWidget {
@@ -77,6 +76,8 @@ class _LoginPageState extends ConsumerState<LoginPage>
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
     final isLoading = authState is AuthLoading;
+    final isAnonymous =
+        authState is AuthAuthenticated && authState.user.isAnonymous;
     final colorScheme = context.colorScheme;
 
     ref.listen<AuthState>(authNotifierProvider, (_, state) {
@@ -179,18 +180,19 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         ),
                         AppSpacing.verticalXl,
 
-                        // Guest mode with gradient border
-                        GuestModeButton(
-                          onPressed: () async {
-                            await ref.read(localStorageProvider).setGuestMode();
-                            ref
+                        // Try first: starts an anonymous session. Hidden
+                        // when already anonymous: a second anonymous
+                        // account would strand the first one's data.
+                        if (!isAnonymous) ...[
+                          TryFirstButton(
+                            onPressed: () => ref
                                 .read(authNotifierProvider.notifier)
-                                .enterGuestMode();
-                          },
-                          colorScheme: colorScheme,
-                          label: context.l10n.authTryFirst,
-                        ),
-                        AppSpacing.verticalXl,
+                                .signInAnonymously(),
+                            colorScheme: colorScheme,
+                            label: context.l10n.authTryFirst,
+                          ),
+                          AppSpacing.verticalXl,
+                        ],
 
                         // Register link
                         Row(

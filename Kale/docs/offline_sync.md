@@ -20,12 +20,14 @@ Auth and preferences are not part of this. They live in secure storage and Share
 | Piece | Location | Role |
 |---|---|---|
 | `AppDatabase` | `core/database/` | Registers every table and DAO; owns `schemaVersion`, migrations, default-category seeding, and `clearAllData()` (logout) |
-| Sync queue table + `SyncQueueDao` | `core/database/` | FIFO queue: `entityType`, `entityId`, `operation` (`create`/`update`/`delete`), JSON `payload`, `status`, `retryCount`, `lastError` |
+| Sync queue table + `SyncQueueDao` | `core/database/` | FIFO queue: `entityType`, `entityId`, `operation` (`create`/`update`/`delete`), JSON `payload`, `status` (`pending`/`in_progress`/`stuck`), `retryCount`, `lastError` |
 | `SyncEngine` + `SyncHandler` | `core/sync/sync_engine.dart` | Engine processes the queue; one handler per entity type does the actual push |
-| `SyncConfig` | `core/sync/` | Retries (max 5) and exponential backoff (1s doubling, capped at 60s) |
-| `SyncStatus` | `core/sync/` | Sealed: `idle`, `syncing(total, completed)`, `synced`, `error`, `offline(pendingCount)` |
-| Providers | `core/sync/sync_providers.dart` | `syncEngineProvider` (keepAlive), `syncStatusProvider`, `pendingSyncCountProvider` |
-| UI | `core/widgets/feedback/` | `SyncStatusBanner` (with retry), `SyncStatusIcon` (per item) |
+| `SyncConfig` | `core/sync/` | Retries (max 5), exponential backoff (1s doubling, capped at 60s), write debounce (2s) |
+| `SyncClock` | `core/sync/` | The engine's only source of time and timers; tests swap in a fake clock |
+| `BackupStatus` | `core/sync/` | `pendingCount`, `stuckCount`, `isSyncing`, `isOffline`, `lastBackupAt` (persisted by `LastBackupStore`) |
+| Providers | `core/sync/sync_providers.dart` | `syncEngineProvider` (keepAlive), `backupStatusProvider` |
+| App wiring | `core/sync/sync_app_lifecycle.dart` | `SyncAppLifecycle` wraps the app root: starts the engine at launch, calls `onAppResumed()` on resume |
+| UI | `core/widgets/feedback/`, `features/more/` | `SyncStatusBanner` (in the home shell; "N changes not backed up · Retry"), `BackupStatusTile` (Settings), `SyncStatusIcon` (per item) |
 
 Feature tables and DAOs live in the feature (`features/<f>/data/tables/`, `data/daos/`) but are registered in `AppDatabase`.
 
@@ -34,14 +36,26 @@ Feature tables and DAOs live in the feature (`features/<f>/data/tables/`, `data/
 1. The repository generates a UUID, builds the model with `isSynced: false`, and saves it through the local datasource.
 2. The local datasource calls `enqueueSync(entityId, operation, payload: jsonEncode(model.toJson()))`.
 3. The repository returns `Right(entity)`. Drift streams update the UI immediately.
-4. When the engine runs `processQueue()`, for each pending entry it:
+4. When the engine runs `processQueue()`, for each pending entry that is not backing off it:
    - looks up the handler by `entityType` and calls `pushCreate` / `pushUpdate` / `pushDelete`;
    - on success, the handler marks the row synced (and stores `serverId`), and the entry is deleted from the queue;
    - on `ServerException` 409, it calls `fetchRemote` then `applyServerVersion` (server wins), then completes the entry;
-   - on `NetworkException`, it marks the entry failed without counting a retry;
-   - on any other error, it records `lastError`, increments `retryCount`, and backs off. Entries at `maxRetries` are skipped.
+   - on `NetworkException`, it leaves the entry pending without using a retry;
+   - on any other error, it records `lastError` and uses a retry. Below `maxRetries` the entry backs off
+     (1s, 2s, 4s…, without blocking the run) and a run is triggered when the backoff expires. At `maxRetries`
+     the entry is marked **stuck**: kept, counted in `BackupStatus.stuckCount`, never dropped.
+5. When a run ends with nothing pending or stuck, the engine records `lastBackupAt`.
 
-`processQueue()` is triggered when connectivity changes to online and by the banner's retry button.
+### Triggers
+
+A run starts on: a local write (any insert into the queue, debounced 2s), app launch and resume
+(`SyncAppLifecycle`), connectivity coming back, manual retry (`SyncEngine.retry()`, from the banner or
+Settings), and an expired backoff. A trigger that arrives during a run schedules one follow-up run, so
+overlapping triggers coalesce. Manual retry also gives stuck entries a fresh set of retries; each app start
+resets every retry count.
+
+Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounce and backoff timers only on
+`elapse()`, and it exposes `resumeApp()`, `retry()`, `restartApp()`, `syncRuns` and `backupStatus`.
 
 ## Money and the base currency
 
@@ -88,11 +102,10 @@ Feature tables and DAOs live in the feature (`features/<f>/data/tables/`, `data/
 
 - **Savings never syncs.** `savings_local_datasource.dart` enqueues `savings_goal` entries, but there is no
   savings `SyncHandler`. The engine logs `No SyncHandler registered for "savings_goal"` and skips them, so
-  savings data never reaches Supabase.
+  savings data never reaches Supabase. Those entries stay pending, so Settings counts them as waiting and
+  `lastBackupAt` is not updated while any exist.
 - **Refresh drops unsynced local rows.** `replaceAll` in the DAOs deletes the whole table before inserting the
   server copy, including rows with `isSynced = false`. A record created while online disappears locally on the
   next background refresh, and comes back only after its queued push succeeds and a later refresh runs.
-- **Writes made while already online wait.** Nothing calls `processQueue()` after `enqueueSync`, so a queued
-  write sits until the next connectivity change or a manual retry.
 - **Handlers register lazily.** A handler registers only when its repository provider is first read. Queue
   entries for an entity whose feature hasn't been opened this session are skipped.

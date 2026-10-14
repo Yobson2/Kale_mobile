@@ -244,20 +244,60 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
-  /// Checks for a cached user session on app launch.
-  Future<void> checkAuthStatus() async {
+  /// Restores the session on app launch, or starts an anonymous one.
+  ///
+  /// A returning user (anonymous or not) keeps their cached session. With
+  /// no session, the app signs in anonymously so every user has a real
+  /// account whose data syncs. If that fails (e.g. offline on first
+  /// launch), the user is unauthenticated and can retry from the login
+  /// page.
+  Future<void> restoreSession() async {
     state = const AuthState.loading();
-    final result =
-        await ref.read(getCachedUserUseCaseProvider).call(const NoParams());
-    state = result.fold(
-      (_) => const AuthState.unauthenticated(),
-      AuthState.authenticated,
-    );
+    try {
+      final cached =
+          await ref.read(getCachedUserUseCaseProvider).call(const NoParams());
+      final cachedUser = cached.fold((_) => null, (user) => user);
+      if (cachedUser != null) {
+        state = AuthState.authenticated(cachedUser);
+        return;
+      }
+
+      final result = await ref
+          .read(signInAnonymouslyUseCaseProvider)
+          .call(const NoParams());
+      state = result.fold(
+        (_) => const AuthState.unauthenticated(),
+        AuthState.authenticated,
+      );
+    } catch (_) {
+      // Never leave launch stuck on the splash.
+      state = const AuthState.unauthenticated();
+    }
   }
 
-  /// Enters guest mode for "try before register" flow.
-  void enterGuestMode() {
-    state = const AuthState.guest();
+  /// Starts an anonymous session ("Try Kalé first").
+  ///
+  /// Returns `true` once the user is authenticated anonymously.
+  Future<bool> signInAnonymously() async {
+    state = const AuthState.loading();
+    try {
+      final result = await ref
+          .read(signInAnonymouslyUseCaseProvider)
+          .call(const NoParams());
+      return result.fold(
+        (failure) {
+          state = AuthState.error(failure.message);
+          return false;
+        },
+        (user) {
+          state = AuthState.authenticated(user);
+          return true;
+        },
+      );
+    } catch (e) {
+      state = AuthState.error(e.toString());
+      return false;
+    }
   }
 
   /// Syncs local data from the server after a successful login or signup.

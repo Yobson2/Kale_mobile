@@ -179,10 +179,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authTryFirstSubtitle => 'Explore the app without an account';
 
   @override
-  String get guestBannerMessage => 'Create an account to sync your data';
+  String get anonymousSaveDataCta => 'Create an account to save your data';
 
   @override
-  String get guestBannerAction => 'Sign Up';
+  String get anonymousBannerAction => 'Sign Up';
 
   @override
   String get authRegisterStep1Title => 'Create Your Account';
@@ -1407,27 +1407,52 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'re all caught up! Notifications about your budgets, savings, and reminders will appear here.';
 
   @override
-  String get baseCurrencyStepTitle => 'Choose your currency';
-
-  @override
-  String get baseCurrencyStepDescription =>
-      'Every amount in Kalé is recorded in this currency. You can change it later.';
-
-  @override
-  String get baseCurrencyLabel => 'Base currency';
-
-  @override
-  String get baseCurrencyRelabelTitle => 'Change base currency?';
-
-  @override
-  String baseCurrencyRelabelMessage(String currency) {
-    return 'Your existing transactions keep the same numbers and will be shown in $currency. Nothing is converted.';
+  String backupStuck(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes not backed up',
+      one: '1 change not backed up',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get baseCurrencyRelabelConfirm => 'Change anyway';
+  String backupOfflinePending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Offline · $count changes waiting',
+      one: 'Offline · 1 change waiting',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get baseCurrencyChangeFailed =>
-      'Could not change the currency. Please try again.';
+  String get backupSyncing => 'Backing up…';
+
+  @override
+  String get settingsBackup => 'Backup';
+
+  @override
+  String get settingsBackupUpToDate => 'All changes backed up';
+
+  @override
+  String settingsBackupPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes waiting to back up',
+      one: '1 change waiting to back up',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsBackupLast(String date) {
+    return 'Last backup: $date';
+  }
+
+  @override
+  String get settingsBackupNever => 'Not backed up yet';
 }

@@ -8,9 +8,7 @@ part of 'sync_providers.dart';
 
 String _$syncConfigHash() => r'b2d2f0ff7108f9a3f606efb51a3b70ca0d909f64';
 
-/// Retry and backoff settings for the [SyncEngine].
-///
-/// Overridden in tests to remove backoff delays.
+/// Retry, backoff and debounce settings for the [SyncEngine].
 ///
 /// Copied from [syncConfig].
 @ProviderFor(syncConfig)
@@ -26,7 +24,45 @@ final syncConfigProvider = Provider<SyncConfig>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SyncConfigRef = ProviderRef<SyncConfig>;
-String _$syncHandlersHash() => r'6fb2143f773d74a159292575fb4464606f2403eb';
+String _$syncClockHash() => r'640d1c1a26e2862e9236b30e4227c6b348788742';
+
+/// Time source for the [SyncEngine]. Overridden in tests with a fake
+/// clock so debounce and backoff need no real waits.
+///
+/// Copied from [syncClock].
+@ProviderFor(syncClock)
+final syncClockProvider = Provider<SyncClock>.internal(
+  syncClock,
+  name: r'syncClockProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$syncClockHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SyncClockRef = ProviderRef<SyncClock>;
+String _$lastBackupStoreHash() => r'1a757fa03688187349b795213ac7d004f9548c77';
+
+/// Where the [SyncEngine] persists the last successful backup time.
+///
+/// Copied from [lastBackupStore].
+@ProviderFor(lastBackupStore)
+final lastBackupStoreProvider = Provider<LastBackupStore>.internal(
+  lastBackupStore,
+  name: r'lastBackupStoreProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$lastBackupStoreHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef LastBackupStoreRef = ProviderRef<LastBackupStore>;
+String _$syncHandlersHash() => r'1789c1511d47d6a07cd4f5e935c2fbbb4e6b711a';
 
 /// Every [SyncHandler] in the app, one per syncable entity type.
 ///
@@ -47,10 +83,11 @@ final syncHandlersProvider = Provider<List<SyncHandler>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SyncHandlersRef = ProviderRef<List<SyncHandler>>;
-String _$syncEngineHash() => r'782c85efda14321941a32b8a414fdc6c7777f332';
+String _$syncEngineHash() => r'1d1514a39394551433b875030c71c3dc2f32d27c';
 
 /// Provides the [SyncEngine] singleton, with every handler from
-/// [syncHandlers] registered at construction.
+/// [syncHandlers] registered at construction. Reading it starts the
+/// engine (see [SyncEngine.start]); the app root does so at launch.
 ///
 /// Copied from [syncEngine].
 @ProviderFor(syncEngine)
@@ -66,42 +103,23 @@ final syncEngineProvider = Provider<SyncEngine>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SyncEngineRef = ProviderRef<SyncEngine>;
-String _$syncStatusHash() => r'bf656d81ec99f09b8c2e684f4f4ef8c40b20d3e9';
+String _$backupStatusHash() => r'3b56618bb349cc18fd78c8025cae0e074b4e4286';
 
-/// Streams the current [SyncStatus] for UI widgets.
+/// Streams the [BackupStatus] for the sync banner and Settings.
 ///
-/// Copied from [syncStatus].
-@ProviderFor(syncStatus)
-final syncStatusProvider = AutoDisposeStreamProvider<SyncStatus>.internal(
-  syncStatus,
-  name: r'syncStatusProvider',
+/// Copied from [backupStatus].
+@ProviderFor(backupStatus)
+final backupStatusProvider = AutoDisposeStreamProvider<BackupStatus>.internal(
+  backupStatus,
+  name: r'backupStatusProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$syncStatusHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$backupStatusHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef SyncStatusRef = AutoDisposeStreamProviderRef<SyncStatus>;
-String _$pendingSyncCountHash() => r'ec197835d59646a205e5e44c40daf090d32d7fb0';
-
-/// Provides the count of pending sync operations for badges.
-///
-/// Copied from [pendingSyncCount].
-@ProviderFor(pendingSyncCount)
-final pendingSyncCountProvider = AutoDisposeStreamProvider<int>.internal(
-  pendingSyncCount,
-  name: r'pendingSyncCountProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$pendingSyncCountHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef PendingSyncCountRef = AutoDisposeStreamProviderRef<int>;
+typedef BackupStatusRef = AutoDisposeStreamProviderRef<BackupStatus>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

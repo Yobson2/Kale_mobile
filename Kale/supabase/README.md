@@ -48,7 +48,7 @@ Core infrastructure:
 
 ### 20260220000002_feature_tables.sql
 All feature tables matching the Flutter domain entities:
-- `categories` — user-scoped transaction categories (TEXT PK matching Dart `DefaultCategories` IDs)
+- `categories` — user-scoped transaction categories (TEXT ids matching Dart `DefaultCategories` IDs; keyed per user since `20261013000001`)
 - `transactions` — income/expense/transfer records with mobile money support
 - `budgets` — budget plans with strategy (50/30/20, 80/20, envelope, custom) and period
 - `budget_category_allocations` — per-category allocation within a budget (CASCADE on budget delete)
@@ -78,26 +78,24 @@ Added after the restore, from a security review:
 - `update_savings_goal_amount` runs one primary-key `UPDATE` as the invoking user (RLS applies) instead of two
   as `SECURITY DEFINER`.
 
-### 20261013000100_reset_transactions_minor_units.sql
-Schema reset for issue #5 (decision Q11: dropped and recreated, data not kept):
-- `currencies` reference table (code, symbol, decimal places), readable by everyone, mirroring
-  `lib/core/money/currency.dart`
-- `profiles.base_currency` (FK to `currencies`, NULL until onboarding) replaces `preferred_currency`
-- `transactions` recreated: `amount_minor BIGINT` (minor units of the base currency), no `currency_code`, UUID id,
-  client-owned `updated_at` (no trigger), nullable `deleted_at`, index on `(user_id, updated_at)`, and one owner-only
-  RLS policy for the `authenticated` role (anonymous users included); `anon` has no access
+### 20261013000001_categories_key_per_user.sql
+`categories` is keyed by `(user_id, id)` instead of `id`. Every user is seeded with the same default ids
+(`cat_food`, …), so the second user ever created failed in `handle_new_user()` and their sign-up was aborted.
+With anonymous sign-in (#11) every fresh install creates a user.
 
-## SQL tests
+## Anonymous users
 
-pgTAP tests live in `supabase/tests/database/`. Run them against the local stack (Docker):
+Every fresh install signs in anonymously, so anonymous sign-ins must be **enabled** on each project, and
+rate-limited because they are an open sign-up door. `config.toml` configures the local stack
+(`enable_anonymous_sign_ins`, `[auth.rate_limit] anonymous_users`). On staging and production set the same in the
+dashboard: Authentication > Sign In / Providers > "Allow anonymous sign-ins", and Authentication > Rate Limits >
+anonymous sign-ins per hour per IP. RLS policies don't special-case anonymous users (their JWT role is
+`authenticated`); `supabase/tests/database/anonymous_users_rls.test.sql` checks it.
 
-```bash
-npx supabase start
-npx supabase test db
-```
+## Server tests
 
-`transactions_rls.test.sql` checks the reset transactions table: its shape, and that one user (permanent or
-anonymous) can neither read nor write another user's transactions.
+SQL tests (pgTAP) live in `supabase/tests/`. Run them against the local stack with `make db-test`
+(`supabase test db`; needs Docker and `make db-start`).
 
 ## Database Schema
 
@@ -158,7 +156,9 @@ Checked statically against the app's remote datasources (no live access):
   (`cat_food`, …) for every user.** With these migrations as written, the second user to sign up hits a
   primary-key violation inside `handle_new_user`, and that sign-up fails. Either the live project differs here
   (look for a composite key or a changed seed function in the diff), or only one account was ever created.
-  Either way, the schema reset (per-user UUID keys) removes the problem.
+  Fixed by `20261013000001_categories_key_per_user.sql` (key `(user_id, id)`), because anonymous sign-in
+  creates a user on every fresh install. If the live project already has a composite key, that migration fails
+  on `DROP CONSTRAINT categories_pkey` there: adjust it before `db push`.
 - `on_savings_contribution_insert` adds each contribution to `savings_goals.current_amount`. It is harmless
   today (contributions never sync) but would double-count once they do; the schema reset drops it (decision Q6).
 

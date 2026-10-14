@@ -15,6 +15,7 @@ import 'package:kale/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/register_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/resend_otp_usecase.dart';
+import 'package:kale/features/auth/domain/usecases/sign_in_anonymously_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/update_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/sign_in_with_apple_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/sign_in_with_google_usecase.dart';
@@ -116,4 +117,10 @@ SignInWithGoogleUseCase signInWithGoogleUseCase(Ref ref) {
 @riverpod
 SignInWithAppleUseCase signInWithAppleUseCase(Ref ref) {
   return SignInWithAppleUseCase(ref.watch(authRepositoryProvider));
+}
+
+/// Provides the [SignInAnonymouslyUseCase].
+@riverpod
+SignInAnonymouslyUseCase signInAnonymouslyUseCase(Ref ref) {
+  return SignInAnonymouslyUseCase(ref.watch(authRepositoryProvider));
 }

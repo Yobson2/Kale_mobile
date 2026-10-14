@@ -11,6 +11,7 @@ import 'package:kale/core/widgets/data_display/app_avatar.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
+import 'package:kale/features/auth/presentation/widgets/account_action_button.dart';
 
 /// Profile page displaying user info, achievements bento grid, and logout.
 class ProfilePage extends ConsumerWidget {
@@ -133,13 +134,8 @@ class ProfilePage extends ConsumerWidget {
               ),
               AppSpacing.verticalXxl,
 
-              // Logout button
-              _LogoutButton(
-                label: l10n.profileLogout,
-                onTap: () {
-                  ref.read(authNotifierProvider.notifier).logout();
-                },
-              ),
+              // Logout, or account creation for an anonymous user
+              const AccountActionButton(),
               AppSpacing.verticalXl,
             ],
           ),
@@ -270,9 +266,7 @@ class _AchievementCell extends StatelessWidget {
         children: [
           Icon(
             achievement.icon,
-            color: isUnlocked
-                ? achievement.color
-                : colorScheme.outlineVariant,
+            color: isUnlocked ? achievement.color : colorScheme.outlineVariant,
             size: 28,
           ),
           AppSpacing.verticalSm,
@@ -390,55 +384,6 @@ class _SettingsTile extends StatelessWidget {
           ),
           if (trailing != null) trailing!,
         ],
-      ),
-    );
-  }
-}
-
-/// Logout button with error container styling.
-class _LogoutButton extends StatelessWidget {
-  const _LogoutButton({
-    required this.label,
-    required this.onTap,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-
-    return Material(
-      color: colorScheme.errorContainer,
-      borderRadius: AppRadius.borderRadiusMd,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: AppRadius.borderRadiusMd,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.lg,
-            vertical: AppSpacing.md,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.logout_rounded,
-                size: 20,
-                color: colorScheme.onErrorContainer,
-              ),
-              AppSpacing.horizontalSm,
-              Text(
-                label,
-                style: context.textTheme.labelLarge?.copyWith(
-                  color: colorScheme.onErrorContainer,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

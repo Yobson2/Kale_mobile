@@ -164,4 +164,58 @@ void main() {
       expect(result, isA<Left<Failure, User>>());
     });
   });
+
+  group('signInAnonymously', () {
+    const anonymousModel = UserModel(
+      id: 'anon-1',
+      email: '',
+      name: '',
+      isAnonymous: true,
+    );
+
+    test('returns an anonymous user and caches the session', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockRemote.signInAnonymously()).thenAnswer(
+        (_) async => (user: anonymousModel, tokens: tTokensModel),
+      );
+      when(() => mockLocal.cacheUser(any())).thenAnswer((_) async {});
+      when(() => mockLocal.cacheTokens(any())).thenAnswer((_) async {});
+
+      final result = await repository.signInAnonymously();
+
+      expect(
+        result,
+        const Right<Failure, User>(
+          User(id: 'anon-1', email: '', name: '', isAnonymous: true),
+        ),
+      );
+      verify(() => mockLocal.cacheUser(anonymousModel));
+      verify(() => mockLocal.cacheTokens(tTokensModel));
+    });
+
+    test('maps a server error to ServerFailure', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockRemote.signInAnonymously()).thenThrow(
+        const ServerException(message: 'Too many requests', statusCode: 429),
+      );
+
+      final result = await repository.signInAnonymously();
+
+      expect(
+        result,
+        const Left<Failure, User>(
+          ServerFailure(message: 'Too many requests', statusCode: 429),
+        ),
+      );
+    });
+
+    test('returns NetworkFailure when offline', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+
+      final result = await repository.signInAnonymously();
+
+      expect(result, const Left<Failure, User>(NetworkFailure()));
+      verifyNever(() => mockRemote.signInAnonymously());
+    });
+  });
 }

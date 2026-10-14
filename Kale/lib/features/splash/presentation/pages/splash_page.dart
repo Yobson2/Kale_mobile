@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_spacing.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/core/widgets/loading/app_progress.dart';
@@ -52,7 +53,15 @@ class _SplashPageState extends ConsumerState<SplashPage>
     ]).animate(_animController);
 
     _animController.forward();
+
+    // Restore the session, or sign in anonymously on first launch, while
+    // the splash shows. Deferred so the auth state doesn't change mid-build.
+    _session = Future(
+      () => ref.read(authNotifierProvider.notifier).restoreSession(),
+    );
   }
+
+  late final Future<void> _session;
 
   @override
   void dispose() {
@@ -65,27 +74,23 @@ class _SplashPageState extends ConsumerState<SplashPage>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    ref.listen(splashInitProvider, (_, next) {
-      if (!context.mounted) return;
+    ref.listen(splashInitProvider, (_, next) async {
       switch (next) {
         case AsyncData(:final value):
-          if (value != SplashResult.onboarding &&
-              value != SplashResult.guest) {
-            ref.read(authNotifierProvider.notifier).checkAuthStatus();
-          }
+          // Navigate only once the session is settled, so the router
+          // redirects on the final auth state.
+          await _session;
+          if (!context.mounted) return;
           switch (value) {
             case SplashResult.onboarding:
-              context.go('/onboarding');
-            case SplashResult.authenticated:
-              context.go('/dashboard');
-            case SplashResult.unauthenticated:
-              context.go('/login');
-            case SplashResult.guest:
-              ref.read(authNotifierProvider.notifier).enterGuestMode();
-              context.go('/dashboard');
+              context.go(RouteNames.onboarding);
+            case SplashResult.home:
+              context.go(RouteNames.dashboard);
           }
         case AsyncError():
-          context.go('/login');
+          await _session;
+          if (!context.mounted) return;
+          context.go(RouteNames.dashboard);
         case _:
           break;
       }

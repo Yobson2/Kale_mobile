@@ -422,17 +422,17 @@ abstract class AppLocalizations {
   /// **'Explore the app without an account'**
   String get authTryFirstSubtitle;
 
-  /// No description provided for @guestBannerMessage.
+  /// No description provided for @anonymousSaveDataCta.
   ///
   /// In en, this message translates to:
-  /// **'Create an account to sync your data'**
-  String get guestBannerMessage;
+  /// **'Create an account to save your data'**
+  String get anonymousSaveDataCta;
 
-  /// No description provided for @guestBannerAction.
+  /// No description provided for @anonymousBannerAction.
   ///
   /// In en, this message translates to:
   /// **'Sign Up'**
-  String get guestBannerAction;
+  String get anonymousBannerAction;
 
   /// No description provided for @authRegisterStep1Title.
   ///
@@ -2708,47 +2708,53 @@ abstract class AppLocalizations {
   /// **'You\'re all caught up! Notifications about your budgets, savings, and reminders will appear here.'**
   String get notificationsEmptySubtitle;
 
-  /// No description provided for @baseCurrencyStepTitle.
+  /// Sync banner and Settings: changes that failed every retry
   ///
   /// In en, this message translates to:
-  /// **'Choose your currency'**
-  String get baseCurrencyStepTitle;
+  /// **'{count, plural, =1{1 change not backed up} other{{count} changes not backed up}}'**
+  String backupStuck(int count);
 
-  /// No description provided for @baseCurrencyStepDescription.
+  /// Sync banner while offline with changes not yet backed up
   ///
   /// In en, this message translates to:
-  /// **'Every amount in Kalé is recorded in this currency. You can change it later.'**
-  String get baseCurrencyStepDescription;
+  /// **'{count, plural, =1{Offline · 1 change waiting} other{Offline · {count} changes waiting}}'**
+  String backupOfflinePending(int count);
 
-  /// No description provided for @baseCurrencyLabel.
+  /// No description provided for @backupSyncing.
   ///
   /// In en, this message translates to:
-  /// **'Base currency'**
-  String get baseCurrencyLabel;
+  /// **'Backing up…'**
+  String get backupSyncing;
 
-  /// No description provided for @baseCurrencyRelabelTitle.
+  /// No description provided for @settingsBackup.
   ///
   /// In en, this message translates to:
-  /// **'Change base currency?'**
-  String get baseCurrencyRelabelTitle;
+  /// **'Backup'**
+  String get settingsBackup;
 
-  /// No description provided for @baseCurrencyRelabelMessage.
+  /// No description provided for @settingsBackupUpToDate.
   ///
   /// In en, this message translates to:
-  /// **'Your existing transactions keep the same numbers and will be shown in {currency}. Nothing is converted.'**
-  String baseCurrencyRelabelMessage(String currency);
+  /// **'All changes backed up'**
+  String get settingsBackupUpToDate;
 
-  /// No description provided for @baseCurrencyRelabelConfirm.
+  /// No description provided for @settingsBackupPending.
   ///
   /// In en, this message translates to:
-  /// **'Change anyway'**
-  String get baseCurrencyRelabelConfirm;
+  /// **'{count, plural, =1{1 change waiting to back up} other{{count} changes waiting to back up}}'**
+  String settingsBackupPending(int count);
 
-  /// No description provided for @baseCurrencyChangeFailed.
+  /// No description provided for @settingsBackupLast.
   ///
   /// In en, this message translates to:
-  /// **'Could not change the currency. Please try again.'**
-  String get baseCurrencyChangeFailed;
+  /// **'Last backup: {date}'**
+  String settingsBackupLast(String date);
+
+  /// No description provided for @settingsBackupNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Not backed up yet'**
+  String get settingsBackupNever;
 }
 
 class _AppLocalizationsDelegate

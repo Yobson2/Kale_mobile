@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:kale/features/auth/data/models/tokens_model.dart';
+import 'package:kale/features/auth/data/models/user_model.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
 import 'package:kale/features/profile/data/datasources/profile_remote_datasource.dart';
@@ -55,8 +58,16 @@ class RemoteCall {
 ///   several calls in a row. Calls after the queue empties succeed.
 abstract class FakeRemote<M> {
   final List<RemoteCall> calls = [];
+
+  /// Who made each of [calls]: the signed-in user's id, or `null` when
+  /// nobody was signed in. Like Supabase stamping `user_id` from the
+  /// session.
+  final List<String?> callers = [];
   final Map<String, M> rows = {};
   final List<SimulatedFailure> _failures = [];
+
+  /// The session the calls are made under. Set by [FakeServer].
+  FakeAuthRemote? session;
 
   /// Makes the next not-yet-failed call throw [failure].
   void failNextCall(SimulatedFailure failure) => _failures.add(failure);
@@ -65,6 +76,7 @@ abstract class FakeRemote<M> {
   @protected
   Future<T> handle<T>(RemoteCall call, T Function() respond) async {
     calls.add(call);
+    callers.add(session?.currentUserId);
     if (_failures.isNotEmpty) {
       switch (_failures.removeAt(0)) {
         case SimulatedFailure.network:
@@ -133,25 +145,43 @@ class FakeBudgetsRemote extends FakeRemote<BudgetModel>
       handle(RemoteCall.delete(id), () => rows.remove(id));
 }
 
-/// Fake server `profiles` row of the signed-in user, held in
-/// `rows[ProfileModel.localId]`.
-class FakeProfileRemote extends FakeRemote<ProfileModel>
-    implements ProfileRemoteDataSource {
-  @override
-  Future<ProfileModel?> getProfile() => handle(
-        const RemoteCall.fetch(ProfileModel.localId),
-        () => rows[ProfileModel.localId],
-      );
+/// Fake Supabase Auth. Only anonymous sign-in is implemented; the other
+/// flows throw until a test needs them.
+class FakeAuthRemote implements AuthRemoteDataSource {
+  /// The signed-in user's id, or `null` when signed out.
+  String? currentUserId;
+
+  /// How many anonymous users were created.
+  int anonymousSignIns = 0;
 
   @override
-  Future<ProfileModel> updateProfile(ProfileModel model) => handle(
-        const RemoteCall.update(ProfileModel.localId),
-        () => rows[ProfileModel.localId] = model,
-      );
+  Future<({UserModel user, TokensModel tokens})> signInAnonymously() async {
+    anonymousSignIns++;
+    final id = 'anon-$anonymousSignIns';
+    currentUserId = id;
+    return (
+      user: UserModel(id: id, email: '', name: '', isAnonymous: true),
+      tokens: TokensModel(accessToken: 'access-$id', refreshToken: 'r-$id'),
+    );
+  }
+
+  @override
+  Future<void> logout() async => currentUserId = null;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) =>
+      throw UnimplementedError('FakeAuthRemote: ${invocation.memberName}');
 }
 
-/// The fake backend: one [FakeRemote] per synced table.
+/// The fake backend: Auth, plus one [FakeRemote] per synced table.
 class FakeServer {
+  FakeServer() {
+    for (final table in <FakeRemote<Object>>[transactions, budgets]) {
+      table.session = auth;
+    }
+  }
+
+  final auth = FakeAuthRemote();
   final transactions = FakeTransactionsRemote();
   final budgets = FakeBudgetsRemote();
   final profile = FakeProfileRemote();

@@ -58,8 +58,8 @@
   "authPrivacyPolicy": "Politique de confidentialite",
   "authTryFirst": "Essayer Kale d'abord",
   "authTryFirstSubtitle": "Explorez l'application sans compte",
-  "guestBannerMessage": "Creez un compte pour synchroniser vos donnees",
-  "guestBannerAction": "S'inscrire",
+  "anonymousSaveDataCta": "Creez un compte pour sauvegarder vos donnees",
+  "anonymousBannerAction": "S'inscrire",
   "authRegisterStep1Title": "Creez votre compte",
   "authRegisterStep1Subtitle": "Entrez votre e-mail pour commencer",
   "authRegisterStep2Subtitle": "Completez votre profil pour terminer l'inscription",
@@ -493,11 +493,12 @@
   "shareAppLinkCopied": "Lien copie dans le presse-papiers",
   "shareAppMessageCopied": "Message copie dans le presse-papiers",
 
-  "baseCurrencyStepTitle": "Choisissez votre devise",
-  "baseCurrencyStepDescription": "Tous les montants dans Kalé sont enregistrés dans cette devise. Vous pourrez la changer plus tard.",
-  "baseCurrencyLabel": "Devise de base",
-  "baseCurrencyRelabelTitle": "Changer la devise de base ?",
-  "baseCurrencyRelabelMessage": "Vos transactions existantes gardent les mêmes chiffres et seront affichées en {currency}. Aucune conversion n'est faite.",
-  "baseCurrencyRelabelConfirm": "Changer quand même",
-  "baseCurrencyChangeFailed": "Impossible de changer la devise. Veuillez réessayer."
+  "backupStuck": "{count, plural, =1{1 modification non sauvegardée} other{{count} modifications non sauvegardées}}",
+  "backupOfflinePending": "{count, plural, =1{Hors ligne · 1 modification en attente} other{Hors ligne · {count} modifications en attente}}",
+  "backupSyncing": "Sauvegarde en cours…",
+  "settingsBackup": "Sauvegarde",
+  "settingsBackupUpToDate": "Toutes les modifications sont sauvegardées",
+  "settingsBackupPending": "{count, plural, =1{1 modification en attente de sauvegarde} other{{count} modifications en attente de sauvegarde}}",
+  "settingsBackupLast": "Dernière sauvegarde : {date}",
+  "settingsBackupNever": "Pas encore sauvegardé"
 }
