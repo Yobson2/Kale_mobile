@@ -115,6 +115,10 @@ class SyncHarness {
   /// The budgets repository, as the feature's use cases get it.
   BudgetsRepository get budgets => _container.read(budgetsRepositoryProvider);
 
+  /// Budget creation, as the budget setup screen runs it.
+  CreateBudgetUseCase get createBudget =>
+      _container.read(createBudgetUseCaseProvider);
+
   /// The savings repository (goals and contributions), as the feature's
   /// use cases get it.
   SavingsRepository get savings => _container.read(savingsRepositoryProvider);
