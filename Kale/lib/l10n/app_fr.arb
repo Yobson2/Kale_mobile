@@ -634,9 +634,29 @@
   "guestDataChoiceCancel": "Annuler",
   "budgetSetupStartDay": "Jour de début de période",
   "budgetSetupStartDayMonthly": "Chaque période commence le {day} du mois, par exemple votre jour de paie.",
+  "@budgetSetupStartDayMonthly": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
   "budgetSetupStartDayWeekly": "Chaque semaine commence ce jour-là.",
   "budgetRenewTitle": "Votre budget est terminé",
   "budgetRenewMessage": "« {name} » couvrait du {start} au {end}. Le relancer pour la période en cours, avec les mêmes montants ?",
+  "@budgetRenewMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
   "budgetRenewAction": "Renouveler pour cette période",
   "budgetRenewed": "Budget renouvelé",
   "budgetRenewFailed": "Impossible de renouveler le budget. Veuillez réessayer."
