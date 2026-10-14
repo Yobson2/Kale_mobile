@@ -7,6 +7,7 @@ import 'package:kale/features/auth/domain/usecases/update_password_usecase.dart'
 import 'package:kale/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:kale/features/auth/presentation/providers/auth_providers.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
+import 'package:kale/features/auth/presentation/providers/logout_outcome.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
@@ -228,8 +229,39 @@ class AuthNotifier extends _$AuthNotifier {
   // Session
   // ---------------------------------------------------------------------------
 
-  /// Logs the user out.
-  Future<void> logout() async {
+  /// Logs the user out, without ever losing data silently.
+  ///
+  /// Backs up pending changes first. If every change reached the server,
+  /// logs out and wipes the phone ([LogoutOutcome.loggedOut]). Otherwise
+  /// nothing happens and the user stays logged in
+  /// ([LogoutOutcome.blocked], with the number of changes that would be
+  /// lost); only [discardChangesAndLogout] logs out from there.
+  Future<LogoutOutcome> logout() async {
+    final LogoutOutcome? stop;
+    try {
+      final backup = await ref
+          .read(backUpPendingChangesUseCaseProvider)
+          .call(const NoParams());
+      stop = backup.fold(
+        (failure) => LogoutOutcome.failed(failure.message),
+        (unsaved) =>
+            unsaved > 0 ? LogoutOutcome.blocked(unsavedChanges: unsaved) : null,
+      );
+    } catch (e) {
+      return LogoutOutcome.failed(e.toString());
+    }
+    if (stop != null) return stop;
+
+    await _logOutAndWipe();
+    return const LogoutOutcome.loggedOut();
+  }
+
+  /// Logs out even though some changes are not backed up: the user
+  /// explicitly confirmed losing them. Wipes the local data and the sync
+  /// queue.
+  Future<void> discardChangesAndLogout() => _logOutAndWipe();
+
+  Future<void> _logOutAndWipe() async {
     state = const AuthState.loading();
     try {
       final result =

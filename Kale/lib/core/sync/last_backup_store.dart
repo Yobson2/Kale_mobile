@@ -8,6 +8,9 @@ abstract class LastBackupStore {
 
   /// Records a successful backup at [time].
   Future<void> write(DateTime time);
+
+  /// Forgets the last backup time (the user logged out).
+  Future<void> clear();
 }
 
 /// [LastBackupStore] backed by [LocalStorage] (SharedPreferences).
@@ -24,6 +27,11 @@ class PreferencesLastBackupStore implements LastBackupStore {
   Future<void> write(DateTime time) async {
     await _storage.setLastBackupAt(time);
   }
+
+  @override
+  Future<void> clear() async {
+    await _storage.clearLastBackupAt();
+  }
 }
 
 /// [LastBackupStore] that keeps the value in memory only.
@@ -35,4 +43,7 @@ class InMemoryLastBackupStore implements LastBackupStore {
 
   @override
   Future<void> write(DateTime time) async => _time = time;
+
+  @override
+  Future<void> clear() async => _time = null;
 }

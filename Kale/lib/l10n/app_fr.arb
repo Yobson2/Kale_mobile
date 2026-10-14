@@ -507,5 +507,10 @@
   "settingsBackupUpToDate": "Toutes les modifications sont sauvegardées",
   "settingsBackupPending": "{count, plural, =1{1 modification en attente de sauvegarde} other{{count} modifications en attente de sauvegarde}}",
   "settingsBackupLast": "Dernière sauvegarde : {date}",
-  "settingsBackupNever": "Pas encore sauvegardé"
+  "settingsBackupNever": "Pas encore sauvegardé",
+  "logoutUnsavedTitle": "Se déconnecter et perdre des modifications ?",
+  "logoutUnsavedMessage": "{count, plural, =1{1 modification n'est pas encore sauvegardée. Si vous vous déconnectez maintenant, elle sera définitivement perdue.} other{{count} modifications ne sont pas encore sauvegardées. Si vous vous déconnectez maintenant, elles seront définitivement perdues.}}",
+  "logoutUnsavedConfirm": "Se déconnecter quand même",
+  "logoutUnsavedCancel": "Rester connecté",
+  "logoutFailed": "Impossible de vérifier votre sauvegarde. Veuillez réessayer."
 }

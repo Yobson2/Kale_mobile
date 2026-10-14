@@ -50,7 +50,7 @@ final authLocalDataSourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthLocalDataSourceRef = AutoDisposeProviderRef<AuthLocalDataSource>;
-String _$authRepositoryHash() => r'f97a209d5e7fffbe5ad69faab19a1e8febee17b9';
+String _$authRepositoryHash() => r'82c3b0ac7263f8f89d3fd1be80fe6f679148ee37';
 
 /// Provides the [AuthRepository].
 ///
@@ -166,6 +166,28 @@ final resendOtpUseCaseProvider = AutoDisposeProvider<ResendOtpUseCase>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ResendOtpUseCaseRef = AutoDisposeProviderRef<ResendOtpUseCase>;
+String _$backUpPendingChangesUseCaseHash() =>
+    r'5216f73b5da7bc5c63ae6dd7d1a94e6957a00e88';
+
+/// Provides the [BackUpPendingChangesUseCase].
+///
+/// Copied from [backUpPendingChangesUseCase].
+@ProviderFor(backUpPendingChangesUseCase)
+final backUpPendingChangesUseCaseProvider =
+    AutoDisposeProvider<BackUpPendingChangesUseCase>.internal(
+  backUpPendingChangesUseCase,
+  name: r'backUpPendingChangesUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$backUpPendingChangesUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef BackUpPendingChangesUseCaseRef
+    = AutoDisposeProviderRef<BackUpPendingChangesUseCase>;
 String _$logoutUseCaseHash() => r'2b963e9e0eff2155f687d45b1b5c652ddb695d62';
 
 /// Provides the [LogoutUseCase].

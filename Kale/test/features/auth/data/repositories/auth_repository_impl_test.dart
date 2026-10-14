@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
+import 'package:kale/core/sync/backup_status.dart';
 import 'package:kale/features/auth/data/models/tokens_model.dart';
 import 'package:kale/features/auth/data/models/user_model.dart';
 import 'package:kale/features/auth/data/repositories/auth_repository_impl.dart';
@@ -16,6 +17,7 @@ void main() {
   late MockAuthLocalDataSource mockLocal;
   late MockNetworkInfo mockNetworkInfo;
   late MockAppDatabase mockAppDatabase;
+  late MockSyncEngine mockSyncEngine;
 
   setUpAll(() {
     registerFallbackValue(
@@ -31,11 +33,13 @@ void main() {
     mockLocal = MockAuthLocalDataSource();
     mockNetworkInfo = MockNetworkInfo();
     mockAppDatabase = MockAppDatabase();
+    mockSyncEngine = MockSyncEngine();
     repository = AuthRepositoryImpl(
       remoteDataSource: mockRemote,
       localDataSource: mockLocal,
       networkInfo: mockNetworkInfo,
       appDatabase: mockAppDatabase,
+      syncEngine: mockSyncEngine,
     );
   });
 
@@ -216,6 +220,59 @@ void main() {
 
       expect(result, const Left<Failure, User>(NetworkFailure()));
       verifyNever(() => mockRemote.signInAnonymously());
+    });
+  });
+
+  group('backUpPendingChanges', () {
+    test('returns how many changes are still pending or stuck', () async {
+      when(() => mockSyncEngine.backUpNow()).thenAnswer(
+        (_) async => const BackupStatus(pendingCount: 2, stuckCount: 1),
+      );
+
+      final result = await repository.backUpPendingChanges();
+
+      expect(result, const Right<Failure, int>(3));
+    });
+
+    test('maps an engine error to SyncFailure', () async {
+      when(() => mockSyncEngine.backUpNow()).thenThrow(Exception('db closed'));
+
+      final result = await repository.backUpPendingChanges();
+
+      expect(result.isLeft(), isTrue);
+      result.leftMap((f) => expect(f, isA<SyncFailure>()));
+    });
+  });
+
+  group('logout', () {
+    setUp(() {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockLocal.clearAll()).thenAnswer((_) async {});
+      when(() => mockAppDatabase.clearAllData()).thenAnswer((_) async {});
+      when(() => mockSyncEngine.onLocalDataCleared()).thenAnswer((_) async {});
+    });
+
+    test('wipes the phone even when the server sign-out fails', () async {
+      when(() => mockRemote.logout())
+          .thenThrow(const ServerException(message: 'Timeout'));
+
+      final result = await repository.logout();
+
+      expect(result, const Right<Failure, void>(null));
+      verify(() => mockLocal.clearAll());
+      verify(() => mockAppDatabase.clearAllData());
+      verify(() => mockSyncEngine.onLocalDataCleared());
+    });
+
+    test('maps a failed wipe to CacheFailure', () async {
+      when(() => mockRemote.logout()).thenAnswer((_) async {});
+      when(() => mockAppDatabase.clearAllData())
+          .thenThrow(Exception('disk full'));
+
+      final result = await repository.logout();
+
+      expect(result.isLeft(), isTrue);
+      result.leftMap((f) => expect(f, isA<CacheFailure>()));
     });
   });
 }

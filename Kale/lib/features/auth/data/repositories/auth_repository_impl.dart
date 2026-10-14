@@ -3,6 +3,7 @@ import 'package:kale/core/database/app_database.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
 import 'package:kale/core/network/network_info.dart';
+import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:kale/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:kale/features/auth/domain/entities/user.dart';
@@ -17,15 +18,18 @@ class AuthRepositoryImpl implements AuthRepository {
     required AuthLocalDataSource localDataSource,
     required NetworkInfo networkInfo,
     required AppDatabase appDatabase,
+    required SyncEngine syncEngine,
   })  : _remote = remoteDataSource,
         _local = localDataSource,
         _networkInfo = networkInfo,
-        _appDatabase = appDatabase;
+        _appDatabase = appDatabase,
+        _syncEngine = syncEngine;
 
   final AuthRemoteDataSource _remote;
   final AuthLocalDataSource _local;
   final NetworkInfo _networkInfo;
   final AppDatabase _appDatabase;
+  final SyncEngine _syncEngine;
 
   @override
   Future<Either<Failure, User>> login({
@@ -150,20 +154,32 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, int>> backUpPendingChanges() async {
+    try {
+      final status = await _syncEngine.backUpNow();
+      return Right(status.pendingCount + status.stuckCount);
+    } on Exception catch (e) {
+      return Left(SyncFailure(message: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> logout() async {
     try {
       if (await _networkInfo.isConnected) {
         await _remote.logout();
       }
+    } on Exception {
+      // Signing out on the server is best effort: the user asked to leave,
+      // so the session and data on this phone go regardless.
+    }
+    try {
       await _local.clearAll();
       await _appDatabase.clearAllData();
+      await _syncEngine.onLocalDataCleared();
       return const Right(null);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } catch (_) {
-      await _local.clearAll();
-      await _appDatabase.clearAllData();
-      return const Right(null);
+    } on Exception catch (e) {
+      return Left(CacheFailure(message: e.toString()));
     }
   }
 
