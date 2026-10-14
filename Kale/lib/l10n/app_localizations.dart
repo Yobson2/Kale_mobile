@@ -2911,6 +2911,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get guestDataChoiceCancel;
+
+  /// No description provided for @budgetSetupStartDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Period start day'**
+  String get budgetSetupStartDay;
+
+  /// No description provided for @budgetSetupStartDayMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Each period starts on day {day} of the month, e.g. your pay day.'**
+  String budgetSetupStartDayMonthly(int day);
+
+  /// No description provided for @budgetSetupStartDayWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Each week starts on this day.'**
+  String get budgetSetupStartDayWeekly;
+
+  /// No description provided for @budgetRenewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your budget has ended'**
+  String get budgetRenewTitle;
+
+  /// No description provided for @budgetRenewMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" covered {start} – {end}. Start it again for the current period, with the same amounts?'**
+  String budgetRenewMessage(String name, String start, String end);
+
+  /// No description provided for @budgetRenewAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Renew for this period'**
+  String get budgetRenewAction;
+
+  /// No description provided for @budgetRenewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget renewed'**
+  String get budgetRenewed;
+
+  /// No description provided for @budgetRenewFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t renew the budget. Please try again.'**
+  String get budgetRenewFailed;
 }
 
 class _AppLocalizationsDelegate

@@ -1601,4 +1601,33 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get guestDataChoiceCancel => 'Annuler';
+
+  @override
+  String get budgetSetupStartDay => 'Jour de début de période';
+
+  @override
+  String budgetSetupStartDayMonthly(int day) {
+    return 'Chaque période commence le $day du mois, par exemple votre jour de paie.';
+  }
+
+  @override
+  String get budgetSetupStartDayWeekly => 'Chaque semaine commence ce jour-là.';
+
+  @override
+  String get budgetRenewTitle => 'Votre budget est terminé';
+
+  @override
+  String budgetRenewMessage(String name, String start, String end) {
+    return '« $name » couvrait du $start au $end. Le relancer pour la période en cours, avec les mêmes montants ?';
+  }
+
+  @override
+  String get budgetRenewAction => 'Renouveler pour cette période';
+
+  @override
+  String get budgetRenewed => 'Budget renouvelé';
+
+  @override
+  String get budgetRenewFailed =>
+      'Impossible de renouveler le budget. Veuillez réessayer.';
 }

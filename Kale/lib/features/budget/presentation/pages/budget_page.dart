@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/money/money.dart';
 import 'package:kale/core/router/route_names.dart';
@@ -12,6 +13,7 @@ import 'package:kale/core/widgets/feedback/refresh_from_backup.dart';
 import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
+import 'package:kale/features/budget/presentation/providers/budgets_notifier.dart';
 import 'package:kale/features/budget/presentation/providers/budgets_providers.dart';
 import 'package:kale/features/budget/presentation/widgets/budget_gauge.dart';
 import 'package:kale/features/dashboard/presentation/providers/dashboard_providers.dart';
@@ -79,11 +81,12 @@ class _EmptyBudgetState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: AppSpacing.paddingXl,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const _RenewCard(),
             Icon(
               Icons.account_balance_wallet_outlined,
               size: 80,
@@ -142,6 +145,80 @@ class _EmptyBudgetState extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Renew ───────────────────────────────────────────────────────
+
+/// Offers to start the budget that ended most recently again for the
+/// current period (decision Q21). Hidden when there is none.
+class _RenewCard extends ConsumerStatefulWidget {
+  const _RenewCard();
+
+  @override
+  ConsumerState<_RenewCard> createState() => _RenewCardState();
+}
+
+class _RenewCardState extends ConsumerState<_RenewCard> {
+  bool _renewing = false;
+
+  Future<void> _renew(Budget budget) async {
+    setState(() => _renewing = true);
+    final renewed =
+        await ref.read(budgetsNotifierProvider.notifier).renewBudget(budget);
+    if (!mounted) return;
+    setState(() => _renewing = false);
+    context.showSnackBar(
+      renewed ? context.l10n.budgetRenewed : context.l10n.budgetRenewFailed,
+      isError: !renewed,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final budget = ref.watch(budgetToRenewProvider).valueOrNull;
+    if (budget == null) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    final dates = DateFormat.yMMMd(Localizations.localeOf(context).toString());
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+      child: Material(
+        color: context.colorScheme.primaryContainer,
+        borderRadius: AppRadius.borderRadiusLg,
+        child: Padding(
+          padding: AppSpacing.paddingLg,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.budgetRenewTitle,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: context.colorScheme.onPrimaryContainer,
+                ),
+              ),
+              AppSpacing.verticalSm,
+              Text(
+                l10n.budgetRenewMessage(
+                  budget.name,
+                  dates.format(budget.startDate.startOfDayLocal()),
+                  dates.format(budget.endDate.startOfDayLocal()),
+                ),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colorScheme.onPrimaryContainer,
+                ),
+              ),
+              AppSpacing.verticalLg,
+              FilledButton.icon(
+                onPressed: _renewing ? null : () => _renew(budget),
+                icon: const Icon(Icons.autorenew_rounded),
+                label: Text(l10n.budgetRenewAction),
+              ),
+            ],
+          ),
         ),
       ),
     );

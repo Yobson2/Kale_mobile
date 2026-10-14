@@ -648,5 +648,25 @@
     }
   },
   "guestDataChoiceDiscard": "Discard them and sign in",
-  "guestDataChoiceCancel": "Cancel"
+  "guestDataChoiceCancel": "Cancel",
+  "budgetSetupStartDay": "Period start day",
+  "budgetSetupStartDayMonthly": "Each period starts on day {day} of the month, e.g. your pay day.",
+  "@budgetSetupStartDayMonthly": {
+    "placeholders": {
+      "day": { "type": "int" }
+    }
+  },
+  "budgetSetupStartDayWeekly": "Each week starts on this day.",
+  "budgetRenewTitle": "Your budget has ended",
+  "budgetRenewMessage": "\"{name}\" covered {start} – {end}. Start it again for the current period, with the same amounts?",
+  "@budgetRenewMessage": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "start": { "type": "String" },
+      "end": { "type": "String" }
+    }
+  },
+  "budgetRenewAction": "Renew for this period",
+  "budgetRenewed": "Budget renewed",
+  "budgetRenewFailed": "Couldn't renew the budget. Please try again."
 }
