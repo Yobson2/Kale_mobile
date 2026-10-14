@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kale/core/constants/currencies.dart' show SupportedCurrencies;
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/providers/notification_provider.dart';
@@ -28,7 +27,6 @@ class SettingsPage extends ConsumerWidget {
     final baseCurrency = ref.watch(baseCurrencyProvider);
     final localStorage = ref.watch(localStorageProvider);
     final l10n = context.l10n;
-    final currency = SupportedCurrencies.byCode(baseCurrency.code);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,9 +66,8 @@ class SettingsPage extends ConsumerWidget {
                     icon: Icons.currency_exchange,
                     iconColor: context.colorScheme.primary,
                     title: l10n.baseCurrencyLabel,
-                    subtitle: currency != null
-                        ? '${currency.code} - ${currency.name.toUpperCase()}'
-                        : baseCurrency.code,
+                    subtitle: '${baseCurrency.code} - '
+                        '${baseCurrency.name.toUpperCase()}',
                     trailing: Icon(
                       Icons.chevron_right,
                       color: context.colorScheme.onSurfaceVariant,

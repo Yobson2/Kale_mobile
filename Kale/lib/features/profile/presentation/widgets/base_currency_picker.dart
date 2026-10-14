@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kale/core/constants/currencies.dart' as display;
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/money/currency.dart';
 import 'package:kale/core/widgets/feedback/app_dialog.dart';
@@ -32,11 +31,10 @@ class BaseCurrencyList extends StatelessWidget {
       itemCount: Currencies.all.length,
       itemBuilder: (context, index) {
         final currency = Currencies.all[index];
-        final info = display.SupportedCurrencies.byCode(currency.code);
         return ListTile(
-          leading: Text(info?.flag ?? '', style: const TextStyle(fontSize: 24)),
+          leading: Text(currency.flag, style: const TextStyle(fontSize: 24)),
           title: Text('${currency.code} · ${currency.symbol}'),
-          subtitle: info == null ? null : Text(info.name),
+          subtitle: Text(currency.name),
           selected: currency == selected,
           trailing: currency == selected
               ? Icon(Icons.check_circle, color: context.colorScheme.primary)

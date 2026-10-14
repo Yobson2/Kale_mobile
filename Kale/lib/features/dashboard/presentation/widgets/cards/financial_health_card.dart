@@ -26,10 +26,10 @@ class FinancialHealthCard extends ConsumerWidget {
         ),
         error: (_, __) => const SizedBox.shrink(),
         data: (summary) {
-          // Ratios only: exact amounts are not needed for the score.
-          final income = summary.totalIncome.minorUnits.toDouble();
-          final expenses = summary.totalExpenses.minorUnits.toDouble();
-          final score = _calculateScore(income, expenses);
+          final score = _calculateScore(
+            summary.totalIncome.minorUnits,
+            summary.totalExpenses.minorUnits,
+          );
           final progress = score / 100;
           final label = _getLabel(context, score);
           final color = _getColor(score);
@@ -70,7 +70,8 @@ class FinancialHealthCard extends ConsumerWidget {
     );
   }
 
-  int _calculateScore(double income, double expenses) {
+  /// Scores [income] and [expenses], in minor units, from 0 to 100.
+  int _calculateScore(int income, int expenses) {
     if (income <= 0 && expenses <= 0) return 0;
 
     var score = 0;
@@ -82,7 +83,7 @@ class FinancialHealthCard extends ConsumerWidget {
     if (income >= expenses) score += 50;
 
     // Spending under 80% of income
-    if (income > 0 && expenses < income * 0.8) score += 25;
+    if (income > 0 && expenses * 5 < income * 4) score += 25;
 
     return score.clamp(0, 100);
   }
