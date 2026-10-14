@@ -24,9 +24,6 @@ abstract class SavingsContributionsRemoteDataSource {
   Future<SavingsContributionModel> updateContribution(
     SavingsContributionModel model,
   );
-
-  /// Deletes a contribution.
-  Future<void> deleteContribution(String id);
 }
 
 /// Implementation of [SavingsContributionsRemoteDataSource] using Supabase.
@@ -102,15 +99,6 @@ class SupabaseSavingsContributionsRemoteDataSource
     }
   }
 
-  @override
-  Future<void> deleteContribution(String id) async {
-    try {
-      await _table.delete().eq('id', id);
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
   static int? _parseCode(PostgrestException e) =>
       e.code != null ? int.tryParse(e.code!) : null;
 }
@@ -149,10 +137,5 @@ class MockSavingsContributionsRemoteDataSource
   ) async {
     await Future<void>.delayed(_delay);
     return model;
-  }
-
-  @override
-  Future<void> deleteContribution(String id) async {
-    await Future<void>.delayed(_delay);
   }
 }

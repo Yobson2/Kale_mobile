@@ -20,7 +20,7 @@ Auth and preferences are not part of this. They live in secure storage and Share
 | Piece | Location | Role |
 |---|---|---|
 | `AppDatabase` | `core/database/` | Registers every table and DAO; owns `schemaVersion`, migrations, default-category seeding, and `clearAllData()` (logout) |
-| Sync queue table + `SyncQueueDao` | `core/database/` | FIFO queue: `entityType`, `entityId`, `operation` (`create`/`update`/`delete`), JSON `payload`, `status` (`pending`/`in_progress`/`stuck`), `retryCount`, `lastError` |
+| Sync queue table + `SyncQueueDao` | `core/database/` | FIFO queue: `entityType`, `entityId`, `operation` (`create`/`update`; a delete is an `update`), JSON `payload`, `status` (`pending`/`in_progress`/`stuck`), `retryCount`, `lastError` |
 | `SyncEngine` + `SyncHandler` | `core/sync/sync_engine.dart` | Engine processes the queue; one handler per entity type does the actual push |
 | `SyncConfig` | `core/sync/` | Retries (max 5), exponential backoff (1s doubling, capped at 60s), write debounce (2s) |
 | `SyncClock` | `core/sync/` | The engine's only source of time and timers; tests swap in a fake clock |
@@ -37,7 +37,7 @@ Feature tables and DAOs live in the feature (`features/<f>/data/tables/`, `data/
 2. The local datasource calls `enqueueSync(entityId, operation, payload: jsonEncode(model.toJson()))`.
 3. The repository returns `Right(entity)`. Drift streams update the UI immediately.
 4. When the engine runs `processQueue()`, for each pending entry that is not backing off it:
-   - looks up the handler by `entityType` and calls `pushCreate` / `pushUpdate` / `pushDelete`;
+   - looks up the handler by `entityType` and calls `pushCreate` or `pushUpdate`;
    - on success, the handler marks the row synced (and stores `serverId`), and the entry is deleted from the queue;
    - on `ServerException` 409, it calls `fetchRemote` then `applyServerVersion` (server wins), then completes the entry;
    - on `NetworkException`, it leaves the entry pending without using a retry;
@@ -66,8 +66,7 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
 - Transactions store `amountMinor` (`amount_minor`): an integer count of minor units of the base currency. They carry
   no currency. DAO sums are integers; the UI wraps them in `Money` (`lib/core/money/`) with the base currency to parse
   input and format output. Never sum or store money as `double`.
-- Transactions have a nullable `deletedAt`; every DAO read excludes rows where it is set. (Deletes are still hard
-  deletes until the tombstone work lands; rows only arrive with `deletedAt` set through a pull.)
+- Transactions have a nullable `deletedAt`; every DAO read excludes rows where it is set (see [Deletes](#deletes)).
 - Budgets store `totalIncomeMinor` and their allocations `allocatedMinor` (`total_income_minor`, `allocated_minor`),
   integer minor units of the base currency like transactions. Spent and remaining amounts are integer sums of
   transaction minor units. Both tables have a nullable `deletedAt` that every DAO read excludes.
@@ -98,11 +97,23 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
   remote datasource and `SyncHandler` (`BudgetsSyncHandler`, `BudgetCategoriesSyncHandler`). Allocations share the
   `USE_MOCK_BUDGETS` flag.
 - A budget's `create`/`update` is queued before its allocations. Saving a budget queues each allocation as a `create`
-  (new), an `update` (existing) or a `delete` (dropped). The setup screen sends allocations without ids, so the
+  (new) or an `update` (existing, or dropped and soft-deleted). The setup screen sends allocations without ids, so the
   repository reuses the id of the existing allocation for the same category; an edit updates rows in place.
 - Allocations have no `user_id` (the server table is `budget_category_allocations`, owned through its budget).
-  Deleting a budget queues only the budget: the server's foreign key cascades to its allocations.
+  Deleting a budget soft-deletes its allocations too (see [Deletes](#deletes)).
 - Refresh pulls budgets, then allocations, and keeps local allocations that are not synced yet.
+
+## Deletes
+
+- Every delete is a **soft delete** (decision Q17): the DAO's `markDeleted` sets `deletedAt` and `updatedAt` and
+  marks the row unsynced, and the repository queues an `update` whose payload carries `deleted_at`. Nothing is
+  hard-deleted on the device or the server; `SyncHandler` has no `pushDelete` and remote datasources no delete.
+- Every DAO read excludes rows with `deletedAt` set, so a deleted entry leaves every list, total, chart and budget
+  computation at once.
+- Deleting a parent soft-deletes its children and queues them too: a savings goal its contributions, a budget its
+  allocations. Each local datasource soft-deletes its own entity type only; the repository queues both.
+- Creating then deleting before a sync pushes the `create`, then the `update`: the server ends up with a tombstone,
+  never an orphan. (Purging old tombstones on the server is #14.)
 
 ## Reads and refresh
 
@@ -115,11 +126,13 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
 
 1. **Table** in `features/<f>/data/tables/`: text UUID `id` primary key, nullable `serverId`, `isSynced`
    (default `false`), `createdAt`/`updatedAt`.
-2. **DAO** in `features/<f>/data/daos/` with at least `watchAll`, `upsert`, `deleteById`, `markSynced`, `replaceAll`.
+2. **DAO** in `features/<f>/data/daos/` with at least `watchAll`, `upsert`, `markDeleted`, `markSynced`, `replaceAll`, a
+   nullable `deletedAt` column, and every read excluding rows where it is set.
 3. **Register** the table and DAO in `AppDatabase`, bump `schemaVersion`, and add an `if (from < N)` step in
    `onUpgrade` that creates the table. Also add it to `clearAllData()`.
 4. **Model** (Freezed) with `fromJson`/`toJson`, `fromDrift`, `toDriftCompanion({required bool isSynced})`, `toEntity`.
-5. **Local datasource** with save/delete/watch, `enqueueSync` using a unique `entityType` string, `markSynced`,
+5. **Local datasource** with save, soft delete (returning the deleted row, to queue) and watch, `enqueueSync`
+   using a unique `entityType` string, `markSynced`,
    and `replaceAllFromServer`. One local datasource per entity type (see savings).
 6. **Remote datasource**: an abstract class, a Supabase implementation scoped by `user_id` that throws
    `ServerException` with a status code, and a mock twin behind a `USE_MOCK_<F>` flag.
@@ -135,4 +148,5 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
 - **Refresh drops unsynced local rows** (all DAOs except the savings ones). `replaceAll` deletes the whole table
   before inserting the server copy, including rows with `isSynced = false`. A record created while online
   disappears locally on the next background refresh, and comes back only after its queued push succeeds and a
-  later refresh runs.
+  later refresh runs. The same goes for an unsynced delete: the deleted row reappears until its update is pushed
+  and a later refresh brings the tombstone back.

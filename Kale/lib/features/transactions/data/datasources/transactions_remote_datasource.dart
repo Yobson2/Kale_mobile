@@ -16,9 +16,6 @@ abstract class TransactionsRemoteDataSource {
 
   /// PUT: Updates an existing transaction on the server.
   Future<TransactionModel> updateTransaction(TransactionModel model);
-
-  /// DELETE: Deletes a transaction on the server.
-  Future<void> deleteTransaction(String id);
 }
 
 /// Implementation of [TransactionsRemoteDataSource] using Supabase.
@@ -90,15 +87,6 @@ class SupabaseTransactionsRemoteDataSource
     }
   }
 
-  @override
-  Future<void> deleteTransaction(String id) async {
-    try {
-      await _table.delete().eq('id', id).eq('user_id', _userId);
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
   static int? _parseCode(PostgrestException e) =>
       e.code != null ? int.tryParse(e.code!) : null;
 }
@@ -134,10 +122,5 @@ class MockTransactionsRemoteDataSource implements TransactionsRemoteDataSource {
   Future<TransactionModel> updateTransaction(TransactionModel model) async {
     await Future<void>.delayed(_delay);
     return model;
-  }
-
-  @override
-  Future<void> deleteTransaction(String id) async {
-    await Future<void>.delayed(_delay);
   }
 }

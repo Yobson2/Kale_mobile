@@ -16,6 +16,13 @@ abstract class SavingsContributionsLocalDataSource {
   /// Saves [model] locally, with its `isSynced` flag as given.
   Future<void> saveContribution(SavingsContributionModel model);
 
+  /// Soft-deletes every live contribution of goal [goalId] at [at] and
+  /// returns them, to be queued as updates.
+  Future<List<SavingsContributionModel>> deleteContributionsOfGoal(
+    String goalId,
+    DateTime at,
+  );
+
   Future<void> enqueueSync({
     required String entityId,
     required String operation,
@@ -79,6 +86,19 @@ class SavingsContributionsLocalDataSourceImpl
       await _dao.upsert(model.toDriftCompanion(isSynced: model.isSynced));
     } catch (e) {
       throw CacheException(message: 'Failed to save contribution: $e');
+    }
+  }
+
+  @override
+  Future<List<SavingsContributionModel>> deleteContributionsOfGoal(
+    String goalId,
+    DateTime at,
+  ) async {
+    try {
+      final rows = await _dao.markDeletedByGoalId(goalId, at);
+      return rows.map(SavingsContributionModel.fromDrift).toList();
+    } catch (e) {
+      throw CacheException(message: 'Failed to delete contributions: $e');
     }
   }
 

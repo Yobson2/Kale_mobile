@@ -56,9 +56,23 @@ class BudgetsDao extends DatabaseAccessor<AppDatabase> with _$BudgetsDaoMixin {
     return into(budgets).insertOnConflictUpdate(entry);
   }
 
-  /// Deletes a budget by ID.
-  Future<void> deleteById(String id) {
-    return (delete(budgets)..where((t) => t.id.equals(id))).go();
+  /// Soft-deletes a live budget: sets `deletedAt` and `updatedAt` to [at]
+  /// and marks it unsynced. Returns the deleted row, or null if no live
+  /// budget has this [id].
+  Future<Budget?> markDeleted(String id, DateTime at) {
+    return transaction(() async {
+      final count = await (update(budgets)
+            ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
+          .write(
+        BudgetsCompanion(
+          deletedAt: Value(at),
+          updatedAt: Value(at),
+          isSynced: const Value(false),
+        ),
+      );
+      if (count == 0) return null;
+      return (select(budgets)..where((t) => t.id.equals(id))).getSingle();
+    });
   }
 
   /// Marks a budget as synced.

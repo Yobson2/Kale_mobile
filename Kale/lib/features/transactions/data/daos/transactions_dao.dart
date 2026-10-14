@@ -81,9 +81,23 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     return into(transactions).insertOnConflictUpdate(entry);
   }
 
-  /// Deletes a transaction by ID.
-  Future<void> deleteById(String id) {
-    return (delete(transactions)..where((t) => t.id.equals(id))).go();
+  /// Soft-deletes a live transaction: sets `deletedAt` and `updatedAt` to
+  /// [at] and marks it unsynced. Returns the deleted row, or null if no
+  /// live transaction has this [id].
+  Future<Transaction?> markDeleted(String id, DateTime at) {
+    return transaction(() async {
+      final count = await (update(transactions)
+            ..where((t) => t.id.equals(id) & t.deletedAt.isNull()))
+          .write(
+        TransactionsCompanion(
+          deletedAt: Value(at),
+          updatedAt: Value(at),
+          isSynced: const Value(false),
+        ),
+      );
+      if (count == 0) return null;
+      return (select(transactions)..where((t) => t.id.equals(id))).getSingle();
+    });
   }
 
   /// Marks a transaction as synced.

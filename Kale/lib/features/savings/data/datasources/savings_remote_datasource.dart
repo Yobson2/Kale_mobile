@@ -15,9 +15,6 @@ abstract class SavingsRemoteDataSource {
 
   /// Updates a goal, including its device-computed saved amount.
   Future<SavingsGoalModel> updateSavingsGoal(SavingsGoalModel model);
-
-  /// Deletes a goal; the server deletes its contributions with it.
-  Future<void> deleteSavingsGoal(String id);
 }
 
 /// Implementation of [SavingsRemoteDataSource] using Supabase.
@@ -88,15 +85,6 @@ class SupabaseSavingsRemoteDataSource implements SavingsRemoteDataSource {
     }
   }
 
-  @override
-  Future<void> deleteSavingsGoal(String id) async {
-    try {
-      await _table.delete().eq('id', id).eq('user_id', _userId);
-    } on PostgrestException catch (e) {
-      throw ServerException(message: e.message, statusCode: _parseCode(e));
-    }
-  }
-
   static int? _parseCode(PostgrestException e) =>
       e.code != null ? int.tryParse(e.code!) : null;
 }
@@ -130,10 +118,5 @@ class MockSavingsRemoteDataSource implements SavingsRemoteDataSource {
   Future<SavingsGoalModel> updateSavingsGoal(SavingsGoalModel model) async {
     await Future<void>.delayed(_delay);
     return model;
-  }
-
-  @override
-  Future<void> deleteSavingsGoal(String id) async {
-    await Future<void>.delayed(_delay);
   }
 }

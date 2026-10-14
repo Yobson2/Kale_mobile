@@ -31,8 +31,11 @@ abstract class TransactionsLocalDataSource {
   /// Saves a transaction locally (insert or update).
   Future<void> saveTransaction(TransactionModel model);
 
-  /// Deletes a transaction locally.
-  Future<void> deleteTransaction(String id);
+  /// Soft-deletes a live transaction at [at] and returns it, to be queued
+  /// as an update.
+  ///
+  /// Throws [CacheException] if no live transaction has this [id].
+  Future<TransactionModel> deleteTransaction(String id, DateTime at);
 
   /// Enqueues a sync operation for a transaction.
   Future<void> enqueueSync({
@@ -151,10 +154,15 @@ class TransactionsLocalDataSourceImpl implements TransactionsLocalDataSource {
   }
 
   @override
-  Future<void> deleteTransaction(String id) async {
+  Future<TransactionModel> deleteTransaction(String id, DateTime at) async {
     try {
-      await _transactionsDao.deleteById(id);
+      final row = await _transactionsDao.markDeleted(id, at);
+      if (row == null) {
+        throw const CacheException(message: 'Transaction not found');
+      }
+      return TransactionModel.fromDrift(row);
     } catch (e) {
+      if (e is CacheException) rethrow;
       throw CacheException(message: 'Failed to delete transaction: $e');
     }
   }

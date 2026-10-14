@@ -34,10 +34,6 @@ class ProfileSyncHandler implements SyncHandler {
     await _local.markSynced();
   }
 
-  /// The profile is never deleted from the device.
-  @override
-  Future<void> pushDelete(String entityId) async {}
-
   @override
   Future<String?> fetchRemote(String entityId) async {
     final model = await _remote.getProfile();

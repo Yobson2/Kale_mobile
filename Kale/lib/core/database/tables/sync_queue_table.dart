@@ -2,7 +2,8 @@ import 'package:drift/drift.dart';
 
 /// Represents a pending sync operation in the queue.
 ///
-/// Each row is one mutation (create/update/delete) that needs
+/// Each row is one mutation (create or update; a delete is an update
+/// carrying `deleted_at`) that needs
 /// to be sent to the server when connectivity is available.
 class SyncQueueEntries extends Table {
   /// Auto-incrementing primary key.
@@ -14,11 +15,10 @@ class SyncQueueEntries extends Table {
   /// The local ID of the entity being synced.
   TextColumn get entityId => text()();
 
-  /// The operation type: 'create', 'update', or 'delete'.
+  /// The operation type: 'create' or 'update'.
   TextColumn get operation => text()();
 
   /// JSON-serialized payload of the entity data at time of mutation.
-  /// Null for delete operations.
   TextColumn get payload => text().nullable()();
 
   /// When this queue entry was created.

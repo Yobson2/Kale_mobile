@@ -139,13 +139,13 @@ class TransactionsRepositoryImpl implements TransactionsRepository {
   @override
   Future<Either<Failure, void>> deleteTransaction(String id) async {
     try {
-      // Delete locally.
-      await _local.deleteTransaction(id);
-
-      // Enqueue for background sync.
+      // A delete is a soft delete, synced as an update carrying
+      // `deleted_at`.
+      final deleted = await _local.deleteTransaction(id, DateTime.now());
       await _local.enqueueSync(
         entityId: id,
-        operation: 'delete',
+        operation: 'update',
+        payload: jsonEncode(deleted.toJson()),
       );
 
       return const Right(null);

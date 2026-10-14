@@ -1,7 +1,6 @@
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/exceptions.dart';
-import 'package:kale/features/budget/data/daos/budget_categories_dao.dart';
 import 'package:kale/features/budget/data/daos/budgets_dao.dart';
 import 'package:kale/features/budget/data/models/budget_model.dart';
 
@@ -22,9 +21,11 @@ abstract class BudgetsLocalDataSource {
   /// Inserts or updates a budget.
   Future<void> saveBudget(BudgetModel model);
 
-  /// Deletes a budget and its category allocations. The server deletes the
-  /// allocations with their budget, so they are not queued.
-  Future<void> deleteBudget(String id);
+  /// Soft-deletes a live budget at [at] and returns it, to be queued as an
+  /// update. Its allocations are deleted through their own datasource.
+  ///
+  /// Throws [CacheException] if no live budget has this [id].
+  Future<BudgetModel> deleteBudget(String id, DateTime at);
 
   /// Enqueues a sync operation for the given budget.
   Future<void> enqueueSync({
@@ -41,14 +42,11 @@ abstract class BudgetsLocalDataSource {
 class BudgetsLocalDataSourceImpl implements BudgetsLocalDataSource {
   const BudgetsLocalDataSourceImpl({
     required BudgetsDao budgetsDao,
-    required BudgetCategoriesDao budgetCategoriesDao,
     required SyncQueueDao syncQueueDao,
   })  : _budgetsDao = budgetsDao,
-        _budgetCategoriesDao = budgetCategoriesDao,
         _syncQueueDao = syncQueueDao;
 
   final BudgetsDao _budgetsDao;
-  final BudgetCategoriesDao _budgetCategoriesDao;
   final SyncQueueDao _syncQueueDao;
 
   static const _entityType = 'budget';
@@ -100,11 +98,15 @@ class BudgetsLocalDataSourceImpl implements BudgetsLocalDataSource {
   }
 
   @override
-  Future<void> deleteBudget(String id) async {
+  Future<BudgetModel> deleteBudget(String id, DateTime at) async {
     try {
-      await _budgetCategoriesDao.deleteByBudgetId(id);
-      await _budgetsDao.deleteById(id);
+      final row = await _budgetsDao.markDeleted(id, at);
+      if (row == null) {
+        throw CacheException(message: 'Budget not found: $id');
+      }
+      return BudgetModel.fromDrift(row);
     } catch (e) {
+      if (e is CacheException) rethrow;
       throw CacheException(message: 'Failed to delete budget: $e');
     }
   }

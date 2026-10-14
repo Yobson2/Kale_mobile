@@ -26,7 +26,7 @@ enum SimulatedFailure {
 }
 
 /// What a remote datasource was asked to do.
-enum RemoteOperation { fetchAll, fetch, create, update, delete }
+enum RemoteOperation { fetchAll, fetch, create, update }
 
 /// One call received by a [FakeRemote], successful or not.
 @immutable
@@ -37,7 +37,6 @@ class RemoteCall {
   const RemoteCall.fetch(String id) : this(RemoteOperation.fetch, id);
   const RemoteCall.create(String id) : this(RemoteOperation.create, id);
   const RemoteCall.update(String id) : this(RemoteOperation.update, id);
-  const RemoteCall.delete(String id) : this(RemoteOperation.delete, id);
 
   final RemoteOperation operation;
   final String? entityId;
@@ -113,6 +112,14 @@ abstract class FakeRemote<M> {
     return rows[id] = model;
   }
 
+  /// Replaces row [id] with [model], like `UPDATE … RETURNING` with
+  /// `.single()`: throws if the signed-in user has no such row.
+  @protected
+  M replace(String id, M model) {
+    findOrThrow(id);
+    return put(id, model);
+  }
+
   /// Like RLS: whether the signed-in user may read row [id].
   @protected
   bool visible(String id) {
@@ -145,20 +152,12 @@ class FakeTransactionsRemote extends FakeRemote<TransactionModel>
 
   @override
   Future<TransactionModel> updateTransaction(TransactionModel model) =>
-      handle(RemoteCall.update(model.id), () => put(model.id, model));
-
-  @override
-  Future<void> deleteTransaction(String id) =>
-      handle(RemoteCall.delete(id), () => rows.remove(id));
+      handle(RemoteCall.update(model.id), () => replace(model.id, model));
 }
 
-/// Fake server table for budgets. Deleting a budget runs [onDelete], so
-/// the server can cascade to its allocations like the real foreign key.
+/// Fake server table for budgets.
 class FakeBudgetsRemote extends FakeRemote<BudgetModel>
     implements BudgetsRemoteDataSource {
-  /// Called with the id of each deleted budget.
-  void Function(String id)? onDelete;
-
   @override
   Future<List<BudgetModel>> getAllBudgets() =>
       handle(const RemoteCall.fetchAll(), visibleRows);
@@ -173,13 +172,7 @@ class FakeBudgetsRemote extends FakeRemote<BudgetModel>
 
   @override
   Future<BudgetModel> updateBudget(BudgetModel model) =>
-      handle(RemoteCall.update(model.id), () => put(model.id, model));
-
-  @override
-  Future<void> deleteBudget(String id) => handle(RemoteCall.delete(id), () {
-        rows.remove(id);
-        onDelete?.call(id);
-      });
+      handle(RemoteCall.update(model.id), () => replace(model.id, model));
 }
 
 /// Fake server table for budget category allocations. Like the real
@@ -216,11 +209,7 @@ class FakeBudgetCategoriesRemote extends FakeRemote<BudgetCategoryModel>
   Future<BudgetCategoryModel> updateBudgetCategory(
     BudgetCategoryModel model,
   ) =>
-      handle(RemoteCall.update(model.id), () => put(model.id, model));
-
-  @override
-  Future<void> deleteBudgetCategory(String id) =>
-      handle(RemoteCall.delete(id), () => rows.remove(id));
+      handle(RemoteCall.update(model.id), () => replace(model.id, model));
 }
 
 /// Fake server `profiles` row of the signed-in user, held in
@@ -258,11 +247,7 @@ class FakeSavingsGoalsRemote extends FakeRemote<SavingsGoalModel>
 
   @override
   Future<SavingsGoalModel> updateSavingsGoal(SavingsGoalModel model) =>
-      handle(RemoteCall.update(model.id), () => put(model.id, model));
-
-  @override
-  Future<void> deleteSavingsGoal(String id) =>
-      handle(RemoteCall.delete(id), () => rows.remove(id));
+      handle(RemoteCall.update(model.id), () => replace(model.id, model));
 }
 
 /// Fake server table for savings contributions. Like the real foreign
@@ -300,11 +285,7 @@ class FakeSavingsContributionsRemote
   Future<SavingsContributionModel> updateContribution(
     SavingsContributionModel model,
   ) =>
-      handle(RemoteCall.update(model.id), () => put(model.id, model));
-
-  @override
-  Future<void> deleteContribution(String id) =>
-      handle(RemoteCall.delete(id), () => rows.remove(id));
+      handle(RemoteCall.update(model.id), () => replace(model.id, model));
 }
 
 /// Fake Supabase Auth. Only anonymous and email sign-in are implemented;
@@ -369,8 +350,6 @@ class FakeServer {
     ]) {
       table.session = auth;
     }
-    budgets.onDelete = (id) => budgetCategories.rows
-        .removeWhere((_, allocation) => allocation.budgetId == id);
   }
 
   final auth = FakeAuthRemote();
