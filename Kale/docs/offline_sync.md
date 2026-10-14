@@ -114,7 +114,12 @@ Test these through `SyncHarness` (`test/helpers/`): its fake clock fires debounc
 - Deleting a parent soft-deletes its children and queues them too: a savings goal its contributions, a budget its
   allocations. Each local datasource soft-deletes its own entity type only; the repository queues both.
 - Creating then deleting before a sync pushes the `create`, then the `update`: the server ends up with a tombstone,
-  never an orphan. (Purging old tombstones on the server is #14.)
+  never an orphan.
+- **Tombstones live 30 days on the server**, then the daily `purge-tombstones` job deletes them
+  (`20261015000200_maintenance_jobs.sql`). A device learns about a deletion on its next pull, so the window must
+  exceed any expected offline period: a device that does not pull for more than 30 days never sees deletions made
+  elsewhere in that time, and keeps those rows. 30 days covers a month without connectivity or without opening the
+  app; raise it in the migration (`purge_tombstones(older_than)`) if users stay offline longer.
 
 ## Pulling: restore and pull-to-refresh
 
