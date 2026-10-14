@@ -80,7 +80,7 @@ class _AccountActionButtonState extends ConsumerState<AccountActionButton> {
         label: context.l10n.anonymousSaveDataCta,
         background: colorScheme.primaryContainer,
         foreground: colorScheme.onPrimaryContainer,
-        onTap: () => context.push(RouteNames.register),
+        onTap: () => context.push(RouteNames.saveData),
       );
     }
 

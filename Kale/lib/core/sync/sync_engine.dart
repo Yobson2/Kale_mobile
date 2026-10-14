@@ -39,6 +39,12 @@ abstract class SyncHandler {
     required PullCursor? after,
     required int limit,
   });
+
+  /// Queues every live local row of [entityType] as a `create`: the
+  /// device's data is moving to another account (see
+  /// `AppDatabase.rekeyForAnotherAccount`). Called in handler order, so
+  /// parents are queued before their children.
+  Future<void> requeueAllAsCreates();
 }
 
 /// Orchestrates background synchronization of offline mutations.

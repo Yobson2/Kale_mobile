@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:kale/core/database/daos/sync_queue_dao.dart';
 import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/error/exceptions.dart';
@@ -29,6 +31,10 @@ abstract class BudgetsLocalDataSource {
   Future<BudgetModel> deleteBudget(String id, DateTime at);
 
   /// Enqueues a sync operation for the given budget.
+  /// Queues every live row as a `create` (the data is moving to another
+  /// account; see `SyncHandler.requeueAllAsCreates`).
+  Future<void> enqueueAllAsCreates();
+
   Future<void> enqueueSync({
     required String entityId,
     required String operation,
@@ -156,6 +162,23 @@ class BudgetsLocalDataSourceImpl implements BudgetsLocalDataSource {
       ]);
     } catch (e) {
       throw CacheException(message: 'Failed to merge budgets: $e');
+    }
+  }
+
+  @override
+  Future<void> enqueueAllAsCreates() async {
+    try {
+      for (final row in await _budgetsDao.getAll()) {
+        final model = BudgetModel.fromDrift(row).copyWith(isSynced: false);
+        await _syncQueueDao.enqueue(
+          entityType: _entityType,
+          entityId: model.id,
+          operation: 'create',
+          payload: jsonEncode(model.toJson()),
+        );
+      }
+    } catch (e) {
+      throw CacheException(message: 'Failed to queue rows as creates: $e');
     }
   }
 }

@@ -1525,4 +1525,60 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get refreshFailed =>
       'Couldn\'t refresh from your backup. Please try again.';
+
+  @override
+  String get saveDataTitle => 'Save your data';
+
+  @override
+  String get saveDataSubtitle =>
+      'Create an account to keep everything you entered, on this phone and any other.';
+
+  @override
+  String get saveDataWithEmail => 'Continue with email';
+
+  @override
+  String saveDataCodeSent(String email) {
+    return 'Enter the 6-digit code we sent to $email.';
+  }
+
+  @override
+  String get saveDataVerify => 'Verify';
+
+  @override
+  String get saveDataDone => 'Your data is saved to your account.';
+
+  @override
+  String get guestDataChoiceTitle => 'This account already exists';
+
+  @override
+  String guestDataChoiceMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'You have $count entries on this phone. Add them to that account, or discard them?',
+      one:
+          'You have 1 entry on this phone. Add it to that account, or discard it?',
+      zero: 'You have no entries on this phone yet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String guestDataChoiceAdd(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add my $count entries to that account',
+      one: 'Add my entry to that account',
+      zero: 'Sign in',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guestDataChoiceDiscard => 'Discard them and sign in';
+
+  @override
+  String get guestDataChoiceCancel => 'Cancel';
 }

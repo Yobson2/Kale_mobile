@@ -49,4 +49,7 @@ class BudgetsSyncHandler implements SyncHandler {
     await _local.mergeFromServer(page.rows);
     return PulledPage(rowCount: page.rows.length, last: page.last);
   }
+
+  @override
+  Future<void> requeueAllAsCreates() => _local.enqueueAllAsCreates();
 }

@@ -9,9 +9,12 @@ import 'package:kale/core/widgets/buttons/app_primary_button.dart';
 import 'package:kale/core/widgets/data_display/geometric_k_watermark.dart';
 import 'package:kale/core/widgets/inputs/app_password_field.dart';
 import 'package:kale/core/widgets/inputs/app_text_field.dart';
+import 'package:kale/features/auth/domain/entities/account_link.dart';
 import 'package:kale/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:kale/features/auth/presentation/providers/auth_state.dart';
+import 'package:kale/features/auth/presentation/providers/save_data_outcome.dart';
 import 'package:kale/features/auth/presentation/widgets/auth_header.dart';
+import 'package:kale/features/auth/presentation/widgets/save_data_flow.dart';
 import 'package:kale/features/auth/presentation/widgets/social_login_buttons.dart';
 import 'package:kale/features/auth/presentation/widgets/try_first_button.dart';
 
@@ -25,7 +28,7 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, SaveDataFlow<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -62,9 +65,36 @@ class _LoginPageState extends ConsumerState<LoginPage>
     super.dispose();
   }
 
+  /// A guest never logs in directly: their entries would be left under
+  /// the guest account. They choose to add or discard them first.
+  bool get _isGuest {
+    final state = ref.read(authNotifierProvider);
+    return state is AuthAuthenticated && state.user.isAnonymous;
+  }
+
+  // Only email-code switches need a code, and the login page never starts
+  // one.
+  @override
+  void onCodeSent({PendingEmailSwitch? pending}) {}
+
   void _onLogin() {
     if (_formKey.currentState?.validate() ?? false) {
       context.unfocus();
+      if (_isGuest) {
+        final credential = PasswordCredential(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+        runSaveDataStep(() async {
+          final count =
+              await ref.read(authNotifierProvider.notifier).countGuestEntries();
+          return SaveDataIdentityInUse(
+            credential: credential,
+            entryCount: count,
+          );
+        });
+        return;
+      }
       ref.read(authNotifierProvider.notifier).login(
             email: _emailController.text.trim(),
             password: _passwordController.text,
@@ -72,10 +102,26 @@ class _LoginPageState extends ConsumerState<LoginPage>
     }
   }
 
+  /// Social sign-in; a guest links the identity instead (keeping their
+  /// entries), or chooses what to do with them if it is taken.
+  void _onSocial(SocialProvider provider) {
+    final notifier = ref.read(authNotifierProvider.notifier);
+    if (_isGuest) {
+      runSaveDataStep(() => notifier.linkSocialAccount(provider));
+      return;
+    }
+    switch (provider) {
+      case SocialProvider.google:
+        notifier.signInWithGoogle();
+      case SocialProvider.apple:
+        notifier.signInWithApple();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
-    final isLoading = authState is AuthLoading;
+    final isLoading = authState is AuthLoading || busy;
     final isAnonymous =
         authState is AuthAuthenticated && authState.user.isAnonymous;
     final colorScheme = context.colorScheme;
@@ -171,12 +217,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         SocialLoginButtons(
                           googleLabel: context.l10n.authLoginWithGoogle,
                           appleLabel: context.l10n.authLoginWithApple,
-                          onGooglePressed: () => ref
-                              .read(authNotifierProvider.notifier)
-                              .signInWithGoogle(),
-                          onApplePressed: () => ref
-                              .read(authNotifierProvider.notifier)
-                              .signInWithApple(),
+                          onGooglePressed: () =>
+                              _onSocial(SocialProvider.google),
+                          onApplePressed: () => _onSocial(SocialProvider.apple),
                         ),
                         AppSpacing.verticalXl,
 

@@ -4,6 +4,7 @@ import 'package:kale/core/sync/pull.dart';
 import 'package:kale/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:kale/features/auth/data/models/tokens_model.dart';
 import 'package:kale/features/auth/data/models/user_model.dart';
+import 'package:kale/features/auth/domain/entities/account_link.dart';
 import 'package:kale/features/budget/data/datasources/budget_categories_remote_datasource.dart';
 import 'package:kale/features/budget/data/datasources/budgets_remote_datasource.dart';
 import 'package:kale/features/budget/data/models/budget_category_model.dart';
@@ -173,6 +174,20 @@ abstract class FakeRemote<M> {
         );
       });
 
+  /// Creates row [id], like an `INSERT` (or an upsert under RLS): a retry
+  /// of the same user's create is harmless, but an id already taken by
+  /// another user is refused.
+  @protected
+  M insert(String id, M model) {
+    if (rows.containsKey(id) && !visible(id)) {
+      throw const ServerException(
+        message: 'duplicate key value violates unique constraint',
+        statusCode: 409,
+      );
+    }
+    return put(id, model);
+  }
+
   /// Replaces row [id] with [model], like `UPDATE … RETURNING` with
   /// `.single()`: throws if the signed-in user has no such row.
   @protected
@@ -208,7 +223,7 @@ class FakeTransactionsRemote extends FakeRemote<TransactionModel>
 
   @override
   Future<TransactionModel> createTransaction(TransactionModel model) =>
-      handle(RemoteCall.create(model.id), () => put(model.id, model));
+      handle(RemoteCall.create(model.id), () => insert(model.id, model));
 
   @override
   Future<TransactionModel> updateTransaction(TransactionModel model) =>
@@ -227,7 +242,7 @@ class FakeBudgetsRemote extends FakeRemote<BudgetModel>
 
   @override
   Future<BudgetModel> createBudget(BudgetModel model) =>
-      handle(RemoteCall.create(model.id), () => put(model.id, model));
+      handle(RemoteCall.create(model.id), () => insert(model.id, model));
 
   @override
   Future<BudgetModel> updateBudget(BudgetModel model) =>
@@ -260,7 +275,7 @@ class FakeBudgetCategoriesRemote extends FakeRemote<BudgetCategoryModel>
             statusCode: 400,
           );
         }
-        return put(model.id, model);
+        return insert(model.id, model);
       });
 
   @override
@@ -300,7 +315,7 @@ class FakeSavingsGoalsRemote extends FakeRemote<SavingsGoalModel>
 
   @override
   Future<SavingsGoalModel> createSavingsGoal(SavingsGoalModel model) =>
-      handle(RemoteCall.create(model.id), () => put(model.id, model));
+      handle(RemoteCall.create(model.id), () => insert(model.id, model));
 
   @override
   Future<SavingsGoalModel> updateSavingsGoal(SavingsGoalModel model) =>
@@ -334,7 +349,7 @@ class FakeSavingsContributionsRemote
             statusCode: 400,
           );
         }
-        return put(model.id, model);
+        return insert(model.id, model);
       });
 
   @override
@@ -373,6 +388,7 @@ class FakeAuthRemote implements AuthRemoteDataSource {
     anonymousSignIns++;
     final id = 'anon-$anonymousSignIns';
     currentUserId = id;
+    _anonymous.add(id);
     return (
       user: UserModel(id: id, email: '', name: '', isAnonymous: true),
       tokens: TokensModel(accessToken: 'access-$id', refreshToken: 'r-$id'),
@@ -386,6 +402,108 @@ class FakeAuthRemote implements AuthRemoteDataSource {
   Future<void> logout() async {
     logouts++;
     currentUserId = null;
+  }
+
+  // ── Guest upgrade ─────────────────────────────────────────────────────────
+
+  /// Which user owns each identity: `email:<address>`, `google:<name>`,
+  /// `apple:<name>`. Seed it to simulate an existing account.
+  final Map<String, String> identities = {};
+
+  /// The identity the Google or Apple sheet returns next, e.g. `alice`.
+  String nextSocialIdentity = 'someone-new';
+
+  /// The code every emailed code check accepts.
+  static const validCode = '123456';
+
+  /// Codes sent: link codes and sign-in codes, by email.
+  final List<String> codesSentTo = [];
+
+  /// Users still anonymous (no identity linked).
+  final Set<String> _anonymous = {};
+
+  /// Creates a permanent account owning `email:<email>`, as if it signed
+  /// up on another device, and returns its id.
+  String createAccount(String email) {
+    final id = 'user-$email';
+    identities['email:$email'] = id;
+    return id;
+  }
+
+  ({UserModel user, TokensModel tokens}) _session(String id) => (
+        user: UserModel(
+          id: id,
+          email: '',
+          name: '',
+          isAnonymous: _anonymous.contains(id),
+        ),
+        tokens: TokensModel(accessToken: 'access-$id', refreshToken: 'r-$id'),
+      );
+
+  /// Links [identity] to the signed-in user, or reports it taken.
+  void _link(String identity, AccountCredential ifTaken) {
+    final owner = identities[identity];
+    if (owner != null && owner != currentUserId) {
+      throw IdentityInUseException(ifTaken);
+    }
+    identities[identity] = currentUserId!;
+    _anonymous.remove(currentUserId);
+  }
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> linkSocialAccount(
+    SocialProvider provider,
+  ) async {
+    final identity = '${provider.name}:$nextSocialIdentity';
+    _link(
+      identity,
+      IdTokenCredential(provider: provider, idToken: identity),
+    );
+    return _session(currentUserId!);
+  }
+
+  @override
+  Future<void> startEmailLink(String email) async {
+    final owner = identities['email:$email'];
+    if (owner != null && owner != currentUserId) {
+      throw IdentityInUseException(EmailCodeCredential(email));
+    }
+    codesSentTo.add(email);
+  }
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> confirmEmailLink({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    if (code != validCode) {
+      throw const ServerException(message: 'Invalid code');
+    }
+    _link('email:$email', EmailCodeCredential(email));
+    return _session(currentUserId!);
+  }
+
+  @override
+  Future<void> sendSignInCode(String email) async => codesSentTo.add(email);
+
+  @override
+  Future<({UserModel user, TokensModel tokens})> signInWithCredential(
+    AccountCredential credential, {
+    String? code,
+  }) async {
+    final identity = switch (credential) {
+      IdTokenCredential(:final idToken) => idToken,
+      PasswordCredential(:final email) => 'email:$email',
+      EmailCodeCredential(:final email) => 'email:$email',
+    };
+    if (credential is EmailCodeCredential && code != validCode) {
+      throw const ServerException(message: 'Invalid code');
+    }
+    final owner = identities[identity] ??
+        (throw const ServerException(message: 'No such account'));
+    currentUserId = owner;
+    return _session(owner);
   }
 
   @override

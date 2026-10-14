@@ -515,5 +515,16 @@
   "logoutFailed": "Impossible de vérifier votre sauvegarde. Veuillez réessayer.",
   "restoreInProgress": "{count, plural, =0{Restauration de vos données…} =1{Restauration de vos données… 1 élément} other{Restauration de vos données… {count} éléments}}",
   "refreshOffline": "Vous êtes hors ligne. Tirez pour actualiser une fois connecté.",
-  "refreshFailed": "Impossible d'actualiser depuis votre sauvegarde. Veuillez réessayer."
+  "refreshFailed": "Impossible d'actualiser depuis votre sauvegarde. Veuillez réessayer.",
+  "saveDataTitle": "Sauvegarder vos données",
+  "saveDataSubtitle": "Créez un compte pour garder tout ce que vous avez saisi, sur ce téléphone et sur les autres.",
+  "saveDataWithEmail": "Continuer avec l'e-mail",
+  "saveDataCodeSent": "Saisissez le code à 6 chiffres envoyé à {email}.",
+  "saveDataVerify": "Vérifier",
+  "saveDataDone": "Vos données sont sauvegardées sur votre compte.",
+  "guestDataChoiceTitle": "Ce compte existe déjà",
+  "guestDataChoiceMessage": "{count, plural, =0{Vous n'avez encore aucune saisie sur ce téléphone.} =1{Vous avez 1 saisie sur ce téléphone. L'ajouter à ce compte, ou la supprimer ?} other{Vous avez {count} saisies sur ce téléphone. Les ajouter à ce compte, ou les supprimer ?}}",
+  "guestDataChoiceAdd": "{count, plural, =0{Se connecter} =1{Ajouter ma saisie à ce compte} other{Ajouter mes {count} saisies à ce compte}}",
+  "guestDataChoiceDiscard": "Les supprimer et se connecter",
+  "guestDataChoiceCancel": "Annuler"
 }

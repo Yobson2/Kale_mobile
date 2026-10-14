@@ -50,7 +50,7 @@ final authLocalDataSourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthLocalDataSourceRef = AutoDisposeProviderRef<AuthLocalDataSource>;
-String _$authRepositoryHash() => r'82c3b0ac7263f8f89d3fd1be80fe6f679148ee37';
+String _$authRepositoryHash() => r'b8a0c8f34327739045bf47266932b65f75b91491';
 
 /// Provides the [AuthRepository].
 ///
@@ -316,5 +316,137 @@ final signInAnonymouslyUseCaseProvider =
 // ignore: unused_element
 typedef SignInAnonymouslyUseCaseRef
     = AutoDisposeProviderRef<SignInAnonymouslyUseCase>;
+String _$linkSocialAccountUseCaseHash() =>
+    r'bc93c0e582fb13a47125fab4399aff028ffe7a27';
+
+/// Provides the [LinkSocialAccountUseCase].
+///
+/// Copied from [linkSocialAccountUseCase].
+@ProviderFor(linkSocialAccountUseCase)
+final linkSocialAccountUseCaseProvider =
+    AutoDisposeProvider<LinkSocialAccountUseCase>.internal(
+  linkSocialAccountUseCase,
+  name: r'linkSocialAccountUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$linkSocialAccountUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef LinkSocialAccountUseCaseRef
+    = AutoDisposeProviderRef<LinkSocialAccountUseCase>;
+String _$startEmailLinkUseCaseHash() =>
+    r'adc18ddec5ccf0fb190886e29142b90fb854dd95';
+
+/// Provides the [StartEmailLinkUseCase].
+///
+/// Copied from [startEmailLinkUseCase].
+@ProviderFor(startEmailLinkUseCase)
+final startEmailLinkUseCaseProvider =
+    AutoDisposeProvider<StartEmailLinkUseCase>.internal(
+  startEmailLinkUseCase,
+  name: r'startEmailLinkUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$startEmailLinkUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef StartEmailLinkUseCaseRef
+    = AutoDisposeProviderRef<StartEmailLinkUseCase>;
+String _$confirmEmailLinkUseCaseHash() =>
+    r'2282c9f010719507a1118fe16ee56baf14a79f8b';
+
+/// Provides the [ConfirmEmailLinkUseCase].
+///
+/// Copied from [confirmEmailLinkUseCase].
+@ProviderFor(confirmEmailLinkUseCase)
+final confirmEmailLinkUseCaseProvider =
+    AutoDisposeProvider<ConfirmEmailLinkUseCase>.internal(
+  confirmEmailLinkUseCase,
+  name: r'confirmEmailLinkUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$confirmEmailLinkUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ConfirmEmailLinkUseCaseRef
+    = AutoDisposeProviderRef<ConfirmEmailLinkUseCase>;
+String _$sendSignInCodeUseCaseHash() =>
+    r'77e9d486a0b0f1f43e88531cd3d2882d9ef7ab75';
+
+/// Provides the [SendSignInCodeUseCase].
+///
+/// Copied from [sendSignInCodeUseCase].
+@ProviderFor(sendSignInCodeUseCase)
+final sendSignInCodeUseCaseProvider =
+    AutoDisposeProvider<SendSignInCodeUseCase>.internal(
+  sendSignInCodeUseCase,
+  name: r'sendSignInCodeUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$sendSignInCodeUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SendSignInCodeUseCaseRef
+    = AutoDisposeProviderRef<SendSignInCodeUseCase>;
+String _$countGuestEntriesUseCaseHash() =>
+    r'6a36ad9e1b47d4f5230b49cdd434d7e55a5b387f';
+
+/// Provides the [CountGuestEntriesUseCase].
+///
+/// Copied from [countGuestEntriesUseCase].
+@ProviderFor(countGuestEntriesUseCase)
+final countGuestEntriesUseCaseProvider =
+    AutoDisposeProvider<CountGuestEntriesUseCase>.internal(
+  countGuestEntriesUseCase,
+  name: r'countGuestEntriesUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$countGuestEntriesUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef CountGuestEntriesUseCaseRef
+    = AutoDisposeProviderRef<CountGuestEntriesUseCase>;
+String _$switchToExistingAccountUseCaseHash() =>
+    r'b51a321d31d6c30a506d38c0dc73e68901b7af3b';
+
+/// Provides the [SwitchToExistingAccountUseCase].
+///
+/// Copied from [switchToExistingAccountUseCase].
+@ProviderFor(switchToExistingAccountUseCase)
+final switchToExistingAccountUseCaseProvider =
+    AutoDisposeProvider<SwitchToExistingAccountUseCase>.internal(
+  switchToExistingAccountUseCase,
+  name: r'switchToExistingAccountUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$switchToExistingAccountUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SwitchToExistingAccountUseCaseRef
+    = AutoDisposeProviderRef<SwitchToExistingAccountUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

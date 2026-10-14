@@ -19,6 +19,7 @@ import 'package:kale/features/transactions/data/daos/categories_dao.dart';
 import 'package:kale/features/transactions/data/daos/transactions_dao.dart';
 import 'package:kale/features/transactions/data/tables/categories_table.dart';
 import 'package:kale/features/transactions/data/tables/transactions_table.dart';
+import 'package:uuid/uuid.dart';
 
 part 'app_database.g.dart';
 
@@ -125,6 +126,96 @@ class AppDatabase extends _$AppDatabase {
       if (row != null) return true;
     }
     return false;
+  }
+
+  /// How many of the user's entries are on the device: live transactions,
+  /// budgets and savings goals (allocations and contributions belong to
+  /// their budget or goal and are not counted).
+  Future<int> countEntries() async {
+    final row = await customSelect(
+      'SELECT '
+      '(SELECT COUNT(*) FROM transactions WHERE deleted_at IS NULL) + '
+      '(SELECT COUNT(*) FROM budgets WHERE deleted_at IS NULL) + '
+      '(SELECT COUNT(*) FROM savings_goals WHERE deleted_at IS NULL) '
+      'AS n',
+      readsFrom: {transactions, budgets, savingsGoals},
+    ).getSingle();
+    return row.read<int>('n');
+  }
+
+  /// Prepares the device's data to move to another account: every live
+  /// row gets a new id (children follow their parent's), becomes unsynced
+  /// with no server id, and deletion markers are dropped. The sync queue
+  /// and the pull cursors are cleared, and the profile is marked synced so
+  /// the other account's profile replaces it on the next pull.
+  ///
+  /// New ids are needed because the old ones stay taken on the server by
+  /// the account the data leaves. The caller then queues every row as a
+  /// create (`SyncHandler.requeueAllAsCreates`).
+  Future<void> rekeyForAnotherAccount() {
+    const uuid = Uuid();
+    return transaction(() async {
+      const synced = [
+        'transactions',
+        'budgets',
+        'budget_categories',
+        'savings_goals',
+        'savings_contributions',
+      ];
+      for (final table in synced) {
+        await customStatement(
+          'DELETE FROM $table WHERE deleted_at IS NOT NULL',
+        );
+      }
+
+      Future<void> rekey(
+        String table, {
+        String? child,
+        String? childKey,
+      }) async {
+        final ids = await customSelect('SELECT id FROM $table')
+            .map((row) => row.read<String>('id'))
+            .get();
+        for (final id in ids) {
+          final newId = uuid.v4();
+          await customStatement(
+            'UPDATE $table SET id = ? WHERE id = ?',
+            [newId, id],
+          );
+          if (child != null) {
+            await customStatement(
+              'UPDATE $child SET $childKey = ? WHERE $childKey = ?',
+              [newId, id],
+            );
+          }
+        }
+      }
+
+      await rekey('budgets', child: 'budget_categories', childKey: 'budget_id');
+      await rekey(
+        'savings_goals',
+        child: 'savings_contributions',
+        childKey: 'goal_id',
+      );
+      await rekey('budget_categories');
+      await rekey('savings_contributions');
+      await rekey('transactions');
+
+      for (final table in synced) {
+        await customStatement('UPDATE $table SET is_synced = 0');
+      }
+      for (final table in [
+        'transactions',
+        'budgets',
+        'savings_goals',
+        'savings_contributions',
+      ]) {
+        await customStatement('UPDATE $table SET server_id = NULL');
+      }
+      await customStatement('UPDATE profiles SET is_synced = 1');
+      await delete(syncQueueEntries).go();
+      await delete(pullCursors).go();
+    });
   }
 
   /// Seeds the database with default Africa-relevant categories.

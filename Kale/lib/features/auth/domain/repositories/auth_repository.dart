@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/failures.dart';
 import 'package:kale/features/auth/data/repositories/auth_repository_impl.dart'
     show AuthRepositoryImpl;
+import 'package:kale/features/auth/domain/entities/account_link.dart';
 import 'package:kale/features/auth/domain/entities/user.dart';
 
 /// Abstract authentication repository defined in the domain layer.
@@ -69,4 +70,43 @@ abstract class AuthRepository {
   /// Starts an anonymous session. The returned [User] has
   /// [User.isAnonymous] set.
   Future<Either<Failure, User>> signInAnonymously();
+
+  // ── Guest upgrade ─────────────────────────────────────────────────────────
+
+  /// Links a Google (or Apple) identity to the signed-in guest.
+  Future<Either<Failure, LinkResult>> linkSocialAccount(
+    SocialProvider provider,
+  );
+
+  /// Starts linking [email] to the signed-in guest: a code is sent to it,
+  /// and the result is null. If [email] belongs to another account,
+  /// returns [IdentityInUse] instead and sends nothing.
+  Future<Either<Failure, LinkResult?>> startEmailLink(String email);
+
+  /// Confirms the emailed [code] and sets [password]: the guest keeps its
+  /// id and becomes a permanent user.
+  Future<Either<Failure, User>> confirmEmailLink({
+    required String email,
+    required String code,
+    required String password,
+  });
+
+  /// Sends a sign-in code to an existing account's [email].
+  Future<Either<Failure, void>> sendSignInCode(String email);
+
+  /// How many of the guest's entries are on this device: live
+  /// transactions, budgets and savings goals.
+  Future<Either<Failure, int>> countGuestEntries();
+
+  /// Leaves the guest session for the existing account behind
+  /// [credential] ([code] for an [EmailCodeCredential]).
+  ///
+  /// With [keepGuestData], every local entry is added to that account as
+  /// new entries; otherwise local data is wiped. Either way the account's
+  /// own data is then brought to this device.
+  Future<Either<Failure, User>> switchToExistingAccount({
+    required AccountCredential credential,
+    required bool keepGuestData,
+    String? code,
+  });
 }
