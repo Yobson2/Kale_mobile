@@ -43,8 +43,11 @@ class AppToast {
             child: Row(
               children: [
                 if (icon != null) ...[
-                  Icon(icon,
-                      color: theme.colorScheme.onInverseSurface, size: 20),
+                  Icon(
+                    icon,
+                    color: theme.colorScheme.onInverseSurface,
+                    size: 20,
+                  ),
                   AppSpacing.horizontalSm,
                 ],
                 Expanded(

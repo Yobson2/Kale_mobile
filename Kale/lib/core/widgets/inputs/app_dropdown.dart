@@ -47,7 +47,7 @@ class AppDropdown<T> extends StatelessWidget {
           AppSpacing.verticalSm,
         ],
         DropdownButtonFormField<T>(
-          value: value,
+          initialValue: value,
           items: items,
           onChanged: onChanged,
           validator: validator,

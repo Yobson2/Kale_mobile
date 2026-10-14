@@ -232,8 +232,9 @@ class _AddTransactionPageState extends ConsumerState<AddTransactionPage> {
   /// Loads existing transaction data when editing.
   void _loadExistingTransaction() {
     _isInitialized = true;
-    final notifier = ref.read(transactionsNotifierProvider.notifier);
-    notifier.loadTransaction(widget.transactionId!);
+    ref
+        .read(transactionsNotifierProvider.notifier)
+        .loadTransaction(widget.transactionId!);
 
     // Listen once for the loaded state to populate fields.
     ref.listenManual<TransactionsState>(
@@ -509,8 +510,10 @@ class _CategoryPicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(context.l10n.transactionsCategory,
-            style: theme.textTheme.labelLarge),
+        Text(
+          context.l10n.transactionsCategory,
+          style: theme.textTheme.labelLarge,
+        ),
         AppSpacing.verticalSm,
         if (categories.isEmpty)
           Text(context.l10n.transactionsNoCategoriesAvailable)

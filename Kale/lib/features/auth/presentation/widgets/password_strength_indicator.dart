@@ -40,9 +40,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
                     ? const EdgeInsets.only(right: AppSpacing.xs)
                     : EdgeInsets.zero,
                 decoration: BoxDecoration(
-                  color: isFilled
-                      ? color
-                      : Theme.of(context).dividerColor,
+                  color: isFilled ? color : Theme.of(context).dividerColor,
                   borderRadius: AppRadius.borderRadiusFull,
                 ),
               ),

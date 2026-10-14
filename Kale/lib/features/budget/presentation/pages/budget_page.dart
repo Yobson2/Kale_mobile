@@ -441,8 +441,6 @@ class _TotalProgressCard extends StatelessWidget {
         child: Stack(
           children: [
             const GeometricKWatermark(
-              opacity: 0.05,
-              fontSize: 120,
               alignment: Alignment.topRight,
               offset: Offset(20, -15),
             ),

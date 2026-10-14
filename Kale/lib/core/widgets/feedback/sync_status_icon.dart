@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 class SyncStatusIcon extends StatelessWidget {
   /// Creates a [SyncStatusIcon].
   const SyncStatusIcon({
-    super.key,
     required this.isSynced,
+    super.key,
     this.size = 18,
   });
 

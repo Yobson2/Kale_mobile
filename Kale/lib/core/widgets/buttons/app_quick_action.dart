@@ -37,8 +37,7 @@ class AppQuickAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final iconColor = color ?? theme.colorScheme.primary;
-    final bgColor =
-        backgroundColor ?? iconColor.withValues(alpha: 0.1);
+    final bgColor = backgroundColor ?? iconColor.withValues(alpha: 0.1);
 
     return GestureDetector(
       onTap: onTap,

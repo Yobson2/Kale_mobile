@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kale/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kale/core/config/env_provider.dart';
@@ -7,6 +6,7 @@ import 'package:kale/core/router/app_router.dart';
 import 'package:kale/core/sync/sync_app_lifecycle.dart';
 import 'package:kale/core/theme/app_theme.dart';
 import 'package:kale/core/theme/theme_provider.dart';
+import 'package:kale/l10n/app_localizations.dart';
 
 /// Root application widget.
 ///

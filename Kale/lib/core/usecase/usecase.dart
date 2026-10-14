@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/failures.dart';
+import 'package:meta/meta.dart';
 
 /// Base class for all use cases in the domain layer.
 ///
@@ -24,6 +25,7 @@ abstract class UseCase<T, Params> {
 }
 
 /// Use when a use case does not require any parameters.
+@immutable
 class NoParams {
   /// Creates a [NoParams] instance.
   const NoParams();

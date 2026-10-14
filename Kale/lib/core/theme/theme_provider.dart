@@ -7,7 +7,7 @@ part 'theme_provider.g.dart';
 /// Manages the app [ThemeMode] and persists the user's preference.
 ///
 /// Supports system, light, and dark modes. Persists choice via
-/// [LocalStorage] so it survives app restarts.
+/// `LocalStorage` so it survives app restarts.
 @Riverpod(keepAlive: true)
 class ThemeModeNotifier extends _$ThemeModeNotifier {
   @override

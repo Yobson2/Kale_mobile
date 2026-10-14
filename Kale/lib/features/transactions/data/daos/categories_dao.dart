@@ -12,15 +12,13 @@ class CategoriesDao extends DatabaseAccessor<AppDatabase>
 
   /// Watches all categories ordered by sortOrder.
   Stream<List<Category>> watchAll() {
-    return (select(categories)
-          ..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
+    return (select(categories)..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
         .watch();
   }
 
   /// Gets all categories.
   Future<List<Category>> getAll() {
-    return (select(categories)
-          ..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
+    return (select(categories)..orderBy([(t) => OrderingTerm.asc(t.sortOrder)]))
         .get();
   }
 

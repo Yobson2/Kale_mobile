@@ -13,29 +13,28 @@ part 'transaction_model.g.dart';
 /// currency. There is no per-transaction currency.
 @freezed
 abstract class TransactionModel with _$TransactionModel {
-  const TransactionModel._();
-
   const factory TransactionModel({
     required String id,
-    @JsonKey(name: 'server_id') String? serverId,
     @JsonKey(name: 'amount_minor') required int amountMinor,
     required String type,
     @JsonKey(name: 'category_id') required String categoryId,
-    String? description,
     required DateTime date,
     @JsonKey(name: 'payment_method') required String paymentMethod,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'server_id') String? serverId,
+    String? description,
     @Default(false) @JsonKey(name: 'is_recurring') bool isRecurring,
     @JsonKey(name: 'recurring_rule_id') String? recurringRuleId,
     @JsonKey(name: 'mobile_money_provider') String? mobileMoneyProvider,
     @JsonKey(name: 'mobile_money_ref') String? mobileMoneyRef,
     @JsonKey(name: 'account_id') String? accountId,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
-    @JsonKey(name: 'updated_at') required DateTime updatedAt,
     @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(true)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
   }) = _TransactionModel;
+  const TransactionModel._();
 
   /// Creates a [TransactionModel] from JSON.
   factory TransactionModel.fromJson(Map<String, dynamic> json) =>

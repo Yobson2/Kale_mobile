@@ -50,8 +50,6 @@ class ShareAppPage extends StatelessWidget {
                       child: Stack(
                         children: [
                           const GeometricKWatermark(
-                            opacity: 0.05,
-                            fontSize: 120,
                             alignment: Alignment.topRight,
                             offset: Offset(20, -15),
                           ),
@@ -245,8 +243,7 @@ class ShareAppPage extends StatelessWidget {
   }
 
   void _copyMessage(BuildContext context) {
-    final message =
-        '${context.l10n.moreShareAppMessage}\n$_appLink';
+    final message = '${context.l10n.moreShareAppMessage}\n$_appLink';
     Clipboard.setData(ClipboardData(text: message));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(context.l10n.shareAppMessageCopied)),

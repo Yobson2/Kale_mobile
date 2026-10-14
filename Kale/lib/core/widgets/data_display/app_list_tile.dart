@@ -14,7 +14,9 @@ class AppListTile extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.dense = false,
-    @Deprecated('Dividers removed per Digital Loom design. Use spacing instead.')
+    @Deprecated(
+      'Dividers removed per Digital Loom design. Use spacing instead.',
+    )
     this.showDivider = false,
   });
 
@@ -37,6 +39,7 @@ class AppListTile extends StatelessWidget {
   final bool dense;
 
   /// Deprecated – kept for backwards compatibility but no longer renders.
+  @Deprecated('Dividers removed per Digital Loom design. Use spacing instead.')
   final bool showDivider;
 
   @override

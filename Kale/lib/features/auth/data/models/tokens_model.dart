@@ -1,5 +1,5 @@
-import 'package:kale/features/auth/domain/entities/tokens.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kale/features/auth/domain/entities/tokens.dart';
 
 part 'tokens_model.freezed.dart';
 part 'tokens_model.g.dart';
@@ -7,13 +7,13 @@ part 'tokens_model.g.dart';
 /// Data model for [Tokens] with JSON serialization.
 @freezed
 abstract class TokensModel with _$TokensModel {
-  /// Creates a [TokensModel].
-  const TokensModel._();
-
   const factory TokensModel({
     @JsonKey(name: 'access_token') required String accessToken,
     @JsonKey(name: 'refresh_token') required String refreshToken,
   }) = _TokensModel;
+
+  /// Creates a [TokensModel].
+  const TokensModel._();
 
   /// Creates a [TokensModel] from JSON.
   factory TokensModel.fromJson(Map<String, dynamic> json) =>

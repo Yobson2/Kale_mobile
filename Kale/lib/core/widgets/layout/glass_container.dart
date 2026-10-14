@@ -42,8 +42,7 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surfaceColor =
-        color ?? Theme.of(context).colorScheme.surface;
+    final surfaceColor = color ?? Theme.of(context).colorScheme.surface;
 
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.zero,

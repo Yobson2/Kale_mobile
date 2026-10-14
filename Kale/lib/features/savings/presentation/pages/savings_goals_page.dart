@@ -155,7 +155,6 @@ class _TotalSavedCard extends StatelessWidget {
         child: Stack(
           children: [
             const GeometricKWatermark(
-              opacity: 0.05,
               fontSize: 140,
               alignment: Alignment.topRight,
               offset: Offset(30, -20),
@@ -359,9 +358,17 @@ class _QuickStartGrid extends StatelessWidget {
       _QuickTemplate(Icons.shield_outlined, 'Emergency', Colors.blue, context),
       _QuickTemplate(Icons.flight_outlined, 'Vacation', Colors.orange, context),
       _QuickTemplate(
-          Icons.directions_car_outlined, 'Car Fund', Colors.green, context),
+        Icons.directions_car_outlined,
+        'Car Fund',
+        Colors.green,
+        context,
+      ),
       _QuickTemplate(
-          Icons.school_outlined, 'Education', Colors.purple, context),
+        Icons.school_outlined,
+        'Education',
+        Colors.purple,
+        context,
+      ),
     ];
 
     return GridView.count(
@@ -390,7 +397,7 @@ class _QuickStartGrid extends StatelessWidget {
                   t.label.toUpperCase(),
                   style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
-                    letterSpacing: 1.0,
+                    letterSpacing: 1,
                   ),
                 ),
               ],

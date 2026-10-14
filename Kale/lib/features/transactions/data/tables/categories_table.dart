@@ -18,8 +18,7 @@ class Categories extends Table {
   TextColumn get type => text()();
 
   /// Whether this is a system-provided category.
-  BoolColumn get isDefault =>
-      boolean().withDefault(const Constant(true))();
+  BoolColumn get isDefault => boolean().withDefault(const Constant(true))();
 
   /// Display order.
   IntColumn get sortOrder => integer().withDefault(const Constant(0))();
@@ -28,8 +27,7 @@ class Categories extends Table {
   DateTimeColumn get createdAt => dateTime()();
 
   /// Whether synced to server.
-  BoolColumn get isSynced =>
-      boolean().withDefault(const Constant(false))();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};

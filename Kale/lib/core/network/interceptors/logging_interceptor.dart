@@ -3,7 +3,7 @@ import 'package:kale/core/utils/logger.dart';
 
 /// Logs HTTP requests and responses for debugging.
 ///
-/// Only active when logging is enabled (controlled by [Env]).
+/// Only active when logging is enabled (controlled by `Env`).
 class LoggingInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {

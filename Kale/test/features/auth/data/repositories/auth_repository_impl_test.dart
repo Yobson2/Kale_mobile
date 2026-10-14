@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:kale/core/error/exceptions.dart';
 import 'package:kale/core/error/failures.dart';
 import 'package:kale/core/sync/backup_status.dart';
@@ -6,7 +7,6 @@ import 'package:kale/features/auth/data/models/tokens_model.dart';
 import 'package:kale/features/auth/data/models/user_model.dart';
 import 'package:kale/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:kale/features/auth/domain/entities/user.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../helpers/mock_providers.dart';
@@ -64,10 +64,12 @@ void main() {
     test('should check if device is online', () async {
       // Arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      when(() => mockRemote.login(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-          )).thenAnswer((_) async => (user: tUserModel, tokens: tTokensModel));
+      when(
+        () => mockRemote.login(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) async => (user: tUserModel, tokens: tTokensModel));
       when(() => mockLocal.cacheUser(any())).thenAnswer((_) async {});
       when(() => mockLocal.cacheTokens(any())).thenAnswer((_) async {});
 
@@ -88,10 +90,12 @@ void main() {
 
       test('should return User when remote call succeeds', () async {
         // Arrange
-        when(() => mockRemote.login(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            )).thenAnswer(
+        when(
+          () => mockRemote.login(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer(
           (_) async => (user: tUserModel, tokens: tTokensModel),
         );
         when(() => mockLocal.cacheUser(any())).thenAnswer((_) async {});
@@ -109,10 +113,12 @@ void main() {
 
       test('should return ServerFailure when remote call fails', () async {
         // Arrange
-        when(() => mockRemote.login(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            )).thenThrow(const ServerException(message: 'Invalid credentials'));
+        when(
+          () => mockRemote.login(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenThrow(const ServerException(message: 'Invalid credentials'));
 
         // Act
         final result = await repository.login(

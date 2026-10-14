@@ -33,7 +33,7 @@ class InsightsPage extends ConsumerWidget {
         loading: () => const Center(
           child: CircularProgressIndicator.adaptive(),
         ),
-        error: (_, __) => Center(
+        error: (_, __) => const Center(
           child: Text('Something went wrong. Please try again.'),
         ),
         data: (summary) {
@@ -335,7 +335,7 @@ class _TopCategoriesCard extends StatelessWidget {
                         name.toUpperCase(),
                         style: context.textTheme.labelSmall?.copyWith(
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 1.0,
+                          letterSpacing: 1,
                           color: context.colorScheme.onSurfaceVariant,
                         ),
                       ),
@@ -510,7 +510,7 @@ class _RecommendationCard extends StatelessWidget {
                     actionLabel,
                     style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 1.0,
+                      letterSpacing: 1,
                     ),
                   ),
                 ),
@@ -567,8 +567,9 @@ class _SparklinePainter extends CustomPainter {
       ..lineTo(0, size.height)
       ..close();
 
-    canvas.drawPath(fillPath, Paint()..color = fillColor);
-    canvas.drawPath(path, linePaint);
+    canvas
+      ..drawPath(fillPath, Paint()..color = fillColor)
+      ..drawPath(path, linePaint);
 
     // Draw dots at key points
     final dotPaint = Paint()
@@ -579,8 +580,9 @@ class _SparklinePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     for (final p in [points[2], points[4]]) {
-      canvas.drawCircle(p, 5, dotBorderPaint);
-      canvas.drawCircle(p, 4, dotPaint);
+      canvas
+        ..drawCircle(p, 5, dotBorderPaint)
+        ..drawCircle(p, 4, dotPaint);
     }
   }
 

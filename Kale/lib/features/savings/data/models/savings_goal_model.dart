@@ -14,26 +14,25 @@ part 'savings_goal_model.g.dart';
 /// device from the goal's contributions and pushed as-is.
 @freezed
 abstract class SavingsGoalModel with _$SavingsGoalModel {
-  const SavingsGoalModel._();
-
   const factory SavingsGoalModel({
     required String id,
-    @JsonKey(name: 'server_id') String? serverId,
     required String name,
     @JsonKey(name: 'target_amount_minor') required int targetAmountMinor,
+    required String status,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'server_id') String? serverId,
     @JsonKey(name: 'current_amount_minor') @Default(0) int currentAmountMinor,
     String? description,
     DateTime? deadline,
     @JsonKey(name: 'icon_name') String? iconName,
     @JsonKey(name: 'color_hex') String? colorHex,
-    required String status,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
-    @JsonKey(name: 'updated_at') required DateTime updatedAt,
     @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(true)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
   }) = _SavingsGoalModel;
+  const SavingsGoalModel._();
 
   factory SavingsGoalModel.fromJson(Map<String, dynamic> json) =>
       _$SavingsGoalModelFromJson(json);

@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:kale/core/error/exceptions.dart';
+import 'package:kale/core/network/interceptors/auth_interceptor.dart'
+    show AuthInterceptor;
 
 /// Maps [DioException] types to application-specific exceptions.
 ///
-/// Stores typed exceptions in [DioException.error] via [handler.reject]
+/// Stores typed exceptions in [DioException.error] via `handler.reject`
 /// instead of throwing, so the interceptor chain continues and
 /// [AuthInterceptor] can handle 401s for token refresh.
 class ErrorInterceptor extends Interceptor {
@@ -68,7 +70,7 @@ class ErrorInterceptor extends Interceptor {
       return;
     }
 
-    final Exception exception = switch (statusCode) {
+    final exception = switch (statusCode) {
       401 => UnauthorizedException(message: message),
       403 => UnauthorizedException(message: 'Access forbidden: $message'),
       404 => ServerException(message: 'Not found: $message', statusCode: 404),

@@ -16,11 +16,8 @@ part 'budget_model.g.dart';
 /// base currency. `start_date`/`end_date` are plain `YYYY-MM-DD` dates.
 @freezed
 abstract class BudgetModel with _$BudgetModel {
-  const BudgetModel._();
-
   const factory BudgetModel({
     required String id,
-    @JsonKey(name: 'server_id') String? serverId,
     required String name,
     required String strategy,
     required String period,
@@ -30,18 +27,20 @@ abstract class BudgetModel with _$BudgetModel {
     @CalendarDateJsonConverter()
     @JsonKey(name: 'end_date')
     required CalendarDate endDate,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'server_id') String? serverId,
     @Default(BudgetPeriodRange.defaultStartDay)
     @JsonKey(name: 'period_start_day')
     int periodStartDay,
     @JsonKey(name: 'total_income_minor') int? totalIncomeMinor,
     @Default(true) @JsonKey(name: 'is_percentage_based') bool isPercentageBased,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
-    @JsonKey(name: 'updated_at') required DateTime updatedAt,
     @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(false)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
   }) = _BudgetModel;
+  const BudgetModel._();
 
   /// Creates a [BudgetModel] from JSON.
   factory BudgetModel.fromJson(Map<String, dynamic> json) =>

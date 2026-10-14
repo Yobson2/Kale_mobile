@@ -1,6 +1,8 @@
 import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/achievement_service.dart';
+import 'package:kale/features/auth/presentation/providers/auth_notifier.dart'
+    show AuthNotifier;
 import 'package:kale/features/budget/domain/entities/budget_category.dart';
 import 'package:kale/features/budget/domain/entities/budget_enums.dart';
 import 'package:kale/features/budget/domain/entities/budget_period_range.dart';

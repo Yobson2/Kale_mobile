@@ -76,9 +76,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
   Future<void> _onVerify() async {
     if (_otpCode.length < 6) return;
     context.unfocus();
-    final success = await ref
-        .read(authNotifierProvider.notifier)
-        .verifyOtp(
+    final success = await ref.read(authNotifierProvider.notifier).verifyOtp(
           email: widget.email,
           code: _otpCode,
           isRecovery: !_isRegistrationFlow,
@@ -144,9 +142,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
           Padding(
             padding: const EdgeInsets.only(right: AppSpacing.lg),
             child: SvgPicture.asset(
-              isDark
-                  ? 'assets/images/logo-dark.svg'
-                  : 'assets/images/logo.svg',
+              isDark ? 'assets/images/logo-dark.svg' : 'assets/images/logo.svg',
               height: 32,
             ),
           ),
@@ -161,7 +157,6 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
             child: GeometricKWatermark(
               opacity: 0.04,
               fontSize: 200,
-              alignment: Alignment.bottomRight,
             ),
           ),
 
@@ -208,8 +203,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
 
                         // OTP field
                         AppOtpField(
-                          onChanged: (code) =>
-                              setState(() => _otpCode = code),
+                          onChanged: (code) => setState(() => _otpCode = code),
                           onCompleted: (_) => _onVerify(),
                         ),
                       ],
@@ -244,10 +238,9 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                            onPressed:
-                                _secondsRemaining <= 0 && !isLoading
-                                    ? _onResend
-                                    : null,
+                            onPressed: _secondsRemaining <= 0 && !isLoading
+                                ? _onResend
+                                : null,
                             child: Text(
                               context.l10n.authOtpResend,
                               style: context.textTheme.bodyMedium?.copyWith(

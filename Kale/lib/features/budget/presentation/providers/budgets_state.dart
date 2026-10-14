@@ -1,5 +1,5 @@
-import 'package:kale/features/budget/domain/entities/budget.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kale/features/budget/domain/entities/budget.dart';
 
 part 'budgets_state.freezed.dart';
 

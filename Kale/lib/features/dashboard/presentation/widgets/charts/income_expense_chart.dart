@@ -92,7 +92,6 @@ class IncomeExpenseChart extends ConsumerWidget {
                   ),
                 ),
                 titlesData: FlTitlesData(
-                  show: true,
                   topTitles: const AxisTitles(),
                   rightTitles: const AxisTitles(),
                   leftTitles: AxisTitles(
@@ -143,7 +142,6 @@ class IncomeExpenseChart extends ConsumerWidget {
                 ),
                 borderData: FlBorderData(show: false),
                 gridData: FlGridData(
-                  show: true,
                   drawVerticalLine: false,
                   horizontalInterval: maxY == 0 ? 25 : maxY / 4,
                   getDrawingHorizontalLine: (value) => FlLine(

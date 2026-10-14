@@ -19,7 +19,6 @@ class AppTheme {
         colorScheme: const ColorScheme.light(
           primary: AppColors.primaryLight,
           primaryContainer: AppColors.primaryContainerLight,
-          onPrimary: AppColors.onPrimaryLight,
           onPrimaryContainer: AppColors.onPrimaryContainerLight,
           primaryFixed: AppColors.primaryFixedLight,
           primaryFixedDim: AppColors.primaryFixedDimLight,

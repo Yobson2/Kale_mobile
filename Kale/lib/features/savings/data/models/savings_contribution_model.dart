@@ -13,23 +13,22 @@ part 'savings_contribution_model.g.dart';
 /// currency. A contribution is owned through its goal (`goal_id`).
 @freezed
 abstract class SavingsContributionModel with _$SavingsContributionModel {
-  const SavingsContributionModel._();
-
   const factory SavingsContributionModel({
     required String id,
-    @JsonKey(name: 'server_id') String? serverId,
     @JsonKey(name: 'goal_id') required String goalId,
     @JsonKey(name: 'amount_minor') required int amountMinor,
     required String source,
-    String? note,
     required DateTime date,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'server_id') String? serverId,
+    String? note,
     @JsonKey(name: 'deleted_at') DateTime? deletedAt,
     @Default(true)
     @JsonKey(includeFromJson: false, includeToJson: false)
     bool isSynced,
   }) = _SavingsContributionModel;
+  const SavingsContributionModel._();
 
   factory SavingsContributionModel.fromJson(Map<String, dynamic> json) =>
       _$SavingsContributionModelFromJson(json);

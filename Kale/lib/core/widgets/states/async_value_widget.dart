@@ -35,13 +35,11 @@ class AsyncValueWidget<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return value.when(
-      loading: () =>
-          loading ?? AppShimmerList(itemCount: loadingItemCount),
+      loading: () => loading ?? AppShimmerList(itemCount: loadingItemCount),
       error: (err, stack) =>
           error?.call(err, stack) ??
           AppErrorState(
             message: err.toString(),
-            onRetry: null,
           ),
       data: data,
     );

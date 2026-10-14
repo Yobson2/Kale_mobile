@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:kale/core/error/failures.dart';
+import 'package:kale/features/auth/data/repositories/auth_repository_impl.dart'
+    show AuthRepositoryImpl;
 import 'package:kale/features/auth/domain/entities/user.dart';
 
 /// Abstract authentication repository defined in the domain layer.

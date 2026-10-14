@@ -58,9 +58,10 @@ class SettingsPage extends ConsumerWidget {
                 children: [
                   // ── Preferences ──
                   _SectionHeader(
-                      title: l10n.settingsCurrency.isEmpty
-                          ? 'Preferences'
-                          : 'Preferences'),
+                    title: l10n.settingsCurrency.isEmpty
+                        ? 'Preferences'
+                        : 'Preferences',
+                  ),
                   AppSpacing.verticalMd,
 
                   _SettingsCard(
