@@ -3,7 +3,8 @@ import 'package:kale/core/error/failures.dart';
 import 'package:kale/core/usecase/usecase.dart';
 import 'package:kale/features/auth/domain/repositories/auth_repository.dart';
 
-/// Logs out the current user and clears tokens.
+/// Logs out the current user and wipes their data from the phone,
+/// including changes not yet backed up.
 class LogoutUseCase extends UseCase<void, NoParams> {
   /// Creates a [LogoutUseCase].
   const LogoutUseCase(this._repository);

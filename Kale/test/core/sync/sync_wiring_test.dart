@@ -8,12 +8,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/sync_harness.dart';
 
-/// Entity types that are enqueued but knowingly have no handler yet.
-/// Delete an entry when its ticket lands; the test fails until you do.
-const knownGaps = {
-  'savings_goal': 'no SavingsSyncHandler until the savings ticket (#7)',
-};
-
 void main() {
   late SyncHarness harness;
 
@@ -29,10 +23,9 @@ void main() {
 
     expect(
       enqueued.difference(registered.toSet()),
-      knownGaps.keys.toSet(),
+      isEmpty,
       reason: 'Each enqueued entityType needs a SyncHandler listed in '
-          'syncHandlersProvider. If a known gap was fixed, remove it from '
-          'knownGaps.',
+          'syncHandlersProvider.',
     );
   });
 

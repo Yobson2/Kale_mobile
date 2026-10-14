@@ -42,12 +42,17 @@ and `toDriftCompanion`, then run steps 3–4.
 bash .claude/skills/add-syncable-entity/check_sync_wiring.sh
 ```
 
-It checks, for every entity: the enqueued `entityType` has a `SyncHandler`; each handler is `registerHandler`ed in a
-providers file; each Drift table is in `@DriftDatabase(tables:)` and in `clearAllData()`; and each syncable repository is
-refreshed in `_syncFromServer()` in `auth_notifier.dart`.
+It checks, for every entity: the enqueued `entityType` has a `SyncHandler`; each handler's provider is listed in
+`syncHandlersProvider` (`lib/core/sync/sync_providers.dart`); each Drift table is in `@DriftDatabase(tables:)` and in
+`clearAllData()`; and each syncable repository is refreshed in `_syncFromServer()` in `auth_notifier.dart`.
+`test/core/sync/sync_wiring_test.dart` runs the same checks as part of `flutter test`.
 
-The script also fails on pre-existing problems (savings has no handler at the time of writing). Only the lines about
-**your** entity must be `ok`. Report any other failures to the user rather than fixing them silently.
+Every line must be `ok`: the script has no known failures. If a line about another entity fails, report it to the
+user rather than fixing it silently.
+
+One local datasource enqueues exactly one entity type. If a feature syncs two kinds of rows (savings goals and their
+contributions), give each its own local datasource, remote datasource and `SyncHandler`, so a handler never receives
+the other type's payload.
 
 ## 5. Test
 

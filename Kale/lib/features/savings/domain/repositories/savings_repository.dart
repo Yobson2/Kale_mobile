@@ -4,7 +4,9 @@ import 'package:kale/features/savings/domain/entities/savings_contribution.dart'
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
 import 'package:kale/features/savings/domain/entities/savings_goal.dart';
 
-/// Abstract repository for savings goals.
+/// Repository for savings goals and their contributions.
+///
+/// Amounts are integer minor units of the account's base currency.
 abstract class SavingsRepository {
   /// Gets all savings goals, optionally filtered by [status].
   Future<Either<Failure, List<SavingsGoal>>> getSavingsGoals({
@@ -17,23 +19,21 @@ abstract class SavingsRepository {
   /// Gets a single savings goal by [id].
   Future<Either<Failure, SavingsGoal>> getSavingsGoalById(String id);
 
-  /// Creates a new savings goal.
+  /// Creates a new savings goal with nothing saved yet.
   Future<Either<Failure, SavingsGoal>> createSavingsGoal({
     required String name,
-    required double targetAmount,
-    required String currencyCode,
+    required int targetAmountMinor,
     String? description,
     DateTime? deadline,
     String? iconName,
     String? colorHex,
   });
 
-  /// Updates an existing savings goal.
+  /// Updates an existing savings goal. Its saved amount is unchanged.
   Future<Either<Failure, SavingsGoal>> updateSavingsGoal({
     required String id,
     required String name,
-    required double targetAmount,
-    required String currencyCode,
+    required int targetAmountMinor,
     required SavingsGoalStatus status,
     String? description,
     DateTime? deadline,
@@ -41,13 +41,17 @@ abstract class SavingsRepository {
     String? colorHex,
   });
 
-  /// Deletes a savings goal by [id].
+  /// Deletes a savings goal by [id], with its contributions.
   Future<Either<Failure, void>> deleteSavingsGoal(String id);
 
-  /// Adds a contribution to a savings goal.
+  /// Adds a contribution of [amountMinor] to a goal.
+  ///
+  /// The goal's saved amount becomes the sum of its contributions, and an
+  /// active goal that reaches its target is marked completed. Both the
+  /// contribution and the goal change are queued for sync.
   Future<Either<Failure, SavingsContribution>> contributeToGoal({
     required String goalId,
-    required double amount,
+    required int amountMinor,
     required ContributionSource source,
     String? note,
   });
@@ -60,6 +64,7 @@ abstract class SavingsRepository {
   /// Watches contributions for a goal as a reactive stream.
   Stream<List<SavingsContribution>> watchContributions(String goalId);
 
-  /// Refreshes savings goals from server.
+  /// Refreshes goals and contributions from the server. Local changes not
+  /// yet pushed are kept.
   Future<Either<Failure, void>> refreshFromServer();
 }

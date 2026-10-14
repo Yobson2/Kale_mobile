@@ -2,9 +2,11 @@ import 'package:kale/core/database/app_database.dart';
 import 'package:kale/core/network/network_info.dart';
 import 'package:kale/core/storage/local_storage.dart';
 import 'package:kale/core/storage/secure_storage.dart';
+import 'package:kale/core/sync/sync_engine.dart';
 import 'package:kale/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:kale/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:kale/features/auth/domain/repositories/auth_repository.dart';
+import 'package:kale/features/auth/domain/usecases/back_up_pending_changes_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/get_cached_user_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/login_usecase.dart';
@@ -27,6 +29,9 @@ class MockSecureStorage extends Mock implements SecureStorage {}
 
 /// Mock implementation of [AppDatabase].
 class MockAppDatabase extends Mock implements AppDatabase {}
+
+/// Mock implementation of [SyncEngine].
+class MockSyncEngine extends Mock implements SyncEngine {}
 
 // -- Auth mocks --
 
@@ -53,6 +58,10 @@ class MockVerifyOtpUseCase extends Mock implements VerifyOtpUseCase {}
 
 /// Mock implementation of [LogoutUseCase].
 class MockLogoutUseCase extends Mock implements LogoutUseCase {}
+
+/// Mock implementation of [BackUpPendingChangesUseCase].
+class MockBackUpPendingChangesUseCase extends Mock
+    implements BackUpPendingChangesUseCase {}
 
 /// Mock implementation of [GetCachedUserUseCase].
 class MockGetCachedUserUseCase extends Mock implements GetCachedUserUseCase {}

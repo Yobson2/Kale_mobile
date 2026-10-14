@@ -43,7 +43,13 @@ abstract class AuthRepository {
     required String newPassword,
   });
 
-  /// Logs out the current user and clears tokens.
+  /// Pushes every local change that can be backed up right now, and
+  /// returns how many are still not on the server (pending or stuck).
+  Future<Either<Failure, int>> backUpPendingChanges();
+
+  /// Logs out the current user and removes everything of theirs from the
+  /// phone: tokens, the local database and the sync queue. Changes not
+  /// yet backed up are lost; call [backUpPendingChanges] first.
   Future<Either<Failure, void>> logout();
 
   /// Gets the currently cached user (from local storage / Supabase session).

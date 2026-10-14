@@ -2,6 +2,9 @@ import 'package:kale/core/providers/notification_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/achievement_service.dart';
 import 'package:kale/features/savings/domain/entities/savings_enums.dart';
+import 'package:kale/features/savings/domain/usecases/contribute_to_goal_usecase.dart';
+import 'package:kale/features/savings/domain/usecases/create_savings_goal_usecase.dart';
+import 'package:kale/features/savings/domain/usecases/update_savings_goal_usecase.dart';
 import 'package:kale/features/savings/presentation/providers/savings_providers.dart';
 import 'package:kale/features/savings/presentation/providers/savings_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -9,6 +12,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'savings_notifier.g.dart';
 
 /// Manages savings goal mutation state and actions.
+///
+/// Amounts are integer minor units of the account's base currency.
 @riverpod
 class SavingsNotifier extends _$SavingsNotifier {
   @override
@@ -17,8 +22,7 @@ class SavingsNotifier extends _$SavingsNotifier {
   /// Creates a new savings goal.
   Future<void> createGoal({
     required String name,
-    required double targetAmount,
-    required String currencyCode,
+    required int targetAmountMinor,
     String? description,
     DateTime? deadline,
     String? iconName,
@@ -26,16 +30,16 @@ class SavingsNotifier extends _$SavingsNotifier {
   }) async {
     state = const SavingsState.loading();
     try {
-      final result =
-          await ref.read(savingsRepositoryProvider).createSavingsGoal(
-                name: name,
-                targetAmount: targetAmount,
-                currencyCode: currencyCode,
-                description: description,
-                deadline: deadline,
-                iconName: iconName,
-                colorHex: colorHex,
-              );
+      final result = await ref.read(createSavingsGoalUseCaseProvider).call(
+            CreateSavingsGoalParams(
+              name: name,
+              targetAmountMinor: targetAmountMinor,
+              description: description,
+              deadline: deadline,
+              iconName: iconName,
+              colorHex: colorHex,
+            ),
+          );
       state = result.fold(
         (failure) => SavingsState.error(failure.message),
         (_) => const SavingsState.success(message: 'Goal created'),
@@ -49,8 +53,7 @@ class SavingsNotifier extends _$SavingsNotifier {
   Future<void> updateGoal({
     required String id,
     required String name,
-    required double targetAmount,
-    required String currencyCode,
+    required int targetAmountMinor,
     required SavingsGoalStatus status,
     String? description,
     DateTime? deadline,
@@ -59,18 +62,18 @@ class SavingsNotifier extends _$SavingsNotifier {
   }) async {
     state = const SavingsState.loading();
     try {
-      final result =
-          await ref.read(savingsRepositoryProvider).updateSavingsGoal(
-                id: id,
-                name: name,
-                targetAmount: targetAmount,
-                currencyCode: currencyCode,
-                status: status,
-                description: description,
-                deadline: deadline,
-                iconName: iconName,
-                colorHex: colorHex,
-              );
+      final result = await ref.read(updateSavingsGoalUseCaseProvider).call(
+            UpdateSavingsGoalParams(
+              id: id,
+              name: name,
+              targetAmountMinor: targetAmountMinor,
+              status: status,
+              description: description,
+              deadline: deadline,
+              iconName: iconName,
+              colorHex: colorHex,
+            ),
+          );
       state = result.fold(
         (failure) => SavingsState.error(failure.message),
         (_) => const SavingsState.success(message: 'Goal updated'),
@@ -84,8 +87,7 @@ class SavingsNotifier extends _$SavingsNotifier {
   Future<void> deleteGoal(String id) async {
     state = const SavingsState.loading();
     try {
-      final result =
-          await ref.read(savingsRepositoryProvider).deleteSavingsGoal(id);
+      final result = await ref.read(deleteSavingsGoalUseCaseProvider).call(id);
       state = result.fold(
         (failure) => SavingsState.error(failure.message),
         (_) => const SavingsState.success(message: 'Goal deleted'),
@@ -95,22 +97,23 @@ class SavingsNotifier extends _$SavingsNotifier {
     }
   }
 
-  /// Contributes money to a savings goal.
+  /// Contributes [amountMinor] to a savings goal.
   Future<void> contribute({
     required String goalId,
-    required double amount,
+    required int amountMinor,
     ContributionSource source = ContributionSource.manual,
     String? note,
   }) async {
     state = const SavingsState.loading();
     try {
-      final result =
-          await ref.read(savingsRepositoryProvider).contributeToGoal(
-                goalId: goalId,
-                amount: amount,
-                source: source,
-                note: note,
-              );
+      final result = await ref.read(contributeToGoalUseCaseProvider).call(
+            ContributeToGoalParams(
+              goalId: goalId,
+              amountMinor: amountMinor,
+              source: source,
+              note: note,
+            ),
+          );
       state = result.fold(
         (failure) => SavingsState.error(failure.message),
         (contribution) {
@@ -130,8 +133,7 @@ class SavingsNotifier extends _$SavingsNotifier {
         final localStorage = ref.read(localStorageProvider);
         if (!localStorage.isNotificationsEnabled) return;
 
-        final goals =
-            await ref.read(savingsGoalsStreamProvider.future);
+        final goals = await ref.read(savingsGoalsStreamProvider.future);
         final goal = goals.where((g) => g.id == goalId).firstOrNull;
         if (goal == null) return;
 
@@ -145,9 +147,7 @@ class SavingsNotifier extends _$SavingsNotifier {
         final percent = (goal.progress * 100).round();
         // Only notify at meaningful milestones.
         const milestones = [25, 50, 75, 100];
-        final milestone = milestones
-            .where((m) => percent >= m)
-            .lastOrNull;
+        final milestone = milestones.where((m) => percent >= m).lastOrNull;
         if (milestone == null) return;
 
         // Only notify if we just crossed this milestone (within 5%).

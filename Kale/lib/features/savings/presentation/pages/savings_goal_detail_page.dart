@@ -4,16 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/extensions/date_time_extensions.dart';
+import 'package:kale/core/money/money.dart';
 import 'package:kale/core/theme/app_colors.dart';
 import 'package:kale/core/theme/app_radius.dart';
 import 'package:kale/core/theme/app_spacing.dart';
-import 'package:kale/core/utils/currency_formatter.dart';
 import 'package:kale/core/widgets/buttons/app_primary_button.dart';
 import 'package:kale/core/widgets/feedback/app_snackbar.dart';
 import 'package:kale/core/widgets/layout/app_app_bar.dart';
 import 'package:kale/core/widgets/layout/app_scaffold.dart';
 import 'package:kale/core/widgets/loading/app_shimmer_list.dart';
 import 'package:kale/core/widgets/states/app_error_state.dart';
+import 'package:kale/features/profile/presentation/providers/profile_providers.dart';
 import 'package:kale/features/savings/domain/entities/savings_contribution.dart';
 import 'package:kale/features/savings/domain/entities/savings_goal.dart';
 import 'package:kale/features/savings/presentation/providers/savings_notifier.dart';
@@ -73,6 +74,7 @@ class _GoalDetailContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = context.isDark;
+    final currency = ref.watch(baseCurrencyProvider);
     final contributionsAsync =
         ref.watch(savingsContributionsStreamProvider(goal.id));
 
@@ -91,8 +93,7 @@ class _GoalDetailContent extends ConsumerWidget {
     final progressPercent = (goal.progress * 100).round();
     final nextMilestone = _getNextMilestone(progressPercent);
     final milestoneAchieved = progressPercent >= 75;
-    final incomeColor =
-        isDark ? AppColors.incomeDark : AppColors.incomeLight;
+    final incomeColor = isDark ? AppColors.incomeDark : AppColors.incomeLight;
 
     return AppScaffold(
       appBar: AppAppBar(
@@ -177,9 +178,11 @@ class _GoalDetailContent extends ConsumerWidget {
             if (nextMilestone != null) ...[
               AppSpacing.verticalSm,
               Text(
-                'Next milestone: ${CurrencyFormatter.format(
-                  goal.targetAmount * nextMilestone / 100,
-                  currencyCode: goal.currencyCode,
+                'Next milestone: ${context.formatMoney(
+                  Money.fromMinorUnits(
+                    goal.targetAmountMinor * nextMilestone ~/ 100,
+                    currency,
+                  ),
                 )} ($nextMilestone%)',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
@@ -195,10 +198,7 @@ class _GoalDetailContent extends ConsumerWidget {
                 Expanded(
                   child: _StatCard(
                     label: 'SAVED',
-                    value: CurrencyFormatter.format(
-                      goal.currentAmount,
-                      currencyCode: goal.currencyCode,
-                    ),
+                    value: context.formatMoney(goal.savedIn(currency)),
                     color: incomeColor,
                   ),
                 ),
@@ -206,10 +206,7 @@ class _GoalDetailContent extends ConsumerWidget {
                 Expanded(
                   child: _StatCard(
                     label: 'REMAINING',
-                    value: CurrencyFormatter.format(
-                      goal.remaining,
-                      currencyCode: goal.currencyCode,
-                    ),
+                    value: context.formatMoney(goal.remainingIn(currency)),
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
@@ -217,10 +214,7 @@ class _GoalDetailContent extends ConsumerWidget {
                 Expanded(
                   child: _StatCard(
                     label: 'TARGET',
-                    value: CurrencyFormatter.format(
-                      goal.targetAmount,
-                      currencyCode: goal.currencyCode,
-                    ),
+                    value: context.formatMoney(goal.targetIn(currency)),
                     color: theme.colorScheme.primary,
                   ),
                 ),
@@ -261,7 +255,7 @@ class _GoalDetailContent extends ConsumerWidget {
                     ],
                   ),
                   AppSpacing.verticalMd,
-                  _buildForecastText(context, theme),
+                  _buildForecastText(context, theme, currency),
                 ],
               ),
             ),
@@ -333,6 +327,7 @@ class _GoalDetailContent extends ConsumerWidget {
                     contribution: contributions[index],
                     labelType: _getLabelType(index),
                     isDark: isDark,
+                    currency: currency,
                   ),
                 );
               },
@@ -344,22 +339,26 @@ class _GoalDetailContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildForecastText(BuildContext context, ThemeData theme) {
+  Widget _buildForecastText(
+    BuildContext context,
+    ThemeData theme,
+    Currency currency,
+  ) {
+    // Saved per 30 days since creation, counting at least one month and
+    // at most twelve. Integer minor units throughout.
     final daysSinceCreation =
-        DateTime.now().difference(goal.createdAt).inDays.clamp(1, 365);
-    final monthsSinceCreation = (daysSinceCreation / 30).clamp(1.0, 12.0);
-    final monthlyRate = goal.currentAmount / monthsSinceCreation;
+        DateTime.now().difference(goal.createdAt).inDays.clamp(30, 360);
+    final monthlyRate = Money.fromMinorUnits(
+      goal.currentAmountMinor * 30 ~/ daysSinceCreation,
+      currency,
+    );
 
     return Text.rich(
       TextSpan(
         text: 'At your current contribution rate of ',
         children: [
           TextSpan(
-            text: '${CurrencyFormatter.format(
-              monthlyRate,
-              currencyCode: goal.currencyCode,
-              compact: true,
-            )}/month',
+            text: '${context.formatMoney(monthlyRate)}/month',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               color: theme.colorScheme.primary,
@@ -400,6 +399,8 @@ class _GoalDetailContent extends ConsumerWidget {
   void _showContributeSheet(BuildContext context, WidgetRef ref) {
     final amountController = TextEditingController();
     final noteController = TextEditingController();
+    final currency = ref.read(baseCurrencyProvider);
+    final locale = Localizations.localeOf(context).toString();
 
     showModalBottomSheet<void>(
       context: context,
@@ -425,16 +426,15 @@ class _GoalDetailContent extends ConsumerWidget {
             AppSpacing.verticalLg,
             TextField(
               controller: amountController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: currency.decimalPlaces > 0,
+              ),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp(r'^\d+\.?\d{0,2}'),
-                ),
+                FilteringTextInputFormatter.allow(RegExp(r'[\d.,\s  ]')),
               ],
               decoration: InputDecoration(
                 labelText: context.l10n.transactionsAmount,
-                prefixText: '${goal.currencyCode} ',
+                prefixText: '${currency.symbol} ',
                 border: OutlineInputBorder(
                   borderRadius: AppRadius.borderRadiusMd,
                 ),
@@ -455,12 +455,16 @@ class _GoalDetailContent extends ConsumerWidget {
             AppPrimaryButton(
               text: context.l10n.savingsAddContribution,
               onPressed: () {
-                final amount = double.tryParse(amountController.text);
-                if (amount == null || amount <= 0) return;
+                final amount = Money.tryParse(
+                  amountController.text,
+                  currency,
+                  locale: locale,
+                );
+                if (amount == null || !amount.isPositive) return;
 
                 ref.read(savingsNotifierProvider.notifier).contribute(
                       goalId: goal.id,
-                      amount: amount,
+                      amountMinor: amount.minorUnits,
                       note: noteController.text.trim().isNotEmpty
                           ? noteController.text.trim()
                           : null,
@@ -562,17 +566,18 @@ class _ContributionTile extends StatelessWidget {
     required this.contribution,
     required this.labelType,
     required this.isDark,
+    required this.currency,
   });
 
   final SavingsContribution contribution;
   final _ContributionLabel labelType;
   final bool isDark;
+  final Currency currency;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final incomeColor =
-        isDark ? AppColors.incomeDark : AppColors.incomeLight;
+    final incomeColor = isDark ? AppColors.incomeDark : AppColors.incomeLight;
 
     final labelText = switch (labelType) {
       _ContributionLabel.up => 'UP 2%',
@@ -634,7 +639,7 @@ class _ContributionTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '+${CurrencyFormatter.format(contribution.amount)}',
+                '+${context.formatMoney(contribution.amountIn(currency))}',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: incomeColor,

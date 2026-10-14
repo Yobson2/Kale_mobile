@@ -50,10 +50,16 @@ class SyncQueueDao extends DatabaseAccessor<AppDatabase>
       );
 
   /// Gets all pending entries in FIFO order.
+  ///
+  /// Entries enqueued within the same second keep their insertion order
+  /// (by id), so a parent (a savings goal) is pushed before its children.
   Future<List<SyncQueueEntry>> getPending() {
     return (select(syncQueueEntries)
           ..where((t) => t.status.equals(SyncQueueStatus.pending))
-          ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
+          ..orderBy([
+            (t) => OrderingTerm.asc(t.createdAt),
+            (t) => OrderingTerm.asc(t.id),
+          ]))
         .get();
   }
 
