@@ -1,20 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kale/core/constants/currencies.dart' as legacy;
 import 'package:kale/core/money/currency.dart';
 
 void main() {
-  test('covers every currency currently selectable in the app', () {
-    for (final selectable in legacy.SupportedCurrencies.all) {
-      final currency = Currencies.byCode(selectable.code);
-
-      expect(currency, isNotNull, reason: selectable.code);
-      expect(
-        currency!.decimalPlaces,
-        selectable.decimalPlaces,
-        reason: selectable.code,
-      );
+  test('lists each currency once, with a name and a flag', () {
+    expect(Currencies.all.map((c) => c.code).toSet(), hasLength(14));
+    for (final currency in Currencies.all) {
+      expect(currency.name, isNotEmpty, reason: currency.code);
+      expect(currency.flag, isNotEmpty, reason: currency.code);
+      expect(Currencies.byCode(currency.code), same(currency));
     }
-    expect(Currencies.all, hasLength(legacy.SupportedCurrencies.all.length));
   });
 
   test('has the agreed decimal places', () {

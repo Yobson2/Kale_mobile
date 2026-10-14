@@ -7,6 +7,8 @@ class Currency {
     required this.code,
     required this.symbol,
     required this.decimalPlaces,
+    required this.name,
+    required this.flag,
   });
 
   /// ISO 4217 code, e.g. `XOF`.
@@ -17,6 +19,12 @@ class Currency {
 
   /// Number of minor-unit digits: 0 for XOF, 2 for EUR.
   final int decimalPlaces;
+
+  /// English name, e.g. `CFA Franc BCEAO`.
+  final String name;
+
+  /// Emoji flag of a country using it, shown in the currency picker.
+  final String flag;
 
   @override
   bool operator ==(Object other) => other is Currency && other.code == code;
@@ -33,21 +41,105 @@ class Currency {
 /// Mirrors the server's currencies table (code, symbol, decimal places).
 abstract final class Currencies {
   // CFA francs: no minor unit.
-  static const xof = Currency(code: 'XOF', symbol: 'FCFA', decimalPlaces: 0);
-  static const xaf = Currency(code: 'XAF', symbol: 'FCFA', decimalPlaces: 0);
+  static const xof = Currency(
+    code: 'XOF',
+    symbol: 'FCFA',
+    decimalPlaces: 0,
+    name: 'CFA Franc BCEAO',
+    flag: '🇸🇳',
+  );
+  static const xaf = Currency(
+    code: 'XAF',
+    symbol: 'FCFA',
+    decimalPlaces: 0,
+    name: 'CFA Franc BEAC',
+    flag: '🇨🇲',
+  );
 
-  static const ngn = Currency(code: 'NGN', symbol: '₦', decimalPlaces: 2);
-  static const ghs = Currency(code: 'GHS', symbol: 'GH₵', decimalPlaces: 2);
-  static const kes = Currency(code: 'KES', symbol: 'KSh', decimalPlaces: 2);
-  static const ugx = Currency(code: 'UGX', symbol: 'USh', decimalPlaces: 0);
-  static const tzs = Currency(code: 'TZS', symbol: 'TSh', decimalPlaces: 0);
-  static const rwf = Currency(code: 'RWF', symbol: 'RF', decimalPlaces: 0);
-  static const zar = Currency(code: 'ZAR', symbol: 'R', decimalPlaces: 2);
-  static const etb = Currency(code: 'ETB', symbol: 'Br', decimalPlaces: 2);
-  static const egp = Currency(code: 'EGP', symbol: 'E£', decimalPlaces: 2);
-  static const mad = Currency(code: 'MAD', symbol: 'MAD', decimalPlaces: 2);
-  static const usd = Currency(code: 'USD', symbol: r'$', decimalPlaces: 2);
-  static const eur = Currency(code: 'EUR', symbol: '€', decimalPlaces: 2);
+  static const ngn = Currency(
+    code: 'NGN',
+    symbol: '₦',
+    decimalPlaces: 2,
+    name: 'Nigerian Naira',
+    flag: '🇳🇬',
+  );
+  static const ghs = Currency(
+    code: 'GHS',
+    symbol: 'GH₵',
+    decimalPlaces: 2,
+    name: 'Ghanaian Cedi',
+    flag: '🇬🇭',
+  );
+  static const kes = Currency(
+    code: 'KES',
+    symbol: 'KSh',
+    decimalPlaces: 2,
+    name: 'Kenyan Shilling',
+    flag: '🇰🇪',
+  );
+  static const ugx = Currency(
+    code: 'UGX',
+    symbol: 'USh',
+    decimalPlaces: 0,
+    name: 'Ugandan Shilling',
+    flag: '🇺🇬',
+  );
+  static const tzs = Currency(
+    code: 'TZS',
+    symbol: 'TSh',
+    decimalPlaces: 0,
+    name: 'Tanzanian Shilling',
+    flag: '🇹🇿',
+  );
+  static const rwf = Currency(
+    code: 'RWF',
+    symbol: 'RF',
+    decimalPlaces: 0,
+    name: 'Rwandan Franc',
+    flag: '🇷🇼',
+  );
+  static const zar = Currency(
+    code: 'ZAR',
+    symbol: 'R',
+    decimalPlaces: 2,
+    name: 'South African Rand',
+    flag: '🇿🇦',
+  );
+  static const etb = Currency(
+    code: 'ETB',
+    symbol: 'Br',
+    decimalPlaces: 2,
+    name: 'Ethiopian Birr',
+    flag: '🇪🇹',
+  );
+  static const egp = Currency(
+    code: 'EGP',
+    symbol: 'E£',
+    decimalPlaces: 2,
+    name: 'Egyptian Pound',
+    flag: '🇪🇬',
+  );
+  static const mad = Currency(
+    code: 'MAD',
+    symbol: 'MAD',
+    decimalPlaces: 2,
+    name: 'Moroccan Dirham',
+    flag: '🇲🇦',
+  );
+  static const usd = Currency(
+    code: 'USD',
+    symbol: r'$',
+    decimalPlaces: 2,
+    name: 'US Dollar',
+    flag: '🇺🇸',
+  );
+  static const eur = Currency(
+    code: 'EUR',
+    symbol: '€',
+    decimalPlaces: 2,
+    name: 'Euro',
+    flag: '🇪🇺',
+  );
 
   static const List<Currency> all = [
     xof,

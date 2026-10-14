@@ -3,14 +3,6 @@ import 'package:intl/intl.dart';
 
 /// Numeric utility extensions.
 extension NumX on num {
-  /// Formats the number as currency (e.g. "$1,234.56").
-  String toCurrency({String symbol = r'$', int decimalDigits = 2}) {
-    return NumberFormat.currency(
-      symbol: symbol,
-      decimalDigits: decimalDigits,
-    ).format(this);
-  }
-
   /// Formats with thousand separators (e.g. "1,234").
   String get formatted => NumberFormat('#,##0').format(this);
 
