@@ -1143,14 +1143,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDailyReminderSubtitle => 'Remind me to log transactions';
 
   @override
-  String get settingsBudgetAlertThreshold => 'Budget Alert Threshold';
-
-  @override
-  String settingsBudgetAlertThresholdSubtitle(int percentage) {
-    return 'Alert when spending reaches $percentage% of budget';
-  }
-
-  @override
   String get settingsData => 'Data';
 
   @override
@@ -1613,4 +1605,46 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get budgetRenewFailed =>
       'Couldn\'t renew the budget. Please try again.';
+
+  @override
+  String notifBudgetAlertTitle(String category) {
+    return 'Budget alert: $category';
+  }
+
+  @override
+  String notifBudgetAlert80Body(String amount, String category) {
+    return 'You\'ve used 80% of your $amount budget for $category.';
+  }
+
+  @override
+  String notifBudgetAlert100Body(String amount, String category) {
+    return 'You\'ve used all of your $amount budget for $category.';
+  }
+
+  @override
+  String notifSavingsMilestoneTitle(String goal) {
+    return 'Savings milestone: $goal';
+  }
+
+  @override
+  String notifSavingsMilestoneBody(String goal, int percent) {
+    return '\"$goal\" is now $percent% funded. Keep going!';
+  }
+
+  @override
+  String notifSavingsGoalReachedTitle(String goal) {
+    return 'Goal reached: $goal';
+  }
+
+  @override
+  String notifSavingsGoalReachedBody(String goal) {
+    return 'Congratulations! You\'ve saved everything for \"$goal\".';
+  }
+
+  @override
+  String get notifDailyReminderTitle => 'Track your spending';
+
+  @override
+  String get notifDailyReminderBody =>
+      'Don\'t forget to log today\'s transactions.';
 }

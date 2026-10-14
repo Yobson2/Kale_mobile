@@ -1154,14 +1154,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Me rappeler de saisir mes transactions';
 
   @override
-  String get settingsBudgetAlertThreshold => 'Seuil d\'alerte budget';
-
-  @override
-  String settingsBudgetAlertThresholdSubtitle(int percentage) {
-    return 'Alerte lorsque les dépenses atteignent $percentage % du budget';
-  }
-
-  @override
   String get settingsData => 'Données';
 
   @override
@@ -1633,4 +1625,46 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get budgetRenewFailed =>
       'Impossible de renouveler le budget. Veuillez réessayer.';
+
+  @override
+  String notifBudgetAlertTitle(String category) {
+    return 'Alerte budget : $category';
+  }
+
+  @override
+  String notifBudgetAlert80Body(String amount, String category) {
+    return 'Vous avez utilisé 80 % de votre budget de $amount pour $category.';
+  }
+
+  @override
+  String notifBudgetAlert100Body(String amount, String category) {
+    return 'Vous avez utilisé tout votre budget de $amount pour $category.';
+  }
+
+  @override
+  String notifSavingsMilestoneTitle(String goal) {
+    return 'Étape d\'épargne : $goal';
+  }
+
+  @override
+  String notifSavingsMilestoneBody(String goal, int percent) {
+    return '« $goal » est financé à $percent %. Continuez !';
+  }
+
+  @override
+  String notifSavingsGoalReachedTitle(String goal) {
+    return 'Objectif atteint : $goal';
+  }
+
+  @override
+  String notifSavingsGoalReachedBody(String goal) {
+    return 'Félicitations ! Vous avez tout épargné pour « $goal ».';
+  }
+
+  @override
+  String get notifDailyReminderTitle => 'Suivez vos dépenses';
+
+  @override
+  String get notifDailyReminderBody =>
+      'N\'oubliez pas de noter les transactions du jour.';
 }

@@ -2240,18 +2240,6 @@ abstract class AppLocalizations {
   /// **'Me rappeler de saisir mes transactions'**
   String get settingsDailyReminderSubtitle;
 
-  /// No description provided for @settingsBudgetAlertThreshold.
-  ///
-  /// In fr, this message translates to:
-  /// **'Seuil d\'alerte budget'**
-  String get settingsBudgetAlertThreshold;
-
-  /// No description provided for @settingsBudgetAlertThresholdSubtitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Alerte lorsque les dépenses atteignent {percentage} % du budget'**
-  String settingsBudgetAlertThresholdSubtitle(int percentage);
-
   /// No description provided for @settingsData.
   ///
   /// In fr, this message translates to:
@@ -2965,6 +2953,60 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Impossible de renouveler le budget. Veuillez réessayer.'**
   String get budgetRenewFailed;
+
+  /// No description provided for @notifBudgetAlertTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerte budget : {category}'**
+  String notifBudgetAlertTitle(String category);
+
+  /// No description provided for @notifBudgetAlert80Body.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous avez utilisé 80 % de votre budget de {amount} pour {category}.'**
+  String notifBudgetAlert80Body(String amount, String category);
+
+  /// No description provided for @notifBudgetAlert100Body.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous avez utilisé tout votre budget de {amount} pour {category}.'**
+  String notifBudgetAlert100Body(String amount, String category);
+
+  /// No description provided for @notifSavingsMilestoneTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Étape d\'épargne : {goal}'**
+  String notifSavingsMilestoneTitle(String goal);
+
+  /// No description provided for @notifSavingsMilestoneBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {goal} » est financé à {percent} %. Continuez !'**
+  String notifSavingsMilestoneBody(String goal, int percent);
+
+  /// No description provided for @notifSavingsGoalReachedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif atteint : {goal}'**
+  String notifSavingsGoalReachedTitle(String goal);
+
+  /// No description provided for @notifSavingsGoalReachedBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Félicitations ! Vous avez tout épargné pour « {goal} ».'**
+  String notifSavingsGoalReachedBody(String goal);
+
+  /// No description provided for @notifDailyReminderTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivez vos dépenses'**
+  String get notifDailyReminderTitle;
+
+  /// No description provided for @notifDailyReminderBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'N\'oubliez pas de noter les transactions du jour.'**
+  String get notifDailyReminderBody;
 }
 
 class _AppLocalizationsDelegate

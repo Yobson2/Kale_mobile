@@ -136,23 +136,20 @@ class SettingsPage extends ConsumerWidget {
                     icon: Icons.access_time,
                     iconColor: context.colorScheme.primary,
                     title: l10n.settingsDailyReminder,
-                    subtitle:
-                        localStorage.isDailyReminderEnabled ? '08:00 AM' : null,
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: context.colorScheme.onSurfaceVariant,
+                    // Opt-in: off until turned on; tapping changes the time.
+                    subtitle: localStorage.isDailyReminderEnabled
+                        ? _reminderTime(localStorage.dailyReminderMinuteOfDay)
+                            .format(context)
+                        : l10n.settingsDisabled,
+                    trailing: Switch.adaptive(
+                      value: localStorage.isDailyReminderEnabled,
+                      onChanged: (on) => on
+                          ? _pickReminderTime(context, ref)
+                          : _disableReminder(ref),
                     ),
-                    onTap: () {
-                      final newValue = !localStorage.isDailyReminderEnabled;
-                      localStorage.setDailyReminderEnabled(enabled: newValue);
-                      final notifs = ref.read(notificationServiceProvider);
-                      if (newValue) {
-                        notifs.scheduleDailyReminder();
-                      } else {
-                        notifs.cancelDailyReminder();
-                      }
-                      ref.invalidate(localStorageProvider);
-                    },
+                    onTap: localStorage.isDailyReminderEnabled
+                        ? () => _pickReminderTime(context, ref)
+                        : null,
                   ),
 
                   AppSpacing.verticalXl,
@@ -283,6 +280,26 @@ class SettingsPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  static TimeOfDay _reminderTime(int minuteOfDay) =>
+      TimeOfDay(hour: minuteOfDay ~/ 60, minute: minuteOfDay % 60);
+
+  /// Asks for the reminder time, then turns the daily reminder on at it.
+  Future<void> _pickReminderTime(BuildContext context, WidgetRef ref) async {
+    final reminder = ref.read(dailyReminderProvider);
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _reminderTime(reminder.minuteOfDay),
+    );
+    if (picked == null) return;
+    await reminder.enable(picked.hour * 60 + picked.minute);
+    ref.invalidate(localStorageProvider);
+  }
+
+  Future<void> _disableReminder(WidgetRef ref) async {
+    await ref.read(dailyReminderProvider).disable();
+    ref.invalidate(localStorageProvider);
   }
 
   void _showLanguagePicker(BuildContext context, WidgetRef ref) {
