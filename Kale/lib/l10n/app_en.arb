@@ -604,5 +604,15 @@
       "date": { "type": "String" }
     }
   },
-  "settingsBackupNever": "Not backed up yet"
+  "settingsBackupNever": "Not backed up yet",
+  "logoutUnsavedTitle": "Log out and lose changes?",
+  "logoutUnsavedMessage": "{count, plural, =1{1 change isn't backed up yet. If you log out now, it will be lost for good.} other{{count} changes aren't backed up yet. If you log out now, they will be lost for good.}}",
+  "@logoutUnsavedMessage": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "logoutUnsavedConfirm": "Log out anyway",
+  "logoutUnsavedCancel": "Stay logged in",
+  "logoutFailed": "Couldn't check your backup. Please try again."
 }

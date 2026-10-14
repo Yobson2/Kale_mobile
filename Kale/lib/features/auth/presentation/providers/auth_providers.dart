@@ -4,11 +4,13 @@ import 'package:kale/core/database/database_providers.dart';
 import 'package:kale/core/providers/network_providers.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/providers/supabase_provider.dart';
+import 'package:kale/core/sync/sync_providers.dart';
 import 'package:kale/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:kale/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:kale/features/auth/data/datasources/mock_auth_remote_datasource.dart';
 import 'package:kale/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:kale/features/auth/domain/repositories/auth_repository.dart';
+import 'package:kale/features/auth/domain/usecases/back_up_pending_changes_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/forgot_password_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/get_cached_user_usecase.dart';
 import 'package:kale/features/auth/domain/usecases/login_usecase.dart';
@@ -56,6 +58,7 @@ AuthRepository authRepository(Ref ref) {
     localDataSource: ref.watch(authLocalDataSourceProvider),
     networkInfo: ref.watch(networkInfoProvider),
     appDatabase: ref.watch(appDatabaseProvider),
+    syncEngine: ref.watch(syncEngineProvider),
   );
 }
 
@@ -87,6 +90,12 @@ VerifyOtpUseCase verifyOtpUseCase(Ref ref) {
 @riverpod
 ResendOtpUseCase resendOtpUseCase(Ref ref) {
   return ResendOtpUseCase(ref.watch(authRepositoryProvider));
+}
+
+/// Provides the [BackUpPendingChangesUseCase].
+@riverpod
+BackUpPendingChangesUseCase backUpPendingChangesUseCase(Ref ref) {
+  return BackUpPendingChangesUseCase(ref.watch(authRepositoryProvider));
 }
 
 /// Provides the [LogoutUseCase].

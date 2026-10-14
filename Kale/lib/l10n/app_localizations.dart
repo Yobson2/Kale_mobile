@@ -2797,6 +2797,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not backed up yet'**
   String get settingsBackupNever;
+
+  /// No description provided for @logoutUnsavedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out and lose changes?'**
+  String get logoutUnsavedTitle;
+
+  /// No description provided for @logoutUnsavedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change isn\'t backed up yet. If you log out now, it will be lost for good.} other{{count} changes aren\'t backed up yet. If you log out now, they will be lost for good.}}'**
+  String logoutUnsavedMessage(int count);
+
+  /// No description provided for @logoutUnsavedConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out anyway'**
+  String get logoutUnsavedConfirm;
+
+  /// No description provided for @logoutUnsavedCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay logged in'**
+  String get logoutUnsavedCancel;
+
+  /// No description provided for @logoutFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t check your backup. Please try again.'**
+  String get logoutFailed;
 }
 
 class _AppLocalizationsDelegate
