@@ -1,3 +1,4 @@
+import 'package:kale/core/config/feature_flags.dart';
 import 'package:kale/core/providers/notification_provider.dart';
 import 'package:kale/core/providers/share_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
@@ -125,8 +126,10 @@ class TransactionsNotifier extends _$TransactionsNotifier {
     }
   }
 
-  /// Records streak and checks transaction-related achievements.
+  /// Records streak and checks transaction-related achievements, when
+  /// gamification is on.
   void _checkAchievements() {
+    if (!ref.read(featureFlagsProvider).gamificationEnabled) return;
     Future(() async {
       try {
         final localStorage = ref.read(localStorageProvider);

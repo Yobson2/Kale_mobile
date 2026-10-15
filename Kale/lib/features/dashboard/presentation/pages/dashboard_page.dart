@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kale/core/config/feature_flags.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_spacing.dart';
@@ -90,13 +91,15 @@ class DashboardPage extends ConsumerWidget {
                   child: CashFlowSummaryCard(),
                 ),
               ),
-              const SliverToBoxAdapter(child: AppSpacing.verticalMd),
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: AppSpacing.paddingHorizontalLg,
-                  child: StreakCard(),
+              if (ref.watch(featureFlagsProvider).gamificationEnabled) ...[
+                const SliverToBoxAdapter(child: AppSpacing.verticalMd),
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: AppSpacing.paddingHorizontalLg,
+                    child: StreakCard(),
+                  ),
                 ),
-              ),
+              ],
               const SliverToBoxAdapter(child: AppSpacing.verticalLg),
               const SliverToBoxAdapter(
                 child: Padding(

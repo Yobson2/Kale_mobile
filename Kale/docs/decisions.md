@@ -11,7 +11,7 @@ other docs (`architecture.md`, `offline_sync.md`) describe the current implement
 | # | Topic | Decision |
 |---|---|---|
 | Q1 | Market | French-speaking West Africa first. FR is the primary language; XOF and mobile money are central. |
-| Q5 | v1 scope | Transactions, budgets with alerts, savings goals, insights, auth. Tontine shows "coming soon" (feature flag). Gamification ships only if finished; otherwise it is cut. |
+| Q5 | v1 scope | Transactions, budgets with alerts, savings goals, insights, auth. Tontine shows "coming soon" (feature flag). Gamification ships only if finished; for v1 it is flagged off (owner's decision on #52), not deleted. |
 | Q13 | Mobile money | Manual entry with a provider picker in v1. Android "share SMS to Kalé" parsing is the first post-launch feature. `READ_SMS` is never requested. |
 | Q16 | Business model | Free v1. Never ads. Paywall-ready flags for advanced features (PDF statements, insights exports). |
 | Q20 | Export | Free basic CSV export of transactions in v1 (share sheet). |
