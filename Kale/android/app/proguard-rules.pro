@@ -17,3 +17,8 @@
 
 # Keep model classes (adjust package path for your app)
 -keep class com.kale.app.** { *; }
+
+# Flutter's engine references Play Core (deferred components), which this app
+# does not use or bundle; without this, R8 stops the release build on the
+# missing classes.
+-dontwarn com.google.android.play.core.**
