@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kale/core/config/feature_flags.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/achievement_service.dart';
@@ -29,6 +30,7 @@ class ProfilePage extends ConsumerWidget {
       _ => null,
     };
 
+    final gamification = ref.watch(featureFlagsProvider).gamificationEnabled;
     final service = AchievementService(ref.watch(localStorageProvider));
     final level = service.currentLevel;
 
@@ -57,26 +59,28 @@ class ProfilePage extends ConsumerWidget {
                 ),
               ),
               AppSpacing.verticalMd,
-              // Level badge
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.xs,
-                ),
-                decoration: BoxDecoration(
-                  color: context.colorScheme.primary,
-                  borderRadius: AppRadius.borderRadiusFull,
-                ),
-                child: Text(
-                  _levelLabel(level, l10n).toUpperCase(),
-                  style: context.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: context.colorScheme.onPrimary,
-                    letterSpacing: 1,
+              if (gamification) ...[
+                // Level badge
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.primary,
+                    borderRadius: AppRadius.borderRadiusFull,
+                  ),
+                  child: Text(
+                    _levelLabel(level, l10n).toUpperCase(),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: context.colorScheme.onPrimary,
+                      letterSpacing: 1,
+                    ),
                   ),
                 ),
-              ),
-              AppSpacing.verticalMd,
+                AppSpacing.verticalMd,
+              ],
               // Name (editorial)
               Text(
                 user?.name ?? l10n.commonUser,
@@ -94,9 +98,11 @@ class ProfilePage extends ConsumerWidget {
               ),
               AppSpacing.verticalXxl,
 
-              // Achievements bento grid
-              _AchievementsBento(service: service, l10n: l10n),
-              AppSpacing.verticalXxl,
+              if (gamification) ...[
+                // Achievements bento grid
+                _AchievementsBento(service: service, l10n: l10n),
+                AppSpacing.verticalXxl,
+              ],
 
               // Appearance toggle
               _SettingsTile(

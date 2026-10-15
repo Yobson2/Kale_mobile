@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kale/core/config/feature_flags.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/router/route_names.dart';
 import 'package:kale/core/theme/app_colors.dart';
@@ -54,6 +55,7 @@ class MorePage extends ConsumerWidget {
             // Gradient profile card
             _ProfileCard(
               name: user?.name ?? context.l10n.commonUser,
+              email: user?.email,
               avatarUrl: user?.avatarUrl,
               isDark: isDark,
               onTap: () => context.goNamed(RouteNames.profileName),
@@ -83,11 +85,19 @@ class MorePage extends ConsumerWidget {
               title: context.l10n.moreSavingsGoals,
               onTap: () => context.goNamed(RouteNames.savingsGoalsName),
             ),
-            _MenuItem(
-              icon: Icons.group_outlined,
-              title: context.l10n.moreTontineGroups,
-              onTap: () => context.goNamed(RouteNames.tontineGroupsName),
-            ),
+            // Out of v1 (Q24): listed, but "Coming soon" while flagged off.
+            if (ref.watch(featureFlagsProvider).tontineEnabled)
+              _MenuItem(
+                icon: Icons.group_outlined,
+                title: context.l10n.moreTontineGroups,
+                onTap: () => context.goNamed(RouteNames.tontineGroupsName),
+              )
+            else
+              _MenuItem(
+                icon: Icons.group_outlined,
+                title: context.l10n.moreTontineGroups,
+                badge: context.l10n.moreComingSoon,
+              ),
             _MenuItem(
               icon: Icons.insights_outlined,
               title: context.l10n.moreInsights,
@@ -131,10 +141,12 @@ class _ProfileCard extends StatelessWidget {
     required this.name,
     required this.isDark,
     required this.onTap,
+    this.email,
     this.avatarUrl,
   });
 
   final String name;
+  final String? email;
   final String? avatarUrl;
   final bool isDark;
   final VoidCallback onTap;
@@ -178,13 +190,16 @@ class _ProfileCard extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        AppSpacing.verticalXs,
-                        Text(
-                          'Premium Member',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.7),
+                        // v1 is free (Q16): the account's email, not a plan.
+                        if (email case final email? when email.isNotEmpty) ...[
+                          AppSpacing.verticalXs,
+                          Text(
+                            email,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.7),
+                            ),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ),
@@ -221,17 +236,22 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-/// Menu item with icon, title, optional trailing, and chevron.
+/// Menu item with icon, title and chevron, or, with a [badge] and no [onTap],
+/// an entry that can't be opened yet.
 class _MenuItem extends StatelessWidget {
   const _MenuItem({
     required this.icon,
     required this.title,
-    required this.onTap,
+    this.onTap,
+    this.badge,
   });
 
   final IconData icon;
   final String title;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+
+  /// Shown instead of the chevron, e.g. "Coming soon".
+  final String? badge;
 
   @override
   Widget build(BuildContext context) {
@@ -260,11 +280,30 @@ class _MenuItem extends StatelessWidget {
                     style: context.textTheme.bodyLarge,
                   ),
                 ),
-                Icon(
-                  Icons.chevron_right,
-                  size: 20,
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                if (badge case final badge?)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xxs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.secondaryContainer,
+                      borderRadius: AppRadius.borderRadiusFull,
+                    ),
+                    child: Text(
+                      badge,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSecondaryContainer,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
+                else
+                  Icon(
+                    Icons.chevron_right,
+                    size: 20,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
               ],
             ),
           ),

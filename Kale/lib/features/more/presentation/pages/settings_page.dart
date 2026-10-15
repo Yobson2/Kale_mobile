@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kale/core/config/feature_flags.dart';
 import 'package:kale/core/extensions/context_extensions.dart';
 import 'package:kale/core/l10n/app_locale.dart';
 import 'package:kale/core/money/currency.dart';
@@ -30,6 +31,7 @@ class SettingsPage extends ConsumerWidget {
     final themeMode = ref.watch(themeModeNotifierProvider);
     final baseCurrency = ref.watch(baseCurrencyProvider);
     final localStorage = ref.watch(localStorageProvider);
+    final flags = ref.watch(featureFlagsProvider);
     final l10n = context.l10n;
 
     return Scaffold(
@@ -168,18 +170,20 @@ class SettingsPage extends ConsumerWidget {
                   _SectionHeader(title: l10n.settingsData),
                   AppSpacing.verticalMd,
 
-                  _SettingsCard(
-                    icon: Icons.file_download_outlined,
-                    iconColor: context.colorScheme.primary,
-                    title: l10n.exportCsvTitle,
-                    subtitle: l10n.exportCsvSubtitle,
-                    trailing: Icon(
-                      Icons.chevron_right,
-                      color: context.colorScheme.onSurfaceVariant,
+                  if (flags.csvExportEnabled) ...[
+                    _SettingsCard(
+                      icon: Icons.file_download_outlined,
+                      iconColor: context.colorScheme.primary,
+                      title: l10n.exportCsvTitle,
+                      subtitle: l10n.exportCsvSubtitle,
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
+                      onTap: () => _exportCsv(context, ref),
                     ),
-                    onTap: () => _exportCsv(context, ref),
-                  ),
-                  AppSpacing.verticalSm,
+                    AppSpacing.verticalSm,
+                  ],
 
                   _SettingsCard(
                     icon: Icons.close,

@@ -120,6 +120,24 @@ so a define file that omits them always talks to Supabase.
 Providers read the flags from `envProvider` (`env.useMockAuth`, …), so tests can override them. A new flag is a
 getter on `Env`, its `bool.fromEnvironment` in `AppConfig`, and a key in every `config/*.json` file.
 
+### Feature flags
+
+Which product features a build shows (decisions Q5, Q16, Q20) lives in `FeatureFlags`
+(`core/config/feature_flags.dart`), read only through `featureFlagsProvider`, so tests override it with
+`featureFlagsProvider.overrideWithValue(const FeatureFlags(tontineEnabled: true))`. The defaults are v1's; a
+build can change one with a define, without touching the `config/*.json` files.
+
+| Flag | Define | v1 | Off means |
+|---|---|---|---|
+| `tontineEnabled` | `FEATURE_TONTINE` | off | More shows "Coming soon"; the tontine route redirects to More |
+| `gamificationEnabled` | `FEATURE_GAMIFICATION` | off | No streak card, level or achievements; nothing records them |
+| `csvExportEnabled` | `FEATURE_CSV_EXPORT` | on | No export tile in Settings |
+| `pdfStatementsEnabled` | `FEATURE_PDF_STATEMENTS` | off | Paywall-ready; the feature isn't built yet |
+| `insightsExportEnabled` | `FEATURE_INSIGHTS_EXPORT` | off | Paywall-ready; the feature isn't built yet |
+
+A new flag is a field with its `bool.fromEnvironment` default, plus a row here. Gate the feature where it's shown
+*and* where it runs (a notifier hook, a route), not only in the UI.
+
 ## Backend (Supabase)
 
 The schema, RLS policies, functions and triggers live in `supabase/migrations/` as Supabase CLI migrations; they

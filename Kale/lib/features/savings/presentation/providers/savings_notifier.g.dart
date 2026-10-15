@@ -6,7 +6,7 @@ part of 'savings_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$savingsNotifierHash() => r'8f0259a581d4e7b96c03d0233829a8e1fcf56c3e';
+String _$savingsNotifierHash() => r'e3229d2a8d0f5955565f80208994955a69095204';
 
 /// Manages savings goal mutation state and actions.
 ///

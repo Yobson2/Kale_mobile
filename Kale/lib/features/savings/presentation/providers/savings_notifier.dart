@@ -1,3 +1,4 @@
+import 'package:kale/core/config/feature_flags.dart';
 import 'package:kale/core/providers/notification_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/achievement_service.dart';
@@ -135,7 +136,8 @@ class SavingsNotifier extends _$SavingsNotifier {
         if (goal == null) return;
 
         // Unlock achievement if goal is fully funded.
-        if (goal.isFullyFunded) {
+        if (goal.isFullyFunded &&
+            ref.read(featureFlagsProvider).gamificationEnabled) {
           final achievements =
               AchievementService(ref.read(localStorageProvider));
           await achievements.unlock(Achievement.firstGoalCompleted);

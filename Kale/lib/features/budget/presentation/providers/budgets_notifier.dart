@@ -1,3 +1,4 @@
+import 'package:kale/core/config/feature_flags.dart';
 import 'package:kale/core/date/calendar_date.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/services/achievement_service.dart';
@@ -194,8 +195,9 @@ class BudgetsNotifier extends _$BudgetsNotifier {
     }
   }
 
-  /// Unlocks the first budget achievement.
+  /// Unlocks the first budget achievement, when gamification is on.
   void _unlockFirstBudget() {
+    if (!ref.read(featureFlagsProvider).gamificationEnabled) return;
     Future(() async {
       try {
         final achievements = AchievementService(ref.read(localStorageProvider));

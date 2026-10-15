@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kale/core/config/feature_flags.dart';
 import 'package:kale/core/providers/analytics_provider.dart';
 import 'package:kale/core/providers/storage_providers.dart';
 import 'package:kale/core/router/analytics_observer.dart';
@@ -77,6 +78,7 @@ GoRouter appRouter(Ref ref) {
     ..onDispose(authState.dispose);
 
   final analytics = ref.read(analyticsServiceProvider);
+  final flags = ref.read(featureFlagsProvider);
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
@@ -328,6 +330,9 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: 'tontine-groups',
                     name: RouteNames.tontineGroupsName,
+                    // Out of v1 (Q24): no tontine page while the flag is off.
+                    redirect: (context, state) =>
+                        flags.tontineEnabled ? null : RouteNames.more,
                     builder: (context, state) => const TontineGroupsPage(),
                   ),
                   GoRoute(
