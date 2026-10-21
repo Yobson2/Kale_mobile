@@ -62,6 +62,7 @@ dart format .   # formatting
 | Agreed decisions (target state) and the v1 work plan | `docs/decisions.md` |
 | Core modules, DI, backend access, auth/session, routing, error handling | `docs/architecture.md` |
 | Setup, env vars & mock flags, commands, codegen, l10n, testing, CI | `docs/development.md` |
+| Release builds, signing, deploying migrations and the landing page | `docs/deployment.md` |
 | Offline sync, adding a syncable entity | `docs/offline_sync.md` |
 | Visual design & UX principles | `docs/Kale_design/kal_modern_heritage/DESIGN.md` |
 
