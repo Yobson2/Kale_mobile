@@ -79,7 +79,11 @@ Currency baseCurrency(Ref ref) {
 }
 
 /// Changes the base currency through [ChangeBaseCurrencyUseCase].
-@riverpod
+///
+/// Kept alive: callers read the notifier without watching it, and an
+/// auto-disposed controller would be gone (and throw on `state =`) by the time
+/// the use case returns.
+@Riverpod(keepAlive: true)
 class BaseCurrencyController extends _$BaseCurrencyController {
   @override
   FutureOr<void> build() {}
