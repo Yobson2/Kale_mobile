@@ -1,0 +1,307 @@
+{
+  "metadata": {
+    "title": "Kalé · Budget & expense tracker",
+    "shortTitle": "Kalé",
+    "description": "Track every expense, budget by category and grow your savings, even offline. Built for cash, mobile money and XOF. Free, with no ads.",
+    "ogLocale": "en_US"
+  },
+  "nav": {
+    "product": "Product",
+    "offline": "Offline & privacy",
+    "faq": "FAQ",
+    "home": "Kalé, home",
+    "primary": "Main",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "skipToContent": "Skip to content",
+    "language": "Language"
+  },
+  "cta": {
+    "notify": "Get notified at launch",
+    "notifyShort": "Get notified",
+    "notifySubject": "Notify me when Kalé launches",
+    "notifyBody": "Hi Kalé team, please let me know when the app is available.",
+    "opensEmail": "opens your email app",
+    "apk": "Download the APK",
+    "apkShort": "Download APK",
+    "apkFile": "Android APK file",
+    "status": "Android APK available · stores coming soon",
+    "apkNote": "For Android phones. Google Play and the App Store are coming soon.",
+    "comingSoonShort": "Coming soon",
+    "googlePlayPrefix": "Get it on",
+    "googlePlayName": "Google Play",
+    "appStorePrefix": "Download on the",
+    "appStoreName": "App Store",
+    "storeUnavailable": "Not available yet"
+  },
+  "hero": {
+    "title": "Know where every franc goes.",
+    "subtitle": "Kalé brings your cash, mobile money and bank spending into one clear picture. Budget by category and save toward real goals, even with no connection.",
+    "secondary": "See how it works",
+    "facts": {
+      "free": "Free, no ads",
+      "offline": "Works offline",
+      "languages": "Français & English"
+    },
+    "screenMain": "Kalé home screen showing the month's balance, income, expenses and recent transactions",
+    "screenSide": "Adding an expense in Kalé: amount, category and payment method"
+  },
+  "problem": {
+    "eyebrow": "Why Kalé",
+    "title": "Your money lives in too many places.",
+    "body": "A little in your pocket, a little on mobile money, a little at the bank. Spread out like that, it's easy to lose track and hard to plan the month.",
+    "answer": "Kalé threads them into one ledger.",
+    "sources": {
+      "cash": "Cash",
+      "mobileMoney": "Mobile money",
+      "bank": "Bank & card"
+    },
+    "ledger": "One ledger",
+    "diagramLabel": "Cash, mobile money, and bank or card payments all flow into a single Kalé ledger",
+    "entries": {
+      "food": "Food & Groceries",
+      "airtime": "Airtime & Data",
+      "salary": "Salary"
+    }
+  },
+  "tour": {
+    "eyebrow": "The product",
+    "title": "Four habits, one app.",
+    "intro": "Kalé is built around what actually changes a month: noting what you spend, deciding ahead, putting money aside, and looking back.",
+    "stepLabel": "Step {n} of {total}",
+    "steps": {
+      "log": {
+        "tag": "Track",
+        "title": "Log it in seconds.",
+        "body": "Expense or income, an amount, a category. Note whether you paid in cash, by card, by transfer or with mobile money, and which provider.",
+        "point1": "Categories ready to use",
+        "point2": "Orange Money, MTN MoMo, Wave, Moov Money and more",
+        "alt": "The Kalé screen for adding a transaction"
+      },
+      "budget": {
+        "tag": "Budget",
+        "title": "Decide before you spend.",
+        "body": "Set a budget for each category, or start from a proven split like 50/30/20. Kalé warns you before you go over.",
+        "point1": "Weekly, bi-weekly or monthly periods",
+        "point2": "Alerts as you near the limit",
+        "alt": "A Kalé budget with spending per category"
+      },
+      "save": {
+        "tag": "Save",
+        "title": "Save toward something real.",
+        "body": "An emergency fund, a new phone, school fees. Create a goal, add contributions as you go, and watch the distance shrink.",
+        "point1": "Progress for every goal",
+        "point2": "Full contribution history",
+        "alt": "Kalé savings goals with their progress"
+      },
+      "insights": {
+        "tag": "Understand",
+        "title": "See where it went.",
+        "body": "Kalé ranks where your money went this month, category by category, and puts income next to expenses by day, week or month. Next month's plan starts from facts.",
+        "point1": "Your top spending categories",
+        "point2": "Export to CSV whenever you want",
+        "alt": "Kalé insights ranking spending by category"
+      }
+    }
+  },
+  "offline": {
+    "eyebrow": "Offline-first",
+    "title": "No network? Keep going.",
+    "body": "Everything you enter is saved on your phone first. When the connection comes back, Kalé backs it up on its own. Nothing waits for a signal.",
+    "demo": {
+      "label": "How Kalé saves while offline",
+      "offline": "Offline",
+      "offlineDetail": "3 changes saved on this phone",
+      "syncing": "Back online",
+      "syncingDetail": "Backing up…",
+      "synced": "Up to date",
+      "syncedDetail": "All changes backed up",
+      "entry1": "Food & Groceries",
+      "entry2": "Transport",
+      "entry3": "Airtime & Data"
+    },
+    "pillars": {
+      "phone": {
+        "title": "Your phone comes first",
+        "body": "Your data lives on your phone. The server is a backup you can restore from on a new device."
+      },
+      "guest": {
+        "title": "Try it without an account",
+        "body": "Start as a guest. Create an account later to back up, and keep everything you've already entered."
+      },
+      "ads": {
+        "title": "No ads. Ever.",
+        "body": "Kalé is free, will never show ads, and does not sell your data."
+      },
+      "local": {
+        "title": "Your currency, your language",
+        "body": "XOF, XAF, NGN, GHS, KES, EUR and more. In French or English."
+      }
+    }
+  },
+  "next": {
+    "eyebrow": "Coming later",
+    "title": "Tontines, together.",
+    "body": "Rotating savings circles, with contributions and payouts tracked in one place. We're designing it carefully, so it won't be in the first release.",
+    "badge": "In design"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Questions, answered.",
+    "items": {
+      "free": {
+        "question": "Is Kalé free?",
+        "answer": "Yes. Kalé is free and will never show ads. Some advanced extras, such as PDF statements, may become paid options later."
+      },
+      "offline": {
+        "question": "Does it work without internet?",
+        "answer": "Yes. Kalé is offline-first: you can add, edit and review everything with no connection. Your changes are backed up automatically once you're online again."
+      },
+      "account": {
+        "question": "Do I need an account?",
+        "answer": "No. You can start as a guest right away. Create an account with email, Google or Apple when you want your data backed up and restorable on a new phone."
+      },
+      "mobileMoney": {
+        "question": "Does Kalé connect to my mobile money account?",
+        "answer": "Not directly. You record mobile money transactions yourself and pick the provider: Orange Money, MTN MoMo, Wave, Moov Money, M-Pesa or Airtel Money. Kalé never asks to read your SMS."
+      },
+      "currency": {
+        "question": "Which currencies can I use?",
+        "answer": "Each account has one base currency: XOF, XAF, NGN, GHS, KES, UGX, TZS, RWF, ZAR, ETB, EGP, MAD, USD or EUR. Amounts are not converted between currencies."
+      },
+      "export": {
+        "question": "Can I get my data out?",
+        "answer": "Yes. You can export your transactions to a CSV file from the app's settings and open it in any spreadsheet."
+      },
+      "installApk": {
+        "question": "How do I install the APK?",
+        "answer": "Download the file on your Android phone and open it. If Android asks, allow installs from that source (your browser or file manager), then confirm. To update before Kalé reaches Google Play, download the latest APK from this page and install it over the old one; your data stays on the phone."
+      },
+      "availability": {
+        "question": "Is it on Google Play or the App Store?",
+        "answer": "Not yet. Kalé is getting ready for Google Play and the App Store. Until then, Android users can install the APK from this page. Send us an email if you want to know the day it lands in the stores."
+      }
+    }
+  },
+  "final": {
+    "title": "Start the month knowing where you stand.",
+    "body": "Download the Android APK today. Google Play and the App Store are on their way.",
+    "questions": "Questions? Write to us at"
+  },
+  "footer": {
+    "tagline": "Personal finance for cash, mobile money and patchy networks.",
+    "product": "Product",
+    "legal": "Legal",
+    "contact": "Contact",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "copyright": "© {year} Kalé"
+  },
+  "errors": {
+    "notFoundCode": "404",
+    "notFoundTitle": "This page doesn't exist.",
+    "notFoundDescription": "It may have moved, or the link may be wrong.",
+    "notFoundCta": "Back to home",
+    "genericTitle": "Something went wrong.",
+    "genericDescription": "An unexpected error occurred. Please try again.",
+    "genericCta": "Try again",
+    "loading": "Loading"
+  },
+  "legal": {
+    "back": "Back to home",
+    "contents": "On this page",
+    "otherDocument": "Also read",
+    "lastUpdated": "Last updated: February 20, 2026",
+    "contactFooter": "If you have any questions, contact us at support@kale.app",
+    "privacy": {
+      "title": "Privacy Policy",
+      "sections": {
+        "intro": {
+          "heading": "1. Introduction",
+          "body": "Your privacy is important to us. This Privacy Policy explains how Kale collects, uses, stores, and protects your personal and financial information. We are committed to handling your data with transparency and care."
+        },
+        "collection": {
+          "heading": "2. Information We Collect",
+          "body": "We collect the following types of information:\n\nAccount Information: Your name, email address, and authentication credentials when you create an account.\n\nFinancial Data: Transaction records, budget configurations, savings goals, and category preferences that you enter into the app.\n\nUsage Data: Anonymous analytics about how you interact with the app, including screen views and feature usage, to help us improve the experience.\n\nDevice Information: Device type, operating system version, and app version for compatibility and troubleshooting purposes."
+        },
+        "usage": {
+          "heading": "3. How We Use Your Data",
+          "body": "We use your information to:\n\n- Provide, maintain, and improve Kale's features and services\n- Generate personalized financial summaries, charts, and insights\n- Send you notifications such as budget alerts and daily reminders (when enabled)\n- Authenticate your identity and secure your account\n- Analyze aggregate usage patterns to improve the app experience"
+        },
+        "storage": {
+          "heading": "4. Data Storage & Security",
+          "body": "Your data is stored securely using industry-standard practices. All data is encrypted in transit using TLS and at rest on our servers. We use Supabase as our backend infrastructure, which provides enterprise-grade security, access controls, and data isolation. We regularly review our security practices and limit access to your data to authorized personnel only."
+        },
+        "third-party": {
+          "heading": "5. Third-Party Services",
+          "body": "Kale integrates with the following third-party services:\n\n- Google Sign-In and Apple Sign-In for authentication\n- Analytics services for anonymous usage tracking\n- Crash reporting services to identify and fix app issues\n\nWe do not sell, rent, or share your personal or financial data with third parties for marketing purposes. Third-party services only receive the minimum data necessary to perform their function."
+        },
+        "rights": {
+          "heading": "6. Your Rights",
+          "body": "You have the right to:\n\n- Access the personal data we hold about you\n- Correct inaccurate information in your account\n- Delete your account and all associated data\n- Export your financial data\n- Restrict or object to certain processing of your data\n\nTo exercise any of these rights, contact us at privacy@kale.app or use the account management features within the app."
+        },
+        "retention": {
+          "heading": "7. Data Retention",
+          "body": "We retain your data for as long as your account is active. If you delete your account, we will remove your personal and financial data from our servers within 30 days. Some anonymized, aggregate data may be retained for analytical purposes. We may also retain certain data as required by law."
+        },
+        "children": {
+          "heading": "8. Children's Privacy",
+          "body": "Kale is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected data from a child under 13 without parental consent, we will take steps to delete that information promptly."
+        },
+        "changes": {
+          "heading": "9. Changes to This Policy",
+          "body": "We may update this Privacy Policy from time to time. We will notify you of material changes through an in-app notice or by email. We encourage you to review this policy periodically. Your continued use of Kale after changes are posted constitutes your acceptance of the updated policy."
+        },
+        "contact": {
+          "heading": "10. Contact Us",
+          "body": "If you have questions about this Privacy Policy or how your data is handled, please contact us at privacy@kale.app."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "sections": {
+        "intro": {
+          "heading": "1. Introduction",
+          "body": "Welcome to Kale. These Terms of Service govern your use of the Kale mobile application and related services. By creating an account or using Kale, you agree to be bound by these terms. If you do not agree, please do not use the app."
+        },
+        "account": {
+          "heading": "2. Account Registration",
+          "body": "To use Kale, you must create an account with accurate and complete information. You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. You must be at least 13 years old to create an account. If you are under 18, you confirm that you have your parent or guardian's consent."
+        },
+        "services": {
+          "heading": "3. Services Provided",
+          "body": "Kale provides personal finance management tools including expense and income tracking, budget creation and monitoring, savings goal management, and financial insights. These tools are designed to help you organize and understand your personal finances."
+        },
+        "responsibilities": {
+          "heading": "4. User Responsibilities",
+          "body": "You are solely responsible for the accuracy of the financial data you enter into Kale. Kale is a tracking and organizational tool and does not provide professional financial, investment, tax, or legal advice. You agree to use the app in compliance with all applicable laws and regulations."
+        },
+        "financial-data": {
+          "heading": "5. Financial Data",
+          "body": "Kale is not a bank, payment processor, or financial institution. We do not hold, transfer, or have custody of your funds. All financial data within Kale is user-entered information intended for personal tracking purposes only. We do not verify the accuracy of transactions, balances, or other financial information you enter."
+        },
+        "ip": {
+          "heading": "6. Intellectual Property",
+          "body": "The Kale app, including its design, code, features, and branding, is owned by Kale and protected by intellectual property laws. You retain full ownership of the personal data and financial information you enter into the app. You grant Kale a limited license to process your data solely to provide and improve the services."
+        },
+        "liability": {
+          "heading": "7. Limitation of Liability",
+          "body": "Kale is provided on an \"as is\" basis. We are not liable for any financial decisions you make based on information displayed in the app. We do not guarantee the accuracy of calculations, summaries, or insights derived from your data. To the maximum extent permitted by law, Kale shall not be liable for any indirect, incidental, or consequential damages."
+        },
+        "termination": {
+          "heading": "8. Termination",
+          "body": "You may delete your account at any time through the app settings. We may suspend or terminate your account if you violate these terms. Upon termination, your data will be deleted from our servers within 30 days unless retention is required by law."
+        },
+        "changes": {
+          "heading": "9. Changes to These Terms",
+          "body": "We may update these Terms of Service from time to time. We will notify you of material changes through the app or by email. Your continued use of Kale after changes are posted constitutes your acceptance of the updated terms."
+        },
+        "contact": {
+          "heading": "10. Contact Us",
+          "body": "If you have questions about these Terms of Service, please contact us at support@kale.app."
+        }
+      }
+    }
+  }
+}
