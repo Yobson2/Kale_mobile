@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+/*
+ * Kalé design tokens — mirrored from the app's "Digital Loom" system
+ * (Kale/lib/core/theme/app_colors.dart, docs/Kale_design/kal_modern_heritage/DESIGN.md).
+ * Depth comes from surface tiers, not borders. Never pure black: ink is #0F172A.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    var(--font-space-grotesk), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Emerald — the primary thread */
+  --color-emerald-950: #002114;
+  --color-emerald-900: #003824;
+  --color-emerald-800: #005236;
+  --color-emerald-700: #006c49;
+  --color-emerald-500: #10b981;
+  --color-emerald-300: #4edea3;
+  --color-emerald-200: #6ffbbe;
+  --color-emerald-50: #e8f8f0;
+
+  /* Gold — the second thread (budgets, highlights) */
+  --color-gold-800: #6b4200;
+  --color-gold-700: #855300;
+  --color-gold-500: #e29100;
+  --color-gold-100: #fdecd0;
+
+  /* Surfaces (light) */
+  --color-paper: #f7f9fb;
+  --color-surface-lowest: #ffffff;
+  --color-surface-low: #f2f4f6;
+  --color-surface: #eceef0;
+  --color-surface-high: #e6e8ea;
+
+  /* Ink */
+  --color-ink: #0f172a;
+  --color-ink-soft: #3c4a42;
+  --color-ink-muted: #5b6b62;
+  --color-ghost: #bbcabf;
+
+  /* Deep surface for the inverse section */
+  --color-night: #0b1611;
+  --color-night-soft: #13241c;
+
+  --color-expense: #ba1a1a;
+
+  --shadow-ghost: 0 20px 40px rgba(15, 23, 42, 0.06);
+  --shadow-device:
+    0 40px 80px -24px rgba(0, 56, 36, 0.28), 0 12px 24px -12px rgba(15, 23, 42, 0.12);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-emerald-700);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .on-night :focus-visible {
+    outline-color: var(--color-emerald-200);
+  }
+
+  ::selection {
+    background: var(--color-emerald-200);
+    color: var(--color-emerald-950);
+  }
+}
+
+/*
+ * Hero entrance: pure CSS so it plays on first paint, before hydration.
+ * Transform only, so the text stays visible and counts for LCP immediately.
+ */
+@keyframes rise {
+  from {
+    transform: translateY(18px);
+  }
+}
+
+@utility animate-rise {
+  animation: rise 0.9s var(--ease-out-soft) both;
+}
+
+.hero-rise > * {
+  animation: rise 0.9s var(--ease-out-soft) both;
+}
+
+.hero-rise > :nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.hero-rise > :nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.hero-rise > :nth-child(4) {
+  animation-delay: 180ms;
+}
+
+.hero-rise > :nth-child(5) {
+  animation-delay: 240ms;
+}
+
+.hero-rise > :nth-child(6) {
+  animation-delay: 300ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise > *,
+  .animate-rise {
+    animation: none;
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
