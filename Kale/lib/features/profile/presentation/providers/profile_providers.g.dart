@@ -157,14 +157,18 @@ final baseCurrencyProvider = AutoDisposeProvider<Currency>.internal(
 // ignore: unused_element
 typedef BaseCurrencyRef = AutoDisposeProviderRef<Currency>;
 String _$baseCurrencyControllerHash() =>
-    r'a58aaeb91e8c7b438ebeb8d1b5deb95c53e02ccf';
+    r'64d5272633b0afa8a01ce0e80a863229d6f9f302';
 
 /// Changes the base currency through [ChangeBaseCurrencyUseCase].
+///
+/// Kept alive: callers read the notifier without watching it, and an
+/// auto-disposed controller would be gone (and throw on `state =`) by the time
+/// the use case returns.
 ///
 /// Copied from [BaseCurrencyController].
 @ProviderFor(BaseCurrencyController)
 final baseCurrencyControllerProvider =
-    AutoDisposeAsyncNotifierProvider<BaseCurrencyController, void>.internal(
+    AsyncNotifierProvider<BaseCurrencyController, void>.internal(
   BaseCurrencyController.new,
   name: r'baseCurrencyControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -174,6 +178,6 @@ final baseCurrencyControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$BaseCurrencyController = AutoDisposeAsyncNotifier<void>;
+typedef _$BaseCurrencyController = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
